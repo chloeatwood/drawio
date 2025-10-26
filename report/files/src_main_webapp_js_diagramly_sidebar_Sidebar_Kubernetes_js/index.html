@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Kubernetes.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Kubernetes.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">59.91</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">103</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">33.16</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">5.64</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addKubernetesPalette = function()
+	{
+		var w = 100;
+		var h = 100;
+		var s = &#039;sketch=0;html=1;dashed=0;whitespace=wrap;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];shape=mxgraph.kubernetes.&#039;;
+		var s2 = &#039;aspect=fixed;sketch=0;html=1;dashed=0;whitespace=wrap;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];shape=mxgraph.kubernetes.&#039;;
+		var gn = &#039;mxgraph.kubernetes&#039;;
+		var dt = &#039;kubernetes &#039;;
+		this.setCurrentSearchEntryLibrary(&#039;kubernetes&#039;);
+		
+		this.addPaletteFunctions(&#039;kubernetes&#039;, &#039;Kubernetes&#039;, false,
+		[
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=api&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;API&#039;, null, null, this.getTagsForStencil(gn, &#039;api application programming interface&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=c_c_m&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;C-C-M&#039;, null, null, this.getTagsForStencil(gn, &#039;ccm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=cm&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;CM&#039;, null, null, this.getTagsForStencil(gn, &#039;cm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=c_m&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;C-M&#039;, null, null, this.getTagsForStencil(gn, &#039;cm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=c_role&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;C-Role&#039;, null, null, this.getTagsForStencil(gn, &#039;crole role&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=control_plane&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Control Plane&#039;, null, null, this.getTagsForStencil(gn, &#039;crole role&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=crb&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;CRB&#039;, null, null, this.getTagsForStencil(gn, &#039;crb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=crd&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;CRD&#039;, null, null, this.getTagsForStencil(gn, &#039;crb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=cronjob&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;CronJob&#039;, null, null, this.getTagsForStencil(gn, &#039;cronjob&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=deploy&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Deploy&#039;, null, null, this.getTagsForStencil(gn, &#039;deploy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=ds&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;DS&#039;, null, null, this.getTagsForStencil(gn, &#039;ds&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=ep&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;EP&#039;, null, null, this.getTagsForStencil(gn, &#039;ep&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=etcd&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;ETCD&#039;, null, null, this.getTagsForStencil(gn, &#039;etcd&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=group&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Group&#039;, null, null, this.getTagsForStencil(gn, &#039;group&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=hpa&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;HPA&#039;, null, null, this.getTagsForStencil(gn, &#039;group&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=ing&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;ING&#039;, null, null, this.getTagsForStencil(gn, &#039;ing&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=job&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Job&#039;, null, null, this.getTagsForStencil(gn, &#039;job&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=k_proxy&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;K-proxy&#039;, null, null, this.getTagsForStencil(gn, &#039;kproxy proxy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=kubelet&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Kubelet&#039;, null, null, this.getTagsForStencil(gn, &#039;kubelet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=limits&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Limits&#039;, null, null, this.getTagsForStencil(gn, &#039;limits&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=netpol&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Netpol&#039;, null, null, this.getTagsForStencil(gn, &#039;netpol&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=node&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Node&#039;, null, null, this.getTagsForStencil(gn, &#039;node&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=ns&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;NS&#039;, null, null, this.getTagsForStencil(gn, &#039;ns&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=pod&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Pod&#039;, null, null, this.getTagsForStencil(gn, &#039;pod&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=psp&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;PSP&#039;, null, null, this.getTagsForStencil(gn, &#039;psp&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=pv&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;PV&#039;, null, null, this.getTagsForStencil(gn, &#039;pv&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=pvc&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;PVC&#039;, null, null, this.getTagsForStencil(gn, &#039;pvc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=quota&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Quota&#039;, null, null, this.getTagsForStencil(gn, &#039;quota&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=rb&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;RB&#039;, null, null, this.getTagsForStencil(gn, &#039;rb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=role&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Role&#039;, null, null, this.getTagsForStencil(gn, &#039;role&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=rs&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;RS&#039;, null, null, this.getTagsForStencil(gn, &#039;rs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=sa&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;SA&#039;, null, null, this.getTagsForStencil(gn, &#039;sa&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=sc&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;SC&#039;, null, null, this.getTagsForStencil(gn, &#039;sc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=sched&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Sched&#039;, null, null, this.getTagsForStencil(gn, &#039;sched&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=secret&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Secret&#039;, null, null, this.getTagsForStencil(gn, &#039;secret&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=sts&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;STS&#039;, null, null, this.getTagsForStencil(gn, &#039;sts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=svc&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;SVC&#039;, null, null, this.getTagsForStencil(gn, &#039;sts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=user&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;User&#039;, null, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;prIcon=vol&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Vol&#039;, null, null, this.getTagsForStencil(gn, &#039;vol&#039;, dt).join(&#039; &#039;)),
+
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=api&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;API&#039;, null, null, this.getTagsForStencil(gn, &#039;api application programming interface&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=c_c_m&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;C-C-M&#039;, null, null, this.getTagsForStencil(gn, &#039;ccm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=cm&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;CM&#039;, null, null, this.getTagsForStencil(gn, &#039;cm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=c_m&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;C-M&#039;, null, null, this.getTagsForStencil(gn, &#039;cm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=c_role&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;C-Role&#039;, null, null, this.getTagsForStencil(gn, &#039;crole role&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=control_plane&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Control Plane&#039;, null, null, this.getTagsForStencil(gn, &#039;crole role&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=crb&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;CRB&#039;, null, null, this.getTagsForStencil(gn, &#039;crb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=crd&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;CRD&#039;, null, null, this.getTagsForStencil(gn, &#039;crd&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=cronjob&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;CronJob&#039;, null, null, this.getTagsForStencil(gn, &#039;cronjob&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=deploy&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Deploy&#039;, null, null, this.getTagsForStencil(gn, &#039;deploy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=ds&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;DS&#039;, null, null, this.getTagsForStencil(gn, &#039;ds&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=ep&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;EP&#039;, null, null, this.getTagsForStencil(gn, &#039;ep&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=etcd&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;ETCD&#039;, null, null, this.getTagsForStencil(gn, &#039;etcd&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=group&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Group&#039;, null, null, this.getTagsForStencil(gn, &#039;group&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=hpa&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;HPA&#039;, null, null, this.getTagsForStencil(gn, &#039;hpa&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=ing&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;ING&#039;, null, null, this.getTagsForStencil(gn, &#039;ing&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=job&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Job&#039;, null, null, this.getTagsForStencil(gn, &#039;job&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=k_proxy&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;K-proxy&#039;, null, null, this.getTagsForStencil(gn, &#039;kproxy proxy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=kubelet&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Kubelet&#039;, null, null, this.getTagsForStencil(gn, &#039;kubelet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=limits&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Limits&#039;, null, null, this.getTagsForStencil(gn, &#039;limits&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=netpol&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Netpol&#039;, null, null, this.getTagsForStencil(gn, &#039;netpol&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=node&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Node&#039;, null, null, this.getTagsForStencil(gn, &#039;node&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=ns&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;NS&#039;, null, null, this.getTagsForStencil(gn, &#039;ns&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=pod&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Pod&#039;, null, null, this.getTagsForStencil(gn, &#039;pod&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=psp&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;PSP&#039;, null, null, this.getTagsForStencil(gn, &#039;psp&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=pv&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;PV&#039;, null, null, this.getTagsForStencil(gn, &#039;pv&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=pvc&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;PVC&#039;, null, null, this.getTagsForStencil(gn, &#039;pvc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=quota&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Quota&#039;, null, null, this.getTagsForStencil(gn, &#039;quota&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=rb&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;RB&#039;, null, null, this.getTagsForStencil(gn, &#039;rb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=role&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Role&#039;, null, null, this.getTagsForStencil(gn, &#039;role&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=rs&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;RS&#039;, null, null, this.getTagsForStencil(gn, &#039;rs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=sa&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;SA&#039;, null, null, this.getTagsForStencil(gn, &#039;sa&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=sc&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;SC&#039;, null, null, this.getTagsForStencil(gn, &#039;sc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=sched&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Sched&#039;, null, null, this.getTagsForStencil(gn, &#039;sched&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=secret&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Secret&#039;, null, null, this.getTagsForStencil(gn, &#039;secret&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=sts&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;STS&#039;, null, null, this.getTagsForStencil(gn, &#039;secret&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=svc&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;SVC&#039;, null, null, this.getTagsForStencil(gn, &#039;secret&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=user&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;User&#039;, null, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;icon2;kubernetesLabel=1;prIcon=vol&#039;, w * 0.5, h * 0.48, &#039;&#039;, &#039;Vol&#039;, null, null, this.getTagsForStencil(gn, &#039;vol&#039;, dt).join(&#039; &#039;))
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+};
+		
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

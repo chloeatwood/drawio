@@ -1,0 +1,3255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\graphml\mxGraphMlCodec.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\graphml\mxGraphMlCodec.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">45.34</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">3138</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">110.23</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">39.16</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+function mxGraphMlCodec()
+{
+	this.cachedRefObj = {};
+};
+
+
+mxGraphMlCodec.prototype.refRegexp = /^\{y\:GraphMLReference\s+(\d+)\}$/;
+mxGraphMlCodec.prototype.staticRegexp = /^\{x\:Static\s+(.+)\.(.+)\}$/;
+
+mxGraphMlCodec.prototype.decode = function (xml, callback, onError)
+{
+	try
+	{
+		var doc = mxUtils.parseXml(xml);
+		
+		var graphs = this.getDirectChildNamedElements(doc.documentElement, mxGraphMlConstants.GRAPH);
+		
+		this.initializeKeys(doc.documentElement);
+		
+		var mxFile = &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;&lt;mxfile&gt;&quot;;
+		for (var i = 0; i &lt; graphs.length; i++)
+		{
+			var pageElement = graphs[i];
+	
+			var graph = this.createMxGraph();
+			var model = graph.getModel();
+			
+	        model.beginUpdate();
+	        try 
+	        {
+		        this.nodesMap = {};
+		    	this.edges = [];
+		        this.importGraph(pageElement, graph, graph.getDefaultParent());
+		    	
+		    	for (var i = 0; i &lt; this.edges.length; i++)
+				{
+		    		var edgesObj = this.edges[i];
+		    		var edges = edgesObj.edges;
+		    		var parent = edgesObj.parent;
+		    		var dx = edgesObj.dx, dy = edgesObj.dy;
+		
+			    	for (var j = 0; j &lt; edges.length; j++)
+			    	{
+			    		this.importEdge(edges[j], graph, parent, dx, dy);
+			    	}
+				}
+	        }
+	        catch(e)
+	        {
+	        	console.log(e);
+	        	throw e;
+	        }
+	        finally
+	        {
+	        	model.endUpdate();
+	        }
+	    	
+	    	//update edges&#039; labels to convert their labels relative coordinate to ours
+	        model.beginUpdate();
+	        try 
+	        {
+	        	var cells = graph.getModel().cells;
+	        	var tr = graph.view.translate;
+	        	
+	        	for (var id in cells)
+	    		{
+	        		var edge = cells[id];
+	        		
+	        		if (edge.edge &amp;&amp; edge.getChildCount() &gt; 0)
+	    			{
+	        			for (var i = 0; i &lt; edge.getChildCount(); i++)
+	    				{
+	        				var cell = edge.children[i];
+	                		var geo = cell.geometry;
+	                		
+	                		if (!geo.adjustIt) continue;
+	                		
+		        			var state = graph.view.getState(edge);
+		        			var abdPs = state.absolutePoints;
+		        			var p0 = abdPs[0];
+		        			var pe = abdPs[abdPs.length - 1];
+		        			
+		        			var ratio = geo.x;
+		        			var dist = geo.y;
+		        			var dx = pe.x - p0.x
+		        			var dy = pe.y - p0.y
+		 
+		        			var x = p0.x + ratio * dx;
+		        			var y = p0.y + ratio * dy;
+		        			
+		        			var d = Math.sqrt(dx*dx + dy*dy);
+		        			dx /= d;
+		        			dy /= d;
+		        			
+		        			x -= dist * dy;
+		        			y += dist * dx;
+		        			
+		        			var np = graph.view.getRelativePoint(state, x, y);
+		        			geo.x = np.x;
+		        			geo.y = np.y;
+		    			}
+		    		}
+	    		}
+	        }
+	        catch(e)
+	        {
+	        	console.log(e);
+	        	throw e;
+	        }
+	        finally
+	        {
+	        	model.endUpdate();
+	        }
+	    	
+	        mxFile += this.processPage(graph, i+1);
+		}
+	
+		mxFile += &quot;&lt;/mxfile&gt;&quot;;
+		
+		if (callback)
+		{
+			callback(mxFile);
+		}
+	}
+    catch(e)
+    {
+    	if (onError) 
+    	{
+    		onError(e);
+    	}
+    }
+};
+
+mxGraphMlCodec.prototype.initializeKeys = function (graphmlElement)
+{
+	var keys = this.getDirectChildNamedElements(graphmlElement, mxGraphMlConstants.KEY);
+	
+	this.nodesKeys = {};
+	this.edgesKeys = {};
+	this.portsKeys = {};
+	this.sharedData = {};
+	
+	this.nodesKeys[mxGraphMlConstants.NODE_GEOMETRY] = {}; 
+	this.nodesKeys[mxGraphMlConstants.USER_TAGS] = {};
+	this.nodesKeys[mxGraphMlConstants.NODE_STYLE] = {};
+	this.nodesKeys[mxGraphMlConstants.NODE_LABELS] = {};
+	this.nodesKeys[mxGraphMlConstants.NODE_GRAPHICS] = {};
+	this.edgesKeys[mxGraphMlConstants.EDGE_GEOMETRY] = {};
+	this.edgesKeys[mxGraphMlConstants.EDGE_STYLE] = {}; 
+	this.edgesKeys[mxGraphMlConstants.EDGE_LABELS] = {}; 
+	this.portsKeys[mxGraphMlConstants.PORT_LOCATION_PARAMETER] = {};
+	this.portsKeys[mxGraphMlConstants.PORT_STYLE] = {};
+	this.portsKeys[mxGraphMlConstants.PORT_VIEW_STATE] = {};
+	
+	var sharedDataId;
+	
+	for (var i = 0; i &lt; keys.length; i++)
+	{
+		var keyObj = this.dataElem2Obj(keys[i]);
+	
+		var id = keyObj[mxGraphMlConstants.ID];
+		var _for = keyObj[mxGraphMlConstants.KEY_FOR];
+		var attName = keyObj[mxGraphMlConstants.KEY_NAME];
+		var yType = keyObj[mxGraphMlConstants.KEY_YTYPE];
+		
+		if (attName == mxGraphMlConstants.SHARED_DATA) sharedDataId = id;
+		
+		attName = attName? attName : yType
+		
+		//TODO handle the defaults inside these keys
+		switch (_for)
+		{
+			case mxGraphMlConstants.NODE:
+				this.nodesKeys[attName] = {key: id, keyObj: keyObj};
+			break;
+			case mxGraphMlConstants.EDGE:
+				this.edgesKeys[attName] = {key: id, keyObj: keyObj};
+			break;
+			case mxGraphMlConstants.PORT:
+				this.portsKeys[attName] = {key: id, keyObj: keyObj};
+			break;
+			case mxGraphMlConstants.ALL:
+				var obj = {key: id, keyObj: keyObj};
+				this.nodesKeys[attName] = obj;
+				this.edgesKeys[attName] = obj;
+				this.portsKeys[attName] = obj;
+			break;
+		}
+	}
+	
+	var data = this.getDirectChildNamedElements(graphmlElement, mxGraphMlConstants.DATA);
+	
+	for (var i = 0; i &lt; data.length; i++)
+	{
+		var key = data[i].getAttribute(mxGraphMlConstants.KEY);
+		
+		if (key == sharedDataId)
+		{
+			var sharedData = this.getDirectChildNamedElements(data[i], mxGraphMlConstants.Y_SHARED_DATA);
+			
+			for (var j = 0; j &lt; sharedData.length; j++)
+			{
+				var dataItems = this.getDirectChildElements(sharedData[j]);
+				
+				for (var k = 0; k &lt; dataItems.length; k++)
+				{
+					var dkey = dataItems[k].getAttribute(mxGraphMlConstants.X_KEY);
+					this.sharedData[dkey] = dataItems[k];
+				}
+			}
+		}
+		else
+		{
+			var resources = this.getDirectChildNamedElements(data[i], mxGraphMlConstants.Y_RESOURCES);
+			
+			for (var j = 0; j &lt; resources.length; j++)
+			{
+				var dataItems = this.getDirectChildElements(resources[j]);
+				
+				for (var k = 0; k &lt; dataItems.length; k++)
+				{
+					var dkey = dataItems[k].getAttribute(mxGraphMlConstants.ID);
+					this.sharedData[dkey] = dataItems[k];
+				}
+			}
+		}
+	}
+};
+
+mxGraphMlCodec.prototype.parseAttributes = function (elem, obj) 
+{
+	var atts = elem.attributes;
+	if (atts)
+	{
+		
+		for (var i = 0; i &lt; atts.length; i++)
+		{
+			var val = atts[i].nodeValue;
+			var ref = this.refRegexp.exec(val);
+			var staticMem = this.staticRegexp.exec(val);
+			
+			if (ref)
+			{
+				var key = ref[1];
+				var subObj = this.cachedRefObj[key];
+				
+				//already cached
+				if (!subObj)
+				{
+					subObj = {};
+					subObj[this.sharedData[key].nodeName] = this.dataElem2Obj(this.sharedData[key]);
+					this.cachedRefObj[key] = subObj;
+				}
+				
+				obj[atts[i].nodeName] = subObj;
+			}
+			else if (staticMem)
+			{
+				obj[atts[i].nodeName] = {};
+				obj[atts[i].nodeName][staticMem[1]] = staticMem[2];
+			}
+			else
+			{
+				obj[atts[i].nodeName] = val;
+			}
+		}
+	}
+};
+
+mxGraphMlCodec.prototype.dataElem2Obj = function (elem) 
+{
+	var ref = this.getDirectFirstChildNamedElements(elem, mxGraphMlConstants.GRAPHML_REFERENCE)
+					|| elem.getAttribute(mxGraphMlConstants.REFID);
+	var refKey = null;
+	var origElem = elem;
+	var obj = {};
+	
+	if (ref) 
+	{
+		var key = (typeof ref === &quot;string&quot;)? ref : ref.getAttribute(mxGraphMlConstants.RESOURCE_KEY);
+		var cachedObj = this.cachedRefObj[key];
+		
+		//already cached
+		if (cachedObj)
+		{
+			//parse all attributes to update the reference
+			this.parseAttributes(elem, cachedObj);
+			return cachedObj;
+		}
+		
+		elem = this.sharedData[key];
+		refKey = key;
+	}
+
+	//parse all attributes
+	this.parseAttributes(elem, obj);
+
+	for (var i = 0; i &lt; elem.childNodes.length; i++)
+	{
+		var child = elem.childNodes[i]; 
+		
+		if (child.nodeType == 1)
+		{
+			var attName = child.nodeName;
+			
+			//Special types of node (x:List and x:Static)
+			if (attName == mxGraphMlConstants.X_LIST) 
+			{
+				var arr = [];
+				var arrayElem = this.getDirectChildElements(child);
+				
+				for (var j = 0; j &lt; arrayElem.length; j++)
+				{
+					attName = arrayElem[j].nodeName;
+					arr.push(this.dataElem2Obj(arrayElem[j]));
+				}
+					
+				obj[attName] = arr;
+			}
+			else if (attName == mxGraphMlConstants.X_STATIC)
+			{
+				var member = child.getAttribute(mxGraphMlConstants.MEMBER);
+				var dotPos = member.lastIndexOf(&#039;.&#039;);
+				obj[member.substr(0, dotPos)] = member.substr(dotPos + 1);
+			}
+			else
+			{
+				var dotPos = attName.lastIndexOf(&quot;.&quot;);
+				
+				if (dotPos &gt; 0)
+				{
+					attName = attName.substr(dotPos + 1);
+				}
+				
+				if (obj[attName] != null)
+				{
+					if (!(obj[attName] instanceof Array))
+					{
+						obj[attName] = [obj[attName]];
+					}
+					
+					obj[attName].push(this.dataElem2Obj(child));
+				}
+				else
+				{
+					obj[attName] = this.dataElem2Obj(child);
+				}
+			}
+		} 
+		else if ((child.nodeType == 3 || child.nodeType == 4) &amp;&amp; child.textContent.trim())
+		{
+			obj[&quot;#text&quot;] = child.textContent;
+		}
+	}
+	
+	//cache referenced objects
+	if (refKey)
+	{
+		var tmpObj = {};
+		//parse all attributes before following the reference
+		this.parseAttributes(origElem, tmpObj);
+		tmpObj[this.sharedData[refKey].nodeName] = obj; 
+		this.cachedRefObj[refKey] = tmpObj;
+		return tmpObj;
+	}
+	
+	return obj;
+};
+
+mxGraphMlCodec.prototype.mapArray = function(arr, mapping, map)
+{
+	var obj = {};
+	for (var k = 0; k &lt; arr.length; k++)
+	{
+		if (arr[k].name)
+		{
+			obj[arr[k].name] = arr[k].value || arr[k]; 
+		}
+	}
+	this.mapObject(obj, mapping, map);
+}
+//Use mapping information to fill the map based on obj content
+//TODO yjs looks like they need special handling
+mxGraphMlCodec.prototype.mapObject = function (obj, mapping, map)
+{
+	//defaults can be overridden by actual values later
+	if (mapping.defaults)
+	{
+		for (var key in mapping.defaults)
+		{
+			map[key] = mapping.defaults[key];
+		}
+	}
+	
+	for (var key in mapping)
+	{
+		var parts = key.split(&#039;.&#039;);
+		
+		var val = obj;
+		
+		for (var i = 0; i &lt; parts.length; i++)
+		{
+			if (!val) break;
+			
+			val = val[parts[i]];
+		}
+		
+		if (val == null &amp;&amp; obj) //some vals doesn&#039;t need to be split
+		{
+			val = obj[key];
+		}
+		
+		if (val != null)
+		{
+			var mappingObj = mapping[key];
+			if (typeof val === &quot;string&quot;)
+			{
+				if (typeof mappingObj === &quot;string&quot;)
+				{
+					map[mappingObj] = val.toLowerCase();
+				}
+				else if (typeof mappingObj === &quot;object&quot;)
+				{
+					var modVal = val.toLowerCase();
+					switch(mappingObj.mod)
+					{
+						case &quot;color&quot;: //mxGraph support alfa in colors in the standard format
+							if (val.indexOf(&quot;#&quot;) == 0 &amp;&amp; val.length == 9)
+							{
+								modVal = &quot;#&quot; + val.substr(3) + val.substr(1,2);
+							}
+							else if (val == &quot;TRANSPARENT&quot;)
+							{
+								modVal = &quot;none&quot;;
+							}
+						break;
+						case &quot;shape&quot;:
+//							console.log(val.toLowerCase());
+							modVal = mxGraphMlShapesMap[val.toLowerCase()];
+						break;
+						case &quot;bpmnOutline&quot;:
+//							console.log(val.toLowerCase());
+							modVal = mxGraphMlShapesMap.bpmnOutline[val.toLowerCase()];
+						break;
+						case &quot;bpmnSymbol&quot;:
+//							console.log(val.toLowerCase());
+							modVal = mxGraphMlShapesMap.bpmnSymbol[val.toLowerCase()];
+						break;
+						case &quot;bool&quot;:
+							modVal = val == &quot;true&quot;? &quot;1&quot; : &quot;0&quot;;
+						break;
+						case &quot;scale&quot;:
+							try {
+								modVal = parseFloat(val) * mappingObj.scale;
+							} catch(e) {
+								//nothing!
+							}
+						break;
+						case &quot;arrow&quot;:
+							modVal = mxGraphMlArrowsMap[val];
+						break;
+					}
+					if (modVal != null)
+						map[mappingObj.key] = modVal;
+				}
+				else
+				{
+					mappingObj(val, map);
+				}
+			}
+			else if (val instanceof Array)
+			{
+				this.mapArray(val, mappingObj, map);
+			}
+			else if (val.name != null &amp;&amp; val.value != null) //this is the case when a single y:Property is used 
+			{
+				this.mapArray([val], mappingObj, map);
+			}
+			else
+			{
+				this.mapObject(val, mappingObj, map);
+			}
+		}
+	}
+};
+
+mxGraphMlCodec.prototype.createMxGraph = function ()
+{
+    var graph = new mxGraph();
+//    graph.setExtendParents(false);
+//    graph.setExtendParentsOnAdd(false);
+//    graph.setConstrainChildren(false);
+//    graph.setHtmlLabels(true);
+//    graph.getModel().maintainEdgeParent = false;
+    return graph;
+}
+
+mxGraphMlCodec.prototype.importGraph = function (pageElement, graph, parent)
+{
+	var nodes = this.getDirectChildNamedElements(pageElement, mxGraphMlConstants.NODE);
+
+	var p = parent;
+	var dx = 0, dy = 0;
+	while (p &amp;&amp; p.geometry)
+	{
+		dx += p.geometry.x;
+		dy += p.geometry.y;
+		
+		p = p.parent;
+	}
+
+	for (var i = 0; i &lt; nodes.length; i++)
+	{
+		this.importNode(nodes[i], graph, parent, dx, dy);
+	}
+	
+	this.edges.push({
+		edges: this.getDirectChildNamedElements(pageElement, mxGraphMlConstants.EDGE),
+		parent: parent,
+		dx: dx,
+		dy: dy
+	});	
+};
+
+//FIXME port 0.5, 0.5 push the edge to the other side (bpmn example)
+mxGraphMlCodec.prototype.importPort = function (portElement, portsMap)
+{
+	var name = portElement.getAttribute(mxGraphMlConstants.PORT_NAME);
+	var portObj = {};
+	
+	var data = this.getDirectChildNamedElements(portElement, mxGraphMlConstants.DATA);
+	
+	for (var i = 0; i &lt; data.length; i++)
+	{
+		var d = data[i];
+		var key = d.getAttribute(mxGraphMlConstants.KEY);
+		
+		var dataObj = this.dataElem2Obj(d);
+//		console.log(dataObj);
+		if (dataObj.key == this.portsKeys[mxGraphMlConstants.PORT_LOCATION_PARAMETER].key) 
+		{
+			this.mapObject(dataObj, {
+				&quot;y:FreeNodePortLocationModelParameter.Ratio&quot;: function(val, map)
+				{
+					var parts = val.split(&#039;,&#039;);
+					map[&quot;pos&quot;] = {x: parts[0], y: parts[1]};
+				}
+			}, portObj);
+		} 
+		/*
+		else if (dataObj.key == this.portsKeys[mxGraphMlConstants.PORT_STYLE].key) 
+		{
+			
+		}
+		else if (dataObj.key == this.portsKeys[mxGraphMlConstants.PORT_VIEW_STATE].key) 
+		{
+			
+		}*/
+	}
+	
+	portsMap[name] = portObj;
+};
+
+mxGraphMlCodec.prototype.styleMap2Str = function (styleMap)
+{
+	var semi = &quot;&quot;;
+	var str = &quot;&quot;;
+	
+	for (var key in styleMap)
+	{
+		str += semi + key + &quot;=&quot; + styleMap[key];
+		semi = &quot;;&quot;;
+	}
+	
+	return str;
+};
+
+mxGraphMlCodec.prototype.importNode = function (nodeElement, graph, parent, dx, dy)
+{
+	var data = this.getDirectChildNamedElements(nodeElement, mxGraphMlConstants.DATA);
+	var v;
+	var id = nodeElement.getAttribute(mxGraphMlConstants.ID);
+	
+	var node = new mxCell();
+	node.vertex = true;
+	node.geometry = new mxGeometry(0,0,30,30); //some node has no geometry, this is the default
+
+	graph.addCell(node, parent);
+
+	var style = {graphMlID: id};
+	var mlStyleObj = null;
+	var mlTemplate = null;
+	var mlUserTags = null;
+	var lblObj = null;
+	var lbls = null;
+	
+	for (var i = 0; i &lt; data.length; i++)
+	{
+		var d = data[i];
+		var dataObj = this.dataElem2Obj(d);
+		
+		if (dataObj.key)
+		{
+			if (dataObj.key == this.nodesKeys[mxGraphMlConstants.NODE_GEOMETRY].key) 
+			{
+				this.addNodeGeo(node, dataObj, dx, dy);
+			} 
+			else if (dataObj.key == this.nodesKeys[mxGraphMlConstants.USER_TAGS].key) 
+			{
+				mlUserTags = dataObj;
+			}
+			else if (dataObj.key == this.nodesKeys[mxGraphMlConstants.NODE_STYLE].key) 
+			{
+	//			console.log(JSON.stringify(dataObj));
+				mlStyleObj = dataObj;
+				if (dataObj[&quot;yjs:StringTemplateNodeStyle&quot;])
+				{
+					mlTemplate = dataObj[&quot;yjs:StringTemplateNodeStyle&quot;][&quot;#text&quot;];
+				} 
+				else
+				{
+					this.addNodeStyle(node, dataObj, style);
+				}
+			}
+			else if (dataObj.key == this.nodesKeys[mxGraphMlConstants.NODE_LABELS].key) 
+			{
+				lblObj = dataObj;
+			}
+			else if (dataObj.key == this.nodesKeys[mxGraphMlConstants.NODE_GRAPHICS].key)
+			{
+				var shape = null, key = null;
+				for (var key in dataObj)
+				{
+					if (key == &quot;key&quot; || key == &quot;#text&quot;) continue;
+					
+					//Special case when a node has multiple graphics
+					//TODO support the open/closed states
+					if (key == &quot;y:ProxyAutoBoundsNode&quot;) 
+					{
+						var realizers = dataObj[key][&quot;y:Realizers&quot;];
+						if (realizers)
+						{
+							for (var key2 in realizers)
+							{
+								if (key2 == &quot;active&quot; || key2 == &quot;#text&quot;) continue;
+								
+								shape = realizers[key2][realizers[&quot;active&quot;]];
+								dataObj = {};
+								dataObj[key2] = shape;
+								break;
+							}
+						}
+					}
+					else
+					{
+						shape = dataObj[key];
+					}
+					break;
+				}
+				if (shape)
+				{
+					if (shape[mxGraphMlConstants.GEOMETRY])
+					{
+						this.addNodeGeo(node, shape[mxGraphMlConstants.GEOMETRY], dx, dy);
+					}
+					
+					if (shape[mxGraphMlConstants.NODE_LABEL])
+					{
+						lblObj = shape[mxGraphMlConstants.NODE_LABEL];
+					}
+				}
+				mlStyleObj = dataObj;
+				this.addNodeStyle(node, dataObj, style);
+			}
+		}
+	}
+	
+	var ports = this.getDirectChildNamedElements(nodeElement, mxGraphMlConstants.PORT);
+	var portsMap = {};
+	
+	for (var i = 0; i &lt; ports.length; i++)
+	{
+		this.importPort(ports[i], portsMap);
+	}
+	
+	if (mlTemplate)
+	{
+		this.handleTemplates(mlTemplate, mlUserTags, node, style);
+	}
+	
+	this.handleFixedRatio(node, style);
+
+	//handle special compound shapes
+	this.handleCompoundShape(node, style, mlStyleObj, lbls);
+
+	//fix for stroke size of zero
+	if (style[&quot;strokeWidth&quot;] == 0)
+	{
+		style[&quot;strokeColor&quot;] = &quot;none&quot;;
+	}
+	
+	node.style = this.styleMap2Str(style);
+	
+	var subGraphs = this.getDirectChildNamedElements(nodeElement, mxGraphMlConstants.GRAPH);
+	
+	for (var i = 0; i &lt; subGraphs.length; i++)
+	{
+		this.importGraph(subGraphs[i], graph, node, portsMap);
+	}	
+
+	//handle labels after node geometry is determined. It is also the last such that labels are on top
+	if (lblObj)
+		lbls = this.addLabels(node, lblObj, style, graph);
+
+	this.nodesMap[id] = {node: node, ports: portsMap};
+};
+
+mxGraphMlCodec.prototype.addNodeStyle = function (node, dataObj, style)
+{
+	//TODO move these static mapping objects outside such that they are defined once only
+	var dashStyleFn = function(val, map)
+	{
+		if (val == &quot;line&quot;) return;
+		
+		map[&quot;dashed&quot;] = 1;
+		//map[&quot;fixDash&quot;] = 1;
+		var pattern = null;
+		switch(val)
+		{
+			case &quot;DashDot&quot;:
+				pattern = &quot;3 1 1 1&quot;;
+			break;
+			case &quot;Dot&quot;:
+				pattern = &quot;1 1&quot;;
+			break;
+			case &quot;DashDotDot&quot;:
+				pattern = &quot;3 1 1 1 1 1&quot;;
+			break;
+			case &quot;Dash&quot;:
+				pattern = &quot;3 1&quot;;
+			break;
+			case &quot;dotted&quot;:
+				pattern = &quot;1 3&quot;;
+			break;
+			case &quot;dashed&quot;:
+				pattern = &quot;5 2&quot;;
+			break;
+			default:
+				pattern = val.replace(/0/g, &#039;1&#039;);
+		}
+		
+		if (pattern)
+		{
+			//Some patterns in graphML has only one number
+			if (pattern.indexOf(&quot; &quot;) &lt; 0) 
+			{
+				pattern = pattern + &quot; &quot; + pattern;
+			}
+			map[&quot;dashPattern&quot;] = pattern;
+		}
+	};
+	
+	var styleCommonMap = 
+	{
+		&quot;shape&quot;: {key: &quot;shape&quot;, mod: &quot;shape&quot;},
+		&quot;y:Shape.type&quot;: {key: &quot;shape&quot;, mod: &quot;shape&quot;},
+		&quot;configuration&quot;: {key: &quot;shape&quot;, mod: &quot;shape&quot;},
+		&quot;type&quot;: {key: &quot;shape&quot;, mod: &quot;shape&quot;},
+		&quot;assetName&quot;: {key: &quot;shape&quot;, mod: &quot;shape&quot;},
+		&quot;activityType&quot;: {key: &quot;shape&quot;, mod: &quot;shape&quot;},
+		&quot;fill&quot;: {key: &quot;fillColor&quot;, mod: &quot;color&quot;},
+		&quot;fill.yjs:SolidColorFill.color&quot;: {key: &quot;fillColor&quot;, mod: &quot;color&quot;},
+		&quot;fill.yjs:SolidColorFill.color.yjs:Color.value&quot;: {key: &quot;fillColor&quot;, mod: &quot;color&quot;},
+		&quot;y:Fill&quot;: {
+			&quot;color&quot;: {key: &quot;fillColor&quot;, mod: &quot;color&quot;},
+			//&quot;color2&quot;: {key: &quot;gradientColor&quot;, mod: &quot;color&quot;}, //??
+			&quot;transparent&quot;: function(val, map)
+			{
+				if (val == &quot;true&quot;)
+				{
+					map[&quot;fillColor&quot;] = &quot;none&quot;;
+				}
+			}
+		},
+		&quot;y:BorderStyle&quot;: {
+			&quot;color&quot;: {key: &quot;strokeColor&quot;, mod: &quot;color&quot;},
+			&quot;width&quot;: &quot;strokeWidth&quot;,
+			&quot;hasColor&quot;:  function(val, map)
+			{
+				if (val == &quot;false&quot;)
+				{
+					map[&quot;strokeColor&quot;] = &quot;none&quot;;
+				}
+			},
+			&quot;type&quot;: dashStyleFn
+			//&quot;raised&quot;: ??
+		},
+		&quot;stroke&quot;: {key: &quot;strokeColor&quot;, mod: &quot;color&quot;},
+		&quot;stroke.yjs:Stroke&quot;:
+		{
+			&quot;dashStyle&quot;: dashStyleFn,
+			&quot;dashStyle.yjs:DashStyle.dashes&quot;: dashStyleFn,
+			&quot;fill&quot;: {key: &quot;strokeColor&quot;, mod: &quot;color&quot;},
+			&quot;fill.yjs:SolidColorFill.color&quot;: {key: &quot;strokeColor&quot;, mod: &quot;color&quot;},
+			//&quot;lineCap&quot;: &quot;&quot;, //??
+			&quot;thickness.sys:Double&quot;: &quot;strokeWidth&quot;,
+			&quot;thickness&quot;: &quot;strokeWidth&quot;
+		}
+	};
+
+	var assetNodesStyle = mxUtils.clone(styleCommonMap);
+	assetNodesStyle[&quot;defaults&quot;] = {
+		&quot;fillColor&quot;: &quot;#CCCCCC&quot;,
+		&quot;strokeColor&quot;: &quot;#6881B3&quot;
+	};
+	
+	var bpmnActivityStyle = mxUtils.clone(styleCommonMap);
+	bpmnActivityStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;ext;rounded=1&quot;,
+		&quot;fillColor&quot;: &quot;#FFFFFF&quot;,
+		&quot;strokeColor&quot;: &quot;#000090&quot;
+	};
+	
+	var bpmnGatewayStyle = mxUtils.clone(styleCommonMap);
+	bpmnGatewayStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;rhombus;fillColor=#FFFFFF;strokeColor=#FFCD28&quot;
+	};
+	
+	var bpmnConversationStyle = mxUtils.clone(styleCommonMap);
+	bpmnConversationStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;hexagon&quot;,
+		&quot;strokeColor&quot;: &quot;#007000&quot;
+	};
+	
+	var bpmnEventStyle = mxUtils.clone(styleCommonMap);
+	bpmnEventStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=general&quot;,
+		&quot;outline&quot;: &quot;standard&quot;
+	};
+	bpmnEventStyle[&quot;characteristic&quot;] = {key: &quot;outline&quot;, mod: &quot;bpmnOutline&quot;};
+	
+	var bpmnDataObjectStyle = mxUtils.clone(styleCommonMap);
+	bpmnDataObjectStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;js:bpmnDataObject&quot;
+	};
+	
+	var bpmnDataStoreStyle = mxUtils.clone(styleCommonMap);
+	bpmnDataStoreStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;datastore&quot;
+	};
+	
+	var bpmnGroupNodeStyle = mxUtils.clone(styleCommonMap);
+	bpmnGroupNodeStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;swimlane;swimlaneLine=0;startSize=20;dashed=1;dashPattern=3 1 1 1;collapsible=0;rounded=1&quot;
+	};
+	
+	var bpmnChoreographyNodeStyle = mxUtils.clone(styleCommonMap);
+	bpmnChoreographyNodeStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;js:BpmnChoreography&quot;//&quot;swimlane;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;startSize=20;rounded=1;collapsible=0&quot;
+	};
+	
+	//approximation to GraphML shapes TODO improve them
+	var bevelNodeStyle = mxUtils.clone(styleCommonMap);
+	bevelNodeStyle[&quot;defaults&quot;] = {
+		&quot;rounded&quot;: &quot;1&quot;,
+		&quot;glass&quot;: &quot;1&quot;,
+		&quot;strokeColor&quot;: &quot;#FFFFFF&quot;
+	};
+	bevelNodeStyle[&quot;inset&quot;] = &quot;strokeWidth&quot;;
+	bevelNodeStyle[&quot;radius&quot;] = &quot;arcSize&quot;;
+	bevelNodeStyle[&quot;drawShadow&quot;] = {key:&quot;shadow&quot;, mod:&quot;bool&quot;};
+	bevelNodeStyle[&quot;color&quot;] = {key:&quot;fillColor&quot;, mod:&quot;color&quot;, addGradient: &quot;north&quot;};
+	bevelNodeStyle[&quot;color.yjs:Color.value&quot;] = bevelNodeStyle[&quot;color&quot;];
+	
+	var shinyPlateNodeStyle = mxUtils.clone(styleCommonMap);
+	shinyPlateNodeStyle[&quot;defaults&quot;] = {
+		&quot;rounded&quot;: &quot;1&quot;,
+		&quot;arcSize&quot;: 10,
+		&quot;glass&quot;: &quot;1&quot;,
+		&quot;shadow&quot;: &quot;1&quot;,
+		&quot;strokeColor&quot;: &quot;none&quot;
+		//,&quot;rotation&quot;: -90 //TODO requires rotation!
+	};
+	shinyPlateNodeStyle[&quot;drawShadow&quot;] = {key:&quot;shadow&quot;, mod:&quot;bool&quot;};
+	
+	var demoGroupStyle = mxUtils.clone(styleCommonMap);
+	demoGroupStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;swimlane&quot;,
+		&quot;startSize&quot;: 20,
+		&quot;strokeWidth&quot;: 4,
+		&quot;spacingLeft&quot;: 10 //TODO can we change collapse icon to be in right side?
+	};
+	demoGroupStyle[&quot;isCollapsible&quot;] = {key:&quot;collapsible&quot;, mod:&quot;bool&quot;};
+	demoGroupStyle[&quot;borderColor&quot;] = {key:&quot;strokeColor&quot;, mod:&quot;color&quot;};
+	demoGroupStyle[&quot;folderFrontColor&quot;] = {key:&quot;fillColor&quot;, mod:&quot;color&quot;}; //TODO fillColor always match strokeColor!
+//			demoGroupStyle[&quot;folderBackColor&quot;] = {key:&quot;fillColor&quot;, mod:&quot;color&quot;}; //??
+	
+	var collapsibleNodeStyle = mxUtils.clone(styleCommonMap);
+	collapsibleNodeStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;swimlane&quot;,
+		&quot;startSize&quot;: 20,
+		&quot;spacingLeft&quot;: 10 //TODO can we change collapse icon to be in right side?
+	};
+	collapsibleNodeStyle[&quot;yjs:PanelNodeStyle&quot;] = {
+		&quot;color&quot;: {key:&quot;swimlaneFillColor&quot;, mod:&quot;color&quot;},
+		&quot;color.yjs:Color.value&quot;: {key:&quot;swimlaneFillColor&quot;, mod:&quot;color&quot;},
+		&quot;labelInsetsColor&quot;: {key:&quot;fillColor&quot;, mod:&quot;color&quot;},
+		&quot;labelInsetsColor.yjs:Color.value&quot;: {key:&quot;fillColor&quot;, mod:&quot;color&quot;}
+	};
+	
+	var tableStyle = mxUtils.clone(styleCommonMap);
+	tableStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;js:table&quot;
+	};
+	
+	var imageNodeStyle = mxUtils.clone(styleCommonMap);
+	imageNodeStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;image&quot;
+	};
+	
+	imageNodeStyle[&quot;image&quot;] = function(val, map)
+	{
+		map[&quot;image&quot;] = val; 
+	};
+	
+	var svgNodeStyle = mxUtils.clone(styleCommonMap);
+	svgNodeStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;image&quot;
+	};
+//	svgNodeStyle[&quot;y:SVGNodeProperties&quot;] = {
+//		&quot;usingVisualBounds&quot;: &quot;&quot;//??
+//	};
+//	y:SVGModel.svgBoundsPolicy ??
+	svgNodeStyle[&quot;y:SVGModel.y:SVGContent.y:Resource.#text&quot;] = function(val, map)
+	{
+		map[&quot;image&quot;] = &quot;data:image/svg+xml,&quot; + ((window.btoa) ? btoa(val) : Base64.encode(val)); 
+	};
+	
+	var groupNodeStyle = mxUtils.clone(styleCommonMap);
+	groupNodeStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;swimlane&quot;,
+		&quot;startSize&quot;: 20
+	};
+	
+	groupNodeStyle[&quot;y:Shape.type&quot;] = function(val, map)
+	{
+		if (val == &quot;roundrectangle&quot;)
+		{
+			map[&#039;rounded&#039;] = 1;
+			map[&#039;arcSize&#039;] = 5;
+		}
+	};
+	
+	var tableNodeStyle = mxUtils.clone(styleCommonMap);
+	tableNodeStyle[&quot;defaults&quot;] = {
+		&quot;shape&quot;: &quot;js:table2&quot;
+	};
+
+	var genericNodeStyle = mxUtils.clone(styleCommonMap);
+	genericNodeStyle[&quot;defaults&quot;] = {
+		&quot;gradientDirection&quot;: &quot;east&quot;
+	};
+	genericNodeStyle[&quot;y:Fill&quot;][&quot;color2&quot;] = {key: &quot;gradientColor&quot;, mod: &quot;color&quot;};
+	genericNodeStyle[&quot;y:StyleProperties.y:Property&quot;] = {
+		&quot;com.yworks.bpmn.characteristic&quot;: {key: &quot;outline&quot;, mod: &quot;bpmnOutline&quot;},
+		//TODO support colors for the icon itself other than the remaining shape!
+//		&quot;com.yworks.bpmn.icon.line.color&quot;: &quot;&quot;,
+		&quot;com.yworks.bpmn.icon.fill&quot;: {key:&quot;gradientColor&quot;, mod:&quot;color&quot;},
+		&quot;com.yworks.bpmn.icon.fill2&quot;: {key:&quot;fillColor&quot;, mod:&quot;color&quot;},
+		&quot;com.yworks.bpmn.type&quot;: {key: &quot;symbol&quot;, mod: &quot;bpmnSymbol&quot;},
+		&quot;y.view.ShadowNodePainter.SHADOW_PAINTING&quot;: {key: &quot;shadow&quot;, mod: &quot;bool&quot;},
+		&quot;doubleBorder&quot;: {key: &quot;double&quot;, mod: &quot;bool&quot;},
+		&quot;com.yworks.sbgn.style.radius&quot;: {key: &quot;arcSize&quot;, mod: &quot;scale&quot;, scale: 2},
+		&quot;com.yworks.sbgn.style.inverse&quot;: {key: &quot;flipV&quot;, mod: &quot;bool&quot;}
+	};
+//	console.log(dataObj);
+	this.mapObject(dataObj, {
+		&quot;yjs:ShapeNodeStyle&quot;: styleCommonMap,
+		&quot;demostyle:FlowchartNodeStyle&quot;: styleCommonMap,
+		&quot;demostyle:AssetNodeStyle&quot;: assetNodesStyle,
+		&quot;bpmn:ActivityNodeStyle&quot;: bpmnActivityStyle,
+		&quot;bpmn:GatewayNodeStyle&quot;: bpmnGatewayStyle,
+		&quot;bpmn:ConversationNodeStyle&quot;: bpmnConversationStyle,
+		&quot;bpmn:EventNodeStyle&quot;: bpmnEventStyle,
+		&quot;bpmn:DataObjectNodeStyle&quot;: bpmnDataObjectStyle,
+		&quot;bpmn:DataStoreNodeStyle&quot;: bpmnDataStoreStyle,
+		&quot;bpmn:GroupNodeStyle&quot;: bpmnGroupNodeStyle,
+		&quot;bpmn:ChoreographyNodeStyle&quot;: bpmnChoreographyNodeStyle,
+		&quot;yjs:BevelNodeStyle&quot;: bevelNodeStyle,
+		&quot;yjs:ShinyPlateNodeStyle&quot;: shinyPlateNodeStyle,
+		&quot;demostyle:DemoGroupStyle&quot;: demoGroupStyle,
+		&quot;yjs:CollapsibleNodeStyleDecorator&quot;: collapsibleNodeStyle,
+		&quot;bpmn:PoolNodeStyle&quot;: tableStyle,
+		&quot;yjs:TableNodeStyle&quot;: tableStyle,
+		&quot;demotablestyle:DemoTableStyle&quot;: tableStyle,
+		&quot;yjs:ImageNodeStyle&quot;: imageNodeStyle,
+		//desktop
+		&quot;y:ShapeNode&quot;: styleCommonMap,
+		&quot;y:GenericNode&quot;: genericNodeStyle,
+		&quot;y:GenericGroupNode&quot;: genericNodeStyle,
+		&quot;y:TableNode&quot;: tableNodeStyle,
+		&quot;y:SVGNode&quot;: svgNodeStyle,
+		&quot;y:GroupNode&quot;: groupNodeStyle
+	}, style);
+};
+
+mxGraphMlCodec.prototype.handleTemplates = function (template, userTags, node, styleMap)
+{
+	if (template)
+	{
+		var w = node.geometry.width;
+		var h = node.geometry.height;
+		var header = &#039;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; viewBox=&quot;0 0 &#039;+ w + &#039; &#039; + h +&#039;&quot;&gt;&lt;g&gt;&#039;;
+		var footer = &#039;&lt;/g&gt;&lt;/svg&gt;&#039;;
+		
+		//TODO optimize this! probably only the text before defs has bindings
+		var matches = null;
+		var bindingPairs = [];
+		//find template bindings
+		var tempBindRegEx = /\{TemplateBinding\s+([^}]+)\}/g;
+		
+		while ((matches = tempBindRegEx.exec(template)) != null) 
+		{
+	        var replacement = &quot;&quot;;
+	        switch (matches[1])
+	        {
+	        	case &quot;width&quot;:
+	        		replacement = w;
+	        	break;
+	        	case &quot;height&quot;:
+	        		replacement = h;
+	    		break;
+	        }
+	        
+	        bindingPairs.push({match: matches[0], repl: replacement});
+		}
+		
+		if (userTags &amp;&amp; userTags[&quot;y:Json&quot;])
+		{
+			var json = JSON.parse(userTags[&quot;y:Json&quot;][&quot;#text&quot;]);
+			//find user tags bindings
+			var userTagBindRegEx = /\{Binding\s+([^}]+)\}/g;
+			
+			while ((matches = userTagBindRegEx.exec(template)) != null) 
+			{
+		        var parts = matches[1].split(&#039;,&#039;);
+		        var val = json[parts[0]];
+		        
+		        if (val)
+	        	{
+		        	if (parts.length &gt; 1)
+	        		{
+		        		if (parts[1].indexOf(&#039;Converter=&#039;))
+	        			{
+		        			var func = mxGraphMlConverters[parts[1].substr(11)]; //11 is the length of Converter=
+		        			
+		        			if (func)
+	        				{
+				        		var args = [val];
+				        		
+				        		if (parts[2])
+				        		{
+				        			args.push(parts[2].substr(11)); //11 is the length of Parameter=
+				        		}
+				        			
+		        				val = func.apply(null, args)
+	        				}
+	        			}
+	        		}
+		        	
+		        	bindingPairs.push({match: matches[0], repl: mxUtils.htmlEntities(val)});
+	        	}
+			}
+		}
+
+		for (var i = 0; i &lt; bindingPairs.length; i++)
+		{
+			template = template.replace(bindingPairs[i].match, bindingPairs[i].repl);		
+		}
+		
+		bindingPairs = [];
+		//Fix text elements (TODO can it be merged with the previous step?)
+		var txtRegEx = /\&lt;text.+data-content=&quot;([^&quot;]+).+\&lt;\/text\&gt;/g;
+		while ((matches = txtRegEx.exec(template)) != null) 
+		{
+			var val = matches[0].substr(0, matches[0].length - 7) + matches[1] + &quot;&lt;/text&gt;&quot;; //7 is the length of &lt;/text&gt; 
+			bindingPairs.push({match: matches[0], repl: val});
+		}
+
+		for (var i = 0; i &lt; bindingPairs.length; i++)
+		{
+			template = template.replace(bindingPairs[i].match, bindingPairs[i].repl);		
+		}
+
+		var svg = header + template + footer;
+		styleMap[&quot;shape&quot;] = &quot;image&quot;;
+		styleMap[&quot;image&quot;] = &quot;data:image/svg+xml,&quot; + ((window.btoa) ? btoa(svg) : Base64.encode(svg));
+	}
+};
+
+mxGraphMlCodec.prototype.handleCompoundShape = function (node, styleMap, mlStyleObj, lbls)
+{
+	var shape = styleMap[&quot;shape&quot;];
+	
+	if (shape &amp;&amp; shape.indexOf(&quot;js:&quot;) == 0)
+	{
+		switch(shape)
+		{
+			case &quot;js:bpmnArtifactShadow&quot;:
+				styleMap[&quot;shadow&quot;] = &quot;1&quot;;
+			case &quot;js:bpmnArtifact&quot;:
+				styleMap[&quot;shape&quot;] = styleMap[&quot;symbol&quot;];
+				delete styleMap[&quot;fillColor&quot;];
+				delete styleMap[&quot;strokeColor&quot;];
+				delete styleMap[&quot;gradientColor&quot;];
+				this.handleCompoundShape(node, styleMap, mlStyleObj, lbls)
+			break;
+			case &quot;js:bpmnDataObjectShadow&quot;:
+			case &quot;js:bpmnDataObject&quot;:
+				styleMap[&quot;shape&quot;] = &quot;note;size=16&quot;;
+//				console.log(mlStyleObj);
+				mlStyleObj = mlStyleObj[&quot;bpmn:DataObjectNodeStyle&quot;] || mlStyleObj[&quot;y:GenericNode&quot;] || mlStyleObj[&quot;y:GenericGroupNode&quot;];
+				var tmpMap = {};
+				
+				this.mapObject(mlStyleObj, {
+					&quot;y:StyleProperties.y:Property&quot;: {
+						&quot;com.yworks.bpmn.dataObjectType&quot;: &quot;dataObjectType&quot;,
+						&quot;com.yworks.bpmn.marker1&quot;: &quot;marker1&quot;
+					}
+				}, tmpMap);
+				
+				if (mlStyleObj[&quot;collection&quot;] == &quot;true&quot; || tmpMap[&quot;marker1&quot;] == &quot;bpmn_marker_parallel&quot;)
+				{
+					var cell2 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 10, 10), &#039;html=1;whiteSpace=wrap;shape=parallelMarker;&#039;);
+					cell2.vertex = true;
+					cell2.geometry.relative = true;
+					cell2.geometry.offset = new mxPoint(-5, -10);
+					node.insert(cell2);
+				}
+				if (mlStyleObj[&quot;type&quot;] == &quot;INPUT&quot; || tmpMap[&quot;dataObjectType&quot;] == &quot;data_object_type_input&quot;)
+				{
+					var cell1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 10, 10), &#039;html=1;shape=singleArrow;arrowWidth=0.4;arrowSize=0.4;&#039;);
+					cell1.vertex = true;
+					cell1.geometry.relative = true;
+					cell1.geometry.offset = new mxPoint(2, 2);
+					node.insert(cell1);
+				}
+				else if (mlStyleObj[&quot;type&quot;] == &quot;OUTPUT&quot; || tmpMap[&quot;dataObjectType&quot;] == &quot;data_object_type_output&quot;)
+				{
+					var cell1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 10, 10), &#039;html=1;shape=singleArrow;arrowWidth=0.4;arrowSize=0.4;fillColor=#000000;&#039;);
+					cell1.vertex = true;
+					cell1.geometry.relative = true;
+					cell1.geometry.offset = new mxPoint(2, 2);
+					node.insert(cell1);
+				}
+			break;
+			case &quot;js:BpmnChoreography&quot;:
+				this.mapObject(mlStyleObj, {
+					&quot;defaults&quot;: {
+						&quot;shape&quot;: &quot;swimlane;collapsible=0;rounded=1&quot;,
+						&quot;startSize&quot;: &quot;20&quot;,
+						&quot;strokeColor&quot;: &quot;#006000&quot;,
+						&quot;fillColor&quot;: &quot;#CCCCCC&quot;
+					}
+				}, styleMap);
+				
+				//TODO the shape should be clipped by parent borders. It should also be resized relative to its parent
+				var pGeo = node.geometry;
+				var cell1 = new mxCell(&#039;&#039;, new mxGeometry(0, pGeo.height - 20, pGeo.width, 20), &#039;strokeColor=#006000;fillColor=#777777;rounded=1&#039;);
+				cell1.vertex = true;
+				node.insert(cell1);
+				
+				//TODO handle labels accurately
+				if (lbls &amp;&amp; lbls.lblTxts)
+				{
+//					console.log(lbls);
+					node.value = lbls.lblTxts[0];
+					cell1.value = lbls.lblTxts[1];
+				}
+			break;
+			case &quot;js:bpmnActivityShadow&quot;:
+			case &quot;js:bpmnActivity&quot;:
+				styleMap[&quot;shape&quot;] = &quot;ext;rounded=1&quot;;
+				var tmpMap = {};
+				mlStyleObj = mlStyleObj[&quot;y:GenericNode&quot;] || mlStyleObj[&quot;y:GenericGroupNode&quot;];
+				
+				this.mapObject(mlStyleObj, {
+					&quot;y:StyleProperties.y:Property&quot;: {
+						&quot;com.yworks.bpmn.taskType&quot;: &quot;taskType&quot;,
+						&quot;com.yworks.bpmn.activityType&quot;: &quot;activityType&quot;,
+						&quot;com.yworks.bpmn.marker1&quot;: &quot;marker1&quot;,
+						&quot;com.yworks.bpmn.marker2&quot;: &quot;marker2&quot;,
+						&quot;com.yworks.bpmn.marker3&quot;: &quot;marker3&quot;,
+						&quot;com.yworks.bpmn.marker4&quot;: &quot;marker4&quot;
+					}
+				}, tmpMap);
+				
+				switch(tmpMap[&quot;activityType&quot;])
+				{
+					case &quot;activity_type_transaction&quot;:
+						styleMap[&quot;double&quot;] = &quot;1&quot;;
+					break;
+				}
+				
+				switch(tmpMap[&quot;taskType&quot;])
+				{
+					case &quot;task_type_send&quot;:
+						var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 19, 12), &#039;shape=message;fillColor=#000000;strokeColor=#FFFFFF;&#039;);
+						item1.geometry.offset = new mxPoint(4, 7);
+						break;
+					case &quot;task_type_receive&quot;:
+						var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 19, 12), &#039;shape=message;&#039;);
+						item1.geometry.offset = new mxPoint(4, 7);
+						break;
+					case &quot;task_type_user&quot;:
+						var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 15, 15), &#039;shape=mxgraph.bpmn.user_task;&#039;);
+						item1.geometry.offset = new mxPoint(4, 5);
+						break;
+					case &quot;task_type_manual&quot;:
+						var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 15, 10), &#039;shape=mxgraph.bpmn.manual_task;&#039;);
+						item1.geometry.offset = new mxPoint(4, 7);
+						break;
+					case &quot;task_type_business_rule&quot;:
+						var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 18, 13), &#039;shape=mxgraph.bpmn.business_rule_task;&#039;);
+						item1.geometry.offset = new mxPoint(4, 7);
+						break;
+					case &quot;task_type_service&quot;:
+						var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 15, 15), &#039;shape=mxgraph.bpmn.service_task;&#039;);
+						item1.geometry.offset = new mxPoint(4, 5);
+						break;
+					case &quot;task_type_script&quot;:
+						var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 15, 15), &#039;shape=mxgraph.bpmn.script_task;&#039;);
+						item1.geometry.offset = new mxPoint(4, 5);
+						break;
+				}
+				
+				if (item1)
+				{
+					item1.vertex = true;
+					item1.geometry.relative = true;
+					node.insert(item1);
+					item1 = null;
+				}
+				
+				var numIcons = 0;
+				
+				for (var i = 1; i &lt;= 4; i++)
+				{
+					if (tmpMap[&quot;marker&quot; + i])
+						numIcons++;
+				}
+
+				var iconX = -7.5 * numIcons - 2 * (numIcons - 1);
+				
+				for (var i = 1; i &lt;= numIcons; i++)
+				{
+					switch(tmpMap[&quot;marker&quot; + i])
+					{
+						case &quot;bpmn_marker_closed&quot;:
+							var item1 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 15, 15), &#039;shape=plus;part=1;&#039;);
+							item1.geometry.offset = new mxPoint(iconX, -20);
+							break;
+						case &quot;bpmn_marker_open&quot;:
+							var item1 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 15, 15), &#039;shape=rect;part=1;&#039;);
+							item1.geometry.offset = new mxPoint(iconX, -20);
+							var item2 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 8, 1), &#039;shape=rect;part=1;&#039;);
+							item2.geometry.offset = new mxPoint(-4, -1);
+							item2.geometry.relative = true;
+							item2.vertex = true;
+							item1.insert(item2);
+							break;
+						case &quot;bpmn_marker_loop&quot;:
+							var item1 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 15, 15), &#039;shape=mxgraph.bpmn.loop;part=1;&#039;);
+							item1.geometry.offset = new mxPoint(iconX, -20);
+							break;
+						case &quot;bpmn_marker_parallel&quot;:
+							var item1 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 15, 15), &#039;shape=parallelMarker;part=1;&#039;);
+							item1.geometry.offset = new mxPoint(iconX, -20);
+							break;
+						case &quot;bpmn_marker_sequential&quot;:
+							var item1 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 15, 15), &#039;shape=parallelMarker;direction=south;part=1;&#039;);
+							item1.geometry.offset = new mxPoint(iconX, -20);
+							break;
+						case &quot;bpmn_marker_ad_hoc&quot;:
+							var item1 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 15, 10), &#039;shape=mxgraph.bpmn.ad_hoc;strokeColor=none;flipH=1;part=1;fillColor=#000000&#039;);
+							item1.geometry.offset = new mxPoint(iconX, -17);
+							break;
+						case &quot;bpmn_marker_compensation&quot;:
+							var item1 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 15, 11), &#039;shape=mxgraph.bpmn.compensation;part=1;&#039;);
+							item1.geometry.offset = new mxPoint(iconX, -18);
+							break;
+					}
+					item1.geometry.relative = true;
+					item1.vertex = true;
+					node.insert(item1);
+					iconX += 20;
+				}
+			break;
+			case &quot;js:table&quot;:
+				//TODO we need 2 passes to find the exact shift of columns/rows especially when there is rows inside rows
+				//TODO Internal table strokes needs to match table strokeWidth and only be on one side
+				//TODO code optimization
+				styleMap[&quot;shape&quot;] = &quot;swimlane;collapsible=0;swimlaneLine=0&quot;;
+				var tableObj = mlStyleObj[&quot;yjs:TableNodeStyle&quot;] || mlStyleObj[&quot;demotablestyle:DemoTableStyle&quot;];
+				
+				if (!tableObj &amp;&amp; mlStyleObj[&quot;bpmn:PoolNodeStyle&quot;])
+				{
+					tableObj = mlStyleObj[&quot;bpmn:PoolNodeStyle&quot;][&quot;yjs:TableNodeStyle&quot;];
+				}
+				
+//				console.log(tableObj);
+				
+				this.mapObject(tableObj, {
+					&quot;backgroundStyle.demotablestyle:TableBackgroundStyle&quot;: {
+						&quot;insetFill.yjs:SolidColorFill.color.yjs:Color.value&quot;: {key: &quot;fillColor&quot;, mod: &quot;color&quot;},
+						&quot;tableBackgroundFill.yjs:SolidColorFill.color.yjs:Color.value&quot;: {key: &quot;swimlaneFillColor&quot;, mod: &quot;color&quot;},
+						&quot;tableBackgroundStroke.yjs:Stroke&quot;:{
+							&quot;fill&quot;: {key: &quot;strokeColor&quot;, mod: &quot;color&quot;},
+							&quot;thickness&quot;: &quot;strokeWidth&quot; 
+						}
+					},
+					&quot;backgroundStyle.yjs:ShapeNodeStyle.fill&quot;: {key: &quot;fillColor&quot;, mod: &quot;color&quot;},
+					&quot;backgroundStyle.yjs:ShapeNodeStyle.fill.yjs:SolidColorFill.color&quot;: {key: &quot;fillColor&quot;, mod: &quot;color&quot;}
+				}, styleMap);
+				
+				//Lane fill color is the same as the fill color
+				styleMap[&quot;swimlaneFillColor&quot;] = styleMap[&quot;fillColor&quot;];
+				
+				tableObj = tableObj[&quot;table&quot;][&quot;y:Table&quot;];
+				
+				var x = 0, y = 0, xShift = {x: 0}, yShift = 0;
+				var insets = tableObj[&quot;Insets&quot;];
+				
+				if (insets)
+				{
+					insets = insets.split(&#039;,&#039;);
+					
+					if (insets[0] != &quot;0&quot;)
+					{
+						styleMap[&quot;startSize&quot;] = insets[0];
+						xShift.x = parseFloat(insets[0]);
+						//x += xShift.x;						
+						styleMap[&quot;horizontal&quot;] = &quot;0&quot;;
+					} 
+					else if (insets[1] != &quot;0&quot;)
+					{
+						styleMap[&quot;startSize&quot;] = insets[1];
+						yShift = parseFloat(insets[1]); 
+						y += yShift;
+					}
+				}
+				else
+				{
+					styleMap[&quot;startSize&quot;] = &quot;0&quot;;
+				}
+				
+				var defRowStyle = {};
+				
+				var rowMapping = {
+					&quot;Insets&quot;: function(val, map)
+					{
+						map[&quot;startSize&quot;] = val.split(&#039;,&#039;)[0];
+					},
+					&quot;Style.bpmn:AlternatingLeafStripeStyle&quot;: {
+						&quot;evenLeafDescriptor.bpmn:StripeDescriptor&quot;: {
+							&quot;insetFill&quot;: {key: &quot;evenFill&quot;, mod: &quot;color&quot;},
+							&quot;backgroundFill&quot;: {key: &quot;evenLaneFill&quot;, mod: &quot;color&quot;}
+						},
+						&quot;oddLeafDescriptor.bpmn:StripeDescriptor&quot;: {
+							&quot;insetFill&quot;: {key: &quot;oddFill&quot;, mod: &quot;color&quot;},
+							&quot;backgroundFill&quot;: {key: &quot;oddLaneFill&quot;, mod: &quot;color&quot;}
+						}
+						//parentDescriptor ??
+						//TODO collect common types in a special mapping hash
+					},
+					&quot;Style.yjs:NodeStyleStripeStyleAdapter&quot;:{
+						&quot;demotablestyle:DemoStripeStyle&quot;: {
+							&quot;stripeInsetFill.yjs:SolidColorFill.color.yjs:Color.value&quot;: {key: &quot;fillColor&quot;, mod: &quot;color&quot;},
+							&quot;tableLineFill.yjs:SolidColorFill.color.yjs:Color.value&quot;: {key: &quot;strokeColor&quot;, mod: &quot;color&quot;}
+						},
+						&quot;yjs:ShapeNodeStyle&quot;: {
+							&quot;fill&quot;: {key: &quot;swimlaneFillColor&quot;, mod: &quot;color&quot;}
+						}
+					},
+					&quot;Size&quot;: &quot;height&quot;
+				};
+				this.mapObject(tableObj[&quot;RowDefaults&quot;], {
+					&quot;defaults&quot;: {
+						&quot;shape&quot;: &quot;swimlane;collapsible=0;horizontal=0&quot;,
+						&quot;startSize&quot;: &quot;0&quot;
+					},
+					&quot;y:StripeDefaults&quot;: rowMapping
+				}, defRowStyle);
+
+				var defColStyle = {};
+				
+				var colMapping = {
+					&quot;Insets&quot;: function(val, map)
+					{
+						map[&quot;startSize&quot;] = val.split(&#039;,&#039;)[1];
+					},
+					&quot;Style.bpmn:AlternatingLeafStripeStyle&quot;: {
+						&quot;evenLeafDescriptor.bpmn:StripeDescriptor&quot;: {
+							&quot;insetFill&quot;: {key: &quot;evenFill&quot;, mod: &quot;color&quot;},
+							&quot;backgroundFill&quot;: {key: &quot;evenLaneFill&quot;, mod: &quot;color&quot;}
+						},
+						&quot;oddLeafDescriptor.bpmn:StripeDescriptor&quot;: {
+							&quot;insetFill&quot;: {key: &quot;oddFill&quot;, mod: &quot;color&quot;},
+							&quot;backgroundFill&quot;: {key: &quot;oddLaneFill&quot;, mod: &quot;color&quot;}
+						}
+						//parentDescriptor ??
+						//TODO collect common types in a special mapping hash
+					},
+					&quot;Style.yjs:NodeStyleStripeStyleAdapter&quot;:{
+						&quot;demotablestyle:DemoStripeStyle&quot;: {
+							&quot;stripeInsetFill.yjs:SolidColorFill.color.yjs:Color.value&quot;: {key: &quot;fillColor&quot;, mod: &quot;color&quot;},
+							&quot;tableLineFill.yjs:SolidColorFill.color.yjs:Color.value&quot;: {key: &quot;strokeColor&quot;, mod: &quot;color&quot;}
+						},
+						&quot;yjs:ShapeNodeStyle&quot;: {
+							&quot;fill&quot;: {key: &quot;swimlaneFillColor&quot;, mod: &quot;color&quot;}
+						}
+					},
+					&quot;Size&quot;: &quot;width&quot;
+				};
+				
+				this.mapObject(tableObj[&quot;ColumnDefaults&quot;], {
+					&quot;defaults&quot;: {
+						&quot;shape&quot;: &quot;swimlane;collapsible=0&quot;,
+						&quot;startSize&quot;: &quot;0&quot;,
+						&quot;fillColor&quot;: &quot;none&quot;
+					},
+					&quot;y:StripeDefaults&quot;: colMapping
+				}, defColStyle);
+
+				var pGeo = node.geometry;
+				
+				var rows = tableObj[&quot;Rows&quot;][&quot;y:Row&quot;];
+				y += parseFloat(defColStyle[&quot;startSize&quot;]);
+				
+				var maxX = xShift.x;
+				var initX = xShift.x;
+				xShift.lx = xShift.x;
+				
+				//TODO We need two passes to determine the header size!
+				if (rows)
+				{
+					if (!(rows instanceof Array))
+						rows = [rows];
+					
+					for (var i = 0; i &lt; rows.length; i++)
+					{
+						xShift.x = initX;
+						xShift.lx = initX;
+						y = this.addRow(rows[i], node, (i &amp; 1), y, xShift, rowMapping, defRowStyle);
+						maxX = Math.max(xShift.x, maxX);
+					}
+				}
+
+				var columns = tableObj[&quot;Columns&quot;][&quot;y:Column&quot;];
+				x = maxX;//parseFloat(defRowStyle[&quot;startSize&quot;]);
+				
+				if (columns)
+				{
+					if (!(columns instanceof Array))
+						columns = [columns];
+					
+					for (var i = 0; i &lt; columns.length; i++)
+					{
+						x = this.addColumn(columns[i], node, (i &amp; 1), x, yShift, colMapping, defColStyle);
+					}
+				}
+				
+			break;
+			case &quot;js:table2&quot;:
+				styleMap[&quot;shape&quot;] = &quot;swimlane;collapsible=0;swimlaneLine=0&quot;;
+//				console.log(mlStyleObj);
+				var tmpMap = {};
+				this.mapObject(mlStyleObj, {
+					&quot;y:TableNode&quot;: {
+						&quot;y:StyleProperties.y:Property&quot;: {
+							&quot;yed.table.section.color&quot;: {key: &quot;secColor&quot;, mod: &quot;color&quot;},
+							&quot;yed.table.header.height&quot;: &quot;headerH&quot;,
+							&quot;yed.table.header.color.main&quot;: {key: &quot;headerColor&quot;, mod: &quot;color&quot;},
+							&quot;yed.table.header.color.alternating&quot;: {key: &quot;headerColorAlt&quot;, mod: &quot;color&quot;},
+							&quot;yed.table.lane.color.main&quot;: {key: &quot;laneColor&quot;, mod: &quot;color&quot;},
+							&quot;yed.table.lane.color.alternating&quot;: {key: &quot;laneColorAlt&quot;, mod: &quot;color&quot;},
+							&quot;yed.table.lane.style&quot;: &quot;laneStyle&quot;,
+							&quot;com.yworks.bpmn.type&quot;: &quot;isHorz&quot;,
+							&quot;POOL_LANE_COLOR_ALTERNATING&quot;: {key: &quot;laneColorAlt&quot;, mod: &quot;color&quot;},
+							&quot;POOL_LANE_COLOR_MAIN&quot;: {key: &quot;laneColor&quot;, mod: &quot;color&quot;},
+							&quot;POOL_LANE_STYLE&quot;: &quot;laneStyle&quot;,
+							&quot;POOL_HEADER_COLOR_MAIN&quot;: {key: &quot;headerColor&quot;, mod: &quot;color&quot;},
+							&quot;POOL_HEADER_COLOR_ALTERNATING&quot;: {key: &quot;headerColorAlt&quot;, mod: &quot;color&quot;},
+							&quot;POOL_TABLE_SECTION_COLOR&quot;: {key: &quot;secColor&quot;, mod: &quot;color&quot;}
+//							//Not Used!
+//							&quot;y.view.tabular.TableNodePainter.ALTERNATE_ROW_STYLE&quot;: {
+//								&quot;y:SimpleStyle&quot;: {
+//									&quot;fillColor&quot;: {key: &quot;rowAltFillColor&quot;, mod: &quot;color&quot;},
+//									&quot;lineColor&quot;: {key: &quot;rowAltLineColor&quot;, mod: &quot;color&quot;},
+//									&quot;lineType&quot;: &quot;rowAltlineType&quot;,
+//									&quot;lineWidth&quot;: &quot;rowAltlineWidth&quot;
+//								}
+//							},
+//							&quot;y.view.tabular.TableNodePainter.ALTERNATE_COLUMN_STYLE&quot;: {
+//								&quot;y:SimpleStyle&quot;: {
+//									&quot;fillColor&quot;: {key: &quot;colAltFillColor&quot;, mod: &quot;color&quot;},
+//									&quot;lineColor&quot;: {key: &quot;colAltLineColor&quot;, mod: &quot;color&quot;},
+//									&quot;lineType&quot;: &quot;colAltlineType&quot;,
+//									&quot;lineWidth&quot;: &quot;colAltlineWidth&quot;
+//								}
+//							}
+						},
+						&quot;y:Table&quot;: {
+							&quot;y:DefaultColumnInsets.top&quot;: &quot;colHHeight&quot;,
+							&quot;y:DefaultRowInsets.left&quot;: &quot;rowHWidth&quot;,
+							&quot;y:Insets&quot;: {
+								&quot;top&quot;: &quot;tblHHeight&quot;,
+								&quot;left&quot;: &quot;tblHWidth&quot;
+							}
+						}
+					}
+				}, tmpMap);
+
+				styleMap[&quot;swimlaneFillColor&quot;] = styleMap[&quot;fillColor&quot;];
+				
+				var isHor = tmpMap[&quot;isHorz&quot;] == &quot;pool_type_lane_and_column&quot;
+					|| tmpMap[&quot;isHorz&quot;] == &quot;pool_type_empty&quot;
+					|| tmpMap[&quot;isHorz&quot;] == &quot;pool_type_lane&quot;;
+
+				var th = 0, tw = 0;
+				if (isHor)
+				{
+					tw = parseFloat(tmpMap[&quot;tblHWidth&quot;]);
+				}
+				else
+				{
+					th = parseFloat(tmpMap[&quot;tblHHeight&quot;]);
+				}
+				
+				styleMap[&quot;startSize&quot;] = th? th : tw;
+				//Assumptions: There is always rows and cols in every table
+				//Also all tables seems to be not rotated
+				try 
+				{
+					var rows = mlStyleObj[&quot;y:TableNode&quot;][&quot;y:Table&quot;][&quot;y:Rows&quot;][&quot;y:Row&quot;];
+					var cols = mlStyleObj[&quot;y:TableNode&quot;][&quot;y:Table&quot;][&quot;y:Columns&quot;][&quot;y:Column&quot;];
+					
+					var atts4Rows = tmpMap[&quot;laneStyle&quot;] == &quot;lane.style.rows&quot; || tmpMap[&quot;laneStyle&quot;] == &quot;lane_style_rows&quot;;
+					
+					if (!(rows instanceof Array))
+						rows = [rows];
+					
+					if (!(cols instanceof Array))
+						cols = [cols];
+					
+					var rowStartSize = parseFloat(tmpMap[&quot;rowHWidth&quot;]);
+					for (var i = 0; i &lt; rows.length; i++)
+					{
+						if (rows[i][&quot;y:Insets&quot;])
+							rowStartSize = Math.max(rowStartSize, 
+									parseFloat(rows[i][&quot;y:Insets&quot;][&quot;left&quot;]) + parseFloat(rows[i][&quot;y:Insets&quot;][&quot;right&quot;]));
+					}
+					
+					var colStartSize = parseFloat(tmpMap[&quot;colHHeight&quot;]);
+					for (var i = 0; i &lt; cols.length; i++)
+					{
+						if (cols[i][&quot;y:Insets&quot;])
+							colStartSize = Math.max(colStartSize, 
+									parseFloat(cols[i][&quot;y:Insets&quot;][&quot;top&quot;]) + parseFloat(cols[i][&quot;y:Insets&quot;][&quot;bottom&quot;]));
+					}
+					
+					if (atts4Rows)
+					{
+						this.addTbl2Rows(node, rows, th, tw, rowStartSize, colStartSize, atts4Rows, tmpMap);
+						this.addTbl2Cols(node, cols, th, tw, rowStartSize, colStartSize, atts4Rows, tmpMap);
+					}
+					else
+					{
+						this.addTbl2Cols(node, cols, th, tw, rowStartSize, colStartSize, atts4Rows, tmpMap);
+						this.addTbl2Rows(node, rows, th, tw, rowStartSize, colStartSize, atts4Rows, tmpMap);
+					}
+				}
+				catch(e)
+				{
+					//nothing!
+				}
+			break;
+			case &quot;js:relationship_big_entity&quot;:
+				styleMap[&#039;shape&#039;] = &quot;swimlane;startSize=30;rounded=1;arcSize=5;collapsible=0&quot;;
+				var fill = mlStyleObj[&quot;y:GenericNode&quot;][&quot;y:Fill&quot;]; 
+				
+				if (fill) 
+				{
+					styleMap[&#039;fillColor&#039;] = fill[&quot;color2&quot;];
+					styleMap[&#039;swimlaneFillColor&#039;] = fill[&quot;color&quot;];
+				}
+			break;
+			case &quot;js:relationship_attribute&quot;:
+				if (styleMap[&quot;double&quot;] == &quot;1&quot;)
+				{
+					styleMap[&#039;shape&#039;] = &quot;doubleEllipse&quot;;
+				}
+				else
+				{
+					styleMap[&#039;shape&#039;] = &quot;ellipse&quot;;
+				}
+			break;
+		}
+		
+		if (shape.indexOf(&quot;Shadow&quot;) &gt; 0) 
+		{
+			styleMap[&quot;shadow&quot;] = &quot;1&quot;;
+		}
+	}
+};
+
+mxGraphMlCodec.prototype.addTbl2Rows = function(node, rows, th, tw, rowStartSize, colStartSize, atts4Rows, tmpMap) 
+{
+	var y = th + colStartSize; 
+	var isBPMN = tmpMap[&quot;isHorz&quot;] != null;
+	
+	for (var i = 0; i &lt; rows.length; i++)
+	{
+		var odd = i &amp; 1;
+		var cell = new mxCell();
+		cell.vertex = true;
+		var rowStyle = {
+			&quot;shape&quot;: &quot;swimlane;collapsible=0;horizontal=0&quot;,
+			&quot;startSize&quot;: rowStartSize,
+			&quot;fillColor&quot;: tmpMap[&quot;secColor&quot;] || &quot;none&quot;,
+			&quot;swimlaneLine&quot;: (isBPMN? &quot;0&quot; : &quot;1&quot;)
+		};
+		
+		if (parseFloat(rowStyle[&quot;startSize&quot;]) == 0)
+		{
+			rowStyle[&quot;fillColor&quot;] = &quot;none&quot;;
+			rowStyle[&quot;swimlaneLine&quot;] = &quot;0&quot;;
+		}
+		
+		if (atts4Rows)
+		{
+			var fillColor = odd? tmpMap[&quot;headerColorAlt&quot;] : tmpMap[&quot;headerColor&quot;];
+			rowStyle[&quot;swimlaneFillColor&quot;] = odd? tmpMap[&quot;laneColorAlt&quot;] : tmpMap[&quot;laneColor&quot;];
+			rowStyle[&quot;fillColor&quot;] = fillColor? fillColor : rowStyle[&quot;swimlaneFillColor&quot;];
+		}
+		
+		var height = parseFloat(rows[i][&quot;height&quot;]);
+		var dh = (isBPMN &amp;&amp; i == 0)? colStartSize : 0 ;
+		cell.geometry = new mxGeometry(tw, y - dh, node.geometry.width - tw, height + dh);
+		y += height;
+		
+//		if (lblObj)
+//			this.addLabels(cell, lblObj, rowStyle)
+		
+		cell.style = this.styleMap2Str(rowStyle);
+		node.insert(cell);
+	}	
+};
+
+mxGraphMlCodec.prototype.addTbl2Cols = function(node, cols, th, tw, rowStartSize, colStartSize, atts4Rows, tmpMap) 
+{
+	var x = rowStartSize + tw;
+	var isBPMN = tmpMap[&quot;isHorz&quot;] != null;
+	
+	for (var i = 0; i &lt; cols.length; i++)
+	{
+		var odd = i &amp; 1;
+		var cell = new mxCell();
+		cell.vertex = true;
+		var colStyle = {
+			&quot;shape&quot;: &quot;swimlane;collapsible=0&quot;,
+			&quot;startSize&quot;: colStartSize,
+			&quot;fillColor&quot;: tmpMap[&quot;secColor&quot;] || &quot;none&quot;,
+			&quot;swimlaneLine&quot;: (isBPMN? &quot;0&quot; : &quot;1&quot;)
+		};
+		
+		if (parseFloat(colStyle[&quot;startSize&quot;]) == 0)
+		{
+			colStyle[&quot;fillColor&quot;] = &quot;none&quot;;
+		}
+		
+		if (!atts4Rows)
+		{
+			var fillColor = odd? tmpMap[&quot;headerColorAlt&quot;] : tmpMap[&quot;headerColor&quot;];
+			colStyle[&quot;swimlaneFillColor&quot;] = odd? tmpMap[&quot;laneColorAlt&quot;] : tmpMap[&quot;laneColor&quot;];
+			colStyle[&quot;fillColor&quot;] = fillColor? fillColor : colStyle[&quot;swimlaneFillColor&quot;];
+		}
+		
+		var width = parseFloat(cols[i][&quot;width&quot;]);
+		var dw = (isBPMN &amp;&amp; i == 0)? rowStartSize : 0 ;
+		cell.geometry = new mxGeometry(x - dw, th, width + dw, node.geometry.height - th);
+		x += width;
+		
+//		if (lblObj)
+//			this.addLabels(cell, lblObj, rowStyle)
+		
+		cell.style = this.styleMap2Str(colStyle);
+		node.insert(cell);
+	}
+};
+
+mxGraphMlCodec.prototype.addRow = function(row, parent, odd, y, xShift, rowMapping, defRowStyle)
+{
+	var cell = new mxCell();
+	cell.vertex = true;
+	var rowStyle = mxUtils.clone(defRowStyle);
+	this.mapObject(row, rowMapping, rowStyle);
+	
+	if (odd)
+	{
+		if (rowStyle[&quot;oddFill&quot;]) 
+			rowStyle[&quot;fillColor&quot;] = rowStyle[&quot;oddFill&quot;];
+
+		if (rowStyle[&quot;oddLaneFill&quot;])
+			rowStyle[&quot;swimlaneFillColor&quot;] = rowStyle[&quot;oddLaneFill&quot;];
+	}
+	else
+	{
+		if (rowStyle[&quot;evenFill&quot;]) 
+			rowStyle[&quot;fillColor&quot;] = rowStyle[&quot;evenFill&quot;];
+		
+		if (rowStyle[&quot;evenLaneFill&quot;])
+			rowStyle[&quot;swimlaneFillColor&quot;] = rowStyle[&quot;evenLaneFill&quot;];
+	}
+	
+	var height = parseFloat(rowStyle[&quot;height&quot;]);
+	cell.geometry = new mxGeometry(xShift.lx, y, parent.geometry.width - xShift.lx, height);
+
+	var lblObj = row[&quot;Labels&quot;];
+	
+	if (lblObj)
+		this.addLabels(cell, lblObj, rowStyle)
+	
+	cell.style = this.styleMap2Str(rowStyle);
+	parent.insert(cell);
+	
+	var subRow = row[&quot;y:Row&quot;];
+
+	xShift.lx = 0;
+	if (rowStyle[&quot;startSize&quot;])
+	{
+		xShift.lx = parseFloat(rowStyle[&quot;startSize&quot;]);
+		xShift.x += xShift.lx;
+	}
+	
+	var initX = xShift.x, maxX = xShift.x, initLx = xShift.lx;
+	var subY = 0;
+	if (subRow)
+	{
+		if (!(subRow instanceof Array))
+			subRow = [subRow];
+		
+		for (var i = 0; i &lt; subRow.length; i++)
+		{
+			xShift.x = initX;
+			xShift.lx = initLx;
+			subY = this.addRow(subRow[i], cell, (i &amp; 1), subY, xShift, rowMapping, defRowStyle);
+			maxX = Math.max(xShift.x, maxX) 
+		}
+	}
+	xShift.x = maxX;
+	height = Math.max(height, subY);
+	cell.geometry.height = height;
+	y += height;
+
+	return y;
+}
+
+mxGraphMlCodec.prototype.addColumn = function(column, parent, odd, x, yShift, colMapping, defColStyle)
+{
+	var cell = new mxCell();
+	cell.vertex = true;
+	var colStyle = mxUtils.clone(defColStyle);
+	this.mapObject(column, colMapping, colStyle);
+	
+	if (odd)
+	{
+		if (colStyle[&quot;oddFill&quot;]) 
+			colStyle[&quot;fillColor&quot;] = colStyle[&quot;oddFill&quot;];
+		
+		if (colStyle[&quot;oddLaneFill&quot;])
+			colStyle[&quot;swimlaneFillColor&quot;] = colStyle[&quot;oddLaneFill&quot;];
+	}
+	else
+	{
+		if (colStyle[&quot;evenFill&quot;]) 
+			colStyle[&quot;fillColor&quot;] = colStyle[&quot;evenFill&quot;];
+		
+		if (colStyle[&quot;evenLaneFill&quot;])
+			colStyle[&quot;swimlaneFillColor&quot;] = colStyle[&quot;evenLaneFill&quot;];
+	}
+
+	var width = parseFloat(colStyle[&quot;width&quot;]);
+	cell.geometry = new mxGeometry(x, yShift, width, parent.geometry.height - yShift);
+
+	var lblObj = column[&quot;Labels&quot;];
+	
+	if (lblObj)
+		this.addLabels(cell, lblObj, colStyle)
+
+	cell.style = this.styleMap2Str(colStyle);
+	parent.insert(cell);
+	
+	var subCol = column[&quot;y:Column&quot;];
+	
+	var subX = 0;
+	if (subCol)
+	{
+		if (!(subCol instanceof Array))
+			subCol = [subCol];
+		
+		for (var i = 0; i &lt; subCol.length; i++)
+		{
+			subX = this.addColumn(subCol[i], cell, (i &amp; 1), subX, yShift, colMapping, defColStyle);
+		}
+	}
+	width = Math.max(width, subX);
+	cell.geometry.width = width;
+	x += width;
+	return x;
+}
+
+mxGraphMlCodec.prototype.handleFixedRatio = function (node, styleMap)
+{
+	var shape = styleMap[&quot;shape&quot;];
+	var geo = node.geometry;
+	
+	if (shape &amp;&amp; geo)
+	{
+		if (shape.indexOf(&quot;;aspect=fixed&quot;) &gt; 0) 
+		{
+			
+			var min = Math.min(geo.height, geo.width);
+			
+			if (min == geo.height) //fix coordinates
+			{
+				geo.x += (geo.width - min) / 2;
+			}
+			
+			geo.height = min;
+			geo.width = min;
+		}
+		else if (shape.indexOf(&quot;;rotation=90&quot;) &gt; 0 || shape.indexOf(&quot;;rotation=-90&quot;) &gt; 0 )
+		{
+			var h = geo.height;
+			var w = geo.width;
+			geo.height = w;
+			geo.width = h;
+			var diff = (h - w) / 2;
+			geo.x -= diff;
+			geo.y += diff;
+		}
+	}
+};
+
+mxGraphMlCodec.prototype.addNodeGeo = function (node, geoObj, dx, dy) 
+{
+	var geoRect = geoObj[mxGraphMlConstants.RECT];
+
+	var x = 0, y = 0, w = 30, h = 30; //some node has no geometry, this is the default
+	if (geoRect)
+	{
+		x = geoRect[mxGraphMlConstants.X];
+		y = geoRect[mxGraphMlConstants.Y];
+		w = geoRect[mxGraphMlConstants.WIDTH];
+		h = geoRect[mxGraphMlConstants.HEIGHT];
+	}
+	else
+	{
+		x = geoObj[mxGraphMlConstants.X_L] || x;
+		y = geoObj[mxGraphMlConstants.Y_L] || y;
+		w = geoObj[mxGraphMlConstants.WIDTH_L] || w;
+		h = geoObj[mxGraphMlConstants.HEIGHT_L] || h;
+	}
+	
+	var geo = node.geometry;
+	geo.x = parseFloat(x) - dx;
+	geo.y = parseFloat(y) - dy;
+	geo.width = parseFloat(w);
+	geo.height = parseFloat(h);
+};
+
+//TODO handle other ports cases
+mxGraphMlCodec.prototype.importEdge = function (edgeElement, graph, parent, dx, dy)
+{
+	var data = this.getDirectChildNamedElements(edgeElement, mxGraphMlConstants.DATA);
+	var e;
+	var id = edgeElement.getAttribute(mxGraphMlConstants.ID);
+	var srcId = edgeElement.getAttribute(mxGraphMlConstants.EDGE_SOURCE);
+	var trgId = edgeElement.getAttribute(mxGraphMlConstants.EDGE_TARGET);
+	var srcPortId = edgeElement.getAttribute(mxGraphMlConstants.EDGE_SOURCE_PORT);
+	var trgPortId = edgeElement.getAttribute(mxGraphMlConstants.EDGE_TARGET_PORT);
+	
+	var src = this.nodesMap[srcId];
+	var trg = this.nodesMap[trgId];
+	
+	var edge = graph.insertEdge(parent, null, &quot;&quot;, src.node, trg.node, &quot;graphMLId=&quot; + id);
+	var style = {graphMlID: id};
+	
+	for (var i = 0; i &lt; data.length; i++)
+	{
+		var d = data[i];
+		var dataObj = this.dataElem2Obj(d);
+		var desktopEdgeObj = dataObj[&quot;y:PolyLineEdge&quot;] || dataObj[&quot;y:GenericEdge&quot;] || 
+							dataObj[&quot;y:ArcEdge&quot;] || dataObj[&quot;y:BezierEdge&quot;] || 
+							dataObj[&quot;y:QuadCurveEdge&quot;] || dataObj[&quot;y:SplineEdge&quot;];
+		
+		if (dataObj.key == this.edgesKeys[mxGraphMlConstants.EDGE_GEOMETRY].key) 
+		{
+			this.addEdgeGeo(edge, dataObj, dx, dy);
+		} 
+		else if (dataObj.key == this.edgesKeys[mxGraphMlConstants.EDGE_STYLE].key) 
+		{
+//			console.log(dataObj);
+			this.addEdgeStyle(edge, dataObj, style);
+		}
+		else if (dataObj.key == this.edgesKeys[mxGraphMlConstants.EDGE_LABELS].key) 
+		{
+			this.addLabels(edge, dataObj, style, graph);
+		}
+		else if (desktopEdgeObj)
+		{
+			this.addEdgeStyle(edge, dataObj, style);
+			var absPoints = this.addEdgePath(edge, desktopEdgeObj[&quot;y:Path&quot;], style, dx, dy);
+			
+			if (desktopEdgeObj[&quot;y:EdgeLabel&quot;])
+				this.addLabels(edge, desktopEdgeObj[&quot;y:EdgeLabel&quot;], style, graph, absPoints);
+			
+			//special case for link edge
+			//TODO link doesn&#039;t support arrow head types
+			if (style[&quot;shape&quot;] != null &amp;&amp; style[&quot;shape&quot;].indexOf(&quot;link&quot;) == 0)
+			{
+				style[&quot;width&quot;] = style[&quot;strokeWidth&quot;];
+				style[&quot;strokeWidth&quot;] = 1;
+			}
+		}
+	}
+	
+	//handle simple ports (exit/entry[X/Y])
+	if (src.ports &amp;&amp; srcPortId)
+	{
+		var srcPort = src.ports[srcPortId];
+		
+		if (srcPort.pos)
+		{
+			style[&quot;exitX&quot;] = srcPort.pos.x;
+			style[&quot;exitY&quot;] = srcPort.pos.y;
+		}
+	}
+
+	if (trg.ports &amp;&amp; trgPortId)
+	{
+		var trgPort = trg.ports[trgPortId];
+		
+		if (trgPort.pos)
+		{
+			style[&quot;entryX&quot;] = trgPort.pos.x;
+			style[&quot;entryY&quot;] = trgPort.pos.y;
+		}
+	}
+
+	edge.style = this.styleMap2Str(style);
+
+	return edge;
+};
+
+mxGraphMlCodec.prototype.addEdgeGeo = function (edge, geoObj, dx, dy) 
+{
+	var list = geoObj[mxGraphMlConstants.Y_BEND];
+	
+	if (list)
+	{
+		var points = [];
+		
+		for (var i = 0; i &lt; list.length; i++) {
+			var pointStr = list[i][mxGraphMlConstants.LOCATION];
+			
+			if (pointStr) {
+				var xy = pointStr.split(&#039;,&#039;);
+				points.push(new mxPoint(parseFloat(xy[0]) - dx, parseFloat(xy[1]) - dy));
+			}
+		}
+		
+		edge.geometry.points = points;
+	}
+};
+
+mxGraphMlCodec.prototype.addEdgePath = function (edge, pathObj, style, dx, dy) 
+{
+	var absPoints = [];
+	if (pathObj)
+	{
+		var srcX = parseFloat(pathObj.sx), srcY = parseFloat(pathObj.sy),
+				trgX = parseFloat(pathObj.tx), trgY = parseFloat(pathObj.ty);
+		
+		var srcGeo = edge.source.geometry;
+		if (srcX != 0 || srcY != 0)
+		{
+			style[&quot;exitX&quot;] = (srcX + srcGeo.width/2) / srcGeo.width;
+			style[&quot;exitY&quot;] = (srcY + srcGeo.height/2) / srcGeo.height;
+			absPoints.push(new mxPoint(srcGeo.x + style[&quot;exitX&quot;] * srcGeo.width - dx, srcGeo.y + style[&quot;exitY&quot;] * srcGeo.height - dy));
+		}
+		else 
+		{
+			absPoints.push(new mxPoint(srcGeo.x + srcGeo.width/2 - dx, srcGeo.y + srcGeo.height/2 - dy));
+		}
+
+		var endP = null;
+		var trgGeo = edge.target.geometry;
+		if (trgX != 0 || trgY != 0)
+		{
+			style[&quot;entryX&quot;] = (trgX + trgGeo.width/2) / trgGeo.width;
+			style[&quot;entryY&quot;] = (trgY + trgGeo.height/2) / trgGeo.height;
+			endP = new mxPoint(trgGeo.x + style[&quot;entryX&quot;] * trgGeo.width - dx, trgGeo.y + style[&quot;entryY&quot;] * trgGeo.height - dy);
+		}
+		else 
+		{
+			endP = new mxPoint(trgGeo.x + trgGeo.width/2 - dx, trgGeo.y + trgGeo.height/2 - dy);
+		}
+
+		var list = pathObj[&quot;y:Point&quot;];
+		
+		if (list)
+		{
+			if (!(list instanceof Array)) 
+			{
+				list = [list];
+			}
+			
+			var points = [];
+			
+			for (var i = 0; i &lt; list.length; i++) 
+			{
+				var p = new mxPoint(parseFloat(list[i].x) - dx, parseFloat(list[i].y) - dy)
+				points.push(p);
+				absPoints.push(p);
+			}
+			
+			edge.geometry.points = points;
+		}
+		
+		absPoints.push(endP);
+	}
+	return absPoints;
+};
+
+//TODO improve similarity handling
+mxGraphMlCodec.prototype.addEdgeStyle = function (edge, styleObj, styleMap) 
+{
+	var dashStyleFn = function(val, map)
+	{
+		map[&quot;dashed&quot;] = 1;
+		//map[&quot;fixDash&quot;] = 1;
+		var pattern = null;
+		switch(val)
+		{
+			case &quot;DashDot&quot;:
+				pattern = &quot;3 1 1 1&quot;;
+			break;
+			case &quot;Dot&quot;:
+				pattern = &quot;1 1&quot;;
+			break;
+			case &quot;DashDotDot&quot;:
+				pattern = &quot;3 1 1 1 1 1&quot;;
+			break;
+			case &quot;Dash&quot;:
+				pattern = &quot;3 1&quot;;
+			break;
+			default:
+				pattern = val.replace(/0/g, &#039;1&#039;);
+		}
+		
+		if (pattern)
+		{
+			//Some patterns in graphML has only one number
+			if (pattern.indexOf(&quot; &quot;) &lt; 0) 
+			{
+				pattern = pattern + &quot; &quot; + pattern;
+			}
+			map[&quot;dashPattern&quot;] = pattern;
+		}
+	};
+	
+	var desktopLineStyleFn = function(val, map)
+	{
+		if (val != &quot;line&quot;)
+			map[&quot;dashed&quot;] = 1;
+		
+		var pattern = null;
+		
+		switch(val)
+		{
+			case &quot;dashed&quot;:
+				pattern = &quot;3 1&quot;;
+			break;
+			case &quot;dotted&quot;:
+				pattern = &quot;1 1&quot;;
+			break;
+			case &quot;dashed_dotted&quot;:
+				pattern = &quot;3 2 1 2&quot;;
+			break;	
+		}
+		
+		if (pattern)
+			map[&quot;dashPattern&quot;] = pattern;
+	};
+	
+	// can be mapping to WHITE =&gt; empty, BLACK =&gt; filled
+	var endArrowFill = function(val, map)
+	{
+		map[&quot;endFill&quot;] = (val == &#039;WHITE&#039; || val.indexOf(&quot;white_&quot;) == 0 || val.indexOf(&quot;transparent_&quot;) == 0)? &quot;0&quot; : &quot;1&quot;; 
+	};
+	// can be mapping to WHITE =&gt; empty, BLACK =&gt; filled
+	var startArrowFill = function(val, map)
+	{
+		map[&quot;startFill&quot;] = (val == &#039;WHITE&#039; || val.indexOf(&quot;white_&quot;) == 0 || val.indexOf(&quot;transparent_&quot;) == 0)? &quot;0&quot; : &quot;1&quot;; 
+	};
+
+	var startArrow = function(val, map)
+	{
+		map[&quot;startArrow&quot;] = mxGraphMlArrowsMap[val] || &quot;classic&quot;;
+		startArrowFill(val, map);
+	};
+	
+	var endArrow = function(val, map)
+	{
+		map[&quot;endArrow&quot;] = mxGraphMlArrowsMap[val] || &quot;classic&quot;;
+		endArrowFill(val, map);
+	}
+	
+	var desktopEdge = {
+		&quot;defaults&quot; : 
+		{
+			&quot;rounded&quot;: 0,
+			&quot;endArrow&quot;: &quot;none&quot;
+		},
+		&quot;configuration&quot;: {key: &quot;shape&quot;, mod: &quot;shape&quot;},
+		&quot;y:LineStyle&quot;: {
+			&quot;color&quot;: {key: &quot;strokeColor&quot;, mod: &quot;color&quot;},
+			&quot;type&quot;: desktopLineStyleFn,
+			&quot;width&quot;: &quot;strokeWidth&quot;
+		},
+		&quot;y:Arrows&quot;: {
+			&quot;source&quot;: startArrow,
+			&quot;target&quot;: endArrow
+		},
+		&quot;y:BendStyle&quot;: {
+			&quot;smoothed&quot;: {key: &quot;rounded&quot;, mod: &quot;bool&quot;}
+		}
+	};
+	
+	var arcEdgeStyle = mxUtils.clone(desktopEdge);
+	arcEdgeStyle[&quot;defaults&quot;][&quot;curved&quot;] = &quot;1&quot;;
+	
+	this.mapObject(styleObj, {
+		&quot;yjs:PolylineEdgeStyle&quot;: {
+			&quot;defaults&quot; : 
+			{
+				&quot;endArrow&quot;: &quot;none&quot;,
+				&quot;rounded&quot;: 0
+			},
+			&quot;smoothingLength&quot;: function(val, map)
+			{
+				map[&quot;rounded&quot;] = (val &amp;&amp; parseFloat(val) &gt; 0)? &quot;1&quot; : &quot;0&quot;; 
+			},
+			&quot;stroke&quot;: {key: &quot;strokeColor&quot;, mod: &quot;color&quot;},
+			&quot;stroke.yjs:Stroke&quot;:
+			{
+				&quot;dashStyle&quot;: dashStyleFn,
+				&quot;dashStyle.yjs:DashStyle.dashes&quot;: dashStyleFn,
+				&quot;fill&quot;: {key: &quot;strokeColor&quot;, mod: &quot;color&quot;},
+				&quot;fill.yjs:SolidColorFill.color&quot;: {key: &quot;strokeColor&quot;, mod: &quot;color&quot;},
+				//&quot;lineCap&quot;: &quot;&quot;, //??
+				&quot;thickness.sys:Double&quot;: &quot;strokeWidth&quot;,
+				&quot;thickness&quot;: &quot;strokeWidth&quot;
+			},
+			&quot;targetArrow&quot;: {key: &quot;endArrow&quot;, mod: &quot;arrow&quot;},
+			&quot;targetArrow.yjs:Arrow&quot;: {
+				&quot;defaults&quot; : 
+				{
+					&quot;endArrow&quot;: &quot;classic&quot;,
+					&quot;endFill&quot;: &quot;1&quot;,
+					&quot;endSize&quot;: &quot;6&quot;
+				},
+//				cropLength: &quot;&quot;, //??
+				&quot;fill&quot;: endArrowFill,
+				&quot;scale&quot;: {key: &quot;endSize&quot;, mod: &quot;scale&quot;, scale: 5},
+//				stroke: &quot;&quot;, //?
+				&quot;type&quot;: {key: &quot;endArrow&quot;, mod: &quot;arrow&quot;}
+			},
+			&quot;sourceArrow&quot;: {key: &quot;startArrow&quot;, mod: &quot;arrow&quot;},
+			&quot;sourceArrow.yjs:Arrow&quot;: {
+				&quot;defaults&quot; : 
+				{
+					&quot;startArrow&quot;: &quot;classic&quot;,
+					&quot;startFill&quot;: &quot;1&quot;,
+					&quot;startSize&quot;: &quot;6&quot;
+				},
+//				cropLength: &quot;&quot;, //??
+				&quot;fill&quot;: startArrowFill,
+				&quot;scale&quot;: {key: &quot;startSize&quot;, mod: &quot;scale&quot;, scale: 5},
+//				stroke: &quot;&quot;, //?
+				&quot;type&quot;: {key: &quot;startArrow&quot;, mod: &quot;arrow&quot;}
+			}
+		},
+		&quot;y:PolyLineEdge&quot;: desktopEdge,
+		&quot;y:GenericEdge&quot;: desktopEdge,
+		//We approximate all curved types with curve
+		&quot;y:ArcEdge&quot;: arcEdgeStyle,
+		&quot;y:BezierEdge&quot;: arcEdgeStyle,
+		&quot;y:QuadCurveEdge&quot;: arcEdgeStyle,
+		&quot;y:SplineEdge&quot;: arcEdgeStyle
+	}, styleMap);
+};
+
+//TODO label offset
+//TODO labels object is over swim lanes collapse button
+mxGraphMlCodec.prototype.addLabels = function (node, lblObj, nodeStyle, graph, absPoints) 
+{
+	var lastChildIndex = node.getChildCount();
+	var lblList = lblObj[mxGraphMlConstants.Y_LABEL] || lblObj;
+	
+	var lblTxts = [];
+	var lblStyles = [];
+	var lblLayouts = [];
+	
+	if (lblList)
+	{
+		if (!(lblList instanceof Array)) 
+		{
+			lblList = [lblList];
+		}
+		
+		for (var i = 0; i &lt; lblList.length; i++)
+		{
+			var lbl = lblList[i];
+//			console.log(lbl);
+			var styleMap = {};
+			var txt = lbl[mxGraphMlConstants.TEXT] || lbl;
+			
+			if (txt) txt = txt[&quot;#text&quot;];
+			
+			//layout
+			var layout = lbl[mxGraphMlConstants.LAYOUTPARAMETER] || lbl || {};
+			
+			//style
+			var fontStyleFn = function(val, map) 
+			{
+				if (val)
+				{
+					val = val.toUpperCase();
+				}
+				
+				var style = map[&quot;fontStyle&quot;] || 0;
+				
+				switch(val)
+				{
+					case &quot;ITALIC&quot;:
+						style = style | 2;
+					break;
+					case &quot;BOLD&quot;:
+						style = style | 1;
+					break;
+					case &quot;UNDERLINE&quot;:
+						style = style | 4;
+					break;
+				}
+				map[&quot;fontStyle&quot;] = style;
+			};
+
+			var underlineStyleFn = function(val, map) 
+			{
+				var style = map[&quot;fontStyle&quot;] || 0;
+				
+				if (val == &quot;true&quot;)
+				{
+					style = style | 4;
+				}
+				map[&quot;fontStyle&quot;] = style;
+			};
+
+			this.mapObject(lbl, {
+				&quot;Style.yjs:DefaultLabelStyle&quot;:
+					{
+						&quot;backgroundFill&quot; : {key: &quot;labelBackgroundColor&quot;, mod: &quot;color&quot;},
+						&quot;backgroundFill.yjs:SolidColorFill.color&quot; : {key: &quot;labelBackgroundColor&quot;, mod: &quot;color&quot;},
+						&quot;backgroundStroke&quot; : {key: &quot;labelBorderColor&quot;, mod: &quot;color&quot;},
+						&quot;backgroundStroke.yjs:Stroke.fill&quot; : {key: &quot;labelBorderColor&quot;, mod: &quot;color&quot;},
+						&quot;textFill&quot;: {key: &quot;fontColor&quot;, mod: &quot;color&quot;},
+						&quot;textFill.yjs:SolidColorFill.color&quot;: {key: &quot;fontColor&quot;, mod: &quot;color&quot;},
+						&quot;textSize&quot;: &quot;fontSize&quot;,
+						&quot;horizontalTextAlignment&quot;: &quot;align&quot;,
+						&quot;verticalTextAlignment&quot;: &quot;verticalAlign&quot;,
+						&quot;wrapping&quot;: function(val, map) 
+						{
+							//TODO mxGraph has a single type of wrapping only
+							if (val)
+								map[&quot;whiteSpace&quot;] = &quot;wrap&quot;;
+						},
+						&quot;font.yjs:Font&quot;: 
+							{
+								&quot;fontFamily&quot;: &quot;fontFamily&quot;,
+								&quot;fontSize&quot;: &quot;fontSize&quot;,
+								&quot;fontStyle&quot;: fontStyleFn,
+								&quot;fontWeight&quot;: fontStyleFn,
+								&quot;textDecoration&quot;: fontStyleFn
+							}
+					},
+				&quot;Style.y:VoidLabelStyle&quot;: function (val, map)
+					{
+						map[&quot;VoidLbl&quot;] = true;
+					},
+				//Desktop format
+					//hasBackgroundColor=&quot;false&quot; hasLineColor=&quot;false&quot; hasText=&quot;false&quot; height=&quot;4.0&quot; iconTextGap=&quot;4&quot; modelName=&quot;custom&quot; visible=&quot;true&quot; width=&quot;4.0&quot; x=&quot;26.277050018310547&quot; y=&quot;70.76200103759766&quot;&gt;
+				&quot;alignment&quot;: &quot;align&quot;,
+				//&quot;autoSizePolicy&quot;: &quot;&quot;,//??
+				&quot;fontFamily&quot;: &quot;fontFamily&quot;,
+				&quot;fontSize&quot;: &quot;fontSize&quot;,
+				&quot;fontStyle&quot;: fontStyleFn,
+				&quot;underlinedText&quot;: underlineStyleFn,
+				&quot;horizontalTextPosition&quot;: &quot;&quot;,//?? how this is compared to alignment?
+				&quot;textColor&quot;: {key: &quot;fontColor&quot;, mod: &quot;color&quot;},
+				&quot;verticalTextPosition&quot;: &quot;verticalAlign&quot;,
+				&quot;hasText&quot;: {key: &quot;hasText&quot;, mod: &quot;bool&quot;},
+				&quot;rotationAngle&quot;: &quot;rotation&quot;
+			}, styleMap);
+
+			if (!styleMap[&quot;VoidLbl&quot;] &amp;&amp; styleMap[&quot;hasText&quot;] != &quot;0&quot;)
+			{
+				lblTxts.push(txt);
+				lblStyles.push(styleMap);
+				lblLayouts.push(layout);
+			}
+		}
+	}
+	
+	//TODO Use the style map with defaults to change the style
+	for (var i = 0; i &lt; lblTxts.length; i++)
+	{
+		if (lblTxts[i])
+		{
+			if (lblLayouts[i] &amp;&amp; lblLayouts[i][&quot;bpmn:ParticipantParameter&quot;])
+				continue;
+			
+			lblTxts[i] = mxUtils.htmlEntities(lblTxts[i], false).replace(/\n/g, &#039;&lt;br/&gt;&#039;);
+			var geo = node.geometry;
+
+			var lblCell = new mxCell(lblTxts[i], new mxGeometry(0, 0, geo.width, geo.height), &#039;text;html=1;spacing=0;&#039; + this.styleMap2Str(lblStyles[i]));
+			lblCell.vertex = true;
+			node.insert(lblCell, lastChildIndex);
+			var lGeo = lblCell.geometry;
+
+//			console.log(lblTxts[i]);
+//			console.log(lblLayouts[i]);
+			
+			if (lblLayouts[i][&quot;y:RatioAnchoredLabelModelParameter&quot;])
+			{
+				var strSize = mxUtils.getSizeForString(lblTxts[i], lblStyles[i][&quot;fontSize&quot;], lblStyles[i][&quot;fontFamily&quot;]);
+				var offsetStr = lblLayouts[i][&quot;y:RatioAnchoredLabelModelParameter&quot;][&quot;LayoutOffset&quot;];
+				
+				if (offsetStr)
+				{
+					var parts = offsetStr.split(&#039;,&#039;);
+					lGeo.x = parseFloat(parts[0]);
+					lGeo.y = parseFloat(parts[1]);
+					lGeo.width = strSize.width;
+					lGeo.height = strSize.height;
+					lblCell.style += &quot;;spacingTop=-4;&quot;;
+				}
+				else
+				{
+					//TODO map there?
+					var lblRatio = lblLayouts[i][&quot;y:RatioAnchoredLabelModelParameter&quot;][&quot;LabelRatio&quot;];
+					var layoutRatio = lblLayouts[i][&quot;y:RatioAnchoredLabelModelParameter&quot;][&quot;LayoutRatio&quot;];
+					
+					lblCell.style += &quot;;align=center;&quot;;
+				}
+			}
+			else if (lblLayouts[i][&quot;y:InteriorLabelModel&quot;]) //TODO this is probably can be done by setting the value?
+			{
+				//TODO merge with next one if they are identical in all cases!
+				switch (lblLayouts[i][&quot;y:InteriorLabelModel&quot;])
+				{
+					case &quot;Center&quot;:
+						lblCell.style += &quot;;verticalAlign=middle;&quot;;
+					break;
+					case &quot;North&quot;:
+						lGeo.height = 1;
+					break;
+					case &quot;West&quot;:
+						lGeo.width = geo.height;
+						lGeo.height = geo.width;
+						//-90 rotation of origin
+						lGeo.y = geo.height /2 - geo.width /2;
+						lGeo.x = -lGeo.y;
+						lblCell.style += &quot;;rotation=-90&quot;;
+					break;
+				}
+				lblCell.style += &quot;;align=center;&quot;;
+			}
+			//TODO Spacing still need to be adjusted
+			else if (lblLayouts[i][&quot;y:StretchStripeLabelModel&quot;] || lblLayouts[i][&quot;y:StripeLabelModelParameter&quot;])
+			{
+				//TODO merge with previous one if they are identical in all cases!
+				var dir = lblLayouts[i][&quot;y:StretchStripeLabelModel&quot;] || lblLayouts[i][&quot;y:StripeLabelModelParameter&quot;][&quot;Position&quot;];
+				switch (dir)
+				{
+					case &quot;North&quot;:
+						lGeo.height = 1;
+					break;
+					case &quot;West&quot;:
+						lGeo.width = geo.height;
+						lGeo.height = geo.width;
+						//-90 rotation of origin
+						lGeo.y = geo.height /2 - geo.width /2;
+						lGeo.x = -lGeo.y;
+						lblCell.style += &quot;;rotation=-90;&quot;;
+					break;
+				}
+			}
+			else if (lblLayouts[i][&quot;bpmn:PoolHeaderLabelModel&quot;])
+			{
+				//TODO merge with previous one if they are identical in all cases!
+				switch (lblLayouts[i][&quot;bpmn:PoolHeaderLabelModel&quot;])
+				{
+					case &quot;NORTH&quot;:
+						lGeo.height = 1;
+					break;
+					case &quot;WEST&quot;:
+						lGeo.width = geo.height;
+						lGeo.height = geo.width;
+						//-90 rotation of origin
+						lGeo.y = geo.height /2 - geo.width /2;
+						lGeo.x = -lGeo.y;
+						lblCell.style += &quot;;rotation=-90;&quot;;
+					break;
+				}
+				lblCell.style += &quot;;align=center;&quot;;
+			}
+			else if (lblLayouts[i][&quot;y:InteriorStretchLabelModelParameter&quot;])
+			{
+				//TODO probably mapObject is needed in this method in general
+				try {
+					var insets = lblLayouts[i][&quot;y:InteriorStretchLabelModelParameter&quot;][&quot;Model&quot;][&quot;y:InteriorStretchLabelModel&quot;][&quot;Insets&quot;];
+					//TODO how to map it?
+				} catch(e) {
+					//Ignore
+				}
+				lblCell.style += &quot;;align=center;&quot;;
+			}
+			else if (lblLayouts[i][&quot;y:ExteriorLabelModel&quot;])
+			{
+				var lblPos;
+				switch (lblLayouts[i][&quot;y:ExteriorLabelModel&quot;])
+				{
+					case &quot;East&quot;:
+						lblCell.style += &quot;;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;&quot;;
+					break;
+					case &quot;South&quot;:
+						lblCell.style += &quot;;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;&quot;;
+					break;
+					case &quot;North&quot;:
+						lblCell.style += &quot;;labelPosition=center;verticalLabelPosition=top;align=center;verticalAlign=bottom;&quot;
+					break;
+					case &quot;West&quot;:
+						lblCell.style += &quot;;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;&quot;;
+					break;
+				}
+			}
+			else if (lblLayouts[i][&quot;y:FreeEdgeLabelModelParameter&quot;])
+			{
+				lGeo.relative = true;
+				lGeo.adjustIt = true;
+				var layout = lblLayouts[i][&quot;y:FreeEdgeLabelModelParameter&quot;];
+				var ratio = layout[&quot;Ratio&quot;];
+				var distance = layout[&quot;Distance&quot;];
+				var angle = layout[&quot;Angle&quot;];
+
+				//The geometry is adjusted after finishing the graph import (in decode method)
+				if (ratio)
+				{
+					lGeo.x = parseFloat(ratio);
+				}
+				
+				if (distance)
+				{
+					lGeo.y = parseFloat(distance);
+				}
+				
+				if (angle)
+				{
+					lblCell.style += &quot;;rotation=&quot; + (parseFloat(angle) * (180 / Math.PI));
+				}
+				
+				lblCell.style += &quot;;verticalAlign=middle;&quot;;
+			}
+			else if (lblLayouts[i][&quot;y:EdgePathLabelModelParameter&quot;])
+			{
+				lGeo.relative = true;
+				var layout = lblLayouts[i][&quot;y:EdgePathLabelModelParameter&quot;];
+				var side = layout[&quot;SideOfEdge&quot;];
+				var ratio = layout[&quot;SegmentRatio&quot;];
+
+				lGeo.x = ratio? (2 * parseFloat(ratio) - 1) : 0;
+
+				//TODO this is an approximation, it needs to take into consideration the segment direction and label size
+				if (side)
+				{
+					switch(side) 
+					{
+						case &quot;RightOfEdge&quot;:
+							lGeo.y = -15;
+						break;
+						case &quot;LeftOfEdge&quot;:
+							lGeo.y = 15;
+						break;
+					}
+				}
+
+				lblCell.style += &quot;;verticalAlign=middle;&quot;;
+				
+			}
+			else //Desktop format or edge
+			{
+				var lblX = parseFloat(lblLayouts[i][&quot;x&quot;]),
+					lblY = parseFloat(lblLayouts[i][&quot;y&quot;]);
+				
+				if (lblLayouts[i][&quot;width&quot;]) lGeo.width = parseFloat(lblLayouts[i][&quot;width&quot;]);
+				if (lblLayouts[i][&quot;height&quot;]) lGeo.height = parseFloat(lblLayouts[i][&quot;height&quot;]);
+
+				if (node.edge) 
+				{
+					lGeo.relative = true;
+					lGeo.x = 0;
+					lGeo.y = 0;
+					var dx = node.source.geometry.getCenterX() - node.target.geometry.getCenterX(); 
+					var dy = node.source.geometry.getCenterY() - node.target.geometry.getCenterY();
+					
+					if (graph &amp;&amp; absPoints &amp;&amp; lblLayouts[i][&quot;y:ModelParameter&quot;] &amp;&amp; lblLayouts[i][&quot;y:ModelParameter&quot;][&quot;y:SmartEdgeLabelModelParameter&quot;])
+					{
+						var layout = lblLayouts[i][&quot;y:ModelParameter&quot;][&quot;y:SmartEdgeLabelModelParameter&quot;];
+						var angle = parseFloat(layout.angle), distance = parseFloat(layout.distance), distanceToCenter = layout.distanceToCenter == &quot;true&quot;,
+							position = layout.position, ratio = parseFloat(layout.ratio), segment = parseFloat(layout.segment);
+						
+						var eState = new mxCellState();
+						eState.absolutePoints = absPoints;
+						graph.view.updateEdgeBounds(eState);
+						var sign = (position == &quot;left&quot;? 1 : -1);
+
+						if (segment == -1 &amp;&amp; angle == 6.283185307179586)
+						{
+							//TODO FIXME this case is still incorrect
+							lGeo.offset = new mxPoint(Math.abs(ratio) &lt; 1? eState.segments[0] * ratio : ratio, sign * distance);
+						}
+						else 
+						{
+							if (segment == -1) segment = 0;
+							//get the edge cell state to get the segments
+							var dist = 0;
+							for (var k = 0; k &lt; segment; k++)
+							{
+								dist += eState.segments[k];
+							}
+							
+							dist += eState.segments[segment] * ratio;
+							lGeo.x = 2 * (dist / eState.length) - 1;
+							lGeo.y = ((position == &quot;center&quot;? 0 : distance) + lGeo.height/2 * sign * (Math.abs(dx) &gt; Math.abs(dy)? 1 : -1)) * sign;
+						}
+					}
+					else if (!isNaN(lblX) &amp;&amp; !isNaN(lblY)) 
+					{
+						lGeo.offset = new mxPoint(lblX + dx/2 + (dx &gt; 0? -lGeo.width : lGeo.width), lblY);
+					}
+				}
+				else
+				{
+					lGeo.x = lblX || 0;
+					lGeo.y = lblY || 0;
+				}
+			}
+			
+			if (lblStyles[i][&quot;rotation&quot;]) 
+			{
+				//TODO fix label coordinates after rotation 
+				//console.log(lGeo, lblStyles[i][&quot;rotation&quot;]);
+				if (lblStyles[i][&quot;rotation&quot;] == 270)
+				{
+					lGeo.x -= lGeo.height/2;
+				}
+			}
+		}
+	}
+	return {lblTxts: lblTxts, lblStyles: lblStyles};
+};
+
+
+mxGraphMlCodec.prototype.processPage = function (graph, pageIndex)
+{
+    var codec = new mxCodec();
+    var node = codec.encode(graph.getModel());
+    node.setAttribute(&quot;style&quot;, &quot;default-style2&quot;);
+    var modelString = mxUtils.getXml(node);
+    
+    var output = &quot;&lt;diagram name=\&quot;Page &quot; + pageIndex + &quot;\&quot;&gt;&quot;;
+    output += Graph.compress(modelString);
+    output += &quot;&lt;/diagram&gt;&quot;;
+    return output;
+
+};
+
+//These are the same as mxVsdxUtils functions, but added here to be self-dependent
+/**
+ * Returns a collection of direct child Elements that match the specified tag name
+ * @param {*} parent the parent whose direct children will be processed
+ * @param {string} name the child tag name to match
+ * @return {*[]} a collection of matching Elements
+ */
+mxGraphMlCodec.prototype.getDirectChildNamedElements = function (parent, name) {
+    var result = ([]);
+    for (var child = parent.firstChild; child != null; child = child.nextSibling) {
+        if ((child != null &amp;&amp; (child.nodeType == 1)) &amp;&amp; (name == child.nodeName)) {
+            /* add */ result.push(child);
+        }
+    }
+    ;
+    return result;
+};
+
+mxGraphMlCodec.prototype.getDirectFirstChildNamedElements = function (parent, name) {
+    for (var child = parent.firstChild; child != null; child = child.nextSibling) {
+        if ((child != null &amp;&amp; (child.nodeType == 1)) &amp;&amp; (name == child.nodeName)) {
+            return child;
+        }
+    }
+    ;
+    return null;
+};
+
+/**
+ * Returns a collection of direct child Elements
+ * @param {*} parent the parent whose direct children will be processed
+ * @return {*[]} a collection of all child Elements
+ */
+mxGraphMlCodec.prototype.getDirectChildElements = function (parent) {
+    var result = ([]);
+    for (var child = parent.firstChild; child != null; child = child.nextSibling) {
+        if (child != null &amp;&amp; (child.nodeType == 1)) {
+            /* add */ result.push(child);
+        }
+    }
+    ;
+    return result;
+};
+/**
+ * Returns the first direct child Element
+ * @param {*} parent the parent whose direct first child will be processed
+ * @return {*} the first child Element
+ */
+mxGraphMlCodec.prototype.getDirectFirstChildElement = function (parent) {
+    for (var child = parent.firstChild; child != null; child = child.nextSibling) {
+        if (child != null &amp;&amp; (child.nodeType == 1)) {
+            return child;
+        }
+    }
+    ;
+    return null;
+};
+
+var mxGraphMlConverters = //TODO this code is taken from yworks.com. Is that OK?
+{
+	&quot;orgchartconverters.linebreakconverter&quot;: function(e, t) {
+		if (typeof e === &quot;string&quot;) {
+			var i = e;
+			while (i.length &gt; 20 &amp;&amp; i.indexOf(&quot; &quot;) &gt; -1)
+				i = i.substring(0, i.lastIndexOf(&quot; &quot;));
+			return t === &quot;true&quot; ? i : e.substring(i.length)
+		}
+		return &quot;&quot;
+	},
+	&quot;orgchartconverters.borderconverter&quot;: function(e, t) {
+		return typeof e === &quot;boolean&quot; ? e ? &quot;#FFBB33&quot; : &quot;rgba(0,0,0,0)&quot; : &quot;#FFF&quot;
+	},
+	&quot;orgchartconverters.addhashconverter&quot;: function(e, t) {
+		return typeof e === &quot;string&quot; ? typeof t === &quot;string&quot; ? &quot;#&quot; + e + t : &quot;#&quot; + e : e
+	},
+	&quot;orgchartconverters.intermediateconverter&quot;: function(e, t) {
+		return typeof e === &quot;string&quot; &amp;&amp; e.length &gt; 17 ? e.replace(/^(.)(\S*)(.*)/, &quot;$1.$3&quot;) : e
+	},
+	&quot;orgchartconverters.overviewconverter&quot;: function(e, t) {
+		return typeof e === &quot;string&quot; &amp;&amp; e.length &gt; 0 ? e.replace(/^(.)(\S*)(.*)/, &quot;$1.$3&quot;) : &quot;&quot;
+	}
+};
+
+var mxGraphMlArrowsMap =
+{
+	&quot;SIMPLE&quot;: &quot;open&quot;,
+	&quot;TRIANGLE&quot;: &quot;block&quot;,
+	&quot;DIAMOND&quot;: &quot;diamond&quot;,
+	&quot;CIRCLE&quot;: &quot;oval&quot;,
+	&quot;CROSS&quot;: &quot;cross&quot;,
+	&quot;SHORT&quot;: &quot;classicThin&quot;,
+	&quot;DEFAULT&quot;: &quot;classic&quot;,
+	&quot;NONE&quot;: &quot;none&quot;,
+	//desktop
+	&quot;none&quot;: &quot;none&quot;,
+	&quot;white_delta_bar&quot;: &quot;block&quot;, //FIXME not a match
+	&quot;delta&quot;: &quot;block&quot;,
+	&quot;standard&quot;: &quot;classic&quot;,
+	&quot;diamond&quot;: &quot;diamond&quot;,
+	&quot;white_diamond&quot;: &quot;diamond&quot;,
+	&quot;white_delta&quot;: &quot;block&quot;,
+	&quot;plain&quot;: &quot;open&quot;,
+	&quot;skewed_dash&quot;: &quot;dash&quot;,
+	&quot;concave&quot;: &quot;openThin&quot;, //FIXME not exact match
+	&quot;transparent_circle&quot;: &quot;oval&quot;,
+	&quot;crows_foot_many&quot;: &quot;ERmany&quot;,
+	&quot;crows_foot_one&quot;: &quot;ERone&quot;,
+	&quot;crows_foot_one_optional&quot;: &quot;ERzeroToOne&quot;,
+	&quot;crows_foot_one_mandatory&quot;: &quot;ERmandOne&quot;,
+	&quot;crows_foot_many_optional&quot;: &quot;ERzeroToMany&quot;,
+	&quot;crows_foot_many_mandatory&quot;: &quot;ERoneToMany&quot;,
+	&quot;white_circle&quot;: &quot;oval&quot;,
+	&quot;t_shape&quot;: &quot;ERone&quot;, //FIXME not a match
+	&quot;short&quot;: &quot;classicThin&quot;,
+	&quot;convex&quot;: &quot;&quot;, //FIXME not a match
+	&quot;cross&quot;: &quot;cross&quot;
+	
+};
+
+var mxGraphMlShapesMap =
+{
+	&quot;star5&quot;: &quot;mxgraph.basic.star;flipV=1&quot;, //TODO This is not close enough!
+	&quot;star6&quot;: &quot;mxgraph.basic.6_point_star&quot;,//;rotation=30&quot;, //TODO requires rotation!
+	&quot;star8&quot;: &quot;mxgraph.basic.8_point_star&quot;,
+	&quot;sheared_rectangle&quot;: &quot;parallelogram&quot;,
+	&quot;sheared_rectangle2&quot;: &quot;parallelogram;flipH=1&quot;,
+	&quot;hexagon&quot;: &quot;hexagon&quot;,
+	&quot;octagon&quot;: &quot;mxgraph.basic.octagon&quot;,
+	&quot;ellipse&quot;: &quot;ellipse&quot;,
+	&quot;round_rectangle&quot;: &quot;rect;rounded=1;arcsize=30&quot;,
+	&quot;diamond&quot;: &quot;rhombus&quot;,
+	&quot;fat_arrow&quot;: &quot;step;perimeter=stepPerimeter&quot;,
+	&quot;fat_arrow2&quot;: &quot;step;perimeter=stepPerimeter;flipH=1&quot;,
+	&quot;trapez&quot;: &quot;trapezoid;perimeter=trapezoidPerimeter;flipV=1&quot;,
+	&quot;trapez2&quot;: &quot;trapezoid;perimeter=trapezoidPerimeter&quot;,
+	&quot;triangle&quot;: &quot;triangle&quot;,//;rotation=-90&quot;, //TODO requires rotation!
+	&quot;triangle2&quot;: &quot;triangle&quot;,//;rotation=90&quot;, //TODO requires rotation!
+	&quot;rectangle&quot;: &quot;rect&quot;,
+	&quot;rectangle3d&quot;: &quot;&quot;, //TODO create this shape
+	&quot;roundrectangle&quot;: &quot;rect;rounded=1;arcsize=30&quot;,
+	&quot;fatarrow&quot;: &quot;step;perimeter=stepPerimeter&quot;,
+	&quot;fatarrow2&quot;: &quot;step;perimeter=stepPerimeter;flipH=1&quot;,
+	&quot;parallelogram&quot;: &quot;parallelogram&quot;,
+	&quot;parallelogram2&quot;: &quot;parallelogram;flipH=1&quot;,
+	&quot;trapezoid2&quot;: &quot;trapezoid;perimeter=trapezoidPerimeter;flipV=1&quot;,
+	&quot;trapezoid&quot;: &quot;trapezoid;perimeter=trapezoidPerimeter&quot;,
+	//Bevel TODO make them looks closer to yEd
+	&quot;bevelnode&quot;: &quot;rect;glass=1;&quot;,
+	&quot;bevelnodewithshadow&quot;: &quot;rect;glass=1;shadow=1&quot;,
+	&quot;bevelnode2&quot;: &quot;rect;glass=1;rounded=1;arcsize=30&quot;,
+	&quot;bevelnode3&quot;: &quot;rect;glass=1;rounded=1;arcsize=30;shadow=1&quot;,
+	&quot;shinyplatenode&quot;: &quot;rect;glass=1&quot;,//;rotation=-90&quot;,//TODO requires rotation!
+	&quot;shinyplatenodewithshadow&quot;: &quot;rect;glass=1;shadow=1&quot;,//;rotation=-90&quot;,//TODO requires rotation!
+	&quot;shinyplatenode2&quot;: &quot;rect;glass=1;rounded=1;arcsize=30&quot;,//;rotation=-90&quot;,//TODO requires rotation!
+	&quot;shinyplatenode3&quot;: &quot;rect;glass=1;rounded=1;arcsize=30;shadow=1&quot;,//;rotation=-90&quot;,//TODO requires rotation!
+	//Table
+//	&quot;yed_table_node
+	//flowchart
+	&quot;process&quot;: &quot;mxgraph.flowchart.process&quot;,
+	&quot;decision&quot;: &quot;mxgraph.flowchart.decision&quot;,
+	&quot;start1&quot;: &quot;mxgraph.flowchart.start_1&quot;,
+	&quot;start2&quot;: &quot;mxgraph.flowchart.start_2;aspect=fixed&quot;,
+	&quot;terminator&quot;: &quot;mxgraph.flowchart.terminator&quot;,
+	&quot;cloud&quot;: &quot;cloud&quot;,
+	&quot;data&quot;: &quot;mxgraph.flowchart.data&quot;,
+	&quot;directdata&quot;: &quot;mxgraph.flowchart.direct_data&quot;,
+	&quot;database&quot;: &quot;mxgraph.flowchart.database&quot;,
+	&quot;document&quot;: &quot;mxgraph.flowchart.document&quot;,
+	&quot;predefinedprocess&quot;: &quot;mxgraph.flowchart.predefined_process&quot;,
+	&quot;storeddata&quot;: &quot;mxgraph.flowchart.stored_data&quot;,
+	&quot;internalstorage&quot;: &quot;mxgraph.flowchart.internal_storage&quot;,
+	&quot;sequentialdata&quot;: &quot;mxgraph.flowchart.sequential_data;aspect=fixed&quot;,
+	&quot;manualinput&quot;: &quot;mxgraph.flowchart.manual_input&quot;,
+	&quot;card&quot;: &quot;card;size=10&quot;,
+	&quot;papertype&quot;: &quot;mxgraph.flowchart.paper_tape&quot;,
+	&quot;delay&quot;: &quot;mxgraph.flowchart.delay&quot;,
+	&quot;display&quot;: &quot;mxgraph.flowchart.display&quot;,
+	&quot;manualoperation&quot;: &quot;mxgraph.flowchart.manual_operation&quot;,
+	&quot;preparation&quot;: &quot;mxgraph.flowchart.preparation&quot;,
+	&quot;looplimit&quot;: &quot;mxgraph.flowchart.loop_limit&quot;,
+	&quot;looplimitend&quot;: &quot;mxgraph.flowchart.loop_limit;flipV=1&quot;,
+	&quot;onpagereference&quot;: &quot;mxgraph.flowchart.on-page_reference;aspect=fixed&quot;,
+	&quot;offpagereference&quot;: &quot;mxgraph.flowchart.off-page_reference;aspect=fixed&quot;,
+	&quot;annotation&quot;: &quot;mxgraph.flowchart.annotation_1&quot;, //TODO not similar!
+	&quot;usermessage&quot;: &quot;mxgraph.arrows2.arrow;dy=0;dx=10;notch=0&quot;, //TODO requires rotation!
+	&quot;networkmessage&quot;: &quot;mxgraph.arrows2.arrow;dy=0;dx=0;notch=10&quot;,
+	//The same like above but with &quot;com.yworks.flowchart.&quot; prefex. TODO should we just remove the prefex? 
+	&quot;com.yworks.flowchart.start1&quot;: &quot;mxgraph.flowchart.start_1&quot;,
+	&quot;com.yworks.flowchart.start2&quot;: &quot;mxgraph.flowchart.start_2;aspect=fixed&quot;,
+	&quot;com.yworks.flowchart.terminator&quot;: &quot;mxgraph.flowchart.terminator&quot;,
+	&quot;com.yworks.flowchart.process&quot;: &quot;mxgraph.flowchart.process&quot;,
+	&quot;com.yworks.flowchart.predefinedprocess&quot;: &quot;mxgraph.flowchart.predefined_process&quot;,
+	&quot;com.yworks.flowchart.decision&quot;: &quot;mxgraph.flowchart.decision&quot;,
+	&quot;com.yworks.flowchart.looplimit&quot;: &quot;mxgraph.flowchart.loop_limit&quot;,
+	&quot;com.yworks.flowchart.looplimitend&quot;: &quot;mxgraph.flowchart.loop_limit;flipV=1&quot;,
+	&quot;com.yworks.flowchart.document&quot;: &quot;mxgraph.flowchart.document&quot;,
+	&quot;com.yworks.flowchart.data&quot;: &quot;mxgraph.flowchart.data&quot;,
+	&quot;com.yworks.flowchart.directdata&quot;: &quot;mxgraph.flowchart.direct_data&quot;,
+	&quot;com.yworks.flowchart.storeddata&quot;: &quot;mxgraph.flowchart.stored_data&quot;,
+	&quot;com.yworks.flowchart.sequentialdata&quot;: &quot;mxgraph.flowchart.sequential_data;aspect=fixed&quot;,
+	&quot;com.yworks.flowchart.database&quot;: &quot;mxgraph.flowchart.database&quot;,
+	&quot;com.yworks.flowchart.internalstorage&quot;: &quot;mxgraph.flowchart.internal_storage&quot;,
+	&quot;com.yworks.flowchart.manualinput&quot;: &quot;mxgraph.flowchart.manual_input&quot;,
+	&quot;com.yworks.flowchart.card&quot;: &quot;card;size=10&quot;,
+	&quot;com.yworks.flowchart.papertype&quot;: &quot;mxgraph.flowchart.paper_tape&quot;,
+	&quot;com.yworks.flowchart.cloud&quot;: &quot;cloud&quot;,
+	&quot;com.yworks.flowchart.delay&quot;: &quot;mxgraph.flowchart.delay&quot;,
+	&quot;com.yworks.flowchart.display&quot;: &quot;mxgraph.flowchart.display&quot;,
+	&quot;com.yworks.flowchart.manualoperation&quot;: &quot;mxgraph.flowchart.manual_operation&quot;,
+	&quot;com.yworks.flowchart.preparation&quot;: &quot;mxgraph.flowchart.preparation&quot;,
+	&quot;com.yworks.flowchart.onpagereference&quot;: &quot;mxgraph.flowchart.on-page_reference;aspect=fixed&quot;,
+	&quot;com.yworks.flowchart.offpagereference&quot;: &quot;mxgraph.flowchart.off-page_reference;aspect=fixed&quot;,
+	&quot;com.yworks.flowchart.usermessage&quot;: &quot;mxgraph.arrows2.arrow;dy=0;dx=10;notch=0&quot;, //TODO requires rotation!
+	&quot;com.yworks.flowchart.networkmessage&quot;: &quot;mxgraph.arrows2.arrow;dy=0;dx=0;notch=10&quot;,
+	&quot;com.yworks.flowchart.annotation&quot;: &quot;mxgraph.flowchart.annotation_1&quot;, //TODO not similar!
+
+	//icons (network)
+	&quot;database.svg&quot;: &quot;mxgraph.networks.storage&quot;, //TODO not similar!
+	&quot;laptop.svg&quot;: &quot;mxgraph.networks.laptop&quot;,//TODO not similar!
+	&quot;server.svg&quot;: &quot;mxgraph.networks.server&quot;,//TODO not similar!
+	&quot;smartphone.svg&quot;: &quot;mxgraph.networks.mobile&quot;,//TODO not similar! //TODO fixed aspect ratio
+	&quot;switch.svg&quot;: &quot;mxgraph.networks.switch&quot;,//TODO not similar! //TODO fixed aspect ratio
+	&quot;wlan.svg&quot;: &quot;mxgraph.networks.wireless_hub&quot;,//TODO not similar!
+	&quot;workstation.svg&quot;: &quot;mxgraph.networks.pc&quot;,//TODO not similar!
+	//bpmn
+	&quot;transaction&quot;: &quot;ext;double=1;rounded=1&quot;,
+	&quot;sub_process&quot;: &quot;ext;rounded=1&quot;,
+	&quot;call_activity&quot;: &quot;ext;rounded=1;strokeWidth=3&quot;,
+	//TODO two colors for stroke!
+	&quot;exclusive_with_marker&quot;: &quot;mxgraph.bpmn.shape;perimeter=rhombusPerimeter;background=gateway;outline=none;symbol=exclusiveGw&quot;,  
+	&quot;event_based&quot;: &quot;mxgraph.bpmn.shape;perimeter=rhombusPerimeter;background=gateway;outline=boundInt;symbol=multiple&quot;, 
+	&quot;parallel&quot;: &quot;mxgraph.bpmn.shape;perimeter=rhombusPerimeter;background=gateway;outline=none;symbol=parallelGw&quot;,
+	&quot;inclusive&quot;: &quot;mxgraph.bpmn.shape;perimeter=rhombusPerimeter;background=gateway;outline=end;symbol=general&quot;,
+	&quot;complex&quot;: &quot;mxgraph.bpmn.shape;perimeter=rhombusPerimeter;background=gateway;outline=none;symbol=complexGw&quot;,
+	&quot;exclusive_event_based&quot;: &quot;mxgraph.bpmn.shape;perimeter=rhombusPerimeter;background=gateway;outline=standard;symbol=multiple&quot;, 
+	&quot;parallel_event_based&quot;: &quot;mxgraph.bpmn.shape;perimeter=rhombusPerimeter;background=gateway;outline=standard;symbol=parallelMultiple&quot;,
+	//hexagon
+	&quot;calling_global_conversation&quot;: &quot;hexagon;strokeWidth=4&quot;,
+	//mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=general
+	&quot;message&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=message&quot;,
+	&quot;timer&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=timer&quot;,
+	&quot;escalation&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=escalation&quot;,
+	&quot;conditional&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=conditional&quot;,
+	&quot;link&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=link&quot;,
+	&quot;error&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=error&quot;,
+	&quot;cancel&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=cancel&quot;,
+	&quot;compensation&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=compensation&quot;,
+	&quot;signal&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=signal&quot;,
+	&quot;multiple&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=multiple&quot;,
+	&quot;parallel_multiple&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=parallelMultiple&quot;,
+	&quot;terminate&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;symbol=terminate&quot;,
+	
+//	&quot;com.yworks.bpmn.pool
+	&quot;com.yworks.bpmn.activity.withshadow&quot;: &quot;js:bpmnActivityShadow&quot;,
+	&quot;com.yworks.bpmn.activity&quot;: &quot;js:bpmnActivity&quot;,
+	&quot;com.yworks.bpmn.gateway.withshadow&quot;: &quot;mxgraph.bpmn.shape;perimeter=rhombusPerimeter;background=gateway;shadow=1&quot;,
+	&quot;com.yworks.bpmn.gateway&quot;: &quot;mxgraph.bpmn.shape;perimeter=rhombusPerimeter;background=gateway&quot;,
+	&quot;com.yworks.bpmn.event.withshadow&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter;shadow=1&quot;,
+	&quot;com.yworks.bpmn.event&quot;: &quot;mxgraph.bpmn.shape;perimeter=ellipsePerimeter&quot;,
+	&quot;com.yworks.bpmn.conversation.withshadow&quot;: &quot;hexagon;shadow=1&quot;,
+	&quot;com.yworks.bpmn.conversation&quot;: &quot;hexagon&quot;,
+	&quot;com.yworks.bpmn.artifact.withshadow&quot;: &quot;js:bpmnArtifactShadow&quot;,
+	&quot;com.yworks.bpmn.artifact&quot;: &quot;js:bpmnArtifact&quot;,
+
+	bpmnOutline: {
+		&quot;sub_process_interrupting&quot;: &quot;eventInt&quot;,
+		&quot;sub_process_non_interrupting&quot;: &quot;eventNonint&quot;,
+		&quot;catching&quot;: &quot;catching&quot;,
+		&quot;boundary_interrupting&quot;: &quot;boundInt&quot;,
+		&quot;boundary_non_interrupting&quot;: &quot;boundNonint&quot;,
+		&quot;throwing&quot;: &quot;throwing&quot;,
+		&quot;end&quot;: &quot;end&quot;,
+		&quot;event_characteristic_start&quot;: &quot;standard&quot;,
+		&quot;event_characteristic_end&quot;: &quot;end&quot;,
+		&quot;event_characteristic_intermediate_catching&quot;: &quot;catching&quot;,
+		&quot;event_characteristic_start_event_sub_process_interrupting&quot;: &quot;eventInt&quot;,
+		&quot;event_characteristic_intermediate_boundary_interrupting&quot;: &quot;boundInt&quot;
+	},
+	bpmnSymbol: {
+		&quot;event_type_plain&quot;: &quot;general&quot;,
+		&quot;event_type_message&quot;: &quot;message&quot;,
+		&quot;event_type_timer&quot;: &quot;timer&quot;,
+		&quot;event_type_escalation&quot;: &quot;escalation&quot;,
+		&quot;event_type_conditional&quot;: &quot;conditional&quot;,
+		&quot;event_type_link&quot;: &quot;link&quot;,
+		&quot;event_type_error&quot;: &quot;error&quot;,
+		&quot;event_type_cancel&quot;: &quot;cancel&quot;,
+		&quot;event_type_compensation&quot;: &quot;compensation&quot;,
+		&quot;event_type_signal&quot;: &quot;signal&quot;,
+		&quot;event_type_multiple&quot;: &quot;multiple&quot;,
+		&quot;event_type_parallel_multiple&quot;: &quot;parallelMultiple&quot;,
+		&quot;event_type_terminate&quot;: &quot;terminate&quot;,
+		&quot;gateway_type_plain&quot;: &quot;&quot;,
+		&quot;gateway_type_data_based_exclusive&quot;: &quot;exclusiveGw&quot;,
+		&quot;gateway_type_inclusive&quot;: &quot;general;outline=end&quot;,
+		&quot;gateway_type_parallel&quot;: &quot;parallelGw&quot;,
+		&quot;gateway_type_complex&quot;: &quot;complexGw&quot;,
+		&quot;gateway_type_event_based_exclusive&quot;: &quot;multiple;outline=catching&quot;,
+		&quot;gateway_type_event_based_exclusive_start_process&quot;: &quot;multiple;outline=standard&quot;,
+		&quot;gateway_type_parallel_event_based_exclusive_start_process&quot;: &quot;parallelMultiple;outline=standard&quot;,
+		&quot;conversation_type&quot;: &quot;&quot;,
+		&quot;artifact_type_data_object&quot;: &quot;js:bpmnDataObject&quot;,
+		&quot;artifact_type_annotation&quot;: &quot;mxgraph.flowchart.annotation_1&quot;,
+		&quot;artifact_type_group&quot;: &quot;rect;fillColor=none;dashed=1;dashPattern=3 1 1 1;collapsible=0;rounded=1&quot;,
+		&quot;artifact_type_data_store&quot;: &quot;datastore&quot;,
+		&quot;artifact_type_reply_message&quot;: &quot;message;strokeColor=#000000;fillColor=#A1A1A1&quot;,
+		&quot;artifact_type_request_message&quot;: &quot;message&quot;,
+		&quot;connection_type_sequence_flow&quot;: &quot;&quot;,
+		&quot;connection_type_default_flow&quot;: &quot;&quot;,
+		&quot;connection_type_conditional_flow&quot;: &quot;&quot;,
+		&quot;connection_type_association&quot;: &quot;&quot;,
+		&quot;connection_type_directed_association&quot;: &quot;&quot;,
+		&quot;connection_type_bidirected_association&quot;: &quot;&quot;,
+		&quot;connection_type_message_flow&quot;: &quot;&quot;,
+		&quot;connection_type_conversation_link&quot;: &quot;&quot;,
+		&quot;connection_type_forked_conversation_link&quot;: &quot;&quot;,
+		&quot;pool_type_lane_and_column&quot;: &quot;&quot;,
+		&quot;pool_type_empty&quot;: &quot;&quot;,
+		&quot;pool_type_lane&quot;: &quot;&quot;,
+		&quot;pool_type_column&quot;: &quot;&quot;,
+		&quot;activity_type&quot;: &quot;&quot;
+	},
+	//desktop entity relationship
+	&quot;com.yworks.entityrelationship.big_entity&quot;: &quot;js:relationship_big_entity&quot;,
+	&quot;com.yworks.entityrelationship.small_entity&quot; : &quot;ext&quot;,
+	&quot;com.yworks.entityrelationship.relationship&quot;: &quot;rhombus&quot;,
+	&quot;com.yworks.entityrelationship.attribute&quot;: &quot;js:relationship_attribute&quot;,
+	//SBGN
+	&quot;com.yworks.sbgn.unspecifiedentity&quot;: &quot;ellipse&quot;,
+	&quot;com.yworks.sbgn.simplechemical&quot;: &quot;ellipse&quot;,
+	&quot;com.yworks.sbgn.macromolecule&quot;: &quot;ext;rounded=1&quot;,
+	&quot;com.yworks.sbgn.nucleicacidfeature&quot;: &quot;&quot;, //TODO create this shape!
+	&quot;com.yworks.sbgn.perturbingagent&quot;: &quot;&quot;, //TODO create this shape!
+	&quot;com.yworks.sbgn.phenotype&quot;: &quot;hexagon;perimeter=hexagonPerimeter2;size=0.2&quot;,
+	&quot;com.yworks.sbgn.emptyset&quot;: &quot;lineEllipse;line=vertical;perimeter=ellipsePerimeter&quot;,//;rotation=45&quot;, //TODO create this shape!
+	&quot;com.yworks.sbgn.submap&quot;: &quot;&quot;,  //TODO create this shape!
+	&quot;com.yworks.sbgn.unitofinformation&quot;: &quot;&quot;,  //TODO create this shape!
+	&quot;com.yworks.sbgn.statevariable&quot;: &quot;mxgraph.flowchart.terminator&quot;,
+	&quot;com.yworks.sbgn.tag&quot;: &quot;offPageConnector;size=0.25&quot;, //;rotation=90&quot;, //TODO create this shape without rotation!
+	&quot;com.yworks.sbgn.process&quot;: &quot;rect&quot;,
+	&quot;com.yworks.sbgn.operator&quot;: &quot;ellipse&quot;,
+
+	//special edges
+	&quot;com.yworks.edge.framed&quot;: &quot;link&quot;,
+	
+	//Male/Female icons (FIXME Not similar and unsafe as it refers to remote resources)
+	&quot;usericon_female1.svg&quot;: &quot;image;image=https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-128.png&quot;,
+	&quot;usericon_female2.svg&quot;: &quot;image;image=https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-128.png&quot;,
+	&quot;usericon_female3.svg&quot;: &quot;image;image=https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-128.png&quot;,
+	&quot;usericon_female4.svg&quot;: &quot;image;image=https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-128.png&quot;,
+	&quot;usericon_female5.svg&quot;: &quot;image;image=https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-128.png&quot;,
+	&quot;usericon_male1.svg&quot;: &quot;image;image=https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-128.png&quot;,
+	&quot;usericon_male2.svg&quot;: &quot;image;image=https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-128.png&quot;,
+	&quot;usericon_male3.svg&quot;: &quot;image;image=https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-128.png&quot;,
+	&quot;usericon_male4.svg&quot;: &quot;image;image=https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-128.png&quot;,
+	&quot;usericon_male5.svg&quot;: &quot;image;image=https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-128.png&quot;
+};
+
+var mxGraphMlConstants =
+{
+	ID: &quot;id&quot;,
+
+	KEY_FOR: &quot;for&quot;,
+
+	KEY_NAME: &quot;attr.name&quot;,
+
+	KEY_TYPE: &quot;attr.type&quot;,
+	
+	KEY_YTYPE: &quot;yfiles.type&quot;,
+
+	GRAPH: &quot;graph&quot;,
+
+	GRAPHML: &quot;graphml&quot;,
+
+	NODE: &quot;node&quot;,
+
+	EDGE: &quot;edge&quot;,
+
+	HYPEREDGE: &quot;hyperedge&quot;,
+
+	PORT: &quot;port&quot;,
+
+	ENDPOINT: &quot;endpoint&quot;,
+
+	KEY: &quot;key&quot;,
+
+	DATA: &quot;data&quot;,
+
+	ALL: &quot;all&quot;,
+
+	EDGE_SOURCE: &quot;source&quot;,
+
+	EDGE_SOURCE_PORT: &quot;sourceport&quot;,
+
+	EDGE_TARGET: &quot;target&quot;,
+
+	EDGE_TARGET_PORT: &quot;targetport&quot;,
+
+	EDGE_DIRECTED: &quot;directed&quot;,
+
+	EDGE_UNDIRECTED: &quot;undirected&quot;,
+
+	EDGE_DEFAULT: &quot;edgedefault&quot;,
+
+	PORT_NAME: &quot;name&quot;,
+
+	HEIGHT: &quot;Height&quot;,
+
+	WIDTH: &quot;Width&quot;,
+
+	X: &quot;X&quot;,
+
+	Y: &quot;Y&quot;,
+
+	HEIGHT_L: &quot;height&quot;,
+
+	WIDTH_L: &quot;width&quot;,
+
+	X_L: &quot;x&quot;,
+
+	Y_L: &quot;y&quot;,
+
+	JGRAPH: &quot;jGraph:&quot;,
+
+	GEOMETRY: &quot;y:Geometry&quot;,
+
+	FILL: &quot;Fill&quot;,
+
+	SHAPENODE: &quot;y:ShapeNode&quot;,
+
+	SHAPEEDGE: &quot;ShapeEdge&quot;,
+
+	JGRAPH_URL: &quot;http://www.jgraph.com/&quot;,
+
+	KEY_NODE_ID: &quot;d0&quot;,
+
+	KEY_NODE_NAME: &quot;nodeData&quot;,
+
+	KEY_EDGE_ID: &quot;d1&quot;,
+
+	KEY_EDGE_NAME: &quot;edgeData&quot;,
+
+	STYLE: &quot;Style&quot;,
+
+	SHAPE: &quot;Shape&quot;,
+
+	TYPE: &quot;type&quot;,
+
+	LABEL: &quot;label&quot;,
+
+	TEXT: &quot;text&quot;,
+
+	PROPERTIES: &quot;properties&quot;,
+
+	SOURCETARGET: &quot;SourceTarget&quot;,
+		
+	RECT: &quot;y:RectD&quot;,
+	
+	NODE_LABELS: &quot;NodeLabels&quot;,
+	
+	NODE_LABEL: &quot;y:NodeLabel&quot;,
+	
+	NODE_GEOMETRY: &quot;NodeGeometry&quot;,
+	
+	USER_TAGS: &quot;UserTags&quot;,
+
+	NODE_STYLE: &quot;NodeStyle&quot;,
+	
+	NODE_GRAPHICS: &quot;nodegraphics&quot;,
+	
+	NODE_VIEW_STATE: &quot;NodeViewState&quot;,
+	
+	EDGE_LABELS: &quot;EdgeLabels&quot;,
+	
+	EDGE_GEOMETRY: &quot;EdgeGeometry&quot;,
+	
+	EDGE_STYLE: &quot;EdgeStyle&quot;,
+	
+	EDGE_VIEW_STATE: &quot;EdgeViewState&quot;,
+	
+	PORT_LOCATION_PARAMETER: &quot;PortLocationParameter&quot;,
+	
+	PORT_STYLE: &quot;PortStyle&quot;,
+	
+	PORT_VIEW_STATE: &quot;PortViewState&quot;,
+	
+	SHARED_DATA: &quot;SharedData&quot;,
+	
+	Y_SHARED_DATA: &quot;y:SharedData&quot;,
+	
+	X_KEY: &quot;x:Key&quot;,
+	
+	GRAPHML_REFERENCE: &quot;y:GraphMLReference&quot;,
+	
+	RESOURCE_KEY: &quot;ResourceKey&quot;,
+	
+	Y_RESOURCES: &quot;y:Resources&quot;,
+	
+	Y_RESOURCE: &quot;y:Resource&quot;,
+	
+	REFID: &quot;refid&quot;,
+		
+	X_LIST: &quot;x:List&quot;,
+	
+	X_STATIC: &quot;x:Static&quot;,
+	
+	Y_BEND: &quot;y:Bend&quot;,
+	
+	LOCATION: &quot;Location&quot;,
+	
+	Y_LABEL: &quot;y:Label&quot;,
+	
+	LAYOUTPARAMETER: &quot;LayoutParameter&quot;,
+	
+	YJS_DEFAULTLABELSTYLE: &quot;yjs:DefaultLabelStyle&quot;,
+	
+	MEMBER: &quot;Member&quot;
+};
+
+
+EditorUi.prototype.doImportGraphML = function(xmlData, done, onerror)
+{
+	new mxGraphMlCodec().decode(xmlData, done, onerror);
+};</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

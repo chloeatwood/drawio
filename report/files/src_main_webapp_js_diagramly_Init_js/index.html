@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\Init.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\Init.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">54.04</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">512</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">45.05</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">4.44</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2006-2021, JGraph Holdings Ltd
+ * Copyright (c) 2006-2021, draw.io AG
+ */
+
+// urlParams is null when used for embedding
+window.urlParams = window.urlParams || {};
+
+// isLocalStorage controls access to local storage
+window.isLocalStorage = window.isLocalStorage || false;
+
+// Disables loading settings in configured mode
+window.mxLoadSettings = window.mxLoadSettings || urlParams[&#039;configure&#039;] != &#039;1&#039;;
+
+// Checks for SVG support
+window.isSvgBrowser = true;
+
+// Checks for Mermaid support
+window.isMermaidEnabled = typeof structuredClone === &#039;function&#039;;
+
+// CUSTOM_PARAMETERS - URLs for save and export
+// Base URL defines cases where an absolute URL is needed (eg. embedding)
+window.DRAWIO_BASE_URL = window.DRAWIO_BASE_URL || ((/.*\.draw\.io$/.test(window.location.hostname)) ||
+	(/.*\.diagrams\.net$/.test(window.location.hostname)) ?
+	window.location.protocol + &#039;//&#039; + window.location.hostname : &#039;https://app.diagrams.net&#039;);
+window.DRAWIO_SERVER_URL = window.DRAWIO_SERVER_URL || window.location.origin +
+	window.location.pathname.substring(0, window.location.pathname.lastIndexOf(&#039;/&#039;)) + &#039;/&#039;;
+window.DRAWIO_LIGHTBOX_URL = window.DRAWIO_LIGHTBOX_URL || &#039;https://viewer.diagrams.net&#039;;
+window.EXPORT_URL = window.EXPORT_URL || &#039;https://convert.diagrams.net/node/export&#039;;
+window.PLANT_URL = window.PLANT_URL || &#039;https://plant-aws.diagrams.net&#039;;
+window.DRAW_MATH_URL = window.DRAW_MATH_URL || &#039;math/es5&#039;;
+window.VSS_CONVERT_URL = window.VSS_CONVERT_URL || &#039;https://convert.diagrams.net/VsdConverter/api/converter&#039;;
+window.EMF_CONVERT_URL = window.EMF_CONVERT_URL || &#039;https://convert.diagrams.net/emf2png/convertEMF&#039;;
+window.REALTIME_URL = window.REALTIME_URL || window.DRAWIO_SERVER_URL + &#039;cache&#039;;
+window.DRAWIO_GITLAB_URL = window.DRAWIO_GITLAB_URL || &#039;https://gitlab.com&#039;;
+window.DRAWIO_GITLAB_ID = window.DRAWIO_GITLAB_ID || &#039;2b14debc5feeb18ba65358d863ec870e4cc9294b28c3c941cb3014eb4af9a9b4&#039;;
+window.DRAWIO_GITHUB_URL = window.DRAWIO_GITHUB_URL || &#039;https://github.com&#039;;
+window.DRAWIO_GITHUB_API_URL = window.DRAWIO_GITHUB_API_URL || &#039;https://api.github.com&#039;;
+window.DRAWIO_GITHUB_ID = window.DRAWIO_GITHUB_ID || &#039;Iv1.98d62f0431e40543&#039;;
+window.DRAWIO_DROPBOX_ID = window.DRAWIO_DROPBOX_ID || &#039;jg02tc0onwmhlgm&#039;;
+window.SAVE_URL = window.SAVE_URL || window.DRAWIO_SERVER_URL + &#039;save&#039;;
+window.OPEN_URL = window.OPEN_URL || window.DRAWIO_SERVER_URL + &#039;import&#039;;
+window.PROXY_URL = window.PROXY_URL || window.DRAWIO_SERVER_URL + &#039;proxy&#039;;
+window.DRAWIO_VIEWER_URL = window.DRAWIO_VIEWER_URL || null;
+window.NOTIFICATIONS_URL = window.NOTIFICATIONS_URL || ((/.*\.draw\.io$/.test(window.location.hostname)) ||
+	(/.*\.diagrams\.net$/.test(window.location.hostname)) ?
+	window.DRAWIO_SERVER_URL + &#039;notifications&#039; : null);
+window.RT_WEBSOCKET_URL = window.RT_WEBSOCKET_URL || (&#039;wss://&#039; + ((window.location.hostname == &#039;test.draw.io&#039;) ?
+	&#039;app.diagrams.net&#039; : window.location.hostname) + &#039;/rt&#039;);
+
+// Paths and files
+window.SHAPES_PATH = window.SHAPES_PATH || &#039;shapes&#039;;
+// Path for images inside the diagram
+window.GRAPH_IMAGE_PATH = window.GRAPH_IMAGE_PATH || &#039;img&#039;;
+window.ICONSEARCH_PATH = window.ICONSEARCH_PATH || (urlParams[&#039;dev&#039;] &amp;&amp; window.location.protocol != &#039;file:&#039; ?
+	&#039;iconSearch2&#039; : window.DRAWIO_SERVER_URL + &#039;iconSearch2&#039;);
+window.TEMPLATE_PATH = window.TEMPLATE_PATH || &#039;templates&#039;;
+window.NEW_DIAGRAM_CATS_PATH = window.NEW_DIAGRAM_CATS_PATH || &#039;newDiagramCats&#039;;
+window.PLUGINS_BASE_PATH = window.PLUGINS_BASE_PATH || &#039;&#039;;
+
+// Allows third-party plugins to run
+window.ALLOW_CUSTOM_PLUGINS = window.ALLOW_CUSTOM_PLUGINS || false;
+
+// Directory for i18 files and basename for main i18n file
+window.RESOURCES_PATH = window.RESOURCES_PATH || &#039;resources&#039;;
+window.RESOURCE_BASE = window.RESOURCE_BASE || RESOURCES_PATH + &#039;/dia&#039;;
+
+// Specifies global configuration via variable
+window.DRAWIO_CONFIG = window.DRAWIO_CONFIG || null;
+
+// Sets the base path, the UI language via URL param and configures the
+// supported languages to avoid 404s. The loading of all core language
+// resources is disabled as all required resources are in grapheditor.
+// properties. Note that in this example the loading of two resource
+// files (the special bundle and the default bundle) is disabled to
+// save a GET request. This requires that all resources be present in
+// the special bundle.
+window.mxLoadResources = window.mxLoadResources || false;
+window.mxLanguage = window.mxLanguage || (function() 
+{
+	var lang = urlParams[&#039;lang&#039;];
+	
+	// Known issue: No JSON object at this point in quirks in IE8
+	if (lang == null &amp;&amp; typeof(JSON) != &#039;undefined&#039;)
+	{
+		// Cannot use mxSettings here
+		if (isLocalStorage) 
+		{
+			try
+			{
+				var value = localStorage.getItem(&#039;.drawio-config&#039;);
+				
+				if (value != null)
+				{
+					lang = JSON.parse(value).language || null;
+				}
+				
+				if (!lang &amp;&amp; window.mxIsElectron)
+				{
+					lang = urlParams[&#039;appLang&#039;];
+					
+					if (lang != null)
+			    	{
+			    		var dash = lang.indexOf(&#039;-&#039;);
+			    		
+			    		if (dash &gt;= 0)
+			    		{
+			    			lang = lang.substring(0, dash);
+			    		}
+			    		
+			    		lang = lang.toLowerCase();
+			    	}
+				}
+			}
+			catch (e)
+			{
+				// cookies are disabled, attempts to use local storage will cause
+				// a DOM error at a minimum on Chrome
+				isLocalStorage = false;
+			}
+		}
+	}
+	
+	return lang;
+})();
+
+// Add new languages here. First entry is translated to [Automatic]
+// in the menu defintion in Diagramly.js.
+window.mxLanguageMap = window.mxLanguageMap ||
+{
+	&#039;i18n&#039;: &#039;&#039;,
+	&#039;id&#039; : &#039;Bahasa Indonesia&#039;,
+	&#039;ms&#039; : &#039;Bahasa Melayu&#039;,
+	&#039;bs&#039; : &#039;Bosanski&#039;,
+	&#039;bg&#039; : &#039;Bulgarian&#039;,
+	&#039;ca&#039; : &#039;Català&#039;,
+	&#039;cs&#039; : &#039;Čeština&#039;,
+	&#039;da&#039; : &#039;Dansk&#039;,
+	&#039;de&#039; : &#039;Deutsch&#039;,
+	&#039;et&#039; : &#039;Eesti&#039;,
+	&#039;en&#039; : &#039;English&#039;,
+	&#039;es&#039; : &#039;Español&#039;,
+	&#039;eu&#039; : &#039;Euskara&#039;,
+	&#039;fil&#039; : &#039;Filipino&#039;,
+	&#039;fr&#039; : &#039;Français&#039;,
+	&#039;gl&#039; : &#039;Galego&#039;,
+	&#039;it&#039; : &#039;Italiano&#039;,
+	&#039;hu&#039; : &#039;Magyar&#039;,
+	&#039;lt&#039; : &#039;Lietuvių&#039;,
+	&#039;lv&#039; : &#039;Latviešu&#039;,
+	&#039;nl&#039; : &#039;Nederlands&#039;,
+	&#039;no&#039; : &#039;Norsk&#039;,
+	&#039;pl&#039; : &#039;Polski&#039;,
+	&#039;pt-br&#039; : &#039;Português (Brasil)&#039;,
+	&#039;pt&#039; : &#039;Português (Portugal)&#039;,
+	&#039;ro&#039; : &#039;Română&#039;,
+	&#039;fi&#039; : &#039;Suomi&#039;,
+	&#039;sv&#039; : &#039;Svenska&#039;,
+	&#039;vi&#039; : &#039;Tiếng Việt&#039;,
+	&#039;tr&#039; : &#039;Türkçe&#039;,
+	&#039;el&#039; : &#039;Ελληνικά&#039;,
+	&#039;ru&#039; : &#039;Русский&#039;,
+	&#039;sr&#039; : &#039;Српски&#039;,
+	&#039;uk&#039; : &#039;Українська&#039;,
+	&#039;he&#039; : &#039;עברית&#039;,
+	&#039;ar&#039; : &#039;العربية&#039;,
+	&#039;fa&#039; : &#039;فارسی&#039;,
+	&#039;th&#039; : &#039;ไทย&#039;,
+	&#039;ta&#039; : &#039;தமிழ்&#039;,
+	&#039;ko&#039; : &#039;한국어&#039;,
+	&#039;ja&#039; : &#039;日本語&#039;,
+	&#039;zh&#039; : &#039;简体中文&#039;,
+	&#039;zh-tw&#039; : &#039;繁體中文&#039;
+};
+
+if (typeof window.mxBasePath === &#039;undefined&#039;)
+{
+	window.mxBasePath = &#039;mxgraph&#039;;
+	window.mxImageBasePath = &#039;mxgraph/images&#039;;
+}
+
+if (window.mxLanguages == null)
+{
+	window.mxLanguages = [];
+	
+	// Populates the list of supported special language bundles
+	for (var lang in mxLanguageMap)
+	{
+		// Empty means default (ie. browser language), &quot;en&quot; means English (default for unsupported languages)
+		// Since &quot;en&quot; uses no extension this must not be added to the array of supported language bundles.
+		if (lang != &#039;en&#039;)
+		{
+			window.mxLanguages.push(lang);
+		}
+	}
+
+	// Uses browser language if supported
+	if (window.mxLanguage == null &amp;&amp;
+		(window.location.hostname == &#039;test.draw.io&#039; ||
+		window.location.hostname == &#039;www.draw.io&#039; ||
+		window.location.hostname == &#039;viewer.diagrams.net&#039; ||
+		window.location.hostname == &#039;embed.diagrams.net&#039; ||
+		window.location.hostname == &#039;app.diagrams.net&#039; ||
+		window.location.hostname == &#039;jgraph.github.io&#039;))
+	{
+		var lang = navigator.language;
+
+		if (lang != null)
+		{
+			var dash = lang.indexOf(&#039;-&#039;);
+				
+			if (dash &gt; 0)
+			{
+				lang = lang.substring(0, dash);
+			}
+
+			if (window.mxLanguages.indexOf(lang) &gt;= 0)
+			{
+				window.mxLanguage = lang;
+			}
+		}
+	}
+}
+
+//Disable Google Drive when running in a WebView (e.g, MS Teams App) Since auth doesn&#039;t work with disallowd_useragent
+//[For MS Teams only] TODO Check if other apps are affected also (android and iOS)
+if (urlParams[&#039;extAuth&#039;] == &#039;1&#039; &amp;&amp; /((iPhone|iPod|iPad).*AppleWebKit(?!.*Version)|; wv)/i.test(navigator.userAgent))
+{
+	urlParams[&#039;gapi&#039;] = &#039;0&#039;;
+	urlParams[&#039;noDevice&#039;] = &#039;1&#039;;
+	//Force viewer only
+	//TODO This should always be for MS Teams only
+	if (urlParams[&#039;lightbox&#039;] != &#039;1&#039;)
+	{
+		urlParams[&#039;lightbox&#039;] = &#039;1&#039;;
+		urlParams[&#039;layers&#039;] = &#039;1&#039;;
+		urlParams[&#039;viewerOnlyMsg&#039;] = &#039;1&#039;;
+	}
+}
+
+// Uses lightbox mode on viewer domain
+if (window.location.hostname == &#039;viewer.diagrams.net&#039;)
+{
+	urlParams[&#039;lightbox&#039;] = &#039;1&#039;;
+}	
+
+// Lightbox enables chromeless mode
+if (urlParams[&#039;lightbox&#039;] == &#039;1&#039;)
+{
+	urlParams[&#039;chrome&#039;] = &#039;0&#039;;
+}
+
+// Embed inline is embed mode and sketch UI
+if (urlParams[&#039;embedInline&#039;] == &#039;1&#039;)
+{
+	urlParams[&#039;embed&#039;] = &#039;1&#039;;
+	urlParams[&#039;ui&#039;] = &#039;sketch&#039;;
+	urlParams[&#039;plugins&#039;] = &#039;0&#039;;
+	urlParams[&#039;proto&#039;] = &#039;json&#039;;
+	urlParams[&#039;prefetchFonts&#039;] = &#039;1&#039;;
+}
+
+/**
+ * Global function for loading local files via servlet
+ */
+function setCurrentXml(data, filename)
+{
+	if (window.parent != null &amp;&amp; window.parent.openFile != null)
+	{
+		window.parent.openFile.setData(data, filename);
+	}
+};
+
+/**
+ * Returns the global UI setting before running static draw.io code
+ */
+window.uiTheme = window.uiTheme || (function() 
+{
+	var ui = urlParams[&#039;ui&#039;];
+
+	//Use Sketch theme for MS Teams (and any future extAuth) by default
+	if (urlParams[&#039;extAuth&#039;] == &#039;1&#039;)
+	{
+		ui = &#039;sketch&#039;;
+	}
+
+	// Known issue: No JSON object at this point in quirks in IE8
+	if (ui == null &amp;&amp; isLocalStorage &amp;&amp; typeof JSON !== &#039;undefined&#039; &amp;&amp; urlParams[&#039;lightbox&#039;] != &#039;1&#039;)
+	{
+		try
+		{
+			var value = localStorage.getItem(&#039;.drawio-config&#039;);
+			
+			if (value != null)
+			{
+				ui = JSON.parse(value).ui || null;
+			}
+		}
+		catch (e)
+		{
+			// cookies are disabled, attempts to use local storage will cause
+			// a DOM error at a minimum on Chrome
+			isLocalStorage = false;
+		}
+	}
+	
+	// Redirects dark UI parameter
+	if (urlParams[&#039;ui&#039;] == &#039;dark&#039; &amp;&amp; urlParams[&#039;dark&#039;] == null)
+	{
+		urlParams[&#039;dark&#039;] = &#039;1&#039;;
+	}
+	
+	// Activates sketch mode in Confluence Cloud sketch theme
+	if (ui == &#039;sketch&#039; &amp;&amp; urlParams[&#039;sketch&#039;] == null &amp;&amp;
+		window.location.hostname === &#039;ac.draw.io&#039;)
+	{
+		urlParams[&#039;sketch&#039;] = &#039;1&#039;;
+	}
+	
+	return ui;
+})();
+
+/**
+ * Overrides splash URL parameter via local storage
+ */
+(function() 
+{
+	if (typeof JSON !== &#039;undefined&#039;)
+	{
+		// Cannot use mxSettings here
+		if (isLocalStorage) 
+		{
+			try
+			{
+				var key = (urlParams[&#039;sketch&#039;] == &#039;1&#039;) ? &#039;.sketch-config&#039; : &#039;.drawio-config&#039;;
+				var value = localStorage.getItem(key);
+				var showSplash = false;
+				
+				if (value != null)
+				{
+					showSplash = JSON.parse(value).showStartScreen;
+				}
+				
+				if (showSplash == false &amp;&amp; urlParams[&#039;splash&#039;] == null)
+				{
+					urlParams[&#039;splash&#039;] = &#039;0&#039;;
+				}
+			}
+			catch (e)
+			{
+				// ignore
+			}
+			
+			// Handles lockdown configuration
+			try
+			{
+				var value = localStorage.getItem(&#039;.configuration&#039;);
+				var lockdown = null;
+
+				if (value != null)
+				{
+					var config = JSON.parse(value);
+					lockdown = config.lockdown;
+				}
+				
+				if (lockdown != null)
+				{
+					urlParams[&#039;lockdown&#039;] = lockdown;
+				}
+			}
+			catch (e)
+			{
+				// ignore
+			}
+		}
+	}
+	
+	// Customizes export URL
+	var ex = urlParams[&#039;export&#039;];
+
+	if (ex != null)
+	{
+		ex = decodeURIComponent(ex);
+		
+		if (ex.substring(0, 7) != &#039;http://&#039; &amp;&amp;  ex.substring(0, 8) != &#039;https://&#039;)
+		{
+			ex = &#039;http://&#039; + ex;
+		}
+		
+		EXPORT_URL = ex;
+	}
+
+	// Customizes gitlab URL
+	var glUrl = urlParams[&#039;gitlab&#039;];
+
+	if (glUrl != null)
+	{
+		glUrl = decodeURIComponent(glUrl);
+		
+		if (glUrl.substring(0, 7) != &#039;http://&#039; &amp;&amp;  glUrl.substring(0, 8) != &#039;https://&#039;)
+		{
+			glUrl = &#039;http://&#039; + glUrl;
+		}
+		
+		DRAWIO_GITLAB_URL = glUrl;
+	}
+	
+	var glId = urlParams[&#039;gitlab-id&#039;];
+
+	if (glId != null)
+	{
+		DRAWIO_GITLAB_ID = glId;
+	}
+
+	// URL for logging
+	window.DRAWIO_LOG_URL = window.DRAWIO_LOG_URL || &#039;&#039;;
+
+	//Adds hard-coded logging domain for draw.io domains
+	var host = window.location.host;
+	
+	if (host != &#039;test.draw.io&#039;)
+	{
+		var searchString = &#039;diagrams.net&#039;;
+		var position = host.length - searchString.length;
+		var lastIndex = host.lastIndexOf(searchString, position);
+		
+		if (lastIndex !== -1 &amp;&amp; lastIndex === position)
+		{
+			window.DRAWIO_LOG_URL = &#039;https://log.diagrams.net&#039;;
+		}
+		else
+		{
+			// For atlas integrations
+			var searchString = &#039;draw.io&#039;;
+			var position = host.length - searchString.length;
+			var lastIndex = host.lastIndexOf(searchString, position);
+			
+			if (lastIndex !== -1 &amp;&amp; lastIndex === position)
+			{
+				window.DRAWIO_LOG_URL = &#039;https://log.draw.io&#039;;
+			}
+		}
+	}
+})();
+
+// Enables stealth mode with Google Drive
+if (urlParams[&#039;gapi-stealth&#039;] == &#039;1&#039;)
+{
+	urlParams[&#039;stealth&#039;] = &#039;1&#039;;
+}
+
+// Enables offline mode
+if (urlParams[&#039;offline&#039;] == &#039;1&#039; || urlParams[&#039;demo&#039;] == &#039;1&#039; || 
+	urlParams[&#039;stealth&#039;] == &#039;1&#039; || urlParams[&#039;local&#039;] == &#039;1&#039; ||
+	urlParams[&#039;lockdown&#039;] == &#039;1&#039;)
+{
+	urlParams[&#039;picker&#039;] = (urlParams[&#039;gapi-stealth&#039;] == &#039;1&#039;) ? &#039;1&#039; : &#039;0&#039;;
+	urlParams[&#039;gapi&#039;] = (urlParams[&#039;gapi-stealth&#039;] == &#039;1&#039;) ? &#039;1&#039; : &#039;0&#039;;
+	urlParams[&#039;db&#039;] = &#039;0&#039;;
+	urlParams[&#039;od&#039;] = &#039;0&#039;;
+	urlParams[&#039;gh&#039;] = &#039;0&#039;;
+	urlParams[&#039;gl&#039;] = &#039;0&#039;;
+	urlParams[&#039;tr&#039;] = &#039;0&#039;;
+}
+
+// Do not insert code between above and below blocks
+// se mode. Ensure this comes after the block above. 
+if (window.location.hostname == &#039;se.diagrams.net&#039;)
+{
+	urlParams[&#039;db&#039;] = &#039;0&#039;;
+	urlParams[&#039;od&#039;] = &#039;0&#039;;
+	urlParams[&#039;gh&#039;] = &#039;0&#039;;
+	urlParams[&#039;gl&#039;] = &#039;0&#039;;
+	urlParams[&#039;tr&#039;] = &#039;0&#039;;
+	urlParams[&#039;plugins&#039;] = &#039;0&#039;;
+	urlParams[&#039;mode&#039;] = &#039;google&#039;;
+	urlParams[&#039;lockdown&#039;] = &#039;1&#039;; // Do not want to apply lockdown true to above block
+
+	window.DRAWIO_GOOGLE_APP_ID = window.DRAWIO_GOOGLE_APP_ID || &#039;184079235871&#039;;
+	window.DRAWIO_GOOGLE_CLIENT_ID = window.DRAWIO_GOOGLE_CLIENT_ID || &#039;184079235871-pjf5nn0lff27lk8qf0770gmffiv9gt61.apps.googleusercontent.com&#039;;
+}
+
+// Disables Trello client by default
+if (urlParams[&#039;mode&#039;] == &#039;trello&#039;)
+{
+	urlParams[&#039;tr&#039;] = &#039;1&#039;;
+}
+
+// Uses embed mode on embed domain
+if (window.location.hostname == &#039;embed.diagrams.net&#039;)
+{
+	urlParams[&#039;embed&#039;] = &#039;1&#039;;
+}
+
+// Fallback for cases where the hash property is not available
+if ((window.location.hash == null || window.location.hash.length &lt;= 1) &amp;&amp;
+	urlParams[&#039;open&#039;] != null)
+{
+	window.location.hash = urlParams[&#039;open&#039;];
+}
+
+// TODO: One day we could remove this. It&#039;s just to stop mermaid throwing syntax error on startup for pre v98 browsers
+// Maybe remove in 2027
+if (typeof window.structuredClone !== &#039;function&#039;)
+{
+	window.structuredClone = function(value)
+	{
+		{
+			return value;
+		}
+	}
+}</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

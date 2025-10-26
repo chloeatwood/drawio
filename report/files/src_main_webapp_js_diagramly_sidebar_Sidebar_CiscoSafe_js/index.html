@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-CiscoSafe.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-CiscoSafe.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">54.57</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">1185</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">45.04</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">50.52</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds Cisco Safe stencils
+	Sidebar.prototype.addCiscoSafePalette = function()
+	{
+		this.setCurrentSearchEntryLibrary(&#039;cisco_safe&#039;, &#039;cisco_safeArchitecture&#039;);
+		this.addCiscoSafeArchitecturePalette();
+		this.setCurrentSearchEntryLibrary(&#039;cisco_safe&#039;, &#039;cisco_safeBusiness Icons&#039;);
+		this.addCiscoSafeBusinessIconsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;cisco_safe&#039;, &#039;cisco_safeCapability&#039;);
+		this.addCiscoSafeCapabilityPalette();
+		this.setCurrentSearchEntryLibrary(&#039;cisco_safe&#039;, &#039;cisco_safeDesign&#039;);
+		this.addCiscoSafeDesignPalette();
+		this.setCurrentSearchEntryLibrary(&#039;cisco_safe&#039;, &#039;cisco_safeIoT Things Icons&#039;);
+		this.addCiscoSafeIoTThingsIconsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;cisco_safe&#039;, &#039;cisco_safePeople Places Things Icons&#039;);
+		this.addCiscoSafePeoplePlacesThingsIconsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;cisco_safe&#039;, &#039;cisco_safeSecurity Icons&#039;);
+		this.addCiscoSafeSecurityIconsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;cisco_safe&#039;, &#039;cisco_safeTechnology Icons&#039;);
+		this.addCiscoSafeTechnologyIconsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;cisco_safe&#039;, &#039;cisco_safeThreat&#039;);
+		this.addCiscoSafeThreatPalette();
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+	Sidebar.prototype.addCiscoSafeArchitecturePalette = function()
+	{
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;html=1;fillColor=#6ABD46;strokeColor=#ffffff;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;align=center;&#039; + 
+	 	&#039;points=[[0.085,0.085,0],[0.915,0.085,0],[0.915,0.915,0],[0.085,0.915,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];pointerEvents=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.cisco_safe.&quot;;
+		var gn = &#039;mxgraph.cisco_safe.architecture&#039;;
+		var dt = &#039;cisco safe architecture&#039;;
+
+		var w = 50;
+
+		this.addPaletteFunctions(&#039;cisco_safeArchitecture&#039;, &#039;Cisco Safe / Architecture&#039;, false,
+		[
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Access Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;access switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.aci_controller;&#039;,
+					 w, w, &#039;&#039;, &#039;ACI Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;aci controller&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.aci_leaf_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;ACI Leaf Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;aci leaf switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.aci_spine_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;ACI Spine Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;aci spine switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.actuator;&#039;,
+					 w, w, &#039;&#039;, &#039;Actuator&#039;, null, null, this.getTagsForStencil(gn, &#039;actuator&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.adaptive_security_appliance;&#039;,
+					 w, w, &#039;&#039;, &#039;Adaptive Security Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;adaptive security appliance&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.automated_system;&#039;,
+					 w, w, &#039;&#039;, &#039;Automated System&#039;, null, null, this.getTagsForStencil(gn, &#039;automated system&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.blade_server;&#039;,
+					 w, w, &#039;&#039;, &#039;Blade Server&#039;, null, null, this.getTagsForStencil(gn, &#039;blade server&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.catalyst_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Catalyst Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;catalyst switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.cisco_appliance;&#039;,
+					 w, w, &#039;&#039;, &#039;Cisco Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;cisco appliance&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.l3_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Core Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;core switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.corporate_device1;&#039;,
+					 w, w, &#039;&#039;, &#039;Corporate Device&#039;, null, null, this.getTagsForStencil(gn, &#039;corporate device&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.corporate_device;&#039;,
+					 w, w, &#039;&#039;, &#039;Corporate Wireless Device&#039;, null, null, this.getTagsForStencil(gn, &#039;corporate wireless device&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.ddos_protection_appliance;&#039;,
+					 w, w, &#039;&#039;, &#039;DDOS Protection Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;ddos protection appliance&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.stacked_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Distribution Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;distribution switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.email_security;&#039;,
+					 w, w, &#039;&#039;, &#039;Email Security&#039;, null, null, this.getTagsForStencil(gn, &#039;email security&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.endpoint_concentrator;&#039;,
+					 w, w, &#039;&#039;, &#039;Endpoint Concentrator&#039;, null, null, this.getTagsForStencil(gn, &#039;endpoint concentrator&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.fabric_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Fabric Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;fabric switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.firepower_appliance;&#039;,
+					 w, w, &#039;&#039;, &#039;Firepower Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;firepower appliance&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.firepower_management_center;&#039;,
+					 w, w, &#039;&#039;, &#039;Firepower Management Center&#039;, null, null, this.getTagsForStencil(gn, &#039;firepower management center&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.firewall;&#039;,
+					 w, w, &#039;&#039;, &#039;Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;firewall&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.flow_collector;&#039;,
+					 w, w, &#039;&#039;, &#039;Flow Collector&#039;, null, null, this.getTagsForStencil(gn, &#039;flow collector&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.flow_sensor;&#039;,
+					 w, w, &#039;&#039;, &#039;Flow Sensor&#039;, null, null, this.getTagsForStencil(gn, &#039;flow sensor&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.generic_appliance;&#039;,
+					 w, w, &#039;&#039;, &#039;Generic Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;generic appliance&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.identity_directory;&#039;,
+					 w, w, &#039;&#039;, &#039;Identity Directory&#039;, null, null, this.getTagsForStencil(gn, &#039;identity directory&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.intrusion_detection;&#039;,
+					 w, w, &#039;&#039;, &#039;Intrusion Detection&#039;, null, null, this.getTagsForStencil(gn, &#039;intrusion detection&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.intrusion_detection;&#039;,
+					 w, w, &#039;&#039;, &#039;Intrusion Prevention&#039;, null, null, this.getTagsForStencil(gn, &#039;intrusion prevention&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.l3_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;L3 Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;l3 switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.aci_leaf_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Leaf Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;leaf switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.load_balancer;&#039;,
+					 w, w, &#039;&#039;, &#039;Load Balancer&#039;, null, null, this.getTagsForStencil(gn, &#039;load balancer&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.log_collector;&#039;,
+					 w, w, &#039;&#039;, &#039;Log Collector&#039;, null, null, this.getTagsForStencil(gn, &#039;log collector&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.mgmt_console;&#039;,
+					 w, w, &#039;&#039;, &#039;Management Console&#039;, null, null, this.getTagsForStencil(gn, &#039;mgmt management console&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.mdm;&#039;,
+					 w, w, &#039;&#039;, &#039;MDM&#039;, null, null, this.getTagsForStencil(gn, &#039;mdm&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.mobile;&#039;,
+					 w, w, &#039;&#039;, &#039;Mobile&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.monitoring;&#039;,
+					 w, w, &#039;&#039;, &#039;Monitoring&#039;, null, null, this.getTagsForStencil(gn, &#039;monitoring&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.nexus_1kv;&#039;,
+					 w, w, &#039;&#039;, &#039;Nexus 1kv&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 1kv&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.nexus_data_center_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Nexus Data Center Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus data center switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.nexus_fabric_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Nexus Fabric Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus fabric switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.nexus_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Nexus Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.ntp;&#039;,
+					 w, w, &#039;&#039;, &#039;NTP&#039;, null, null, this.getTagsForStencil(gn, &#039;ntp&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.phone;&#039;,
+					 w, w, &#039;&#039;, &#039;Phone&#039;, null, null, this.getTagsForStencil(gn, &#039;phone&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.policy;&#039;,
+					 w, w, &#039;&#039;, &#039;Policy&#039;, null, null, this.getTagsForStencil(gn, &#039;policy&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.radware_appliance;&#039;,
+					 w, w, &#039;&#039;, &#039;Radware Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;radware appliance&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.router;&#039;,
+					 w, w, &#039;&#039;, &#039;Router&#039;, null, null, this.getTagsForStencil(gn, &#039;router&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.sandbox_appliance;&#039;,
+					 w, w, &#039;&#039;, &#039;Sandbox Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;sandbox appliance&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.aci_controller;&#039;,
+					 w, w, &#039;&#039;, &#039;SD Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;sd controller&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.sd_wan;&#039;,
+					 w, w, &#039;&#039;, &#039;SD WAN&#039;, null, null, this.getTagsForStencil(gn, &#039;sd wan wireless area network&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.sd_wan_2;&#039;,
+					 w, w, &#039;&#039;, &#039;SD WAN&#039;, null, null, this.getTagsForStencil(gn, &#039;sd wan wireless area network&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.secure_dns;&#039;,
+					 w, w, &#039;&#039;, &#039;Secure DNS&#039;, null, null, this.getTagsForStencil(gn, &#039;secure dns domain name server&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.secure_server;&#039;,
+					 w, w, &#039;&#039;, &#039;Secure Server&#039;, null, null, this.getTagsForStencil(gn, &#039;secure server&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.sensor;&#039;,
+					 w, w, &#039;&#039;, &#039;Sensor&#039;, null, null, this.getTagsForStencil(gn, &#039;sensor&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.server;&#039;,
+					 w, w, &#039;&#039;, &#039;Server&#039;, null, null, this.getTagsForStencil(gn, &#039;server&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.siem;&#039;,
+					 w, w, &#039;&#039;, &#039;SIEM&#039;, null, null, this.getTagsForStencil(gn, &#039;siem&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.aci_spine_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Spine Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;spine switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.stacked_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Stacked Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;stacked switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.storage;&#039;,
+					 w, w, &#039;&#039;, &#039;Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;storage&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.tetration_analytics;&#039;,
+					 w, w, &#039;&#039;, &#039;Tetration Analytics&#039;, null, null, this.getTagsForStencil(gn, &#039;tetration analytics&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.tls_appliance;&#039;,
+					 w, w, &#039;&#039;, &#039;TLS Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;tls appliance&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.unified_access_switch;&#039;,
+					 w, w, &#039;&#039;, &#039;Unified Access Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;unified access switch&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.udp_director;&#039;,
+					 w, w, &#039;&#039;, &#039;UDP Director&#039;, null, null, this.getTagsForStencil(gn, &#039;udp director&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.video_endpoint;&#039;,
+					 w, w, &#039;&#039;, &#039;Video Endpoint&#039;, null, null, this.getTagsForStencil(gn, &#039;video endpoint&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.vpn_concentrator;&#039;,
+					 w, w, &#039;&#039;, &#039;VPN Concentrator&#039;, null, null, this.getTagsForStencil(gn, &#039;vpn virtual private network concentrator&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.vulnerability_management;&#039;,
+					 w, w, &#039;&#039;, &#039;Vulnerability Management&#039;, null, null, this.getTagsForStencil(gn, &#039;vulnerability management&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.web_application_firewall;&#039;,
+					 w, w, &#039;&#039;, &#039;Web Application Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;web application firewall&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.web_application_firewall_2;&#039;,
+					 w, w, &#039;&#039;, &#039;Web Application Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;web application firewall&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.web_filtering;&#039;,
+					 w, w, &#039;&#039;, &#039;Web Filtering&#039;, null, null, this.getTagsForStencil(gn, &#039;web filtering&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.web_security;&#039;,
+					 w, w, &#039;&#039;, &#039;Web Security&#039;, null, null, this.getTagsForStencil(gn, &#039;web security&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.wide_area_application_engine;&#039;,
+					 w, w, &#039;&#039;, &#039;Wide Area Application Engine&#039;, null, null, this.getTagsForStencil(gn, &#039;wide area application engine&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.wireless_access_point;&#039;,
+					 w, w, &#039;&#039;, &#039;Wireless Access Point&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless access point&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.generic_appliance;resIcon=&#039; + gn + &#039;.wireless_lan_controller;&#039;,
+					 w, w, &#039;&#039;, &#039;Wireless LAN Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless lan controller&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCiscoSafeBusinessIconsPalette = function()
+	{
+		var w = 50;
+		var h = 50;
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;html=1;fillColor=#282828;strokeColor=none;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;pointerEvents=1;align=center;shape=mxgraph.cisco_safe.business_icons.&#039;;
+		var gn = &#039;mxgraph.cisco_safe.business_icons&#039;;
+		var dt = &#039;cisco safe business&#039;;
+
+		this.addPaletteFunctions(&#039;cisco_safeBusiness Icons&#039;, &#039;Cisco Safe / Business Icons&#039;, false,
+		[
+	   		 this.createVertexTemplateEntry(s + &#039;icon1;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon2;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon3;&#039;,
+					 w * 0.9, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon4;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon5;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon6;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon7;&#039;,
+					 w, h * 0.7, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon8;&#039;,
+					 w * 0.77, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon9;&#039;,
+					 w * 0.81, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon10;&#039;,
+					 w, h * 0.88, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon11;&#039;,
+					 w, h * 0.84, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon12;&#039;,
+					 w, h * 0.89, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon13;&#039;,
+					 w, h * 0.56, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon14;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon15;&#039;,
+					 w * 0.76, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon16;&#039;,
+					 w, h * 0.75, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon17;&#039;,
+					 w, h * 0.69, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon18;&#039;,
+					 w * 0.82, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon19;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon20;&#039;,
+					 w * 0.89, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon21;&#039;,
+					 w * 0.99, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon22;&#039;,
+					 w * 0.93, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon23;&#039;,
+					 w * 0.87, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon24;&#039;,
+					 w, h * 0.62, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon25;&#039;,
+					 w, h * 0.81, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon26;&#039;,
+					 w, h * 0.71, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon27;&#039;,
+					 w, h * 0.99, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon28;&#039;,
+					 w * 0.94, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon29;&#039;,
+					 w, h * 0.84, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon30;&#039;,
+					 w, h * 0.97, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCiscoSafeCapabilityPalette = function()
+	{
+		var ptss = &#039;points=[[0.145,0.145,0],[0.5,0,0],[0.855,0.145,0],[1,0.5,0],[0.855,0.855,0],[0.5,1,0],[0.145,0.855,0],[0,0.5,0]];&#039;;
+		var n2 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;html=1;strokeColor=#ffffff;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;align=center;&#039; + 
+			ptss + &#039;pointerEvents=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.cisco_safe.&quot;;
+		var n3 = &#039;fillColor=#6ABD46;&#039; + n2;
+		var n4 = &#039;fillColor=#999999;&#039; + n2;
+		var n2 = &#039;fillColor=#28A8E0;&#039; + n2;
+		var gn = &#039;mxgraph.cisco_safe.capability&#039;;
+		var dt = &#039;cisco safe capability&#039;;
+
+		var w = 43;
+		
+		this.addPaletteFunctions(&#039;cisco_safeCapability&#039;, &#039;Cisco Safe / Capability&#039;, false,
+		[
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.access_control_using_trustsec;&#039;,
+					 w, w, &#039;&#039;, &#039;Access Control Using TrustSec&#039;, null, null, this.getTagsForStencil(gn, &#039;access control using trustsec&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.analysis_correlation;&#039;,
+					 w, w, &#039;&#039;, &#039;Analysis Correlation&#039;, null, null, this.getTagsForStencil(gn, &#039;analysis correlation&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.anomaly_detection;&#039;,
+					 w, w, &#039;&#039;, &#039;Anomaly Detection&#039;, null, null, this.getTagsForStencil(gn, &#039;anomaly detection&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.anti_malware;&#039;,
+					 w, w, &#039;&#039;, &#039;Anti-Malware&#039;, null, null, this.getTagsForStencil(gn, &#039;anti malware&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.anti_spam;&#039;,
+					 w, w, &#039;&#039;, &#039;Anti-Spam&#039;, null, null, this.getTagsForStencil(gn, &#039;anti spam&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.anti_virus;&#039;,
+					 w, w, &#039;&#039;, &#039;Anti-Virus&#039;, null, null, this.getTagsForStencil(gn, &#039;anti virus&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.application;&#039;,
+					 w, w, &#039;&#039;, &#039;Application&#039;, null, null, this.getTagsForStencil(gn, &#039;application&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.application_visibility_control;&#039;,
+					 w, w, &#039;&#039;, &#039;Application Visibility Control&#039;, null, null, this.getTagsForStencil(gn, &#039;application visibility control&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.casb;&#039;,
+					 w, w, &#039;&#039;, &#039;CASB&#039;, null, null, this.getTagsForStencil(gn, &#039;casb&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.client_based_security;&#039;,
+					 w, w, &#039;&#039;, &#039;Client-Based Security&#039;, null, null, this.getTagsForStencil(gn, &#039;client based security&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n3 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.block;&#039;,
+					 w, w, &#039;&#039;, &#039;Block&#039;, null, null, this.getTagsForStencil(gn, &#039;block&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.cloud_web_security;&#039;,
+					 w, w, &#039;&#039;, &#039;Cloud Web Security&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud web security&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.conference_bridge;&#039;,
+					 w, w, &#039;&#039;, &#039;Conference Bridge&#039;, null, null, this.getTagsForStencil(gn, &#039;conference bridge&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.database;&#039;,
+					 w, w, &#039;&#039;, &#039;Database&#039;, null, null, this.getTagsForStencil(gn, &#039;database&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.data_loss_prevention;&#039;,
+					 w, w, &#039;&#039;, &#039;Data Loss Prevention&#039;, null, null, this.getTagsForStencil(gn, &#039;data loss prevention&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.device_profiling;&#039;,
+					 w, w, &#039;&#039;, &#039;Device Profiling&#039;, null, null, this.getTagsForStencil(gn, &#039;device profiling&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.device_trajectory;&#039;,
+					 w, w, &#039;&#039;, &#039;Device Trajectory&#039;, null, null, this.getTagsForStencil(gn, &#039;device trajectory&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.disk_encryption;&#039;,
+					 w, w, &#039;&#039;, &#039;Disk Encryption&#039;, null, null, this.getTagsForStencil(gn, &#039;disk encryption&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.distributed_denial_of_service_protection;&#039;,
+					 w, w, &#039;&#039;, &#039;Distributed Denial of Service Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;distributed denial of service protection&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.dns;&#039;,
+					 w, w, &#039;&#039;, &#039;DNS&#039;, null, null, this.getTagsForStencil(gn, &#039;dns&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.dns_security;&#039;,
+					 w, w, &#039;&#039;, &#039;DNS Security&#039;, null, null, this.getTagsForStencil(gn, &#039;dns security&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.email_encryption;&#039;,
+					 w, w, &#039;&#039;, &#039;Email Encryption&#039;, null, null, this.getTagsForStencil(gn, &#039;email encryption&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.email_security;&#039;,
+					 w, w, &#039;&#039;, &#039;Email Security&#039;, null, null, this.getTagsForStencil(gn, &#039;email security&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.file_trajectory;&#039;,
+					 w, w, &#039;&#039;, &#039;File Trajectory&#039;, null, null, this.getTagsForStencil(gn, &#039;file trajectory&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.fabric_switching;&#039;,
+					 w, w, &#039;&#039;, &#039;Fabric Switching&#039;, null, null, this.getTagsForStencil(gn, &#039;fabric switching&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.firewall;&#039;,
+					 w, w, &#039;&#039;, &#039;Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;firewall&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.flow_analytics;&#039;,
+					 w, w, &#039;&#039;, &#039;Flow Analytics&#039;, null, null, this.getTagsForStencil(gn, &#039;flow analytics&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.identity_authorization;&#039;,
+					 w, w, &#039;&#039;, &#039;Identity Authorization&#039;, null, null, this.getTagsForStencil(gn, &#039;identity authorization&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.identity_authorization_alt;&#039;,
+					 w, w, &#039;&#039;, &#039;Identity Authorization (alternative)&#039;, null, null, this.getTagsForStencil(gn, &#039;identity authorization alt alternative&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.intrusion_detection;&#039;,
+					 w, w, &#039;&#039;, &#039;Intrusion Detection&#039;, null, null, this.getTagsForStencil(gn, &#039;intrusion detection&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.intrusion_prevention;&#039;,
+					 w, w, &#039;&#039;, &#039;Intrusion Prevention&#039;, null, null, this.getTagsForStencil(gn, &#039;intrusion prevention&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.l2_l3_network;&#039;,
+					 w, w, &#039;&#039;, &#039;L2 L3 Network&#039;, null, null, this.getTagsForStencil(gn, &#039;l2 l3 network&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.l2_l3_network_virtual;&#039;,
+					 w, w, &#039;&#039;, &#039;L2 L3 Network (virtual)&#039;, null, null, this.getTagsForStencil(gn, &#039;l2 l3 network virtual&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.l2_switching;&#039;,
+					 w, w, &#039;&#039;, &#039;L2 Switching&#039;, null, null, this.getTagsForStencil(gn, &#039;l2 switching&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.l3_switching;&#039;,
+					 w, w, &#039;&#039;, &#039;L3 Switching&#039;, null, null, this.getTagsForStencil(gn, &#039;l3 switching&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.load_balancer;&#039;,
+					 w, w, &#039;&#039;, &#039;Load Balancer&#039;, null, null, this.getTagsForStencil(gn, &#039;load balancer&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.logging_reporting;&#039;,
+					 w, w, &#039;&#039;, &#039;Logging Reporting&#039;, null, null, this.getTagsForStencil(gn, &#039;logging reporting&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.malware_sandbox;&#039;,
+					 w, w, &#039;&#039;, &#039;Malware Sandbox&#039;, null, null, this.getTagsForStencil(gn, &#039;malware sandbox&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.micro_segmentation;&#039;,
+					 w, w, &#039;&#039;, &#039;Micro-Segmentation&#039;, null, null, this.getTagsForStencil(gn, &#039;micro segmentation&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.mobile_device_manager;&#039;,
+					 w, w, &#039;&#039;, &#039;Mobile Device Manager&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile device manager&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.multi_factor_identification;&#039;,
+					 w, w, &#039;&#039;, &#039;Multi-Factor Identification&#039;, null, null, this.getTagsForStencil(gn, &#039;multi factor identification&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.monitoring;&#039;,
+					 w, w, &#039;&#039;, &#039;Monitoring&#039;, null, null, this.getTagsForStencil(gn, &#039;monitoring&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.policy_configuration;&#039;,
+					 w, w, &#039;&#039;, &#039;Policy Configuration&#039;, null, null, this.getTagsForStencil(gn, &#039;policy configuration&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.posture_assessment;&#039;,
+					 w, w, &#039;&#039;, &#039;Posture Assessment&#039;, null, null, this.getTagsForStencil(gn, &#039;posture assessment&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n3 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.quarantine;&#039;,
+					 w, w, &#039;&#039;, &#039;Quarantine&#039;, null, null, this.getTagsForStencil(gn, &#039;quarantine&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n3 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.remediate;&#039;,
+					 w, w, &#039;&#039;, &#039;Remediate&#039;, null, null, this.getTagsForStencil(gn, &#039;remediate&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.routing;&#039;,
+					 w, w, &#039;&#039;, &#039;Routing&#039;, null, null, this.getTagsForStencil(gn, &#039;routing&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.server_based_security;&#039;,
+					 w, w, &#039;&#039;, &#039;Server Based Security&#039;, null, null, this.getTagsForStencil(gn, &#039;server based security&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.tagging;&#039;,
+					 w, w, &#039;&#039;, &#039;Tagging&#039;, null, null, this.getTagsForStencil(gn, &#039;tagging&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.ssl_tls_offload;&#039;,
+					 w, w, &#039;&#039;, &#039;SSL TLS Offload&#039;, null, null, this.getTagsForStencil(gn, &#039;ssl tls offload&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.storage;&#039;,
+					 w, w, &#039;&#039;, &#039;Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;storage&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.threat_intelligence;&#039;,
+					 w, w, &#039;&#039;, &#039;Threat Intelligence&#039;, null, null, this.getTagsForStencil(gn, &#039;threat intelligence&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.time_synchronization;&#039;,
+					 w, w, &#039;&#039;, &#039;Time Synchronization&#039;, null, null, this.getTagsForStencil(gn, &#039;time synchronization&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.user;&#039;,
+					 w, w, &#039;&#039;, &#039;User&#039;, null, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.video;&#039;,
+					 w, w, &#039;&#039;, &#039;Video&#039;, null, null, this.getTagsForStencil(gn, &#039;video&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.virtualized_capability;&#039;,
+					 w, w, &#039;&#039;, &#039;Virtualized Capability&#039;, null, null, this.getTagsForStencil(gn, &#039;virtualized capability&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.virtual_firewall;&#039;,
+					 w, w, &#039;&#039;, &#039;Virtual Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual firewall&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.virtual_l2_switching;&#039;,
+					 w, w, &#039;&#039;, &#039;Virtual L2 Switching&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual l2 switching&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.virtual_private_network;&#039;,
+					 w, w, &#039;&#039;, &#039;Virtual Private Network&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual private network vpn&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.voice;&#039;,
+					 w, w, &#039;&#039;, &#039;Voice&#039;, null, null, this.getTagsForStencil(gn, &#039;voice&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.vpn_concentrator;&#039;,
+					 w, w, &#039;&#039;, &#039;VPN Concentrator&#039;, null, null, this.getTagsForStencil(gn, &#039;vpn concentrator virtual private network&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.vulnerability_management;&#039;,
+					 w, w, &#039;&#039;, &#039;Vulnerability Management&#039;, null, null, this.getTagsForStencil(gn, &#039;vulnerability management&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.web_application_firewall;&#039;,
+					 w, w, &#039;&#039;, &#039;Web Application Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;web application firewall&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.web_reputation_filtering_dcs;&#039;,
+					 w, w, &#039;&#039;, &#039;Web Reputation Filtering DCS&#039;, null, null, this.getTagsForStencil(gn, &#039;web reputation filtering dcs&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.web_security;&#039;,
+					 w, w, &#039;&#039;, &#039;Web Security&#039;, null, null, this.getTagsForStencil(gn, &#039;web security&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.wireless_connection;&#039;,
+					 w, w, &#039;&#039;, &#039;Wireless Connection&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless connection&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.wireless_intrusion_detection_system;&#039;,
+					 w, w, &#039;&#039;, &#039;Wireless Intrusion Detection System&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless intrusion detection system&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.wireless_intrusion_prevention_system;&#039;,
+					 w, w, &#039;&#039;, &#039;Wireless Intrusion Prevention System&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless intrusion prevention system&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.wireless_rogue_detection;&#039;,
+					 w, w, &#039;&#039;, &#039;Wireless Rogue Detection&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless rogue detection&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.routing;&#039;,
+					 w, w, &#039;&#039;, &#039;Routing&#039;, null, null, this.getTagsForStencil(gn, &#039;routing&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.l2_switching;&#039;,
+					 w, w, &#039;&#039;, &#039;L2 Switching&#039;, null, null, this.getTagsForStencil(gn, &#039;l2 switching&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.l3_switching;&#039;,
+					 w, w, &#039;&#039;, &#039;L3 Switching&#039;, null, null, this.getTagsForStencil(gn, &#039;l3 switching&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.fabric_switching;&#039;,
+					 w, w, &#039;&#039;, &#039;Fabric Switching&#039;, null, null, this.getTagsForStencil(gn, &#039;fabric switching&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.l2_l3_network;&#039;,
+					 w, w, &#039;&#039;, &#039;L2 L3 Network&#039;, null, null, this.getTagsForStencil(gn, &#039;l2 l3 network&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.wireless_connection;&#039;,
+					 w, w, &#039;&#039;, &#039;Wireless Connection&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless connection&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.application_optimization;&#039;,
+					 w, w, &#039;&#039;, &#039;Application Optimization&#039;, null, null, this.getTagsForStencil(gn, &#039;application optimization&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.quality_of_service;&#039;,
+					 w, w, &#039;&#039;, &#039;Quality of Service&#039;, null, null, this.getTagsForStencil(gn, &#039;quality of service&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.path_control;&#039;,
+					 w, w, &#039;&#039;, &#039;Path Control&#039;, null, null, this.getTagsForStencil(gn, &#039;path control&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.database;&#039;,
+					 w, w, &#039;&#039;, &#039;Database&#039;, null, null, this.getTagsForStencil(gn, &#039;database&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.storage;&#039;,
+					 w, w, &#039;&#039;, &#039;Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;storage&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.secure_server;&#039;,
+					 w, w, &#039;&#039;, &#039;Secure Server&#039;, null, null, this.getTagsForStencil(gn, &#039;secure server&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.voice;&#039;,
+					 w, w, &#039;&#039;, &#039;Voice&#039;, null, null, this.getTagsForStencil(gn, &#039;voice&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.video;&#039;,
+					 w, w, &#039;&#039;, &#039;Video&#039;, null, null, this.getTagsForStencil(gn, &#039;video&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.load_balancer;&#039;,
+					 w, w, &#039;&#039;, &#039;Load Balancer&#039;, null, null, this.getTagsForStencil(gn, &#039;load balancer&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.host_context;&#039;,
+					 w, w, &#039;&#039;, &#039;Host Context&#039;, null, null, this.getTagsForStencil(gn, &#039;host context&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.application;&#039;,
+					 w, w, &#039;&#039;, &#039;Business Application&#039;, null, null, this.getTagsForStencil(gn, &#039;business application&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.infrastructure_redundancy;&#039;,
+					 w, w, &#039;&#039;, &#039;Infrastructure Redundancy&#039;, null, null, this.getTagsForStencil(gn, &#039;infrastructure redundancy&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n4 + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.standardized_system_images;&#039;,
+					 w, w, &#039;&#039;, &#039;Standardized System Images&#039;, null, null, this.getTagsForStencil(gn, &#039;standardized_system_images&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCiscoSafeDesignPalette = function()
+	{
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;html=1;fillColor=#A153A0;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;pointerEvents=1;align=center;&#039; + 
+			&#039;points=[[0,0.5,0],[0.125,0.25,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[0.875,0.25,0],[1,0.5,0],[0.875,0.75,0],[0.75,1,0],[0.5,1,0],[0.125,0.75,0]];shape=mxgraph.cisco_safe.design.&#039;;
+		var s2 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;html=1;fillColor=#A153A0;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;align=center;pointerEvents=1;shape=mxgraph.cisco_safe.design.&#039;;
+		var n = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;html=1;fillColor=#A153A0;strokeColor=#ffffff;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;align=center;&#039; + 
+		&#039;points=[[0,0.5,0],[0.125,0.25,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[0.875,0.25,0],[1,0.5,0],[0.875,0.75,0],[0.75,1,0],[0.5,1,0],[0.125,0.75,0]];pointerEvents=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.cisco_safe.&quot;;
+		var gn = &#039;mxgraph.cisco_safe.design&#039;;
+		var dt = &#039;cisco safe design&#039;;
+
+		var w = 50;
+
+		this.addPaletteFunctions(&#039;cisco_safeDesign&#039;, &#039;Cisco Safe / Design&#039;, false,
+		[
+			this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.access_point;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Access Point&#039;, null, null, this.getTagsForStencil(gn, &#039;access point&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.access_switch_2;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Access Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;access switch&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.aci_controller;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;ACI Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;aci controller&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.aci_controller_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;ACI Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;aci controller&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.aci_leaf_switch;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;ACI Leaf Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;aci leaf switch&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.aci_spine_switch;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;ACI Spine Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;aci spine switch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;actor_1;&#039;, 
+				w * 0.47, w, &#039;&#039;, &#039;Actor (female)&#039;, null, null, this.getTagsForStencil(gn, &#039;actor female&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;actor_2;&#039;, 
+				w * 0.38, w, &#039;&#039;, &#039;Actor (male)&#039;, null, null, this.getTagsForStencil(gn, &#039;actuator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;actuator;&#039;, 
+				w, w * 0.9, &#039;&#039;, &#039;Actuator&#039;, null, null, this.getTagsForStencil(gn, &#039;actuator&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.adaptive_security_appliance;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Adaptive Security Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;adaptive security appliance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.adaptive_security_appliance_2;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Adaptive Security Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;adaptive security appliance&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.automated_system;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Automated System&#039;, null, null, this.getTagsForStencil(gn, &#039;automated system&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.blade_server;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Blade Server&#039;, null, null, this.getTagsForStencil(gn, &#039;blade server&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.blade_server_2;&#039;,
+		   		w, w * 0.9, &#039;&#039;, &#039;Blade Server&#039;, null, null, this.getTagsForStencil(gn, &#039;blade server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;blank_device;&#039;, 
+				w, w * 0.9, &#039;&#039;, &#039;Blank Device&#039;, null, null, this.getTagsForStencil(gn, &#039;blank device&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.blank_service;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Blank Service&#039;, null, null, this.getTagsForStencil(gn, &#039;blank service&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.call_manager;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Call Manager&#039;, null, null, this.getTagsForStencil(gn, &#039;call manager&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.catalyst_data_center_switch;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Catalyst Data Center Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;catalyst data center switch&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.catalyst_switch_stack;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Catalyst Switch Stack&#039;, null, null, this.getTagsForStencil(gn, &#039;catalyst switch stack&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.cisco_amp;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Cisco Amp&#039;, null, null, this.getTagsForStencil(gn, &#039;cisco amp amplifier&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.cisco_anyconnect;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Cisco AnyConnect&#039;, null, null, this.getTagsForStencil(gn, &#039;cisco anyconnect&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.cisco_cloud_web_security;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Cisco Cloud Web Security&#039;, null, null, this.getTagsForStencil(gn, &#039;cisco cloud web security&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.client_firewall;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Client Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;client firewall&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.l3_switch;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Core Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;core switch&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.corporate_device;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Corporate Device&#039;, null, null, this.getTagsForStencil(gn, &#039;corporate device&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.corporate_device;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Corporate Wireless Device&#039;, null, null, this.getTagsForStencil(gn, &#039;corporate device_2&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.ddos_protection;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;DDOS Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;ddos protection&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.ddos_protection_2;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;DDOS Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;ddos protection&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.distribution_switch;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Distribution Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;distribution switch&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.email_security;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Email Security&#039;, null, null, this.getTagsForStencil(gn, &#039;email security&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.encryption_offload;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Encryption Offload&#039;, null, null, this.getTagsForStencil(gn, &#039;encryption offload&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.endpoint_concentrator;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Endpoint Concentrator&#039;, null, null, this.getTagsForStencil(gn, &#039;endpoint concentrator&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.endpoint_concentrator_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Endpoint Concentrator&#039;, null, null, this.getTagsForStencil(gn, &#039;endpoint concentrator&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.fabric_switch;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Fabric Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;fabric switch&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.firepower_appliance;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Firepower Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;firepower appliance&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.firepower_appliance_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Firepower Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;firepower appliance&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.firepower_management_center;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Firepower Management Center&#039;, null, null, this.getTagsForStencil(gn, &#039;firepower management center&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.firepower_management_center_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Firepower Management Center&#039;, null, null, this.getTagsForStencil(gn, &#039;firepower management center&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.firewall;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;firewall&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.firewall_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;firewall&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.flow_collector;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Flow Collector&#039;, null, null, this.getTagsForStencil(gn, &#039;flow collector&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.flow_collector_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Flow Collector&#039;, null, null, this.getTagsForStencil(gn, &#039;flow collector&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.flow_sensor;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Flow Sensor&#039;, null, null, this.getTagsForStencil(gn, &#039;flow sensor&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.flow_sensor_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Flow Sensor&#039;, null, null, this.getTagsForStencil(gn, &#039;flow sensor&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.intrusion_detection;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Intrusion Prevention&#039;, null, null, this.getTagsForStencil(gn, &#039;intrusion detection&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.intrusion_prevention_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Intrusion Prevention&#039;, null, null, this.getTagsForStencil(gn, &#039;intrusion detection&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.identity_directory;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Identity Directory&#039;, null, null, this.getTagsForStencil(gn, &#039;identity directory&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.l2_switch;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;L2 Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;l2 switch&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.l3_switch;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;L3 Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;l3 switch&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.load_balancer;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Load Balancer&#039;, null, null, this.getTagsForStencil(gn, &#039;load balancer&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.load_balancer_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Load Balancer&#039;, null, null, this.getTagsForStencil(gn, &#039;load balancer&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.log_collector;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Log collector&#039;, null, null, this.getTagsForStencil(gn, &#039;log collector&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.log_collector_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Log collector&#039;, null, null, this.getTagsForStencil(gn, &#039;log collector&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.mgmt_console;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Management Console&#039;, null, null, this.getTagsForStencil(gn, &#039;management console&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.mgmt_console_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Management Console&#039;, null, null, this.getTagsForStencil(gn, &#039;management console&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.mdm;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;MDM&#039;, null, null, this.getTagsForStencil(gn, &#039;mdm&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.mdm_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;MDM&#039;, null, null, this.getTagsForStencil(gn, &#039;mdm&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.mobile_device;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Mobile Device&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile device&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.monitoring;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Monitoring&#039;, null, null, this.getTagsForStencil(gn, &#039;monitoring&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.monitoring_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Monitoring&#039;, null, null, this.getTagsForStencil(gn, &#039;monitoring&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.ms_active_directory;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;MS Active Directory&#039;, null, null, this.getTagsForStencil(gn, &#039;ms active directory&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.ms_active_directory_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;MS Active Directory&#039;, null, null, this.getTagsForStencil(gn, &#039;ms active directory&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.nexus_1kv;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Nexus 1kv&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 1kv&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.nexus_data_center_switch;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Nexus Data Center Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus data center switch&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.nexus_fabric_switch;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Nexus Fabric Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus fabric switch&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.nexus_switch;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Nexus Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus switch&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.ntp;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;NTP&#039;, null, null, this.getTagsForStencil(gn, &#039;ntp&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.ntp_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;NTP&#039;, null, null, this.getTagsForStencil(gn, &#039;ntp&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.phone;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Phone&#039;, null, null, this.getTagsForStencil(gn, &#039;phone&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.policy;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Policy&#039;, null, null, this.getTagsForStencil(gn, &#039;policy&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.policy_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Policy&#039;, null, null, this.getTagsForStencil(gn, &#039;policy&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.radware;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Radware Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;radware&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.radware_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Radware Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;radware&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.router;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Router&#039;, null, null, this.getTagsForStencil(gn, &#039;router&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.router_2;&#039;,
+				w, w * 0.9, &#039;&#039;, &#039;Router&#039;, null, null, this.getTagsForStencil(gn, &#039;router&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.sd_wan;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;SD-WAN&#039;, null, null, this.getTagsForStencil(gn, &#039;sd wan&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.sd_wan_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;SD-WAN&#039;, null, null, this.getTagsForStencil(gn, &#039;sd wan&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.secure_dns;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Secure DNS&#039;, null, null, this.getTagsForStencil(gn, &#039;secure dns&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.secure_dns_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Secure DNS&#039;, null, null, this.getTagsForStencil(gn, &#039;secure dns&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.sensor;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Sensor&#039;, null, null, this.getTagsForStencil(gn, &#039;sensor&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.server_1;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Server&#039;, null, null, this.getTagsForStencil(gn, &#039;server&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.server_3;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Server&#039;, null, null, this.getTagsForStencil(gn, &#039;server&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.server_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Server&#039;, null, null, this.getTagsForStencil(gn, &#039;server&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.server_4;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Server&#039;, null, null, this.getTagsForStencil(gn, &#039;server&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.siem;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;SIEM&#039;, null, null, this.getTagsForStencil(gn, &#039;siem&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.siem_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;SIEM&#039;, null, null, this.getTagsForStencil(gn, &#039;siem&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.storage_1;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;storage&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.storage;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;storage&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.switch_stack;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Switch Stack&#039;, null, null, this.getTagsForStencil(gn, &#039;switch stack&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.tetration_agent;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Tetration Agent&#039;, null, null, this.getTagsForStencil(gn, &#039;tetration agent&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.tls_appliance;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;TLS Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;tls appliance&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.encryption_offload;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;TLS Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;tls appliance&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.udp_director;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;UDP Director&#039;, null, null, this.getTagsForStencil(gn, &#039;udp director&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.udp_director_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;UDP Director&#039;, null, null, this.getTagsForStencil(gn, &#039;udp director&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.user;&#039;,
+	   			w, w, &#039;&#039;, &#039;User&#039;, null, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.users;&#039;,
+	   			w, w, &#039;&#039;, &#039;Users&#039;, null, null, this.getTagsForStencil(gn, &#039;users&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=ellipse;resIcon=&#039; + gn + &#039;.video_endpoint;&#039;,
+	   			w, w, &#039;&#039;, &#039;Video Endpoint&#039;, null, null, this.getTagsForStencil(gn, &#039;video endpoint&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.virtual_secure_server;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Virtual Secure Server&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual secure server&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.vload_balancer;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;vLoad Balancer&#039;, null, null, this.getTagsForStencil(gn, &#039;vload balancer&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.vpn_concentrator;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;VPN Concentrator&#039;, null, null, this.getTagsForStencil(gn, &#039;vpn concentrator&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.vpn_concentrator_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;VPN Concentrator&#039;, null, null, this.getTagsForStencil(gn, &#039;vpn concentrator&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.vulnerability_management;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Vulnerability Management&#039;, null, null, this.getTagsForStencil(gn, &#039;vulnerability management&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.vulnerability_management_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Vulnerability Management&#039;, null, null, this.getTagsForStencil(gn, &#039;vulnerability management&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.vwaf_security;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;vWAF Security&#039;, null, null, this.getTagsForStencil(gn, &#039;vwaf security&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.vweb_security;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;vWeb Security&#039;, null, null, this.getTagsForStencil(gn, &#039;vweb security&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.vwlan_controller;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;vWLAN Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;vwlan controller&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.web_application_firewall;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Web Application Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;web application firewall&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.web_application_firewall_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Web Application Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;web application firewall&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.web_filtering;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Web Filtering&#039;, null, null, this.getTagsForStencil(gn, &#039;web filtering&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.web_filtering_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Web Filtering&#039;, null, null, this.getTagsForStencil(gn, &#039;web filtering&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.web_security;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Web Security&#039;, null, null, this.getTagsForStencil(gn, &#039;web security&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.wide_area_application_engine;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Wide Area Application Engine&#039;, null, null, this.getTagsForStencil(gn, &#039;wide area application engine&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.wide_area_application_engine_2;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Wide Area Application Engine&#039;, null, null, this.getTagsForStencil(gn, &#039;wide area application engine&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.wireless_corporate_device;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Wireless Corporate Device&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless corporate device&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.wireless_switch;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Wireless Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless switch&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.wlan_controller;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Wireless LAN Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;wlan wireless lan controller&#039;, dt).join(&#039; &#039;)),
+	   		this.createVertexTemplateEntry(n + &#039;compositeIcon;bgIcon=&#039; + gn + &#039;.blank_device;resIcon=&#039; + gn + &#039;.vwlan_controller;&#039;,
+	   			w, w * 0.9, &#039;&#039;, &#039;Wireless LAN Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;wlan wireless lan controller&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCiscoSafeIoTThingsIconsPalette = function()
+	{
+		var w = 50;
+		var h = 50;
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;html=1;fillColor=#282828;strokeColor=none;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;pointerEvents=1;align=center;shape=mxgraph.cisco_safe.iot_things_icons.&#039;;
+		var gn = &#039;mxgraph.cisco_safe.iot_things_icons&#039;;
+		var dt = &#039;cisco safe iot things icons internet&#039;;
+
+		var sc = 1;
+		var w2 = sc * 50;
+
+		this.addPaletteFunctions(&#039;cisco_safeIoT Things Icons&#039;, &#039;Cisco Safe / IoT Things Icons&#039;, false,
+		[
+	   		 this.createVertexTemplateEntry(s + &#039;icon1;&#039;,
+					 w * 0.97, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon2;&#039;,
+					 w, h * 0.96, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon3;&#039;,
+					 w, h * 0.48, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon4;&#039;,
+					 w, h * 0.78, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon5;&#039;,
+					 w * 0.58, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon6;&#039;,
+					 w, h * 0.99, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon7;&#039;,
+					 w * 0.82, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon8;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon9;&#039;,
+					 w, h * 0.77, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon10;&#039;,
+					 w * 0.5, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon11;&#039;,
+					 w, h * 0.97, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon12;&#039;,
+					 w, h * 0.65, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon13;&#039;,
+					 w, h * 0.56, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon14;&#039;,
+					 w * 0.37, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon15;&#039;,
+					 w, h * 0.65, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon16;&#039;,
+					 w, h * 0.92, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon17;&#039;,
+					 w * 0.7, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon18;&#039;,
+					 w, h * 0.75, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon19;&#039;,
+					 w, h * 0.77, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon20;&#039;,
+					 w * 0.91, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon21;&#039;,
+					 w, h * 0.97, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon22;&#039;,
+					 w, h * 0.73, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon23;&#039;,
+					 w, h * 0.9, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon24;&#039;,
+					 w, h * 0.87, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon25;&#039;,
+					 w, h * 0.22, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon26;&#039;,
+					 w, h * 0.63, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon27;&#039;,
+					 w, h * 0.5, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon28;&#039;,
+					 w, h * 0.74, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon29;&#039;,
+					 w, h * 0.74, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon30;&#039;,
+					 w, h * 0.71, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon31;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon32;&#039;,
+					 w, h * 0.56, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon33;&#039;,
+					 w, h * 0.78, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon34;&#039;,
+					 w, h * 0.7, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon35;&#039;,
+					 w, h * 0.62, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon36;&#039;,
+					 w * 0.53, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon37;&#039;,
+					 w * 0.79, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon38;&#039;,
+					 w, h * 0.91, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon39;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon40;&#039;,
+					 w, h * 0.89, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon41;&#039;,
+					 w * 0.58, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon42;&#039;,
+					 w * 0.58, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon43;&#039;,
+					 w * 0.96, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon44;&#039;,
+					 w * 0.99, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon45;&#039;,
+					 w, h * 0.99, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon46;&#039;,
+					 w, h * 0.83, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon47;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon48;&#039;,
+					 w * 0.43, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCiscoSafePeoplePlacesThingsIconsPalette = function()
+	{
+		var w = 50;
+		var h = 50;
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;html=1;fillColor=#282828;strokeColor=none;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;pointerEvents=1;align=center;shape=mxgraph.cisco_safe.people_places_things_icons.&#039;;
+		var gn = &#039;mxgraph.cisco_safe.people_places_things_icons&#039;;
+		var dt = &#039;cisco safe people places things&#039;;
+
+		var sc = 1;
+		var w2 = sc * 50;
+		
+		this.addPaletteFunctions(&#039;cisco_safePeople Places Things Icons&#039;, &#039;Cisco Safe / People, Places, Things Icons&#039;, false,
+		[
+	   		 this.createVertexTemplateEntry(s + &#039;icon1;&#039;,
+					 w * 0.93, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon2;&#039;,
+					 w, h * 0.82, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon3;&#039;,
+					 w, h * 0.97, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon4;&#039;,
+					 w * 0.89, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon5;&#039;,
+					 w * 0.81, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon6;&#039;,
+					 w, h * 0.87, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon7;&#039;,
+					 w * 0.98, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon8;&#039;,
+					 w * 0.39, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon9;&#039;,
+					 w, h * 0.9, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon10;&#039;,
+					 w, h * 0.99, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon11;&#039;,
+					 w * 0.95, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCiscoSafeSecurityIconsPalette = function()
+	{
+		var w = 50;
+		var h = 50;
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;html=1;fillColor=#282828;strokeColor=none;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;pointerEvents=1;align=center;shape=mxgraph.cisco_safe.security_icons.&#039;;
+		var gn = &#039;mxgraph.cisco_safe.security_icons&#039;;
+		var dt = &#039;cisco safe security&#039;;
+
+		var sc = 1;
+		var w2 = sc * 50;
+		
+		this.addPaletteFunctions(&#039;cisco_safeSecurity Icons&#039;, &#039;Cisco Safe / Security Icons&#039;, false,
+		[
+	   		 this.createVertexTemplateEntry(s + &#039;ngips;&#039;,
+					 w * 0.71, h * 0.85, &#039;&#039;, &#039;NGIPS&#039;, null, null, this.getTagsForStencil(gn, &#039;ngips&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;ngfw;&#039;,
+					 w * 1.05, h * 0.92, &#039;&#039;, &#039;NGFW&#039;, null, null, this.getTagsForStencil(gn, &#039;ngfw&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;ise;&#039;,
+					 w * 0.49, h * 0.69, &#039;&#039;, &#039;ISE&#039;, null, null, this.getTagsForStencil(gn, &#039;ise&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;ids;&#039;,
+					 w * 0.92, h * 0.71, &#039;&#039;, &#039;IDS&#039;, null, null, this.getTagsForStencil(gn, &#039;ids&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;nba;&#039;,
+					 w * 0.89, h * 0.67, &#039;&#039;, &#039;NBA&#039;, null, null, this.getTagsForStencil(gn, &#039;nba&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;nac;&#039;,
+					 w, h, &#039;&#039;, &#039;NAC&#039;, null, null, this.getTagsForStencil(gn, &#039;nac&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;iam;&#039;,
+					 w * 0.75, h * 0.94, &#039;&#039;, &#039;IAM&#039;, null, null, this.getTagsForStencil(gn, &#039;iam&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;amp;&#039;,
+					 w, h, &#039;&#039;, &#039;AMP&#039;, null, null, this.getTagsForStencil(gn, &#039;amp&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;utm;&#039;,
+					 w * 1.04, h * 0.23, &#039;&#039;, &#039;UTM&#039;, null, null, this.getTagsForStencil(gn, &#039;utm&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;firewall;&#039;,
+					 w * 0.99, h * 0.7, &#039;&#039;, &#039;Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;firewall&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;vulnerability_management;&#039;,
+					 w, h, &#039;&#039;, &#039;Vulnerability Management&#039;, null, null, this.getTagsForStencil(gn, &#039;vulnerability management&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;log_management;&#039;,
+					 w * 0.6, h * 0.75, &#039;&#039;, &#039;Log Management&#039;, null, null, this.getTagsForStencil(gn, &#039;log management&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;application_control;&#039;,
+					 w, h, &#039;&#039;, &#039;Application Control&#039;, null, null, this.getTagsForStencil(gn, &#039;application control&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;virtual;&#039;,
+					 w, h, &#039;&#039;, &#039;Virtual&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;siem;&#039;,
+					 w, h * 0.81, &#039;&#039;, &#039;SIEM&#039;, null, null, this.getTagsForStencil(gn, &#039;siem&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;antivirus;&#039;,
+					 w, h * 0.65, &#039;&#039;, &#039;Antivirus&#039;, null, null, this.getTagsForStencil(gn, &#039;antivirus&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;patch_management;&#039;,
+					 w, h * 0.78, &#039;&#039;, &#039;Patch Management&#039;, null, null, this.getTagsForStencil(gn, &#039;patch management&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;inspection_forensics;&#039;,
+					 w, h * 0.77, &#039;&#039;, &#039;Inspection / Forensics&#039;, null, null, this.getTagsForStencil(gn, &#039;inspection forensics&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;malware_sandbox;&#039;,
+					 w, h * 0.62, &#039;&#039;, &#039;Malware Sandbox&#039;, null, null, this.getTagsForStencil(gn, &#039;malware sandbox&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;ddos;&#039;,
+					 w, h, &#039;&#039;, &#039;DDoS&#039;, null, null, this.getTagsForStencil(gn, &#039;ddos&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;talos;&#039;,
+					 w * 1.86, h * 0.43, &#039;&#039;, &#039;Talos&#039;, null, null, this.getTagsForStencil(gn, &#039;talos&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;services;&#039;,
+					 w, h * 0.92, &#039;&#039;, &#039;Services&#039;, null, null, this.getTagsForStencil(gn, &#039;services&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;vpn;&#039;,
+					 w * 0.86, h, &#039;&#039;, &#039;VPN&#039;, null, null, this.getTagsForStencil(gn, &#039;vpn&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;email;&#039;,
+					 w, h * 0.71, &#039;&#039;, &#039;Email&#039;, null, null, this.getTagsForStencil(gn, &#039;email&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;web;&#039;,
+					 w, h, &#039;&#039;, &#039;Web&#039;, null, null, this.getTagsForStencil(gn, &#039;web&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;virtual_deployment;&#039;,
+					 w, h * 0.89, &#039;&#039;, &#039;Virtual Deployment&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual deployment&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;cloud_based;&#039;,
+					 w, h * 0.63, &#039;&#039;, &#039;Cloud Based&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud based&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;cloud_based_management;&#039;,
+					 w, h * 0.78, &#039;&#039;, &#039;Cloud Based Management&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud based management&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;trustsec;&#039;,
+					 w * 0.83, h, &#039;&#039;, &#039;Trustsec&#039;, null, null, this.getTagsForStencil(gn, &#039;trustsec&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;retrospective_security;&#039;,
+					 w, h * 0.96, &#039;&#039;, &#039;Retrospective Security&#039;, null, null, this.getTagsForStencil(gn, &#039;retrospective security&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;apic;&#039;,
+					 w, h * 0.81, &#039;&#039;, &#039;APIC&#039;, null, null, this.getTagsForStencil(gn, &#039;apic&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;waf;&#039;,
+					 w * 0.8, h, &#039;&#039;, &#039;WAF&#039;, null, null, this.getTagsForStencil(gn, &#039;waf&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon1;&#039;,
+					 w * 0.95, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon2;&#039;,
+					 w, h * 0.91, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon3;&#039;,
+					 w * 0.78, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon4;&#039;,
+					 w, h * 0.84, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon5;&#039;,
+					 w * 0.82, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon6;&#039;,
+					 w * 0.95, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon7;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon8;&#039;,
+					 w * 0.85, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon9;&#039;,
+					 w * 0.68, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon10;&#039;,
+					 w, h * 0.62, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon11;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon12;&#039;,
+					 w * 0.84, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon13;&#039;,
+					 w, h * 0.91, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon14;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon15;&#039;,
+					 w * 0.79, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon16;&#039;,
+					 w, h * 0.47, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon17;&#039;,
+					 w * 0.58, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon18;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon19;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon20;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon21;&#039;,
+					 w * 0.87, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon22;&#039;,
+					 w * 0.81, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon23;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon24;&#039;,
+					 w * 0.89, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon25;&#039;,
+					 w, h * 0.91, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon26;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon27;&#039;,
+					 w, h * 0.7, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon28;&#039;,
+					 w, h * 0.69, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon29;&#039;,
+					 w * 0.92, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon30;&#039;,
+					 w, h * 0.7, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon31;&#039;,
+					 w, h * 0.86, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon32;&#039;,
+					 w, h * 0.69, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon33;&#039;,
+					 w * 0.99, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon34;&#039;,
+					 w, h * 0.91, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon35;&#039;,
+					 w, h * 0.57, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon36;&#039;,
+					 w, h * 0.98, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon37;&#039;,
+					 w * 0.81, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon38;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon39;&#039;,
+					 w * 0.72, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon40;&#039;,
+					 w, h * 0.66, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCiscoSafeTechnologyIconsPalette = function()
+	{
+		var w = 50;
+		var h = 50;
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;html=1;fillColor=#282828;strokeColor=none;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;pointerEvents=1;align=center;shape=mxgraph.cisco_safe.technology_icons.&#039;;
+		var gn = &#039;mxgraph.cisco_safe.technology_icons&#039;;
+		var dt = &#039;cisco safe technology&#039;;
+
+		var sc = 1;
+		var w2 = sc * 50;
+		
+		this.addPaletteFunctions(&#039;cisco_safeTechnology Icons&#039;, &#039;Cisco Safe / Technology Icons&#039;, false,
+		[
+	   		 this.createVertexTemplateEntry(s + &#039;icon1;&#039;,
+					 w, h * 0.65, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon2;&#039;,
+					 w * 0.58, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon3;&#039;,
+					 w, h * 0.86, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon4;&#039;,
+					 w, h * 0.99, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon5;&#039;,
+					 w, h * 0.76, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon6;&#039;,
+					 w * 0.58, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon7;&#039;,
+					 w * 0.69, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon8;&#039;,
+					 w * 0.91, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon9;&#039;,
+					 w * 0.78, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon10;&#039;,
+					 w, h * 0.82, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon11;&#039;,
+					 w, h * 0.76, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon12;&#039;,
+					 w * 0.79, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon13;&#039;,
+					 w, h * 0.89, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon14;&#039;,
+					 w, h * 0.77, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon15;&#039;,
+					 w, h * 0.89, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon16;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon17;&#039;,
+					 w, h * 0.85, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon18;&#039;,
+					 w, h * 0.84, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon19;&#039;,
+					 w, h * 0.84, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon20;&#039;,
+					 w, h * 0.84, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon21;&#039;,
+					 w * 0.86, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon22;&#039;,
+					 w, h * 0.56, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon23;&#039;,
+					 w, h * 0.47, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon24;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon25;&#039;,
+					 w, h * 0.69, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon26;&#039;,
+					 w, h * 0.81, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon27;&#039;,
+					 w, h * 0.7, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon28;&#039;,
+					 w, h * 0.43, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(s + &#039;icon29;&#039;,
+					 w, h, &#039;&#039;, &#039;&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCiscoSafeThreatPalette = function()
+	{
+		var w = 50;
+		var h = 50;
+		var n2 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;html=1;fillColor=#F06650;strokeColor=#ffffff;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;align=center;&#039; + 
+		&#039;points=[];pointerEvents=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.cisco_safe.&quot;;
+		var gn = &#039;mxgraph.cisco_safe.threat&#039;;
+		var dt = &#039;cisco safe threat &#039;;
+
+		var sc = 1;
+		var w2 = sc * 50;
+		
+		this.addPaletteFunctions(&#039;cisco_safeThreat&#039;, &#039;Cisco Safe / Threat&#039;, false,
+		[
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat1;resIcon=&#039; + gn + &#039;.threat_a1;&#039;,
+					 w2 * 0.98, w2, &#039;&#039;, &#039;Threat A1&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat1;resIcon=&#039; + gn + &#039;.threat_a2;&#039;,
+					 w2 * 0.98, w2, &#039;&#039;, &#039;Threat A2&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat1;resIcon=&#039; + gn + &#039;.threat_a3;&#039;,
+					 w2 * 0.98, w2, &#039;&#039;, &#039;Threat A3&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat1;resIcon=&#039; + gn + &#039;.threat_a4;&#039;,
+					 w2 * 0.98, w2, &#039;&#039;, &#039;Threat A4&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat1;resIcon=&#039; + gn + &#039;.threat_a5;&#039;,
+					 w2 * 0.98, w2, &#039;&#039;, &#039;Threat A5&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat1;resIcon=&#039; + gn + &#039;.threat_a6;&#039;,
+					 w2 * 0.98, w2, &#039;&#039;, &#039;Threat A6&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat1;resIcon=&#039; + gn + &#039;.threat_a7;&#039;,
+					 w2 * 0.98, w2, &#039;&#039;, &#039;Threat A7&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat1;resIcon=&#039; + gn + &#039;.threat_a8;&#039;,
+					 w2 * 0.98, w2, &#039;&#039;, &#039;Threat A8&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat2;resIcon=&#039; + gn + &#039;.threat_b1;&#039;,
+					 w2 * 0.63, w2, &#039;&#039;, &#039;Threat B1&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat2;resIcon=&#039; + gn + &#039;.threat_b2;&#039;,
+					 w2 * 0.63, w2, &#039;&#039;, &#039;Threat B2&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat2;resIcon=&#039; + gn + &#039;.threat_b3;&#039;,
+					 w2 * 0.63, w2, &#039;&#039;, &#039;Threat B3&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat2;resIcon=&#039; + gn + &#039;.threat_b4;&#039;,
+					 w2 * 0.63, w2, &#039;&#039;, &#039;Threat B4&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat2;resIcon=&#039; + gn + &#039;.threat_b5;&#039;,
+					 w2 * 0.63, w2, &#039;&#039;, &#039;Threat B5&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat2;resIcon=&#039; + gn + &#039;.threat_b6;&#039;,
+					 w2 * 0.63, w2, &#039;&#039;, &#039;Threat B6&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat2;resIcon=&#039; + gn + &#039;.threat_b7;&#039;,
+					 w2 * 0.63, w2, &#039;&#039;, &#039;Threat B7&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat2;resIcon=&#039; + gn + &#039;.threat_b8;&#039;,
+					 w2 * 0.63, w2, &#039;&#039;, &#039;Threat B8&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat3;resIcon=&#039; + gn + &#039;.threat_c1;&#039;,
+					 w2, w2 * 0.81, &#039;&#039;, &#039;Threat C1&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat3;resIcon=&#039; + gn + &#039;.threat_c2;&#039;,
+					 w2, w2 * 0.81, &#039;&#039;, &#039;Threat C2&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat3;resIcon=&#039; + gn + &#039;.threat_c3;&#039;,
+					 w2, w2 * 0.81, &#039;&#039;, &#039;Threat C3&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat3;resIcon=&#039; + gn + &#039;.threat_c4;&#039;,
+					 w2, w2 * 0.81, &#039;&#039;, &#039;Threat C4&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat3;resIcon=&#039; + gn + &#039;.threat_c5;&#039;,
+					 w2, w2 * 0.81, &#039;&#039;, &#039;Threat C5&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat3;resIcon=&#039; + gn + &#039;.threat_c6;&#039;,
+					 w2, w2 * 0.81, &#039;&#039;, &#039;Threat C6&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat3;resIcon=&#039; + gn + &#039;.threat_c7;&#039;,
+					 w2, w2 * 0.81, &#039;&#039;, &#039;Threat C7&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat3;resIcon=&#039; + gn + &#039;.threat_c8;&#039;,
+					 w2, w2 * 0.81, &#039;&#039;, &#039;Threat C8&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat4;resIcon=&#039; + gn + &#039;.threat_d1;&#039;,
+					 w2 * 0.93, w2, &#039;&#039;, &#039;Threat D1&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat4;resIcon=&#039; + gn + &#039;.threat_d2;&#039;,
+					 w2 * 0.93, w2, &#039;&#039;, &#039;Threat D2&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat4;resIcon=&#039; + gn + &#039;.threat_d3;&#039;,
+					 w2 * 0.93, w2, &#039;&#039;, &#039;Threat D3&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat4;resIcon=&#039; + gn + &#039;.threat_d4;&#039;,
+					 w2 * 0.93, w2, &#039;&#039;, &#039;Threat D4&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat4;resIcon=&#039; + gn + &#039;.threat_d5;&#039;,
+					 w2 * 0.93, w2, &#039;&#039;, &#039;Threat D5&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat4;resIcon=&#039; + gn + &#039;.threat_d6;&#039;,
+					 w2 * 0.93, w2, &#039;&#039;, &#039;Threat D6&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat4;resIcon=&#039; + gn + &#039;.threat_d7;&#039;,
+					 w2 * 0.93, w2, &#039;&#039;, &#039;Threat D7&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat4;resIcon=&#039; + gn + &#039;.threat_d8;&#039;,
+					 w2 * 0.93, w2, &#039;&#039;, &#039;Threat D8&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat5;resIcon=&#039; + gn + &#039;.threat_e1;&#039;,
+					 w2, w2 * 0.94, &#039;&#039;, &#039;Threat E1&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat5;resIcon=&#039; + gn + &#039;.threat_e2;&#039;,
+					 w2, w2 * 0.94, &#039;&#039;, &#039;Threat E2&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat5;resIcon=&#039; + gn + &#039;.threat_e3;&#039;,
+					 w2, w2 * 0.94, &#039;&#039;, &#039;Threat E3&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat5;resIcon=&#039; + gn + &#039;.threat_e4;&#039;,
+					 w2, w2 * 0.94, &#039;&#039;, &#039;Threat E4&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat5;resIcon=&#039; + gn + &#039;.threat_e5;&#039;,
+					 w2, w2 * 0.94, &#039;&#039;, &#039;Threat E5&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat5;resIcon=&#039; + gn + &#039;.threat_e6;&#039;,
+					 w2, w2 * 0.94, &#039;&#039;, &#039;Threat E6&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat5;resIcon=&#039; + gn + &#039;.threat_e7;&#039;,
+					 w2, w2 * 0.94, &#039;&#039;, &#039;Threat E7&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)),
+	   		 this.createVertexTemplateEntry(n2 + &#039;compositeIcon;bgIcon=threat5;resIcon=&#039; + gn + &#039;.threat_e8;&#039;,
+					 w2, w2 * 0.94, &#039;&#039;, &#039;Threat E8&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

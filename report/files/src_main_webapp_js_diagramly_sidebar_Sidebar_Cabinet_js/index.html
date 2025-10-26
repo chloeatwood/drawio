@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Cabinet.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Cabinet.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">55.10</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">246</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">40.34</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">7.24</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds Cabinets shapes
+	Sidebar.prototype.addCabinetsPalette = function()
+	{
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;dashed=0;shadow=0;html=1;align=center;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;shape=mxgraph.cabinets.&#039;;
+		var s2 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=middle;dashed=0;shadow=0;html=1;shape=mxgraph.cabinets.&#039;;
+		var inh = &#039;strokeColor=inherit;fillColor=inherit;gradientColor=inherit;&#039;;
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cabinets&#039;;
+		var dt = &#039;cabinet &#039;;
+		var sb = this;
+		this.setCurrentSearchEntryLibrary(&#039;cabinets&#039;);
+		
+		var fns = 
+		[
+			this.createVertexTemplateEntry(s + &#039;cabinet;hasStand=1&#039;, 
+					w * 5, h * 10, &#039;&#039;, &#039;Cabinet&#039;, null, null, this.getTagsForStencil(gn, &#039;cabinet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;dimension;verticalAlign=top;align=center;&#039;, 
+					w * 5, 40, &#039;100&#039;, &#039;Dimension&#039;, null, null, this.getTagsForStencil(gn, &#039;dimension&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;dimensionBottom;verticalAlign=bottom;align=center;&#039;, 
+					w * 5, 40, &#039;100&#039;, &#039;Dimension&#039;, null, null, this.getTagsForStencil(gn, &#039;dimensionBottom&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;coverPlate&#039;, 
+					w * 4.4, h * 2.5, &#039;&#039;, &#039;Cover Plate&#039;, null, null, this.getTagsForStencil(gn, &#039;coverPlate&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=rect;dashed=0;shadow=0;html=1;whiteSpace=wrap;&#039;, 
+					w * 4.4, h * 0.25, &#039;25x40&#039;, &#039;Panel Wiring System 25x40mm&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;panel wiring system&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=rect;dashed=0;shadow=0;html=1;whiteSpace=wrap;&#039;, 
+					w * 4.4, h * 0.4, &#039;40x40&#039;, &#039;Panel Wiring System 40x40mm&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;panel wiring system&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=rect;dashed=0;shadow=0;html=1;whiteSpace=wrap;&#039;, 
+					w * 4.4, h * 0.6, &#039;60x40&#039;, &#039;Panel Wiring System 60x40mm&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;panel wiring system&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=rect;dashed=0;shadow=0;html=1;whiteSpace=wrap;&#039;, 
+					w * 4.4, h * 0.8, &#039;80x40&#039;, &#039;Panel Wiring System 80x40mm&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;panel wiring system&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=rect;dashed=0;shadow=0;html=1;whiteSpace=wrap;&#039;, 
+					w * 4.4, h, &#039;100x40&#039;, &#039;Panel Wiring System 100x40mm&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;panel wiring system&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=rect;dashed=0;shadow=0;html=1;whiteSpace=wrap;direction=south;horizontal=0;&#039;, 
+					w * 0.25, h * 7, &#039;25x40&#039;, &#039;Panel Wiring System 25x40mm (Vertical)&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;panel wiring system&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=rect;dashed=0;shadow=0;html=1;whiteSpace=wrap;direction=south;horizontal=0;&#039;, 
+					w * 0.4, h * 7, &#039;40x40&#039;, &#039;Panel Wiring System 40x40mm (Vertical)&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;panel wiring system&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=rect;dashed=0;shadow=0;html=1;whiteSpace=wrap;direction=south;horizontal=0;&#039;, 
+					w * 0.6, h * 7, &#039;60x40&#039;, &#039;Panel Wiring System 60x40mm (Vertical)&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;panel wiring system&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=rect;dashed=0;shadow=0;html=1;whiteSpace=wrap;direction=south;horizontal=0;&#039;, 
+					w * 0.8, h * 7, &#039;80x40&#039;, &#039;Panel Wiring System 80x40mm (Vertical)&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;panel wiring system&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=rect;dashed=0;shadow=0;html=1;whiteSpace=wrap;direction=south;horizontal=0;&#039;, 
+					w, h * 7, &#039;100x40&#039;, &#039;Panel Wiring System 100x40mm (Vertical)&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;panel wiring system&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cb_1p;&#039;, 
+					w * 0.18, h, &#039;&#039;, &#039;Circuit Breaker (1P)&#039;, null, null, this.getTagsForStencil(gn, &#039;cb_1p&#039;, dt).join(&#039; &#039;)),
+					
+			this.addEntry(dt + &#039;circuit breaker row&#039;, function()
+	   		{
+			   	var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, w * 0.18, h), s + &#039;cb_1p;&#039;);
+			   	bg1.vertex = true;
+			   	var bg2 = new mxCell(&#039;&#039;, new mxGeometry(w * 0.18, 0, w * 0.18, h), s + &#039;cb_1p;&#039;);
+			   	bg2.vertex = true;
+			   	var bg3 = new mxCell(&#039;&#039;, new mxGeometry(w * 0.36, 0, w * 0.18, h), s + &#039;cb_1p;&#039;);
+			   	bg3.vertex = true;
+			   	var bg4 = new mxCell(&#039;&#039;, new mxGeometry(w * 0.54, 0, w * 0.18, h), s + &#039;cb_1p;&#039;);
+			   	bg4.vertex = true;
+			   	var bg5 = new mxCell(&#039;&#039;, new mxGeometry(w * 0.72, 0, w * 0.18, h), s + &#039;cb_1p;&#039;);
+			   	bg5.vertex = true;
+			   	var bg6 = new mxCell(&#039;&#039;, new mxGeometry(w * 0.9, 0, w * 0.18, h), s + &#039;cb_1p;&#039;);
+			   	bg6.vertex = true;
+			   	var bg7 = new mxCell(&#039;&#039;, new mxGeometry(w * 1.08, 0, w * 0.18, h), s + &#039;cb_1p;&#039;);
+			   	bg7.vertex = true;
+			   	var bg8 = new mxCell(&#039;&#039;, new mxGeometry(w * 1.26, 0, w * 0.18, h), s + &#039;cb_1p;&#039;);
+			   	bg8.vertex = true;
+			   	var bg9 = new mxCell(&#039;&#039;, new mxGeometry(w * 1.44, 0, w * 0.18, h), s + &#039;cb_1p;&#039;);
+			   	bg9.vertex = true;
+			   	var bg10 = new mxCell(&#039;&#039;, new mxGeometry(w * 1.62, 0, w * 0.18, h), s + &#039;cb_1p;&#039;);
+			   	bg10.vertex = true;
+			    
+			   	return sb.createVertexTemplateFromCells([bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, bg9, bg10], w * 1.8, h, &#039;Circuit Breaker (1P x 10)&#039;);
+			}),				
+				
+			this.createVertexTemplateEntry(s + &#039;cb_2p;&#039;, w * 0.36, h, &#039;&#039;, &#039;Circuit Breaker (2P)&#039;, null, null, this.getTagsForStencil(gn, &#039;cb_2p&#039;, dt).join(&#039; &#039;)),
+			
+			this.addEntry(dt + &#039;circuit breaker row&#039;, function()
+	   		{
+			   	var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, w * 0.36, h), s + &#039;cb_2p;&#039;);
+			   	bg1.vertex = true;
+			   	var bg2 = new mxCell(&#039;&#039;, new mxGeometry(w * 0.36, 0, w * 0.36, h), s + &#039;cb_2p;&#039;);
+			   	bg2.vertex = true;
+			   	var bg3 = new mxCell(&#039;&#039;, new mxGeometry(w * 0.72, 0, w * 0.36, h), s + &#039;cb_2p;&#039;);
+			   	bg3.vertex = true;
+			   	var bg4 = new mxCell(&#039;&#039;, new mxGeometry(w * 1.08, 0, w * 0.36, h), s + &#039;cb_2p;&#039;);
+			   	bg4.vertex = true;
+			   	var bg5 = new mxCell(&#039;&#039;, new mxGeometry(w * 1.44, 0, w * 0.36, h), s + &#039;cb_2p;&#039;);
+			   	bg5.vertex = true;
+			   	var bg6 = new mxCell(&#039;&#039;, new mxGeometry(w * 1.8, 0, w * 0.36, h), s + &#039;cb_2p;&#039;);
+			   	bg6.vertex = true;
+			   	var bg7 = new mxCell(&#039;&#039;, new mxGeometry(w * 2.16, 0, w * 0.36, h), s + &#039;cb_2p;&#039;);
+			   	bg7.vertex = true;
+			   	var bg8 = new mxCell(&#039;&#039;, new mxGeometry(w * 2.52, 0, w * 0.36, h), s + &#039;cb_2p;&#039;);
+			   	bg8.vertex = true;
+			   	var bg9 = new mxCell(&#039;&#039;, new mxGeometry(w * 2.88, 0, w * 0.36, h), s + &#039;cb_2p;&#039;);
+			   	bg9.vertex = true;
+			   	var bg10 = new mxCell(&#039;&#039;, new mxGeometry(w * 3.24, 0, w * 0.36, h), s + &#039;cb_2p;&#039;);
+			   	bg10.vertex = true;
+			    
+			   	return sb.createVertexTemplateFromCells([bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, bg9, bg10], w * 3.6, h, &#039;Circuit Breaker (2P x 10)&#039;);
+			}),				
+				
+			this.createVertexTemplateEntry(s + &#039;cb_3p;&#039;, w * 0.54, h, &#039;&#039;, &#039;Circuit Breaker (3P)&#039;, null, null, this.getTagsForStencil(gn, &#039;cb_3p&#039;, dt).join(&#039; &#039;)),
+			
+			this.addEntry(dt + &#039;circuit breaker row&#039;, function()
+	   		{
+			   	var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, w * 0.54, h), s + &#039;cb_3p;&#039;);
+			   	bg1.vertex = true;
+			   	var bg2 = new mxCell(&#039;&#039;, new mxGeometry(w * 0.54, 0, w * 0.54, h), s + &#039;cb_3p;&#039;);
+			   	bg2.vertex = true;
+			   	var bg3 = new mxCell(&#039;&#039;, new mxGeometry(w * 1.08, 0, w * 0.54, h), s + &#039;cb_3p;&#039;);
+			   	bg3.vertex = true;
+			   	var bg4 = new mxCell(&#039;&#039;, new mxGeometry(w * 1.62, 0, w * 0.54, h), s + &#039;cb_3p;&#039;);
+			   	bg4.vertex = true;
+			   	var bg5 = new mxCell(&#039;&#039;, new mxGeometry(w * 2.16, 0, w * 0.54, h), s + &#039;cb_3p;&#039;);
+			   	bg5.vertex = true;
+			    
+			   	return sb.createVertexTemplateFromCells([bg1, bg2, bg3, bg4, bg5], w * 2.7, h, &#039;Circuit Breaker (3P x 5)&#039;);
+			}),				
+				
+			this.createVertexTemplateEntry(s + &#039;cb_4p;&#039;, w * 0.72, h, &#039;&#039;, &#039;Circuit Breaker (4P)&#039;, null, null, this.getTagsForStencil(gn, &#039;cb_4p&#039;, dt).join(&#039; &#039;)),
+			
+			this.addEntry(dt + &#039;circuit breaker row&#039;, function()
+	   		{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, w * 0.72, h), s + &#039;cb_4p;&#039;);
+			   	bg1.vertex = true;
+			   	var bg2 = new mxCell(&#039;&#039;, new mxGeometry(w * 0.72, 0, w * 0.72, h), s + &#039;cb_4p;&#039;);
+			   	bg2.vertex = true;
+			   	var bg3 = new mxCell(&#039;&#039;, new mxGeometry(w * 1.44, 0, w * 0.72, h), s + &#039;cb_4p;&#039;);
+			   	bg3.vertex = true;
+			   	var bg4 = new mxCell(&#039;&#039;, new mxGeometry(w * 2.16, 0, w * 0.72, h), s + &#039;cb_4p;&#039;);
+			   	bg4.vertex = true;
+			   	var bg5 = new mxCell(&#039;&#039;, new mxGeometry(w * 2.88, 0, w * 0.72, h), s + &#039;cb_4p;&#039;);
+			   	bg5.vertex = true;
+			    
+			   	return sb.createVertexTemplateFromCells([bg1, bg2, bg3, bg4, bg5], w * 3.6, h, &#039;Circuit Breaker (4P x 5)&#039;);
+			}),				
+				
+			this.createVertexTemplateEntry(s + &#039;cb_auxiliary_contact;&#039;, 
+					w * 0.09, h, &#039;&#039;, &#039;Auxiliary Contact (Circuit Breaker)&#039;, null, null, this.getTagsForStencil(gn, &#039;cb_auxiliary_contact&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;contactor_1_32a;&#039;, 
+					w * 0.54, h * 0.86, &#039;&#039;, &#039;Contactor (1-32A)&#039;, null, null, this.getTagsForStencil(gn, &#039;contactor_1_32a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;auxiliary_contact_contactor_1_32a;&#039;, 
+					w * 0.09, h * 0.86, &#039;&#039;, &#039;Auxiliary Contact (Contactor 1-32A)&#039;, null, null, this.getTagsForStencil(gn, &#039;auxiliary_contact_contactor_1_32a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;contactor_32_125a;&#039;, 
+					w * 0.6, h, &#039;&#039;, &#039;Contactor 32 to 125A&#039;, null, null, this.getTagsForStencil(gn, &#039;contactor_32_125a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;auxiliary_contact_contactor_32_125a;&#039;, 
+					w * 0.09, h, &#039;&#039;, &#039;Auxiliary Contact (Contactor 32-125A)&#039;, null, null, this.getTagsForStencil(gn, &#039;auxiliary_contact_contactor_32_125a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;contactor_125_400a;&#039;, 
+					w * 1.1, h * 1.8, &#039;&#039;, &#039;Contactor 125 to 400A&#039;, null, null, this.getTagsForStencil(gn, &#039;contactor_125_400a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;distribution_block_4p_125a_11_connections;&#039;, 
+					w * 2, h * 1.2, &#039;&#039;, &#039;Distribution Block 4P 125A 11 Connections&#039;, null, null, this.getTagsForStencil(gn, &#039;distribution_block_4p_125a_11_connections&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;distribution_block_4p_125a_11_connections_2;&#039;,
+					w * 2, h, &#039;&#039;, &#039;Distribution Block 4P 125A 11 Connections&#039;, null, null, this.getTagsForStencil(gn, &#039;distribution_block_4p_125a_11_connections_2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;mccb_25_63a_3p;&#039;, 
+					w * 1.2, h * 1.8, &#039;&#039;, &#039;MCCB 25-63A 3P&#039;, null, null, this.getTagsForStencil(gn, &#039;mccb_25_63a_3p&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;mccb_25_63a_4p;&#039;, 
+					w * 1.6, h * 1.8, &#039;&#039;, &#039;MCCB 25-63A 4P&#039;, null, null, this.getTagsForStencil(gn, &#039;mccb_25_63a_4p&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;mccb_63_250a_3p;&#039;, 
+					w * 1.4, h * 2.1, &#039;&#039;, &#039;MCCB 63-250A 3P&#039;, null, null, this.getTagsForStencil(gn, &#039;mccb_63_250a_3p&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;mccb_63_250a_4p;&#039;, 
+					w * 1.9, h * 2.1, &#039;&#039;, &#039;MCCB 63-250A 4P&#039;, null, null, this.getTagsForStencil(gn, &#039;mccb_63_250a_4p&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;motorized_switch_3p;&#039;, 
+					w * 1.7, h * 1.4, &#039;&#039;, &#039;Motorized Switch 3P&#039;, null, null, this.getTagsForStencil(gn, &#039;motorized_switch_3p&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;motorized_switch_4p;&#039;, 
+					w * 2, h * 1.4, &#039;&#039;, &#039;Motorized Switch 4P&#039;, null, null, this.getTagsForStencil(gn, &#039;motorized_switch_4p&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;motor_cb_1_32a;&#039;, 
+					w * 0.54, h * 0.86, &#039;&#039;, &#039;Motor Circuit Breaker 1-32A&#039;, null, null, this.getTagsForStencil(gn, &#039;motor_cb_1_32a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;motor_cb_32_125a;&#039;, 
+					w * 0.6, h, &#039;&#039;, &#039;Motor Circuit Breaker 32-125A&#039;, null, null, this.getTagsForStencil(gn, &#039;motor_cb_32_125a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;motor_cb_125_400a;&#039;, 
+					w * 1.1, h * 1.8, &#039;&#039;, &#039;Motor Circuit Breaker 125-400A&#039;, null, null, this.getTagsForStencil(gn, &#039;motor_cb_125_400a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;motor_protection_cb;&#039;, 
+					w * 0.54, h, &#039;&#039;, &#039;Motor Protection CB&#039;, null, null, this.getTagsForStencil(gn, &#039;motor_protection_cb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;motor_starter_1_32a;&#039;, 
+					w * 0.54, h * 0.86, &#039;&#039;, &#039;Motor Circuit Breaker 1-32A&#039;, null, null, this.getTagsForStencil(gn, &#039;motor_starter_1_32a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;motor_starter_32_125a;&#039;, 
+					w * 0.6, h, &#039;&#039;, &#039;Motor Circuit Breaker 32-125A&#039;, null, null, this.getTagsForStencil(gn, &#039;motor_starter_32_125a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;motor_starter_125_400a;&#039;, 
+					w * 1.1, h * 1.8, &#039;&#039;, &#039;Motor Circuit Breaker 125-400A&#039;, null, null, this.getTagsForStencil(gn, &#039;motor_starter_125_400a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;overcurrent_relay_1_32a;&#039;, 
+					w * 0.54, h * 0.3, &#039;&#039;, &#039;Overcurrent Relay 1-32A&#039;, null, null, this.getTagsForStencil(gn, &#039;overcurrent_relay_1_32a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;overcurrent_relay_32_125a;&#039;, 
+					w * 0.6, h * 0.33, &#039;&#039;, &#039;Overcurrent Relay 32-125A&#039;, null, null, this.getTagsForStencil(gn, &#039;overcurrent_relay_32_125a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;overcurrent_relay_125_400a;&#039;, 
+					w * 1.1, h * 0.6, &#039;&#039;, &#039;Overcurrent Relay 125-400A&#039;, null, null, this.getTagsForStencil(gn, &#039;overcurrent_relay_125_400a&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;plugin_relay_1;&#039;, 
+					w * 0.06, h * 0.8, &#039;&#039;, &#039;Plugin Relay&#039;, null, null, this.getTagsForStencil(gn, &#039;plugin_relay_1&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;plugin_relay_2;&#039;, 
+					w * 0.24, h * 0.8, &#039;&#039;, &#039;Plugin Relay&#039;, null, null, this.getTagsForStencil(gn, &#039;plugin_relay_2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;din_rail;&#039;, 
+					w * 10, h * 0.5, &#039;&#039;, &#039;DIN Rail&#039;, null, null, this.getTagsForStencil(gn, &#039;din_rail&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;residual_current_device_2p;&#039;, 
+					w * 0.36, h, &#039;&#039;, &#039;Residual Current Device 2p&#039;, null, null, this.getTagsForStencil(gn, &#039;residual_current_device_2p&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;residual_current_device_4p;&#039;, 
+					w * 0.72, h, &#039;&#039;, &#039;Residual Current Device 4p&#039;, null, null, this.getTagsForStencil(gn, &#039;residual_current_device_4p&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;surge_protection_1p;&#039;, 
+					w * 0.18, h, &#039;&#039;, &#039;Surge Protection 1p&#039;, null, null, this.getTagsForStencil(gn, &#039;surge_protection_1p&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;surge_protection_2p;&#039;, 
+					w * 0.36, h, &#039;&#039;, &#039;Surge Protection 2p&#039;, null, null, this.getTagsForStencil(gn, &#039;surge_protection_2p&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;surge_protection_3p;&#039;, 
+					w * 0.54, h, &#039;&#039;, &#039;Surge Protection 3p&#039;, null, null, this.getTagsForStencil(gn, &#039;surge_protection_3p&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;surge_protection_4p;&#039;, 
+					w * 0.72, h, &#039;&#039;, &#039;Surge Protection 4p&#039;, null, null, this.getTagsForStencil(gn, &#039;surge_protection_4p&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminal_4mm2;&#039;, 
+					w * 0.05, h * 0.5, &#039;&#039;, &#039;Terminal 4mm2&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal_4mm2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminal_4mm2_x10;&#039;, 
+					w * 0.5, h * 0.5, &#039;&#039;, &#039;Terminal 4mm2 x10&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal_4mm2_x10&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminal_4_6mm2;&#039;, 
+					w * 0.05, h * 0.6, &#039;&#039;, &#039;Terminal 4-6mm2&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal_4_6mm2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminal_4_6mm2_x10;&#039;, 
+					w * 0.5, h * 0.6, &#039;&#039;, &#039;Terminal 4-6mm2 x10&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal_4_6mm2_x10&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminal_6_25mm2;&#039;, 
+					w * 0.1, h * 0.75, &#039;&#039;, &#039;Terminal 6-25mm2&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal_6_25mm2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminal_6_25mm2_x10;&#039;, 
+					w, h * 0.75, &#039;&#039;, &#039;Terminal 6-25mm2 x10&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal_6_25mm2_x10&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminal_40mm2;&#039;, 
+					w * 0.22, h, &#039;&#039;, &#039;Terminal 40mm2&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal_40mm2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminal_40mm2_x10;&#039;, 
+					w * 2.2, h, &#039;&#039;, &#039;Terminal 40mm2 x10&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal_40mm2_x10&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminal_50mm2;&#039;, 
+					w * 0.25, h * 1.1, &#039;&#039;, &#039;Terminal 50mm2&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal_50mm2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminal_50mm2_x10;&#039;, 
+					w * 2.5, h * 1.1, &#039;&#039;, &#039;Terminal 50mm2 x10&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal_50mm2_x10&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminal_75mm2;&#039;, 
+					w * 0.3, h * 1.4, &#039;&#039;, &#039;Terminal 75mm2&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal_75mm2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminal_75mm2_x10;&#039;, 
+					w * 3, h * 1.4, &#039;&#039;, &#039;Terminal 75mm2 x10&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal_75mm2_x10&#039;, dt).join(&#039; &#039;))
+		];
+	   	
+		this.addPalette(&#039;cabinets&#039;, mxResources.get(&#039;cabinets&#039;), false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

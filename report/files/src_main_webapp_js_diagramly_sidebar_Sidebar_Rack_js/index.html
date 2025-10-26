@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Rack.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Rack.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">59.75</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">432</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">25.14</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">16.96</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addRackPalette = function(rack, dir)
+	{
+		for (var i = 0; i &lt; rack.length; i++)
+		{
+			if (rack[i].toLowerCase() === &#039;general&#039;)
+			{
+				this.setCurrentSearchEntryLibrary(&#039;rack&#039;, &#039;rackGeneral&#039;);
+				this.addRackGeneralPalette();
+			}
+			else if (rack[i].toLowerCase() === &#039;f5&#039;)
+			{
+				this.setCurrentSearchEntryLibrary(&#039;rack&#039;, &#039;rackF5&#039;);
+				this.addRackF5Palette();
+			}
+			else if (rack[i].toLowerCase() === &#039;dell&#039;)
+			{
+				this.setCurrentSearchEntryLibrary(&#039;rack&#039;, &#039;rackDell&#039;);
+				this.addRackDellPalette();
+			}
+            else if (rack[i].toLowerCase() === &#039;hpe aruba gateways controllers&#039;)
+            {
+                this.addRackHPEArubaGatewaysControllersPalette();
+            }
+            else if (rack[i].toLowerCase() === &#039;hpe aruba security&#039;)
+            {
+                this.addRackHPEArubaSecurityPalette();
+            }
+            else if (rack[i].toLowerCase() === &#039;hpe aruba switches&#039;)
+            {
+                this.addRackHPEArubaSwitchesPalette();
+            }
+            else
+			{
+				this.setCurrentSearchEntryLibrary(&#039;rack&#039;, &#039;rack&#039; + rack[i]);
+				this.addStencilPalette(&#039;rack&#039; + rack[i], &#039;Rack / &#039; + rack[i],
+					dir + &#039;/rack/&#039; + rack[i].toLowerCase() + &#039;.xml&#039;,
+					&#039;;html=1;labelPosition=right;align=left;spacingLeft=15;dashed=0;shadow=0;fillColor=#ffffff;&#039;,	
+					null, null, null, null, null, &#039;rack&#039;);
+			}
+		}
+		
+		this.setCurrentSearchEntryLibrary();
+	}
+	
+	// Adds Rack shapes
+	Sidebar.prototype.addRackGeneralPalette = function()
+	{
+		var s = &#039;strokeColor=#666666;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;outlineConnect=0;shadow=0;dashed=0;&#039;;
+		var sr = &#039;strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;&#039;;
+		
+		//default tags
+		var dt = &#039;rack equipment general &#039;;
+		
+		this.addPaletteFunctions(&#039;rackGeneral&#039;, &#039;Rack / General&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;shape=mxgraph.rackGeneral.rackCabinet3;rackUnitSize=14.8;fillColor2=#f4f4f4;container=1;collapsible=0;childLayout=rack;allowGaps=1;marginLeft=9;marginRight=9;marginTop=21;marginBottom=22;textColor=#666666;numDisp=off;&#039;, 180, 219, &#039;&#039;, &#039;Rack Cabinet&#039;, null, null, dt + &#039;cabinet&#039;),
+			this.createVertexTemplateEntry(s + &#039;shape=mxgraph.rackGeneral.rackCabinet3;rackUnitSize=14.8;fillColor2=#f4f4f4;container=1;collapsible=0;childLayout=rack;allowGaps=1;marginLeft=33;marginRight=9;marginTop=21;marginBottom=22;textColor=#666666;numDisp=ascend;&#039;, 204, 219, &#039;&#039;, &#039;Numbered Rack Cabinet&#039;, null, null, dt + &#039;cabinet numbered&#039;),
+			this.createVertexTemplateEntry(sr + &#039;text;&#039;, 160, 15, &#039;&#039;, &#039;Spacing&#039;, null, null, dt + &#039;spacing&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rackGeneral.plate;fillColor=#e8e8e8;&#039;, 160, 15, &#039;&#039;, &#039;Cover Plate&#039;, null, null, dt + &#039;cover plate&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.general.1u_rack_server;&#039;, 160, 15, &#039;&#039;, &#039;Server&#039;, null, null, dt + &#039;server&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rackGeneral.horCableDuct;&#039;, 160, 15, &#039;&#039;, &#039;Horizontal Cable Duct&#039;, null, null, dt + &#039;horizontal cable duct&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rackGeneral.horRoutingBank;&#039;, 160, 20, &#039;&#039;, &#039;Horizontal Routing Bank&#039;, null, null, dt + &#039;horizontal routing bank&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rackGeneral.neatPatch;&#039;, 160, 30, &#039;&#039;, &#039;Neat-Patch&#039;, null, null, dt + &#039;neat patch&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rackGeneral.shelf;container=1;collapsible=0&#039;, 160, 15, &#039;&#039;, &#039;Shelf&#039;, null, null, dt + &#039;shelf&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rackGeneral.channelBase;&#039;, 200, 30, &#039;&#039;, &#039;Channel Base&#039;, null, null, dt + &#039;channel base&#039;),
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.rackGeneral.cabinetLeg;html=1;shadow=0;dashed=0;fillColor=#444444;strokeColor=#444444;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;&#039;, 50, 50, &#039;&#039;, &#039;Cabinet Leg&#039;, null, null, dt + &#039;cabinet leg support&#039;),
+
+			//stencils
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.general.cat5e_enhanced_patch_panel_48_ports;&#039;, 160, 30, &#039;&#039;, &#039;CAT5e Enhanced Patch Panel 48 ports&#039;, null, null, dt + &#039;cat5e enhanced patch panel port&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.general.cat5e_rack_mount_patch_panel_24_ports;&#039;, 160, 15, &#039;&#039;, &#039;CAT5e Rack Mount Patch Panel 24 ports&#039;, null, null, dt + &#039;cat5e mount patch panel port&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.general.cat5e_rack_mount_patch_panel_96_ports;&#039;, 160, 60, &#039;&#039;, &#039;CAT5e Rack Mount Patch Panel 96 ports&#039;, null, null, dt + &#039;cat5e mount patch panel port&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.general.hub;&#039;, 160, 30, &#039;&#039;, &#039;Hub&#039;, null, null, dt + &#039;hub&#039;),
+			this.createVertexTemplateEntry(s + &#039;shape=mxgraph.rack.general.server_1;&#039;, 73, 150, &#039;&#039;, &#039;Server 1&#039;, null, null, dt + &#039;server&#039;),
+			this.createVertexTemplateEntry(s + &#039;shape=mxgraph.rack.general.server_2;&#039;, 73, 150, &#039;&#039;, &#039;Server 2&#039;, null, null, dt + &#039;server&#039;),
+			this.createVertexTemplateEntry(s + &#039;shape=mxgraph.rack.general.server_3;&#039;, 73, 150, &#039;&#039;, &#039;Server 3&#039;, null, null, dt + &#039;server&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.general.switches_1;&#039;, 160, 30, &#039;&#039;, &#039;Switches 1&#039;, null, null, dt + &#039;server&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.general.switches_2;&#039;, 160, 30, &#039;&#039;, &#039;Switches 2&#039;, null, null, dt + &#039;server&#039;)
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+	Sidebar.prototype.addRackF5Palette = function()
+	{
+		var sr = &#039;strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;&#039;;
+		
+		//default tags
+		var dt = &#039;rack equipment f5 &#039;;
+
+		this.addPaletteFunctions(&#039;rackF5&#039;, &#039;Rack / F5&#039;, false,
+		[
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.arx_500;&#039;, 168, 20, &#039;&#039;, &#039;ARX 500&#039;, null, null, dt + &#039;arx&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.arx_1000;&#039;, 168, 40, &#039;&#039;, &#039;ARX 1000&#039;, null, null, dt + &#039;arx&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.arx_1500;&#039;, 168, 20, &#039;&#039;, &#039;ARX 1500&#039;, null, null, dt + &#039;arx&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.arx_2000;&#039;, 168, 40, &#039;&#039;, &#039;ARX 2000&#039;, null, null, dt + &#039;arx&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.arx_2500;&#039;, 168, 20, &#039;&#039;, &#039;ARX 2500&#039;, null, null, dt + &#039;arx&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.arx_4000;&#039;, 168, 60, &#039;&#039;, &#039;ARX 4000&#039;, null, null, dt + &#039;arx&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.arx_5000;&#039;, 168, 20, &#039;&#039;, &#039;ARX 5000&#039;, null, null, dt + &#039;arx&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.arx_6000;&#039;, 168, 240, &#039;&#039;, &#039;ARX 6000&#039;, null, null, dt + &#039;arx&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.big_ip_1600;&#039;, 168, 20, &#039;&#039;, &#039;BIG-IP 1600&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.big_ip_2x00;&#039;, 168, 20, &#039;&#039;, &#039;BIG-IP 2x00&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.big_ip_3600;&#039;, 168, 20, &#039;&#039;, &#039;BIG-IP 3600&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.big_ip_3900;&#039;, 168, 20, &#039;&#039;, &#039;BIG-IP 3900&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.big_ip_4x00;&#039;, 168, 20, &#039;&#039;, &#039;BIG-IP 4x00&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.big_ip_5x00;&#039;, 168, 20, &#039;&#039;, &#039;BIG-IP 5x00&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.big_ip_6900;&#039;, 168, 40, &#039;&#039;, &#039;BIG-IP 6900&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.big_ip_89x0;&#039;, 168, 40, &#039;&#039;, &#039;BIG-IP 89x0&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.big_ip_7x00;&#039;, 168, 40, &#039;&#039;, &#039;BIG-IP 7x00&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.big_ip_10x00;&#039;, 168, 40, &#039;&#039;, &#039;BIG-IP 10x00&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.big_ip_110x0;&#039;, 168, 60, &#039;&#039;, &#039;BIG-IP 110x0&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.em_4000;&#039;, 168, 20, &#039;&#039;, &#039;EM 4000&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.firepass_1200;&#039;, 168, 20, &#039;&#039;, &#039;FirePass 1200&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.firepass_4100;&#039;, 168, 40, &#039;&#039;, &#039;FirePass 4100&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.viprion_2400;&#039;, 168, 60, &#039;&#039;, &#039;VIPRION 2400&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.viprion_4400;&#039;, 168, 120, &#039;&#039;, &#039;VIPRION 4400&#039;, null, null, dt + &#039;big ip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.f5.viprion_4800;&#039;, 168, 320, &#039;&#039;, &#039;VIPRION 4800&#039;, null, null, dt + &#039;big ip&#039;)
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+	Sidebar.prototype.addRackDellPalette = function()
+	{
+		var sr = &#039;strokeColor=#666666;html=1;labelPosition=right;align=left;spacingLeft=15;shadow=0;dashed=0;outlineConnect=0;&#039;;
+		
+		//default tags
+		var dt = &#039;rack equipment dell &#039;;
+
+		this.addPaletteFunctions(&#039;rackDell&#039;, &#039;Rack / Dell&#039;, false,
+		[
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.dell_poweredge_1u;&#039;, 162, 15, &#039;&#039;, &#039;PowerEdge 1U&#039;, null, null, dt + &#039;poweredge 1u&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.dell_poweredge_2u;&#039;, 162, 30, &#039;&#039;, &#039;PowerEdge 2U&#039;, null, null, dt + &#039;poweredge 2u&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.dell_poweredge_4u;&#039;, 162, 60, &#039;&#039;, &#039;PowerEdge 4U&#039;, null, null, dt + &#039;poweredge 4u&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.power_strip;&#039;, 162, 15, &#039;&#039;, &#039;Power Strip&#039;, null, null, dt + &#039;power strip&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_630;&#039;, 162, 15, &#039;&#039;, &#039;PowerEdge 630&#039;, null, null, dt + &#039;poweredge 630&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_c4140;&#039;, 162, 15, &#039;&#039;, &#039;PowerEdge C4140&#039;, null, null, dt + &#039;poweredge c4140&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_m1000e_enclosure;&#039;, 162, 150, &#039;&#039;, &#039;PowerEdge M1000e Enclosure&#039;, null, null, dt + &#039;poweredge m1000e enclosure&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_m420;&#039;, 20, 37, &#039;&#039;, &#039;PowerEdge M420&#039;, null, null, dt + &#039;poweredge m420&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_m520;&#039;, 20, 37, &#039;&#039;, &#039;PowerEdge M520&#039;, null, null, dt + &#039;poweredge m520&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_m610x;&#039;, 20, 37, &#039;&#039;, &#039;PowerEdge M610x&#039;, null, null, dt + &#039;poweredge m610x&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_m620;&#039;, 20, 37, &#039;&#039;, &#039;PowerEdge M620&#039;, null, null, dt + &#039;poweredge m620&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_m820;&#039;, 20, 143, &#039;&#039;, &#039;PowerEdge M820&#039;, null, null, dt + &#039;poweredge m820&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_m915;&#039;, 20, 143, &#039;&#039;, &#039;PowerEdge M915&#039;, null, null, dt + &#039;poweredge m820&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r240;&#039;, 162, 15, &#039;&#039;, &#039;PowerEdge R240&#039;, null, null, dt + &#039;poweredge r240&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r340;&#039;, 162, 15, &#039;&#039;, &#039;PowerEdge R340&#039;, null, null, dt + &#039;poweredge r340&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r440;&#039;, 162, 15, &#039;&#039;, &#039;PowerEdge R440&#039;, null, null, dt + &#039;poweredge r440&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r540;&#039;, 162, 27, &#039;&#039;, &#039;PowerEdge R540&#039;, null, null, dt + &#039;poweredge r540&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r640;&#039;, 162, 15, &#039;&#039;, &#039;PowerEdge R640&#039;, null, null, dt + &#039;poweredge r640&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r6415;&#039;, 162, 15, &#039;&#039;, &#039;PowerEdge R6415&#039;, null, null, dt + &#039;poweredge r6415&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r6515;&#039;, 162, 15, &#039;&#039;, &#039;PowerEdge R6515&#039;, null, null, dt + &#039;poweredge r6515&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r6525;&#039;, 162, 15, &#039;&#039;, &#039;PowerEdge R6525&#039;, null, null, dt + &#039;poweredge r6525&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r730;&#039;, 162, 30, &#039;&#039;, &#039;PowerEdge R730&#039;, null, null, dt + &#039;poweredge r730&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r730xd;&#039;, 162, 30, &#039;&#039;, &#039;PowerEdge R730xd&#039;, null, null, dt + &#039;poweredge r730xd&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r740;&#039;, 162, 30, &#039;&#039;, &#039;PowerEdge R740&#039;, null, null, dt + &#039;poweredge r740&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r740xd;&#039;, 162, 30, &#039;&#039;, &#039;PowerEdge R740xd&#039;, null, null, dt + &#039;poweredge r740xd&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r740xd2;&#039;, 162, 30, &#039;&#039;, &#039;PowerEdge R740xd2&#039;, null, null, dt + &#039;poweredge r740xd2&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r7415;&#039;, 162, 30, &#039;&#039;, &#039;PowerEdge R7415&#039;, null, null, dt + &#039;poweredge r7415&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r7425;&#039;, 162, 30, &#039;&#039;, &#039;PowerEdge R7425&#039;, null, null, dt + &#039;poweredge r7425&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r7515;&#039;, 162, 30, &#039;&#039;, &#039;PowerEdge R7515&#039;, null, null, dt + &#039;poweredge r7515&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r840;&#039;, 162, 30, &#039;&#039;, &#039;PowerEdge R840&#039;, null, null, dt + &#039;poweredge r840&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_r940;&#039;, 162, 45, &#039;&#039;, &#039;PowerEdge R940&#039;, null, null, dt + &#039;poweredge r940&#039;),
+			this.createVertexTemplateEntry(sr + &#039;shape=mxgraph.rack.dell.poweredge_xr2;&#039;, 162, 15, &#039;&#039;, &#039;PowerEdge XR2&#039;, null, null, dt + &#039;poweredge xr2&#039;)
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+    Sidebar.prototype.addRackHPEArubaGatewaysControllersPalette = function()
+    {
+        var s = &#039;html=1;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;shadow=0;dashed=0;shape=mxgraph.rack.hpe_aruba.gateways_controllers.&#039;;
+        
+        //default tags
+        var dt = &#039;rack equipment hpe hp aruba hewlett packard enterprise gateway controller &#039;;
+        
+        this.addPaletteFunctions(&#039;rackHPE Aruba Gateways Controllers&#039;, &#039;Rack / HPE Aruba / Gateways and Controllers&#039;, false,
+        [
+            this.createVertexTemplateEntry(s + &#039;aruba_7010_mobility_controller_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7010 Mobility Controller (front)&#039;, null, null, dt + &#039;7010 mobility front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7010_mobility_controller_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7010 Mobility Controller (rear)&#039;, null, null, dt + &#039;7010 mobility rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7024_mobility_controller_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7024 Mobility Controller (front)&#039;, null, null, dt + &#039;7024 mobility front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7024_mobility_controller_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7024 Mobility Controller (rear)&#039;, null, null, dt + &#039;7024 mobility rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7030_mobility_controller_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7030 Mobility Controller (front)&#039;, null, null, dt + &#039;7030 mobility front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7030_mobility_controller_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7030 Mobility Controller (rear)&#039;, null, null, dt + &#039;7030 mobility rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7205_mobility_controller_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7205 Mobility Controller (front)&#039;, null, null, dt + &#039;7205 mobility front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7205_mobility_controller_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7205 Mobility Controller (rear)&#039;, null, null, dt + &#039;7205 mobility rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7210_mobility_controller_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7210 Mobility Controller (front)&#039;, null, null, dt + &#039;7210 mobility front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7210_mobility_controller_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7210 Mobility Controller (rear)&#039;, null, null, dt + &#039;7210 mobility rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7220_mobility_controller_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7220 Mobility Controller (front)&#039;, null, null, dt + &#039;7220 mobility front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7220_mobility_controller_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7220 Mobility Controller (rear)&#039;, null, null, dt + &#039;7220 mobility rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7240_mobility_controller_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7240 Mobility Controller (front)&#039;, null, null, dt + &#039;7240 mobility front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7240_mobility_controller_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7240 Mobility Controller (rear)&#039;, null, null, dt + &#039;7240 mobility rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7280_mobility_controller_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7280 Mobility Controller (front)&#039;, null, null, dt + &#039;7280 mobility front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_7280_mobility_controller_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 7280 Mobility Controller (rear)&#039;, null, null, dt + &#039;7280 mobility rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_9004_4_port_gbe_gateway_front;&#039;, 71, 15, &#039;&#039;, &#039;Aruba 9004 4-Port GbE Gateway (back)&#039;, null, null, dt + &#039;9004 port gbe front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_9004_4_port_gbe_gateway_back;&#039;, 71, 15, &#039;&#039;, &#039;Aruba 9004 4-Port GbE Gateway (front)&#039;, null, null, dt + &#039;9004 port gbe back&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_9004_dual_rackmount;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 9004 dual rackmount&#039;, null, null, dt + &#039;9004 dual rackmount&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_9012_10_port_gbe_gateway_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 9012 10-Port GbE Gateway (front)&#039;, null, null, dt + &#039;9012 10 port gbe front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_9012_10_port_gbe_gateway_back;&#039;, 142, 15, &#039;&#039;, &#039;Aruba 9012 10-Port GbE Gateway (back)&#039;, null, null, dt + &#039;9012 10 port gbe back&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_clearpass_c1000_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba ClearPass C1000 (front)&#039;, null, null, dt + &#039;clearpass c1000 front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_mobility_master_10k_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba Mobility Master 10k (front)&#039;, null, null, dt + &#039;mobility master 10k front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_mobility_master_10k_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba Mobility Master 10k (rear)&#039;, null, null, dt + &#039;mobility master 10k rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_mobility_master_1k_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba Mobility Master 1k (front)&#039;, null, null, dt + &#039;mobility master 1k front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_mobility_master_1k_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba Mobility Master 1k (rear)&#039;, null, null, dt + &#039;mobility master 1k rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_mobility_master_5k_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba Mobility Master 5k (front)&#039;, null, null, dt + &#039;mobility master 5k front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_mobility_master_5k_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba Mobility Master 5k (rear)&#039;, null, null, dt + &#039;mobility master 5k rear&#039;)
+        ]);
+    };
+    
+    Sidebar.prototype.addRackHPEArubaSecurityPalette = function()
+    {
+        var s = &#039;html=1;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;shadow=0;dashed=0;shape=mxgraph.rack.hpe_aruba.security.&#039;;
+        
+        //default tags
+        var dt = &#039;rack equipment hpe hp hewlett packard enterprise aruba security clearpass &#039;;
+        
+        this.addPaletteFunctions(&#039;rackHPE Aruba Security&#039;, &#039;Rack / HPE Aruba / Security&#039;, false,
+        [
+            this.createVertexTemplateEntry(s + &#039;aruba_clearpass_c1000_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba ClearPass C1000 (front)&#039;, null, null, dt + &#039;c1000 front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_clearpass_c1000_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba ClearPass C1000 (rear)&#039;, null, null, dt + &#039;c1000 rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_clearpass_c2000_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba ClearPass C2000 (front)&#039;, null, null, dt + &#039;c2000 front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_clearpass_c2000_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba ClearPass C2000 (rear)&#039;, null, null, dt + &#039;c2000 rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_clearpass_c3000_front;&#039;, 142, 15, &#039;&#039;, &#039;Aruba ClearPass C3000 (front)&#039;, null, null, dt + &#039;c3000 front&#039;),
+            this.createVertexTemplateEntry(s + &#039;aruba_clearpass_c3000_rear;&#039;, 142, 15, &#039;&#039;, &#039;Aruba ClearPass C3000 (rear)&#039;, null, null, dt + &#039;c3000 rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;direct_qsfp;&#039;, 11, 5.7, &#039;&#039;, &#039;Direct QSFP&#039;, null, null, dt + &#039;direct qsfp&#039;)
+        ]);
+    };
+    
+    Sidebar.prototype.addRackHPEArubaSwitchesPalette = function()
+    {
+        var s = &#039;html=1;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;shadow=0;dashed=0;shape=mxgraph.rack.hpe_aruba.switches.&#039;;
+        
+        //default tags
+        var dt = &#039;rack equipment hpe hp hewlett packard enterprise aruba &#039;;
+        
+        this.addPaletteFunctions(&#039;rackHPE Aruba Switches&#039;, &#039;Rack / HPE Aruba / Switches&#039;, false,
+        [
+            this.createVertexTemplateEntry(s + &#039;direct_qsfp;&#039;, 11, 5.7, &#039;&#039;, &#039;Direct QSFP&#039;, null, null, dt + &#039;direct qsfp&#039;),
+            this.createVertexTemplateEntry(s + &#039;direct_sfp;&#039;, 11, 8, &#039;&#039;, &#039;Direct SFP&#039;, null, null, dt + &#039;direct sfp&#039;),
+            this.createVertexTemplateEntry(s + &#039;fibre_qsfp;&#039;, 20, 5.7, &#039;&#039;, &#039;Fibre QSFP&#039;, null, null, dt + &#039;fibre qsfp&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9772a_2530_48g_poeplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;J9772A 2530-48G PoE+ Switch&#039;, null, null, dt + &#039;j9772a 2530 48g poeplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9773a_2530_24g_poeplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;J9773A 2530-24G PoE+ Switch&#039;, null, null, dt + &#039;j9773a 2530 24g poeplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9774a_2530_8g_poeplus_front;&#039;, 87, 15, &#039;&#039;, &#039;J9774A 2530-8G PoE+ (front)&#039;, null, null, dt + &#039;j9774a 2530 8g poeplus front&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9774a_2530_8g_poeplus_rear;&#039;, 87, 15, &#039;&#039;, &#039;J9774A 2530-8G PoEplus (rear)&#039;, null, null, dt + &#039;j9774a 2530 8g poeplus rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9775a_2530_48g_switch;&#039;, 142, 15, &#039;&#039;, &#039;J9775A 2530-48G Switch&#039;, null, null, dt + &#039;j9775a 2530 48g switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9776a_2530_24g_switch;&#039;, 142, 15, &#039;&#039;, &#039;J9776A 2530-24G Switch&#039;, null, null, dt + &#039;j9776a 2530 24g switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9777a_2530_8g_front;&#039;, 87, 15, &#039;&#039;, &#039;J9777A 2530-8G (front)&#039;, null, null, dt + &#039;j9777a 2530 8g front&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9777a_2530_8g_rear;&#039;, 87, 15, &#039;&#039;, &#039;J9777A 2530-8G (rear)&#039;, null, null, dt + &#039;j9777a 2530 8g rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9778a_2530_48_poeplus_front;&#039;, 142, 15, &#039;&#039;, &#039;J9778A 2530-48 PoE+ (front)&#039;, null, null, dt + &#039;j9778a 2530 48 poeplus front&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9780a_2530_8_poeplus_front;&#039;, 142, 15, &#039;&#039;, &#039;J9780A 2530-8 PoE+ (front)&#039;, null, null, dt + &#039;j9780a 2530 poeplus front&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9780a_2530_8_poeplus_rear;&#039;, 142, 15, &#039;&#039;, &#039;J9780A 2530-8 PoE+ (rear)&#039;, null, null, dt + &#039;j9780a 2530 poeplus rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9781a_2530_48_front;&#039;, 142, 15, &#039;&#039;, &#039;J9781A 2530-48 (front)&#039;, null, null, dt + &#039;j9781a 2530 48 front&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9782a_2530_24_front;&#039;, 142, 15, &#039;&#039;, &#039;J9782A 2530-24 (front)&#039;, null, null, dt + &#039;j9782a 2530 24 front&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9821a_540r_zl2_switch_rear;&#039;, 142, 56, &#039;&#039;, &#039;J9821A 540R zl2 Switch (rear)&#039;, null, null, dt + &#039;j9821a 540r zl2 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9822a_5412r_zl2_switch;&#039;, 142, 98, &#039;&#039;, &#039;J9822A 5412R zl2 Switch&#039;, null, null, dt + &#039;j9822a 5412r zl2 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9822a_5412r_zl2_switch_rear;&#039;, 142, 98, &#039;&#039;, &#039;J9822A 5412R zl2 Switch (rear)&#039;, null, null, dt + &#039;j9822a 5412r zl2 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9827a_5400r_management_module;&#039;, 98, 15, &#039;&#039;, &#039;J9827A 5400R Management Module&#039;, null, null, dt + &#039;j9827a 5400r management module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9828a_5400r_700w_poeplus_zl2_power_supply;&#039;, 63, 43, &#039;&#039;, &#039;J9828A 5400R 700W PoE+ zl2 Power Supply&#039;, null, null, dt + &#039;j9828a 5400r 700w poeplus zl2 power supply&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9829a_5400r_1100w_poeplus_zl2_power_supply;&#039;, 63, 43, &#039;&#039;, &#039;J9829A 5400R 1100W PoE+ zl2 Power Supply&#039;, null, null, dt + &#039;j9829a 5400r 1100w poeplus zl2 power supply&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9830b_5400r_2750w_poeplus_zl2_power_supply;&#039;, 63, 43, &#039;&#039;, &#039;J9830B 5400R 2750W PoE+ zl2 Power Supply&#039;, null, null, dt + &#039;j9830b 5400r 2750w poeplus zl2 power supply&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9831a_5406r_zl2_switch_fan_tray;&#039;, 15, 53, &#039;&#039;, &#039;J9831A 5406R zl2 Switch Fan Tray&#039;, null, null, dt + &#039;j9831a 5406r zl2 switch fan tray&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9832a_5412r_zl2_switch_fan_tray;&#039;, 15, 96, &#039;&#039;, &#039;J9832A 5412R zl2 Switch Fan Tray&#039;, null, null, dt + &#039;j9832a 5412r zl2 switch fan tray&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9840a_msm_775zl_v2_zl_module;&#039;, 75, 15, &#039;&#039;, &#039;J9840A MSM 775zl v2 zl Module&#039;, null, null, dt + &#039;j9840a msm 775zl v2 zl module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9850a_5406r_zl2_switch_rear;&#039;, 142, 55, &#039;&#039;, &#039;J9850A 5406R zl2 Switch (rear)&#039;, null, null, dt + &#039;j9850a 5406r zl2 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9850a_540r_zl2_switch;&#039;, 142, 55, &#039;&#039;, &#039;J9850A 540R zl2 Switch&#039;, null, null, dt + &#039;j9850a 540r zl2 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9851a_5412r_zl2_switch;&#039;, 142, 98, &#039;&#039;, &#039;J9851A 5412R zl2 Switch&#039;, null, null, dt + &#039;j9851a 5412r zl2 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9851a_5412r_zl2_switch_rear;&#039;, 142, 98, &#039;&#039;, &#039;J9851A 5412R zl2 Switch (rear)&#039;, null, null, dt + &#039;j9851a 5412r zl2 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9853a_2530_48g_poeplus_2sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;J9853A 2530-48G PoE+ 2SFP+ Switch&#039;, null, null, dt + &#039;j9853a 2530 48g poeplus 2sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9854a_2530_24g_poeplus_2sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;J9854A 2530-24G PoE+ 2SFP+ Switch&#039;, null, null, dt + &#039;j9854a 2530 24g poeplus 2sfpplus Switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9855a_2530_48g_2sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;J9855A 2530-48G 2SFP+ Switch&#039;, null, null, dt + &#039;j9855a 2530 48g 2sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9856a_2530_24g_2sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;J9856A 2530-24G 2SFP+ Switch&#039;, null, null, dt + &#039;j9856a 2530 24g 2sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9857a_adv_svcs_v2_zl_module;&#039;, 75, 15, &#039;&#039;, &#039;J9857A Adv Svcs v2 zl Module&#039;, null, null, dt + &#039;j9857a adv svcs v2 zl module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9858a_adv_svcs_v2_zl_module;&#039;, 75, 15, &#039;&#039;, &#039;J9858A Adv Svcs v2 zl Module&#039;, null, null, dt + &#039;j9858a adv svcs v2 zl module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j993a_8_port_1g_10gbe_sfpplus_with_macsec_v3_zl2_module;&#039;, 75, 15, &#039;&#039;, &#039;J993A 8-port 1G 10GbE SFP+ with MACsec v3 zl2 Module&#039;, null, null, dt + &#039;j993a 8 port 1g 10gbe sfpplus with macsec v3 zl2 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9986a_24p_gigt_module;&#039;, 75, 15, &#039;&#039;, &#039;J9986A 24p GigT Module&#039;, null, null, dt + &#039;j9986a 24p gigt module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9987a_24_port_10_100_1000base_t_with_macsec_v3_zl2_module;&#039;, 75, 15, &#039;&#039;, &#039;J9987A 24-port 10/100/1000BASE-T with MACsec v3 zl2 Module&#039;, null, null, dt + &#039;j9987a 24 port 10 100 1000base with macsec v3 zl2 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9988a_24_port_1gbe_sfp_with_magsec_v3_zl2_module;&#039;, 75, 15, &#039;&#039;, &#039;J9988A 24-port 1GbE SFP with MAGsec v3 zl2 Module&#039;, null, null, dt + &#039;j9988A 24 port 1gbe sfp with magsec v3 zl2 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9989a_12_port_10_100_1000base_t_poeplus_and_12_port_1gbe_sfp_with_macsec_v3_zl2_module;&#039;, 75, 15, &#039;&#039;, &#039;J9989A 12-port 10/100/1000BASE-T PoE+ and 12-port 1GbE SFP with MACsec v3 zl2 Module&#039;, null, null, dt + &#039;j9989a 12 port 10 100 1000base poeplus and 12 port 1gbe sfp with macsec v3 zl2 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9990a_20p_gigt_4p_sfpplus_module;&#039;, 75, 15, &#039;&#039;, &#039;J9990A 20p GigT 4p SFP+ Module&#039;, null, null, dt + &#039;j9990a 20p gigt 4p sfpplus module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9991a_20_port_10_100_1000base_t_poeplus_and_4_port_1_2.5_5_10gbase_t_poeplus_with_macsec_v3_zl2_module;&#039;, 75, 15, &#039;&#039;, &#039;J9991A 20-port 10/100/1000BASE-T PoE+ and 4 port 1/2.5/5/10GBASE-T PoE+ with MACsec v3 zl2 Module&#039;, null, null, dt + &#039;j9991a 20 port 10 100 1000base poeplus and port 2.5 10gbase poeplus with macsec v3 zl2 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9992a_20_port_10_100_1000base_t_poeplus_and_1_port_40gbe_qsfpplus_withmacsec_v3_zl2_module;&#039;, 75, 15, &#039;&#039;, &#039;J9992A 20-port 10/100/1000BASE-T PoE+ and 1-port 40GbE QSFP+ with MACsec v3 zl2 Module&#039;, null, null, dt + &#039;j9992a 20 port 10 100 1000base poeplus and port 40gbe qsfpplus withmacsec v3 zl2 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9995a_8p_smart_rate_poeplus_module;&#039;, 75, 15, &#039;&#039;, &#039;J9995A 8p Smart Rate PoE+ Module&#039;, null, null, dt + &#039;j9995a 8p smart rate poeplus module&#039;),
+            this.createVertexTemplateEntry(s + &#039;j9996a_2_port_40gbe_qsfpplus_with_macsec_v3_zl2_module;&#039;, 75, 15, &#039;&#039;, &#039;J9996A 2-port 40GbE QSFP+ with MACsec v3 zl2 Module&#039;, null, null, dt + &#039;j9996a port 40gbe qsfpplus with macsec v3 zl2 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl070a_2530_8_poeplus_internal_ps_switch;&#039;, 82, 15, &#039;&#039;, &#039;JL070A 2530-8 PoE+ Internal PS Switch&#039;, null, null, dt + &#039;jL070a 2530 poeplus internal ps switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl071a_hpe_aruba_3810m_24_port_gt_1_slot_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL071A HPE Aruba 3810M 24-port GT 1-slot Switch&#039;, null, null, dt + &#039;jl071a 3810m 24 port gt slot switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl071a_hpe_aruba_3810m_24_port_gt_1_slot_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL071A HPE Aruba 3810M 24-port GT 1-slot Switch (rear)&#039;, null, null, dt + &#039;jl071a 3810m 24 port gt slot switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl072a_hpe_aruba_3810m_48_port_gt_1_slot_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL072A HPE Aruba 3810M 48-port GT 1-slot Switch&#039;, null, null, dt + &#039;jl072a hpe aruba 3810m 48 port gt slot switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl072a_hpe_aruba_3810m_48_port_gt_1_slot_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL072A HPE Aruba 3810M 48-port GT 1-slot Switch (rear)&#039;, null, null, dt + &#039;jl072a 3810m 48 port gt slot switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl073a_hpe_aruba_3810m_24_port_gt_poeplus_1_slot_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL073A HPE Aruba 3810M 24-port GT PoEplus 1-slot Switch&#039;, null, null, dt + &#039;jl073a 3810m 24 port gt poeplus slot switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl073a_hpe_aruba_3810m_24_port_gt_poeplus_1_slot_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL073A HPE Aruba 3810M 24-port GT PoE 1-slot Switch (rear)&#039;, null, null, dt + &#039;jl073a 3810m 24 port gt poeplus slot switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl074a_hpe_aruba_3810m_48_port_gt_poeplus_1_slot_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL074A HPE Aruba 3810M 48-port GT PoE+ 1-slot Switch&#039;, null, null, dt + &#039;jl074a 3810m 48 port gt poeplus slot switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl075a_hpe_aruba_3810m_16_port_sfpplus_2_slot_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL075A HPE Aruba 3810M 16-port SFP+ 2-slot Switch&#039;, null, null, dt + &#039;jl075a 3810m 16 port sfpplus slot switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl075a_hpe_aruba_3810m_16_port_sfpplus_2_slot_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL075A HPE Aruba 3810M 16-port SFP+ 2-slot Switch (rear)&#039;, null, null, dt + &#039;jl075a 3810m 16 port sfpplus slot switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl076a_hpe_aruba_3810m_40_port_gt_poeplus_8_port_1_2_5_5_10gbase_t_poeplus_1_slot_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL076A HPE Aruba 3810M 40-port GT PoE+ 8-port 1/2.5/5/10GBASE-T PoE+ 1-slot Switch&#039;, null, null, dt + &#039;jl076a 3810m 40 port gt poeplus port 10gbase poeplus slot switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl076a_hpe_aruba_3810m_40_port_gt_poeplus_8_port_1_2_5_5_10gbase_t_poeplus_1_slot_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL076A HPE Aruba 3810M 40-port GT PoE+ 8-port 1/2.5/5/10GBASE-T PoE+ 1-slot Switch (rear)&#039;, null, null, dt + &#039;jl076a 3810m 40 port gt poeplus port 10gbase poeplus slot switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl079a3810m_2930m_2_port_40gbe_qsfpplus_module;&#039;, 41, 15, &#039;&#039;, &#039;JL079A3810M 2930M 2-port 40GbE QSFP+ Module&#039;, null, null, dt + &#039;jl079a3810m 2930m port 40gbe qsfpplus module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl081a_3810m_2930m_4_1_2_5_5_10_gbe_hpe_smart_rate_module;&#039;, 41, 15, &#039;&#039;, &#039;JL081A 3810M 2930M 4 1/2.5/5/10 GbE HPE Smart Rate Module&#039;, null, null, dt + &#039;jl081a 3810m 2930m 10 gbe smart rate module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl083a_3810m_2930m_4_port_10gbe_sfpplus_module;&#039;, 41, 15, &#039;&#039;, &#039;JL083A 3810M 2930M 4-port 10GbE SFP+ Module&#039;, null, null, dt + &#039;jl083a 3810m 2930m port 10gbe sfpplus module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl084a_3810m_2930m_4_port_stacking_module;&#039;, 82, 15, &#039;&#039;, &#039;JL084A 3810M 2930M 4-port Stacking Module&#039;, null, null, dt + &#039;jl084a 3810m 2930m port stacking module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl085a_aruba_6300m_psu_module;&#039;, 27, 13, &#039;&#039;, &#039;JL085A Aruba 6300M PSU Module&#039;, null, null, dt + &#039;jl085a 6300m psu module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl086a_aruba_6300m_psu_module;&#039;, 27, 13, &#039;&#039;, &#039;JL086A Aruba 6300M PSU Module&#039;, null, null, dt + &#039;jl086a 6300m psu module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl087a_3810m_2930m_1_port_40gbe_qsfpplus_module;&#039;, 41, 15, &#039;&#039;, &#039;JL087A 3810M 2930M 1-port 40GbE QSFP+ Module&#039;, null, null, dt + &#039;jl087a 3810m 2930m port 40gbe qsfpplus module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl087a_aruba_6300m_psu_module;&#039;, 27, 15, &#039;&#039;, &#039;JL087A Aruba 6300M PSU Module&#039;, null, null, dt + &#039;jl087a 6300m psu module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl253a_aruba_2930f_24g_4sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL253A Aruba 2930F-24G 4SFP+ switch&#039;, null, null, dt + &#039;jl253a 2930f 24g 4sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl254a_aruba_2930f_48g_4sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL254A Aruba 2930F-48G 4SFP+ switch&#039;, null, null, dt + &#039;jl254a 2930f 48g 4sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl255a_aruba_2930f_24g_poeplus_4sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL255A Aruba 2930F-24G PoE+ 4SFP+ switch&#039;, null, null, dt + &#039;jl255a 2930f 24g poeplus 4sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl256a_aruba_2930f_48g_poeplus_4sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL256A Aruba 2930F-48G PoE+ 4SFP+ switch&#039;, null, null, dt + &#039;jl256a 2930f 48g poeplus 4sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl258a_aruba_2930f_8g_poeplus_2sfpplus_rear;&#039;, 82, 15, &#039;&#039;, &#039;JL258A Aruba 2930F-8G PoE+ 2SFP+ (rear)&#039;, null, null, dt + &#039;jl258a 2930f 8g poeplus 2sfpplus rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl258a_aruba_2930f_8g_poeplus_2sfpplus_switch;&#039;, 82, 15, &#039;&#039;, &#039;JL258A Aruba 2930F-8G PoE+ 2SFP+ switch&#039;, null, null, dt + &#039;jl258a 2930f 8g poeplus 2sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl258a_aruba_2930f_8g_poeplus_2sfpplus_switch_rear;&#039;, 82, 15, &#039;&#039;, &#039;JL258A Aruba 2930F-8G PoE+ 2SFP+ switch (rear)&#039;, null, null, dt + &#039;jl258a 2930f 8g poeplus 2sfpplus switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl259a_aruba_2930f_24g_4sfp_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL259A Aruba 2930F-24G 4SFP switch&#039;, null, null, dt + &#039;jl259a 2930f 24g 4sfp switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl260a_aruba_2930f_48g_4sfp_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL260A Aruba 2930F-48G 4SFP switch&#039;, null, null, dt + &#039;jl260a 2930f 48g 4sfp switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl261a_aruba_2930f_24g_poeplus_4sfp_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL261A Aruba 2930F-24G PoE+ 4SFP switch&#039;, null, null, dt + &#039;jl261a 2930f 24g poeplus 4sfp switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl262a_aruba_2930f_48g_poeplus_4sfp_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL262A Aruba 2930F-48G PoE+ 4SFP switch&#039;, null, null, dt + &#039;jl262a 2930f 48g poeplus 4sfp switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl263a_aruba_2930f_24g_poeplus_4sfpplus_taa_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL263A Aruba 2930F-24G PoE+ 4SFP+ TAA Switch&#039;, null, null, dt + &#039;jl263a 2930f 24g poeplus 4sfpplus taa switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl264a_aruba_2930f_48g_poeplus_4sfpplus_taa_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL264A Aruba 2930F-48G PoE+ 4SFP+ TAA switch&#039;, null, null, dt + &#039;jl264a 2930f 48g poeplus 4sfpplus taa switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl319a_aruba_2930m_24g_1_slot_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL319A Aruba 2930M-24G 1-slot Switch&#039;, null, null, dt + &#039;jl319a 2930m 24g slot switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl319a_aruba_2930m_24g_1_slot_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL319A Aruba 2930M-24G 1-slot Switch (rear)&#039;, null, null, dt + &#039;jl319a 2930m 24g slot switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl320a_aruba_2930m_24g_poeplus_1_slot_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL320A Aruba 2930M-24G PoE+ 1-slot Switch&#039;, null, null, dt + &#039;jl320a 2930m 24g poeplus slot switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl320a_aruba_2930m_24g_poeplus_1_slot_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL320A Aruba 2930M-24G PoE+ 1-slot Switch (rear)&#039;, null, null, dt + &#039;jl320a 2930m 24g poeplus slot switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl321a_aruba_2930m_48g_1_slot_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL321A Aruba 2930M-48G 1-slot Switch&#039;, null, null, dt + &#039;jl321a 2930m 48g slot switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl321a_aruba_2930m_48g_1_slot_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL321A Aruba 2930M-48G 1-slot Switch (rear)&#039;, null, null, dt + &#039;jl321a 2930m 48g slot switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl322a_aruba_2930m_48g_poeplus_1_slot_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL322A Aruba 2930M-48G PoE+ 1-slot Switch&#039;, null, null, dt + &#039;jl322a 2930m 48g poeplus slot switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl322a_aruba_2930m_48g_poeplus_1_slot_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL322A Aruba 2930M-48G PoE+ 1-slot Switch (rear)&#039;, null, null, dt + &#039;jl322a 2930m 48g poeplus slot switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl323a_aruba_2930m_40g_8_smart_rate_poeplus_1_slot_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL323A Aruba 2930M-40G 8 Smart Rate PoE+ 1-slot Switch&#039;, null, null, dt + &#039;jl323a 2930m 40g smart rate poeplus slot switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl324a_aruba_2930m_24_smart_rate_poeplus_1_slot_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL324A Aruba 2930M-24 Smart Rate PoE+ 1-slot Switch&#039;, null, null, dt + &#039;jl324a 2930m 24 smart rate poeplus slot switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl325a_2930m_2_port_stacking_module;&#039;, 23, 10, &#039;&#039;, &#039;JL325A 2930M 2-port Stacking Module&#039;, null, null, dt + &#039;jl325a 2930m port stacking module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl354a_aruba_2540_24g_4sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL354A Aruba 2540-24G 4SFP+ switch&#039;, null, null, dt + &#039;jl354a 2540 24g 4sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl355a_aruba_2540_48g_4sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL355A Aruba 2540-48G 4SFP Switch&#039;, null, null, dt + &#039;jl355a 2540 48g 4sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl356a_aruba_2540_24g_poeplus_4sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL356A Aruba 2540-24G PoE+ 4SFP+ Switch&#039;, null, null, dt + &#039;jl356a 2540 24g poeplus 4sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl357a_aruba_2540_48g_poeplus_4sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL357A Aruba 2540-48G PoE+ 4SFP+ Switch&#039;, null, null, dt + &#039;jl357a 2540 48g poeplus 4sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl363a_32p_sfpplus_adv;&#039;, 14, 107, &#039;&#039;, &#039;JL363A-32P SFP+ Adv&#039;, null, null, dt + &#039;jl363a 32p sfpplus adv&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl365a_8p_qsfpplus_adv;&#039;, 14, 107, &#039;&#039;, &#039;JL365A-8P QSFP+ Adv&#039;, null, null, dt + &#039;jl365a 8p qsfpplus adv&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl366a_6p_qsfp28_adv;&#039;, 14, 107, &#039;&#039;, &#039;JL366A-6P QSFP28 Adv&#039;, null, null, dt + &#039;jl366a 6p qsfpP28 adv&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl368a_aruba_8400_mgmt_mod;&#039;, 14, 122, &#039;&#039;, &#039;JL368A Aruba 8400 Mgmt Mod&#039;, null, null, dt + &#039;jl368a 8400 mgmt management mod&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl369a_aruba_8400_x731_fan_tray;&#039;, 142, 27, &#039;&#039;, &#039;JL369A Aruba 8400 X731 Fan tray&#039;, null, null, dt + &#039;jl369a 8400 x731 Fan tray&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl370a_aruba_8400_fan_for_x731_fan_tray;&#039;, 20, 23, &#039;&#039;, &#039;JL370A Aruba 8400 Fan for X731 Fan tray&#039;, null, null, dt + &#039;jl370a 8400 fan for x731 fan tray&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl371a_aruba8400_fan_tray_and_6_fans_bundle;&#039;, 142, 27, &#039;&#039;, &#039;JL371A Aruba 8400 Fan tray and 6 fans bundle&#039;, null, null, dt + &#039;jl371a 8400 fan tray and fans bundle&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl375a_aruba_8400_front;&#039;, 142, 112, &#039;&#039;, &#039;JL375A Aruba 8400 (front)&#039;, null, null, dt + &#039;jl375a 8400 front&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl375a_aruba_8400_rear;&#039;, 142, 112, &#039;&#039;, &#039;JL375A Aruba 8400 (rear)&#039;, null, null, dt + &#039;jl375a 8400 rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl375a_aruba_8400_rear_empty;&#039;, 142, 112, &#039;&#039;, &#039;JL375A Aruba 8400 (rear, empty)&#039;, null, null, dt + &#039;jl375a 8400 rear empty&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl376a_aruba_8400_front;&#039;, 142, 112, &#039;&#039;, &#039;JL376A Aruba 8400 (front)&#039;, null, null, dt + &#039;jl376a 8400 front&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl376a_aruba_8400_rear;&#039;, 142, 112, &#039;&#039;, &#039;JL376A Aruba 8400 (rear)&#039;, null, null, dt + &#039;jl376a 8400 rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl376a_aruba_8400_rear_empty;&#039;, 142, 112, &#039;&#039;, &#039;JL376A Aruba 8400 (rear, empty)&#039;, null, null, dt + &#039;jl376a 8400 rear empty&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl479a_aruba_8320_48p_10g_sfp_sfpplus_and_6p_40g_qsfpplus_5_fan_2_ps_switch_bundle;&#039;, 142, 15, &#039;&#039;, &#039;JL479A Aruba 8320-48p 10G SFP SFP+ and 6p 40G QSFP+ 5 fan 2 PS Switch Bundle&#039;, null, null, dt + &#039;jl479a 8320 48p 10g sfp sfpplus and 6p 40g qsfpplus fan ps switch bundle&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl479a_aruba_8320_48p_10g_sfp_sfpplus_and_6p_40g_qsfpplus_5_fan_2_ps_switch_bundle_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL479A Aruba 8320 48p 10G SFP SFP+ and 6p 40G QSFP+ 5 fan 2 PS Switch Bundle (rear)&#039;, null, null, dt + &#039;jl479a 8320 48p 10g sfp sfpplus and 6p 40g qsfpplus fan ps switch bundle rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl557a_aruba_2930f_48g_poeplus_4sfp_740w_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL557A Aruba 2930F-48G PoE+ 4SFP 740W Switch&#039;, null, null, dt + &#039;jl557a 2930f 48g poeplus 4sfp 740w switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl557a_aruba_2930f_48g_poeplus_4sfp_740w_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL557A Aruba 2930F-48G PoE+ 4SFP 740W Switch (rear)&#039;, null, null, dt + &#039;jl557a 2930f 48g poeplus 4sfp 740w switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl558a_aruba_2930f_48g_poeplus_4sfpplus_740w_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL558A Aruba 2930F-48G PoE+ 4SFP+ 740W Switch&#039;, null, null, dt + &#039;jl558a 2930f 48g poeplus 4sfpplus 740w switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl558a_aruba_2930f_48g_poeplus_4sfpplus_740w_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL558A Aruba 2930F-48G PoE+ 4SFP+ 740W Switch (rear)&#039;, null, null, dt + &#039;jl558a 2930f 48g poeplus 4sfpplus 740w switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl559a_aruba_2930f_48g_poeplus_4sfpplus_740w_taa_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL559A Aruba 2930F-48G PoE+ 4SFP+ 740W TAA switch&#039;, null, null, dt + &#039;jl559a 2930f 48g poeplus 4sfpplus 740w taa switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl559a_aruba_2930f_48g_poeplus_4sfpplus_740w_taa_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL559A Aruba 2930F-48G PoE+ 4SFP+ 740W TAA switch (rear)&#039;, null, null, dt + &#039;jl559a 2930f 48g poeplus 4sfpplus 740w taa switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl579a_aruba_8320_32p_40g_qsfpplus_5_fans_2_ps_switch_bundle;&#039;, 142, 15, &#039;&#039;, &#039;JL579A Aruba 8320-32p-40G QSFP+ 5 fans 2 PS Switch Bundle&#039;, null, null, dt + &#039;jl579a 8320 32p 40g qsfpplus fans ps switch bundle&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl579a_aruba_8320_32p_40g_qsfpplus_5_fans_2_ps_switch_bundle_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL579A Aruba 8320-32p-40G QSFP+ 5 fans 2 PS Switch Bundle (rear)&#039;, null, null, dt + &#039;jl579a 8320 32p 40g qsfpplus fans ps switch bundle rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl581a_aruba_8320_48p_1g_10gbase_t_and_6p_40g_qsfpplus_5_fans_2_ps_switch_bundle;&#039;, 142, 15, &#039;&#039;, &#039;JL581A Aruba 8320-48p-1G 10GBASE-T and 6p 40G QSFP+ 5 fans 2 PS Switch Bundle&#039;, null, null, dt + &#039;jl581a 8320 48p 1g 10gbase and 6p 40g qsfpplus fans ps switch bundle&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl581a_aruba_8320_48p_1g_10gbase_t_and_6p_40g_qsfpplus_5_fans_2_ps_switch_bundle_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL581A Aruba 8320-48p-1G 10GBASE-T and 6p 40G QSFP+ 5 fans 2 PS Switch Bundle (rear)&#039;, null, null, dt + &#039;jl581a 8320 48p 1g 10gbase and 6p 40g qsfpplus fans ps switch bundle rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl624a_aruba_8325_32y8c_f2b_front;&#039;, 142, 15, &#039;&#039;, &#039;JL624A Aruba 8325 32Y8C F2B (front)&#039;, null, null, dt + &#039;jl624a 8325 32y8c f2b front&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl624a_aruba_8325_32y8c_f2b_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL624A Aruba 8325 32Y8C F2B (rear)&#039;, null, null, dt + &#039;jl624a 8325 32y8c f2b rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl625a_aruba_8325_32y_8c_b2f_front;&#039;, 142, 15, &#039;&#039;, &#039;JL625A Aruba 8325 32Y 8C B2F (front)&#039;, null, null, dt + &#039;jl625a 8325 32y 8c b2f front&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl625a_aruba_8325_32y_8c_b2f_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL625A Aruba 8325 32Y 8C B2F (rear)&#039;, null, null, dt + &#039;jl625a 8325 32y 8c b2f rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl626a_aruba_8325_32c_f2b_front;&#039;, 142, 15, &#039;&#039;, &#039;JL626A Aruba 8325 32C F2B (front)&#039;, null, null, dt + &#039;jl626a 8325 32c f2b front&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl626a_aruba_8325_32c_f2b_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL626A Aruba 8325 32C F2B (rear)&#039;, null, null, dt + &#039;jl626a 8325 32c f2b rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl627a_aruba_8325_32c_b2f_front;&#039;, 142, 15, &#039;&#039;, &#039;JL627A Aruba 8325 32C B2F (front)&#039;, null, null, dt + &#039;jl627a 8325 32c b2f front&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl627a_aruba_8325_32c_b2f_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL627A Aruba 8325 32C B2F (rear)&#039;, null, null, dt + &#039;jl627a 8325 32c b2f rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl658a_aruba_6300m_24_port_sfpplus_and_4_port_sfp56_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL658A Aruba 6300M 24-port SFP+ and 4 port SFP56 Switch&#039;, null, null, dt + &#039;jl658a 6300m 24 port sfpplus and port sfp56 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl658a_aruba_6300m_24_port_sfpplus_and_4_port_sfp56_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL658A Aruba 6300M 24-port SFP+ and 4 port SFP56 Switch (rear)&#039;, null, null, dt + &#039;jl658a 6300m 24 port sfpplus and port sfp56 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl659a_aruba_6300m_48_port_hpe_smart_rate_1_2_5_5gbe_class_6_poe_and_4_port_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL659A Aruba 6300M 48-port HPE Smart Rate 1/2.5/5GbE Class 6 PoE and 4-port Switch&#039;, null, null, dt + &#039;jl659a a6300m 48 port smart rate 5gbe class poe and port switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl659a_aruba_6300m_48_port_hpe_smart_rate_1_2_5_5gbe_class_6_poe_and_4_port_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL659A Aruba 6300M 48-port HPE Smart Rate 1/2.5/5GbE Class 6 PoE and 4-port Switch (rear)&#039;, null, null, dt + &#039;jl659a 6300m 48 port smart rate 5gbe class poe and port switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl660a_aruba_6300m_24_port_hpe_smart_rate_1_2_5_5_gbe_class_6_poe_and_4_port_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL660A Aruba 6300M 24-port HPE Smart Rate 1/2.5/5 GbE Class 6 PoE and 4-port switch&#039;, null, null, dt + &#039;jl660a 6300m 24 port smart rate gbe class poe and port switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl660a_aruba_6300m_24_port_hpe_smart_rate_1_2_5_5_gbe_class_6_poe_and_4_port_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL660A Aruba 6300M 24-port HPE Smart Rate 1/2.5/5 GbE Class 6 PoE and 4-port switch (rear)&#039;, null, null, dt + &#039;jl660a 6300m 24 port smart rate 1 2 5 5 gbe class 6 poe and 4 port switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl661a_aruba_6300m_48_port_1gbe_class_4_poe_and_4_port_sfp56_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL661A Aruba 6300M 48-port 1GbE Class 4 PoE and 4-port SFP56 Switch&#039;, null, null, dt + &#039;jl661a 6300m 48 port 1gbe class poe and port sfp56 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl661a_aruba_6300m_48_port_1gbe_class_4_poe_and_4_port_sfp56_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL661A Aruba 6300M 48-port 1GbE Class 4 PoE and 4-port SFP56 Switch (rear)&#039;, null, null, dt + &#039;jl661a 6300m 48 port 1gbe class poe and port sfp56 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl662a_aruba_6300m_24_port_1gbe_class_4_poe_4_port_sfp56_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL662A Aruba 6300M 24-port 1GbE Class 4 PoE 4-port SFP56 Switch&#039;, null, null, dt + &#039;jlJL662a 6300m 24 port 1gbe class poe port sfp56 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl662a_aruba_6300m_24_port_1gbe_class_4_poe_4_port_sfp56_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL662A Aruba 6300M 24-port 1GbE Class 4 PoE 4-port SFP56 Switch (rear)&#039;, null, null, dt + &#039;jl662a 6300m 24 port 1gbe class poe port sfp56 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl663a_aruba_6300m_48_port_1gbe_and_4_port_sfp56_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL663A Aruba 6300M 48-port 1GbE and 4-port SFP56 Switch&#039;, null, null, dt + &#039;jl663a 6300m 48 port 1gbe and port sfp56 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl663a_aruba_6300m_48_port_1gbe_and_4_port_sfp56_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL663A Aruba 6300M 48-port 1GbE and 4-port SFP56 Switch (rear)&#039;, null, null, dt + &#039;jl663a 6300m 48 port 1gbe and port sfp56 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl664a_aruba_6300m_24_port_1gbe_and_4_port_sfp56_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL664A Aruba 6300M 24-port 1GbE and 4-port SFP56 Switch&#039;, null, null, dt + &#039;jl664a 6300m 24 port 1gbe and port sfp56 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl664a_aruba_6300m_24_port_1gbe_and_4_port_sfp56_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL664A Aruba 6300M 24-port 1GbE and 4-port SFP56 Switch (rear)&#039;, null, null, dt + &#039;jl664a 6300m 24 port 1gbe and port sfp56 Switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl665a_aruba_6300f_48_port_1gbe_class_4_poe_and_4_port_sfp56_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL665A Aruba 6300F 48-port 1GbE Class 4 PoE and 4-port SFP56 Switch&#039;, null, null, dt + &#039;jl665a 6300f 48 port 1gbe class poe and port sfp56 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl665a_aruba_6300f_48_port_1gbe_class_4_poe_and_4_port_sfp56_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL665A Aruba 6300F 48-port 1GbE Class 4 PoE and 4-port SFP56 Switch (rear)&#039;, null, null, dt + &#039;jl665a 6300f 48 port 1gbe class poe and port sfp56 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl666a_aruba_6300f_24_port_1gbe_class_4_poe_and_4_port_sfp56_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL666A Aruba 6300F 24-port 1GbE Class 4 PoE and 4-port SFP56 Switch&#039;, null, null, dt + &#039;jl666a 6300f 24 port 1gbe class poe and port sfp56 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl666a_aruba_6300f_24_port_1gbe_class_4_poe_and_4_port_sfp56_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL666A Aruba 6300F 24-port 1GbE Class 4 PoE and 4-port SFP56 Switch (rear)&#039;, null, null, dt + &#039;jl666a 6300f 24 port 1gbe class poe and port sfp56 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl667a_aruba_6300f_48_port_1gbe_and_4_port_sfp56_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL667A Aruba 6300F 48-port 1GbE and 4-port SFP56 Switch&#039;, null, null, dt + &#039;jl667a 6300f 48 port 1gbe and port sfp56 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl667a_aruba_6300f_48_port_1gbe_and_4_port_sfp56_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL667A Aruba 6300F 48-port 1GbE and 4-port SFP56 Switch (rear)&#039;, null, null, dt + &#039;jl667a 6300f 48 port 1gbe and port sfp56 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl668a_aruba_6300f_24_port_1gbe_and_4_port_sfp56_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL668A aruba 6300F 24-port 1GbE and 4-port SFP56 (rear)&#039;, null, null, dt + &#039;jl668a 6300f 24 port 1gbe and port sfp56 rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl668a_aruba_6300f_24_port_1gbe_and_4_port_sfp56_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL668A Aruba 6300F 24-port 1GbE and 4-port SFP56 Switch&#039;, null, null, dt + &#039;jl668a 6300f 24 port 1gbe and port sfp56 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl669_aruba_6300m_fan_module;&#039;, 41, 13, &#039;&#039;, &#039;JL669 Aruba 6300M Fan Module&#039;, null, null, dt + &#039;jl669 6300m fan module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl670a_aruba_6300m_psu_module;&#039;, 27, 13, &#039;&#039;, &#039;JL670A Aruba 6300M PSU Module&#039;, null, null, dt + &#039;jl670a 6300m psu module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl687a_aruba_8400x_32y_32p_1_10_25g_sfp_sfpplus_sfp28_module;&#039;, 14, 107, &#039;&#039;, &#039;JL687A Aruba 8400X 32Y 32p 1/10/25G SFP SFP+ SFP28 Module&#039;, null, null, dt + &#039;jl687a 8400x 32y 32p 10 25g sfp sfpplus sfp28 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl693a_aruba_12g_poeplus_2g_2sfpplus_switch;&#039;, 82, 15, &#039;&#039;, &#039;JL693A Aruba 12G PoE+ 2G 2SFP+ Switch&#039;, null, null, dt + &#039;jl693a 12g poeplus 2G 2sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl693a_aruba_12g_poeplus_2g_2sfpplus_switch_rear;&#039;, 82, 15, &#039;&#039;, &#039;JL693A Aruba 12G PoE+ 2G 2SFP+ Switch (rear)&#039;, null, null, dt + &#039;jl693a 12g poeplus 2g 2sfpplus switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl724a_aruba_6200f_24_port_1gbe_and_4_port_sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL724A Aruba 6200F 24-port 1GbE and 4-port SFP+ switch&#039;, null, null, dt + &#039;jl724a 6200f 24 port 1gbe and port sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl724a_aruba_6200f_24_port_1gbe_and_4_port_sfpplus_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL724A Aruba 6200F 24-port 1GbE and 4-port SFP+ switch (rear)&#039;, null, null, dt + &#039;jl724a 6200f 24 port 1gbe and port sfpplus switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl725a_aruba_6200f_24_port_1gbe_class_4_poe_and_4_port_sfpplus_370w_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL725A Aruba 6200F 24-port 1GbE Class 4 PoE and 4-port SFP+ 370W Switch&#039;, null, null, dt + &#039;jl725a 6200f 24 port 1gbe class poe and port sfpplus 370w switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl725a_aruba_6200f_24_port_1gbe_class_4_poe_and_4_port_sfpplus_370w_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL725A Aruba 6200F 24-port 1GbE Class 4 PoE and 4-port SFP+ 370W Switch (rear)&#039;, null, null, dt + &#039;jl725a 6200f 24 port 1gbe class poe and port sfpplus 370w switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl726a_aruba_6200f_48_port_1gbe_and_4_port_sfpplus_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL726A Aruba 6200F 48-port 1GbE and 4-port SFP+ Switch&#039;, null, null, dt + &#039;jl726a 6200f 48 port 1gbe and port sfpplus switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl726a_aruba_6200f_48_port_1gbe_and_4_port_sfpplus_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL726A Aruba 6200F 48-port 1GbE and 4-port SFP+ Switch (rear)&#039;, null, null, dt + &#039;jl726a 6200f 48 port 1gbe and port sfpplus switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl727a_aruba_6200f_48_port_1gbe_class_4_poe_and_4_port_sfpplus_370w_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL727A Aruba 6200F 48-port 1GbE Class 4 PoE and 4-port SFP+ 370W Switch&#039;, null, null, dt + &#039;jl727a 6200f 48 port 1gbe class poe and port sfpplus 370w switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl727a_aruba_6200f_48_port_1gbe_class_4_poe_and_4_port_sfpplus_370w_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL727A Aruba 6200F 48-port 1GbE Class 4 PoE and 4-port SFP+ 370W Switch (rear)&#039;, null, null, dt + &#039;jl727a 6200f 48 port 1gbe class poe and port sfpplus 370w switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl728a_aruba_6200f_48_port_1gbe_class_4_poe_and_4_port_sfpplus_740w_switch;&#039;, 142, 15, &#039;&#039;, &#039;JL728A Aruba 6200F 48-port 1GbE Class 4 PoE and 4-port SFP+ 740W Switch&#039;, null, null, dt + &#039;jl728a 6200f 48 port 1gbe class poe and port sfpplus 740w switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl728a_aruba_6200f_48_port_1gbe_class_4_poe_and_4_port_sfpplus_740w_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;JL728A Aruba 6200F 48-port 1GbE Class 4 PoE and 4-port SFP+ 740W Switch (rear)&#039;, null, null, dt + &#039;jl728a 6200f 48 port 1gbe class poe and port sfpplus 740w switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;jl9826a_5412r_92g_poeplus_4sfp_zl2_switch;&#039;, 142, 98, &#039;&#039;, &#039;JL9826A 5412R 92G PoE+ 4SFP zl2 Switch&#039;, null, null, dt + &#039;jl9826a 5412r 92g poeplus 4sfp zl2 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;lc_sfp;&#039;, 17, 6, &#039;&#039;, &#039;LC SFP&#039;, null, null, dt + &#039;lc sfp&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x26a_aruba_cx_6400_switch;&#039;, 142, 98, &#039;&#039;, &#039;R0X26A Aruba CX 6400 Switch&#039;, null, null, dt + &#039;r0X26a cx 6400 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x26a_aruba_cx_6405_switch_rear;&#039;, 142, 98, &#039;&#039;, &#039;R0X26A Aruba CX 6405 Switch (rear)&#039;, null, null, dt + &#039;r0X26a cx 6405 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x27a_aruba_cx_6410_switch;&#039;, 142, 169, &#039;&#039;, &#039;R0X27A Aruba CX 6410 Switch&#039;, null, null, dt + &#039;r0X27a cx 6410 switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x27a_aruba_cx_6410_switch_rear;&#039;, 142, 169, &#039;&#039;, &#039;R0X27A Aruba CX 6410 Switch (rear)&#039;, null, null, dt + &#039;r0X27a cx 6410 switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x31a_aruba_6400_management_module;&#039;, 142, 15, &#039;&#039;, &#039;R0X31A Aruba 6400 Management Module&#039;, null, null, dt + &#039;r0X31a 6400 management module&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x35a_aruba_6400_1800w_ps_w_c16;&#039;, 41, 20, &#039;&#039;, &#039;R0X35A Aruba 6400 1800W PS w/C16&#039;, null, null, dt + &#039;r0x35a 6400 1800w ps c16&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x36a_aruba_6400_3000w_ps_w_c20;&#039;, 41, 20, &#039;&#039;, &#039;R0X36A Aruba 6400 3000W PS w/C20&#039;, null, null, dt + &#039;r0x36a 6400 3000w ps c20&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x38a_aruba_6400_48p_1gbe_cls4_poe_module;&#039;, 142, 15, &#039;&#039;, &#039;R0X38A Aruba 6400-48p 1GbE CLS4 PoE Module&#039;, null, null, dt + &#039;r0x38a 6400 48p 1gbe cls4 poe module&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x39a_aruba_6400_48p_1gbe_cls4_poe_4sfp56_module;&#039;, 142, 15, &#039;&#039;, &#039;R0X39A Aruba 6400-48p 1GbE CLS4 PoE 4SFP56 Module&#039;, null, null, dt + &#039;r0x39a 6400 48p 1gbe cls4 poe 4sfp56 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x40a_aruba_6400_48p_1gbe_cls6_poe_4sfp56_module;&#039;, 142, 15, &#039;&#039;, &#039;R0X40A Aruba 6400-48p 1GbE CLS6 PoE 4SFP56 Module&#039;, null, null, dt + &#039;r0x40a 6400 48p 1gbe cls6 poe 4sfp56 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x41a_aruba_6400_48p_smart_rate_cls6_poe_4sfp56_module;&#039;, 142, 15, &#039;&#039;, &#039;R0X41A Aruba 6400-48p Smart Rate CSL6 PoE 4SFP56 Module&#039;, null, null, dt + &#039;r0x41a 6400 48p smart rate csl6 poe 4sfp56 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x42a_aruba_6400_24p_10gt_4sfp56_module;&#039;, 142, 15, &#039;&#039;, &#039;R0X42A Aruba 6400-24p 10GT 4SFP56 Module&#039;, null, null, dt + &#039;r0x42a 6400 24p 10gt 4sfp56 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x43a_aruba_6400_24p_sfp_4sfp56_module;&#039;, 142, 15, &#039;&#039;, &#039;R0X43A Aruba 6400-24p SFP 4SFP56 Module&#039;, null, null, dt + &#039;r0x43a 6400 24p sfp 4sfp56 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x44_aruba_6400_48p_10g_25g_sfp28_module;&#039;, 142, 15, &#039;&#039;, &#039;R0X44 Aruba 6400-48p 10G/25G SFP28 Module&#039;, null, null, dt + &#039;r0x44 6400 48p 10g 25g sfp28 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;r0x45a_aruba_6400_12p_40g_100g_qsfp28_module;&#039;, 142, 15, &#039;&#039;, &#039;R0X45A Aruba 6400-12p 40G/100G QSFP28 Module&#039;, null, null, dt + &#039;r0x45a 6400 12p 40g 100g qsfp28 module&#039;),
+            this.createVertexTemplateEntry(s + &#039;rj45_sfp;&#039;, 8, 6, &#039;&#039;, &#039;rj45 SFP&#039;, null, null, dt + &#039;rj45 sfp&#039;),
+            this.createVertexTemplateEntry(s + &#039;rj45_sfp_alt;&#039;, 5, 4, &#039;&#039;, &#039;rj45 SFP alt&#039;, null, null, dt + &#039;rj45 sfp alt alternative&#039;),
+            this.createVertexTemplateEntry(s + &#039;rom67a_aruba_2930m_48p_poe_class_6_switch;&#039;, 142, 15, &#039;&#039;, &#039;ROM67A Aruba 2930M-48p PoE class 6 switch&#039;, null, null, dt + &#039;rom67a 2930m 48p poe class switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;rom67a_aruba_2930m_poe_class_6_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;ROM67A Aruba 2930M PoE class 6 switch (rear)&#039;, null, null, dt + &#039;rom67a 2930m poe class switch rear&#039;),
+            this.createVertexTemplateEntry(s + &#039;rom68a_aruba_2930m_24p_poe_class_6_switch;&#039;, 142, 15, &#039;&#039;, &#039;ROM68A Aruba 2930M-24p PoE class 6 switch&#039;, null, null, dt + &#039;rom68a 2930m 24p poe class switch&#039;),
+            this.createVertexTemplateEntry(s + &#039;rom68a_aruba_2930m_24p_poe_class_6_switch_rear;&#039;, 142, 15, &#039;&#039;, &#039;ROM68A Aruba 2930M-24p PoE class 6 switch (rear)&#039;, null, null, dt + &#039;rom68a 2930m 24p poe class switch rear&#039;)
+        ]);
+    };
+    	
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

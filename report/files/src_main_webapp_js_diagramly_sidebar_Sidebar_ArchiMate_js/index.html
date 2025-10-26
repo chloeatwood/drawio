@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-ArchiMate.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-ArchiMate.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">56.97</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">157</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">21.50</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">4.10</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds ArchiMate 2.1 shapes
+	Sidebar.prototype.addArchiMatePalette = function()
+	{
+		var w = 100;
+		var h = 75;
+		var s = &#039;html=1;outlineConnect=0;shape=mxgraph.archimate.&#039;;
+		var am1 = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate.&#039;;
+		var am2 = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#99ffff;shape=mxgraph.archimate.&#039;;
+		var am3 = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#99ff99;shape=mxgraph.archimate.&#039;;
+		var am4 = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffccff;shape=mxgraph.archimate.&#039;;
+		var am5 = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ccccff;shape=mxgraph.archimate.&#039;;
+		var am6 = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffe0e0;shape=mxgraph.archimate.&#039;;
+		var am7 = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffe0e0;shape=mxgraph.archimate.&#039;;
+		var gn = &#039;mxgraph.archimate&#039;;
+		var dt = &#039;archimate &#039;;
+		this.setCurrentSearchEntryLibrary(&#039;archimate&#039;);
+		
+		this.addPaletteFunctions(&#039;archimate&#039;, mxResources.get(&#039;archiMate21&#039;), false,
+		[
+			this.createVertexTemplateEntry(am1 + &#039;application;appType=actor&#039;, 
+					w, h, &#039;&#039;, &#039;Business Actor&#039;, null, null, this.getTagsForStencil(gn, &#039;application&#039;, dt + &#039;business actor&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;application;appType=role&#039;, 
+					w, h, &#039;&#039;, &#039;Business Role&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;business role&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;application;appType=collab&#039;, 
+					w, h, &#039;&#039;, &#039;Business Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;business collaboration&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;application;appType=interface&#039;, 
+					w, h, &#039;&#039;, &#039;Business Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;business interface&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;application;appType=interface2&#039;, 
+					w, h, &#039;&#039;, &#039;Business Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;business interface&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;location&#039;, 
+					w, h, &#039;&#039;, &#039;Location&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;location&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;business;busType=process&#039;, 
+					w, h, &#039;&#039;, &#039;Business Process&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;business process&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;business;busType=function&#039;, 
+					w, h, &#039;&#039;, &#039;Business Function&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;business function&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;business;busType=interaction&#039;, 
+					w, h, &#039;&#039;, &#039;Business Interaction&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;business interaction&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;business;busType=event&#039;, 
+					w, h, &#039;&#039;, &#039;Business Event&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;business event&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;business;busType=service&#039;, 
+					w, h, &#039;&#039;, &#039;Business Service&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;business service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;businessObject;overflow=fill&#039;, w, h, 
+					&#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&lt;tr style=&quot;height:20px;&quot;&gt;&lt;td align=&quot;center&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;left&quot; valign=&quot;top&quot; style=&quot;padding:4px;&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;, 
+					&#039;Business Object&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;business object&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;representation&#039;, 
+					w, h, &#039;&#039;, &#039;Representation&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;representation&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;fillColor=#ffff99;whiteSpace=wrap;shape=cloud;html=1;&#039;, 
+					w, h, &#039;&#039;, &#039;Meaning&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;meaning&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;fillColor=#ffff99;whiteSpace=wrap;shape=ellipse;html=1;&#039;, 
+					w, h * 0.75, &#039;&#039;, &#039;Value&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;value&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;product;overflow=fill&#039;, w, h, 
+					&#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&lt;tr style=&quot;height:20px;&quot;&gt;&lt;td align=&quot;left&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;left&quot; valign=&quot;top&quot; style=&quot;padding:4px;&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;, 
+					&#039;Product&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;product&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am1 + &#039;businessObject;overflow=fill&#039;, w, h, 
+					&#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&lt;tr style=&quot;height:20px;&quot;&gt;&lt;td align=&quot;center&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;left&quot; valign=&quot;top&quot; style=&quot;padding:4px;&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;, 
+					&#039;Contract&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;contract&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=comp&#039;, 
+					w, h, &#039;&#039;, &#039;Application Component&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;application component&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=collab&#039;, 
+					w, h, &#039;&#039;, &#039;Application Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;application collaboration&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=interface&#039;, 
+					w, h, &#039;&#039;, &#039;Application Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;application interface&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=interface2&#039;, 
+					w, h, &#039;&#039;, &#039;Application Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;application interface&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=function&#039;, 
+					w, h, &#039;&#039;, &#039;Application Function&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;application function&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=interaction&#039;, 
+					w, h, &#039;&#039;, &#039;Application Interaction&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;application interaction&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=service&#039;, 
+					w, h, &#039;&#039;, &#039;Application Service&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;application service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;businessObject;overflow=fill&#039;, w, h, 
+					&#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&lt;tr style=&quot;height:20px;&quot;&gt;&lt;td align=&quot;center&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;left&quot; valign=&quot;top&quot; style=&quot;padding:4px;&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;, 
+					&#039;Data Object&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;data object&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;application;appType=node&#039;,
+					w, h, &#039;&#039;, &#039;Node&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;node&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;tech;techType=device&#039;, 
+					w, h, &#039;&#039;, &#039;Device&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;device&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;application;appType=network&#039;,
+					w, h, &#039;&#039;, &#039;Network&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;network&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;application;appType=commPath&#039;, 
+					w, h, &#039;&#039;, &#039;Communications Path&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;communications path&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;application;appType=interface&#039;, 
+					w, h, &#039;&#039;, &#039;Infrastructure Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;infrastructure interface&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;application;appType=interface2&#039;, 
+					w, h, &#039;&#039;, &#039;Infrastructure Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;infrastructure interface&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;application;appType=sysSw&#039;, 
+					w, h, &#039;&#039;, &#039;System Software&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;system software&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;business;busType=function&#039;, 
+					w, h, &#039;&#039;, &#039;Infrastructure Function&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;infraastructure function&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;business;busType=service&#039;, 
+					w, h, &#039;&#039;, &#039;Infrastructure Service&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;infrastructure service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;application;appType=artifact&#039;, 
+					w, h, &#039;&#039;, &#039;Artifact&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;artifact&#039;).join(&#039; &#039;)),
+			
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=none;elbow=vertical&#039;, 
+					w, h, &#039;&#039;, &#039;Association&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;association&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=open;elbow=vertical;endFill=1;dashed=1&#039;, 
+					w, h, &#039;&#039;, &#039;Access&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;access&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=none;elbow=vertical;endFill=0;dashed=1&#039;, 
+					w, h, &#039;&#039;, &#039;Access&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;access&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=open;elbow=vertical;endFill=1&#039;,
+					w, h, &#039;&#039;, &#039;Used by&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;used by&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=block;elbow=vertical;endFill=0;dashed=1&#039;, 
+					w, h, &#039;&#039;, &#039;Realization&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;realization&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;endArrow=oval;html=1;endFill=1;startArrow=oval;startFill=1;edgeStyle=elbowEdgeStyle;elbow=vertical&#039;, 
+					w, h, &#039;&#039;, &#039;Assignment&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;assignment&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;endArrow=none;html=1;endFill=0;startArrow=diamondThin;startFill=0;edgeStyle=elbowEdgeStyle;elbow=vertical&#039;, 
+					w, h, &#039;&#039;, &#039;Aggregation&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;aggregation&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;endArrow=none;html=1;endFill=0;startArrow=diamondThin;startFill=1;edgeStyle=elbowEdgeStyle;elbow=vertical&#039;,
+					w, h, &#039;&#039;, &#039;Composition&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;composition&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;endArrow=block;html=1;endFill=1;startArrow=none;startFill=0;edgeStyle=elbowEdgeStyle;elbow=vertical;dashed=1&#039;,
+					w, h, &#039;&#039;, &#039;A&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;endArrow=block;html=1;endFill=1;startArrow=none;startFill=0;edgeStyle=elbowEdgeStyle;elbow=vertical;dashed=1&#039;, 
+					w, h, &#039;&#039;, &#039;Flow&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;flow&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;endArrow=block;html=1;endFill=1;startArrow=none;startFill=0;edgeStyle=elbowEdgeStyle;elbow=vertical;dashed=0&#039;, 
+					w, h, &#039;&#039;, &#039;Triggering&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;triggering&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;swimlane;html=1;fillColor=#ffffff;whiteSpace=wrap&#039;, 
+					w, h, &#039;&#039;, &#039;Grouping&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;grouping&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;ellipse;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;fillColor=strokeColor&#039;, 
+					10, 10, &#039;&#039;, &#039;Junction&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;junction&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;endArrow=block;html=1;endFill=0;edgeStyle=elbowEdgeStyle;elbow=vertical&#039;,
+					w, h, &#039;&#039;, &#039;Specialization&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;specialization&#039;).join(&#039; &#039;)),
+
+			this.createVertexTemplateEntry(am4 + &#039;motiv;motivType=stake&#039;, 
+					w, h, &#039;&#039;, &#039;Stakeholder&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;stakeholder&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am4 + &#039;motiv;motivType=driver&#039;, 
+					w, h, &#039;&#039;, &#039;Driver&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;driver&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am4 + &#039;motiv;motivType=assess&#039;, 
+					w, h, &#039;&#039;, &#039;Assessment&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;assesment&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am5 + &#039;motiv;motivType=goal&#039;, 
+					w, h, &#039;&#039;, &#039;Goal&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;goal&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am5 + &#039;motiv;motivType=req&#039;, 
+					w, h, &#039;&#039;, &#039;Requirement&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;goal&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am5 + &#039;motiv;motivType=const&#039;, 
+					w, h, &#039;&#039;, &#039;Constraint&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;constraint&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am5 + &#039;motiv;motivType=princ&#039;, 
+					w, h, &#039;&#039;, &#039;Principle&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;principle&#039;).join(&#039; &#039;)),
+			
+			this.createVertexTemplateEntry(am6 + &#039;rounded=1&#039;, 
+					w, h, &#039;&#039;, &#039;Work Package&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;work package&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am6 + &#039;representation&#039;, 
+					w, h, &#039;&#039;, &#039;Deliverable&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;deliverable&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;tech;techType=plateau&#039;, 
+					w, h, &#039;&#039;, &#039;Plateau&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;plateau&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;gap&#039;, 
+					w, h, &#039;&#039;, &#039;Gap&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;gap&#039;).join(&#039; &#039;))
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

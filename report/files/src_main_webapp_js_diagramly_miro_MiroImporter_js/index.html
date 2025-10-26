@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\miro\MiroImporter.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\miro\MiroImporter.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">50.33</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">534</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">55.46</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">4.95</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+function MiroImporter()
+{
+    var stencilsMap = {
+        &#039;amazon-aws-cost-management-reserved-instance-reporting&#039;: &#039;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.reserved_instance_reporting;gradientColor=#60A337;gradientDirection=north;fillColor=#277116;strokeColor=#ffffff;dashed=0;aspect=fixed;align=center;verticalAlign=top;labelPosition=center;verticalLabelPosition=bottom;&#039;,
+        &#039;flowchart-process&#039;: &#039;shape=mxgraph.flowchart.process;&#039;,
+        &#039;flowchart-decision&#039;: &#039;shape=mxgraph.flowchart.decision;&#039;,
+        &#039;flowchart-data&#039;: &#039;shape=mxgraph.flowchart.data;&#039;,
+        &#039;flowchart-predefined-process&#039;: &#039;shape=mxgraph.flowchart.predefined_process;&#039;,
+        &#039;flowchart-internal-storage&#039;: &#039;shape=mxgraph.flowchart.internal_storage;&#039;,
+        &#039;flowchart-document&#039;: &#039;shape=mxgraph.flowchart.document;&#039;,
+        &#039;flowchart-preparation&#039;: &#039;shape=mxgraph.flowchart.preparation;&#039;,
+        &#039;flowchart-manual-operation&#039;: &#039;shape=mxgraph.flowchart.manual_operation;&#039;,
+        &#039;flowchart-multiple-documents&#039;: &#039;shape=mxgraph.flowchart.multi-document;&#039;,
+        &#039;flowchart-terminator&#039;: &#039;shape=mxgraph.flowchart.terminator;&#039;,
+        &#039;flowchart-manual-input&#039;: &#039;shape=mxgraph.flowchart.manual_input;&#039;,
+        &#039;flowchart-database&#039;: &#039;shape=mxgraph.flowchart.database;&#039;,
+        &#039;flowchart-hard-disk&#039;: &#039;shape=mxgraph.flowchart.direct_data;&#039;,
+        &#039;flowchart-delay&#039;: &#039;shape=mxgraph.flowchart.delay;&#039;,
+        &#039;flowchart-stored-data&#039;: &#039;shape=mxgraph.flowchart.stored_data;&#039;,
+        &#039;flowchart-merge&#039;: &#039;shape=mxgraph.flowchart.merge_or_storage;&#039;,
+        &#039;flowchart-connector&#039;: &#039;ellipse;&#039;,
+        &#039;flowchart-or&#039;: &#039;shape=mxgraph.flowchart.or;&#039;,
+        &#039;flowchart-summing-junction&#039;: &#039;shape=mxgraph.flowchart.summing_function;&#039;,
+        &#039;flowchart-display&#039;: &#039;shape=mxgraph.flowchart.display;&#039;,
+        &#039;flowchart-off-page-link&#039;: &#039;shape=offPageConnector;&#039;,
+        //&#039;flowchart-note-curly-right&#039;: &#039;shape=mxgraph.flowchart.note_curly_right;&#039;,
+        //&#039;flowchart-note-curly-left&#039;: &#039;shape=mxgraph.flowchart.note_curly_left;&#039;,
+        &#039;flowchart-note-square&#039;: &#039;shape=mxgraph.flowchart.annotation_1;&#039;,
+    };
+
+    var typeStylesMap = {
+        &#039;card&#039;: function (vertex, obj, tags, graph)
+        {
+            vertex.value = obj.title.title + obj.description.description;
+            var styleMap = parseStyles(obj);
+            styleMap[&#039;strokeColor&#039;] = styleMap[&#039;fillColor&#039;];
+            styleMap[&#039;fillColor&#039;] = &#039;#ffffff&#039;;
+            styleMap[&#039;strokeWidth&#039;] = 10;
+            vertex.style = buildStyleString(&#039;shape=partialRectangle;top=0;bottom=0;right=0;align=left;verticalAlign=top;spacing=20;fontSize=28;spacingLeft=40;&#039;, styleMap);
+        },
+        &#039;sticker&#039;: &#039;rect;shadow=1;strokeColor=none;&#039;,
+        &#039;text&#039;: &#039;rect;rounded=1;arcSize=50;&#039;,
+        &#039;stencil&#039;: function(vertex, obj, tags, graph)
+        {
+            var style = &#039;&#039;;
+
+            try
+            {
+                var texts = obj.schema.data.texts;
+
+                if (texts)
+                {
+                    vertex.value = texts.caption? texts.caption.text : 
+                        (texts.name? texts.name.text : &#039;&#039;);
+                }
+
+                style = stencilsMap[obj.schema.id];
+            }
+            catch (e)
+            {
+                console.log(e);
+            }
+
+            vertex.style = buildStyleString(style, parseStyles(obj));
+        }
+    };
+
+    function colorNum2Hex(color)
+    {
+        return  color == -1 ? &#039;none&#039; : 
+                &#039;#&#039; + (&#039;0&#039; + (color &gt;&gt; 16).toString(16)).slice(-2) +
+                (&#039;0&#039; + ((color &gt;&gt; 8) &amp; 0xFF).toString(16)).slice(-2) +
+                (&#039;0&#039; + (color &amp; 0xFF).toString(16)).slice(-2);
+    };
+
+    fontNameMap = {
+        0: &#039;Arial&#039;,
+        2: &#039;Abril Fatface&#039;,
+        3: &#039;Bangers&#039;,
+        4: &#039;EB Garamond&#039;,
+        5: &#039;Georgia&#039;,
+        6: &#039;Graduate&#039;,
+        7: &#039;Gravitas One&#039;,
+        8: &#039;Fredoka One&#039;,
+        9: &#039;Nixie One&#039;,
+        10: &#039;OpenSans&#039;,
+        11: &#039;Permanent Marker&#039;,
+        12: &#039;PT Sans&#039;,
+        13: &#039;PT Sans Narrow&#039;,
+        14: &#039;PT Serif&#039;,
+        15: &#039;Rammetto One&#039;,
+        16: &#039;Roboto&#039;,
+        17: &#039;Roboto Condensed&#039;,
+        18: &#039;Roboto Slab&#039;,
+        19: &#039;Caveat&#039;,
+        20: &#039;Times New Roman&#039;,
+        21: &#039;Titan One&#039;,
+        22: &#039;Lemon Tuesday&#039;,
+        23: &#039;Roboto Mono&#039;,
+        24: &#039;Noto Sans&#039;,
+        25: &#039;IBM Plex Sans&#039;,
+        26: &#039;IBM Plex Serif&#039;,
+        27: &#039;IBM Plex Mono&#039;,
+        28: &#039;Spoof&#039;,
+        29: &#039;Tiempos Text&#039;,
+    };
+
+    var shapesMap = {
+        3: &#039;&#039;,
+        4: &#039;ellipse;&#039;,
+        5: &#039;shape=mxgraph.basic.acute_triangle;dx=0.5;&#039;,
+        6: &#039;shape=callout;perimeter=calloutPerimeter;size=30;position=0.13;position2=0.13;rounded=1;&#039;,
+        7: &#039;;rounded=1;&#039;,
+        8: &#039;shape=isoRectangle;&#039;,
+        10: &#039;shape=parallelogram;perimeter=parallelogramPerimeter;&#039;,
+        11: &#039;shape=mxgraph.basic.star;&#039;,
+        12: &#039;shape=singleArrow;arrowWidth=0.622;arrowSize=0.277;&#039;,
+        13: &#039;shape=singleArrow;arrowWidth=0.622;arrowSize=0.277;direction=west;&#039;,
+        16: &#039;shape=mxgraph.basic.pentagon;&#039;,
+        17: &#039;shape=mxgraph.basic.polygon;polyCoords=[[0.25,0],[0.75,0],[1,0.5],[0.75,1],[0.25,1],[0,0.5]];&#039;,
+        18: &#039;shape=mxgraph.basic.polygon;polyCoords=[[0.25,0],[0.75,0],[1,0.25],[1,0.75],[0.75,1],[0.25,1],[0,0.75],[0,0.25]];&#039;,
+        19: &#039;shape=trapezoid;perimeter=trapezoidPerimeter;fixedSize=1;&#039;,
+        20: &#039;&#039;,
+        21: &#039;shape=doubleArrow;arrowWidth=0.622;arrowSize=0.277;&#039;,
+        22: &#039;ellipse;shape=cloud;&#039;,
+        23: function(vertex, obj, tags, graph)
+        { 
+            var geo = vertex.geometry;
+            var w = geo.width;
+            geo.width = 20;
+            geo.x += w - 20;
+            vertex.style = buildStyleString(&#039;shape=curlyBracket;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;&#039;, parseStyles(obj));
+            vertex.style = vertex.style.replace(&#039;strokeColor=none;&#039;, &#039;&#039;);
+        },
+        24: function(vertex, obj, tags, graph)
+        { 
+            vertex.geometry.width = 20;
+            vertex.style = buildStyleString(&#039;shape=curlyBracket;rounded=1;flipH=1;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;&#039;, parseStyles(obj));
+            vertex.style = vertex.style.replace(&#039;strokeColor=none;&#039;, &#039;&#039;);
+        },
+        25: &#039;shape=cross;size=0.425;&#039;,
+        26: &#039;shape=cylinder3;boundedLbl=1;size=7;&#039;,
+    };
+
+    function getTypeStyle(type, obj)
+    {
+        var style = &#039;&#039;;
+
+        if (type == &#039;paint&#039;)
+        {
+            var drawPoints = obj.points, w = obj.size.width, h = obj.size.height;
+            var drawShape = &#039;&lt;shape strokewidth=&quot;inherit&quot;&gt;&lt;foreground&gt;&#039;;
+            
+            for (var i = 0; i &lt; drawPoints.length; i++) 
+            {
+                var p = drawPoints[i];
+                drawShape += (i == 0? &#039;&lt;path&gt;&lt;move&#039; : &#039;&lt;line&#039;) + &#039; x=&quot;&#039; + (p.x / w * 100).toFixed(2) +
+                                &#039;&quot; y=&quot;&#039; + (p.y / h * 100).toFixed(2) + &#039;&quot;/&gt;&#039;;
+            }
+            
+            drawShape += &#039;&lt;/path&gt;&lt;stroke/&gt;&lt;/foreground&gt;&lt;/shape&gt;&#039;;
+            style = &#039;shape=stencil(&#039; + Graph.compress(drawShape) + &#039;);&#039;;
+        }
+        else if (type == &#039;shape&#039;)
+        {
+            style = shapesMap[obj.shape];
+        }
+        else
+        {
+            style = typeStylesMap[type];
+        }
+
+        if (typeof style == &#039;function&#039;)
+        {
+            return style;
+        }
+
+        return style;
+    };
+
+    var arrowsMap = {
+        0: [&#039;none&#039;, 0],
+        1: [&#039;classic&#039;],
+        2: [&#039;diamond&#039;, 0],
+        3: [&#039;diamond&#039;, 1],
+        4: [&#039;oval&#039;, 0],
+        5: [&#039;oval&#039;, 1],
+        6: [&#039;block&#039;, 0],
+        7: [&#039;open&#039;],
+        8: [&#039;block&#039;, 1]
+    };
+
+    function addArrowStyle (style, val, end)
+    {
+        var es = arrowsMap[val];
+
+        if (es)
+        {
+            style[end + &#039;Arrow&#039;] = es[0];
+            
+            if (es[1] != null)
+            {
+                style[end + &#039;Fill&#039;] = es[1];
+            }
+        }
+    };
+
+    function parseStyles(obj)
+    {
+        var style = {
+            html: 1,
+            whiteSpace: &#039;wrap&#039;
+        }, fontStyle = 0;
+
+        try
+        {
+            var scale = obj.scale? (obj.scale.scale || 1) : 1;
+            var styleMap = JSON.parse(obj.style);
+
+            for (var key in styleMap)
+            {
+                var val = styleMap[key];
+
+                if (val === null) continue;
+
+                switch (key)
+                {
+                    case &#039;sbc&#039;: //Fill Color
+                    case &#039;bc&#039;:
+                        style[&#039;fillColor&#039;] = colorNum2Hex(val);
+                        break;
+                    case &#039;fs&#039;: //Font Size
+                        style[&#039;fontSize&#039;] = (val || 48) * scale; //TODO support auto font size (0)
+                        break;
+                    case &#039;fsc&#039;: //Font Color?
+                        break;
+                    case &#039;fsa&#039;: //Font Style?
+                        break;
+                    case &#039;ffn&#039;: //Font Family
+                        val = fontNameMap[val];
+
+                        if (val) 
+                        {
+                            style[&#039;fontFamily&#039;] = val;
+                        }
+                        break;
+                    case &#039;ta&#039;: //Text Align
+                        style[&#039;align&#039;] = (val == &#039;t&#039; ? &#039;left&#039; : 
+                            (val == &#039;r&#039;? &#039;right&#039; : &#039;center&#039;));
+                        break;
+                    case &#039;tav&#039;: //Text Vertical Align
+                        style[&#039;verticalAlign&#039;] = (val == &#039;t&#039; ? &#039;top&#039; : 
+                            (val == &#039;b&#039;? &#039;bottom&#039; : &#039;middle&#039;));
+                        break;
+                    case &#039;taw&#039;: //Text Wrap?
+                        break;
+                    case &#039;tah&#039;: //Text Height?
+                        break;
+                    case &#039;lh&#039;: //Line Height?
+                        break;
+                    case &#039;bo&#039;: //Fill Opacity
+                        style[&#039;opacity&#039;] = val * 100;
+                        break;
+                    case &#039;ss&#039;: //Stroke Size?
+                        break;
+                    case &#039;st&#039;: //Stroke Type?
+                        break;
+                    case &#039;brw&#039;: //Stroke width
+                    case &#039;t&#039;: //Edge Thickness
+                        style[&#039;strokeWidth&#039;] = val * scale;
+                        break;
+                    case &#039;brc&#039;: //Stroke Color
+                    case &#039;lc&#039;: //Edge Line Color
+                        style[&#039;strokeColor&#039;] = colorNum2Hex(val);
+                        break;
+                    case &#039;bro&#039;: //Stroke Opacity
+                        style[&#039;strokeOpacity&#039;] = val * 100;
+                        break;
+                    case &#039;brs&#039;: //Stroke Style
+                    case &#039;ls&#039;: //Edge Line Style
+                        //1 dashed, 0 dotted, 2 solid
+                        if (val != 2)
+                        {
+                            style[&#039;dashed&#039;] = 1;
+                            
+                            if (val == 0)
+                            {
+                                style[&#039;dashPattern&#039;] = &#039;1 4&#039;;
+                            }
+                        }
+                        break;
+                    case &#039;b&#039;: //Bold
+                        if (val) fontStyle |= 1;
+                        break;
+                    case &#039;i&#039;: //Italic
+                        if (val) fontStyle |= 2;
+                        break;
+                    case &#039;u&#039;: //Underline
+                        if (val) fontStyle |= 4;
+                        break;
+                    case &#039;s&#039;: //Stroke throw
+                        if (val) fontStyle |= 8;
+                        break;
+                    case &#039;hl&#039;: //Highlight color
+                        style[&#039;labelBackgroundColor&#039;] = val;
+                        break;
+                    case &#039;tc&#039;: //Text Color
+                        style[&#039;fontColor&#039;] = colorNum2Hex(val);
+                        break;
+                    case &#039;sc&#039;: //Shadow Color?
+                        break;
+                    //Edge styles
+                    case &#039;lt&#039;: //Line Type
+                        //(val == 0) simple
+                        if (val == 1)
+                        {
+                            style[&#039;edgeStyle&#039;] = &#039;orthogonalEdgeStyle&#039;;
+                            style[&#039;elbow&#039;] = &#039;vertical&#039;;
+                        }
+                        else if (val &gt;= 2)
+                        {
+                            style[&#039;edgeStyle&#039;] = &#039;orthogonalEdgeStyle&#039;;
+                            style[&#039;curved&#039;] = 1;
+                        }
+                        break;
+                    case &#039;a_start&#039;: //Start Arrow
+                        addArrowStyle(style, val, &#039;start&#039;);
+                        break;
+                    case &#039;a_end&#039;: //End Arrow
+                        addArrowStyle(style, val, &#039;end&#039;);
+                        break;
+                }
+            }
+        }
+        catch (e)
+        {
+            console.error(e);
+        }
+
+        if (fontStyle)
+        {
+            style[&#039;fontStyle&#039;] = fontStyle;
+        }
+
+        if (obj.rotation &amp;&amp; obj.rotation.rotation)
+        {
+            style[&#039;rotation&#039;] = obj.rotation.rotation;
+        }
+
+        return style;
+    }
+
+    function buildStyleString(curStyle, styleMap)
+    {
+        var style = curStyle || &#039;&#039;;
+
+        for (var key in styleMap)
+        {
+            if (style.indexOf(&#039;;&#039; + key + &#039;=&#039;) == -1)
+            {
+                style += key + &#039;=&#039; + styleMap[key] + &#039;;&#039;;
+            }
+        }
+
+        return style;
+    };
+
+    function importVertex(obj, type, tags, graph)
+    {
+        try
+        {
+            var style = getTypeStyle(type, obj) || &#039;&#039;;
+            var scale = obj.scale.scale, //TODO Check this is the correct use of the scale
+            w = obj.size.width, h = obj.size.height, 
+            x = obj.position.x, y = obj.position.y;
+            var vertex = new mxCell(obj.text, new mxGeometry((x - w / 2 * scale), (y - h / 2 * scale),
+                                w * scale, h * scale), &#039;&#039;);
+
+            if (typeof style == &#039;function&#039;)
+            {
+                style(vertex, obj, tags, graph);
+            }
+            else
+            {
+                vertex.style = buildStyleString(style, parseStyles(obj));
+            }
+
+            vertex.setVertex(true);
+            graph.addCell(vertex);
+            return vertex;
+        }
+        catch (e)
+        {
+            console.error(e);
+        }
+    };
+
+    function importEdge(obj, vertexes, tags, graph)
+    {
+        try
+        {
+            var e = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 100, 100), &#039;&#039;);
+            e.geometry.relative = true;
+            e.edge = true;
+
+            var edgeStyle = &#039;orthogonalLoop=1;jettySize=auto;&#039;;
+            var source = vertexes[obj.primary.widgetIndex]; //-1 would be null
+            var target = vertexes[obj.secondary.widgetIndex]; //-1 would be null
+            var pp = obj.primary.point, sp = obj.secondary.point;
+            var sourcePoint = pp? new mxPoint(pp.x, pp.y) : null, 
+                targetPoint = sp? new mxPoint(sp.x, sp.y) : null;
+
+            if (sourcePoint)
+            {
+                if (source)
+                {
+                    edgeStyle += &#039;exitX=&#039; + sourcePoint.x + &#039;;exitY=&#039; + sourcePoint.y + &#039;;&#039;;
+                }
+                else
+                {
+                    e.geometry.sourcePoint = sourcePoint;
+                }
+            }
+
+            if (targetPoint)
+            {
+                if (target)
+                {
+                
+                    edgeStyle += &#039;entryX=&#039; + targetPoint.x + &#039;;entryY=&#039; + targetPoint.y + &#039;;&#039;;
+                }
+                else
+                {
+                    e.geometry.targetPoint = targetPoint;
+                }
+            }
+
+            //Labels
+            var lbls = obj.line.captions;
+
+            if (lbls.length &gt; 0)
+            {
+                //Add basic support for multiple labels by joining them together
+                var lbl = &#039;&#039;;
+
+                for (var i = 0; i &lt; lbls.length; i++)
+                {
+                    lbl += lbls[i].text;
+                }
+
+                e.value = lbl;
+                e.geometry.offset = new mxPoint(lbls[0].position.x, lbls[0].position.y);
+
+                edgeStyle += &#039;labelBackgroundColor=none;fontSize=&#039; + lbls[0].fontSize
+                            + &#039;;fontColor=&#039; + colorNum2Hex(lbls[0].color) + &#039;;&#039;;
+            }
+
+            e.style = buildStyleString(edgeStyle, parseStyles(obj));
+            graph.addCell(e, null, null, source, target);
+        }
+        catch (e)
+        {
+            console.error(e);
+        }
+    }
+
+    function createGraph()
+	{
+		var graph = new Graph();
+        graph.setExtendParents(false);
+        graph.setExtendParentsOnAdd(false);
+        graph.setConstrainChildren(false);
+        graph.setHtmlLabels(true);
+        graph.getModel().maintainEdgeParent = false;
+        return graph;
+	};
+
+    this.importMiroJson = function(data)
+    {
+        try
+        {
+            var graph = createGraph();
+            //Currently this handles version 2
+            if (data.version != 2)
+            {
+                throw new Error(&#039;Unsupported Version&#039;);
+            }
+
+            var objects = data.data.objects;
+            var edges = [], vertexes = {}, tags = [];
+
+            for (var i = 0; i &lt; objects.length; i++)
+            {
+                var o = objects[i];
+
+                if (o.type == 13) //Tags (assuming they are always at the top)
+                {
+                    tags.push({color: colorNum2Hex(o.color), text: o.text});
+                }
+                else if (o.type == 14)
+                {
+                    var obj = o.widgetData;
+                    var type = obj.type;
+                    obj = obj.json;
+
+                    if (type == &#039;line&#039;)
+                    {
+                        edges.push(obj);
+                    }
+                    else
+                    {
+                        vertexes[i] = importVertex(obj, type, tags, graph);
+                    }
+                }
+            }
+
+            for (var i = 0; i &lt; edges.length; i++)
+            {
+                importEdge(edges[i], vertexes, tags, graph);
+            }
+
+            var node = new mxCodec().encode(graph.getModel());
+            return mxUtils.getXml(node);
+        }
+        catch (e)
+        {
+            console.error(e);
+        }
+    }
+}</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

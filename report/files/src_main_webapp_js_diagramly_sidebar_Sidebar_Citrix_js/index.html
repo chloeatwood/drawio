@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Citrix.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Citrix.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">60.87</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">119</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">25.14</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">7.63</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addCitrixPalette = function()
+	{
+		var w = 0.5;
+		var h = 0.5;
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;aspect=fixed;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.&#039;;
+		var gn = &#039;mxgraph.citrix&#039;;
+		var dt = &#039;&#039;;
+		this.setCurrentSearchEntryLibrary(&#039;citrix&#039;);
+		
+		this.addPaletteFunctions(&#039;citrix&#039;, &#039;Citrix (legacy)&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;1u_2u_server;&#039;, w * 200, h * 78.2, &#039;&#039;, &#039;1U 2U Server&#039;, null, null, this.getTagsForStencil(gn, &#039;1U 2U Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;access_card;&#039;, w * 111, h * 150, &#039;&#039;, &#039;Access Card&#039;, null, null, this.getTagsForStencil(gn, &#039;Access Card&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;branch_repeater;&#039;, w * 200, h * 78, &#039;&#039;, &#039;Branch Repeater&#039;, null, null, this.getTagsForStencil(gn, &#039;Branch Repeater&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;browser;&#039;, w * 95, h * 145, &#039;&#039;, &#039;Browser&#039;, null, null, this.getTagsForStencil(gn, &#039;Browser&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cache_server;&#039;, w * 142, h * 195, &#039;&#039;, &#039;Cache Server&#039;, null, null, this.getTagsForStencil(gn, &#039;Cache Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;calendar;&#039;, w * 150, h * 200, &#039;&#039;, &#039;Calendar&#039;, null, null, this.getTagsForStencil(gn, &#039;Calendar&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cell_phone;&#039;, w * 50, h * 120, &#039;&#039;, &#039;Cell Phone&#039;, null, null, this.getTagsForStencil(gn, &#039;Cell Phone&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;chassis;&#039;, w * 275, h * 355, &#039;&#039;, &#039;Chassis&#039;, null, null, this.getTagsForStencil(gn, &#039;Chassis&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_hdx;&#039;, w * 155, h * 82, &#039;&#039;, &#039;Citrix HDX&#039;, null, null, this.getTagsForStencil(gn, &#039;Citrix HDX&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_logo;fillColor=#4E4F53;&#039;, w * 320, h * 125, &#039;&#039;, &#039;Citrix Logo&#039;, null, null, this.getTagsForStencil(gn, &#039;Citrix Logo&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cloud;&#039;, w * 190, h * 124, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;Cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;command_center;&#039;, w * 151, h * 192, &#039;&#039;, &#039;Command Center&#039;, null, null, this.getTagsForStencil(gn, &#039;Command Center&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;database;&#039;, w * 85, h * 100, &#039;&#039;, &#039;Database&#039;, null, null, this.getTagsForStencil(gn, &#039;Database&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;database_server;&#039;, w * 160, h * 180, &#039;&#039;, &#039;Database Server&#039;, null, null, this.getTagsForStencil(gn, &#039;Database Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;datacenter;&#039;, w * 255, h * 270, &#039;&#039;, &#039;Datacenter&#039;, null, null, this.getTagsForStencil(gn, &#039;Datacenter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;desktop;&#039;, w * 178, h * 196, &#039;&#039;, &#039;Desktop&#039;, null, null, this.getTagsForStencil(gn, &#039;Desktop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;desktop_web;&#039;, w * 153, h * 180, &#039;&#039;, &#039;Desktop Web&#039;, null, null, this.getTagsForStencil(gn, &#039;Desktop Web&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dhcp_server;&#039;, w * 152, h * 180, &#039;&#039;, &#039;DHCP Server&#039;, null, null, this.getTagsForStencil(gn, &#039;DHCP Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;directory_server;&#039;, w * 130, h * 177, &#039;&#039;, &#039;Directory Server&#039;, null, null, this.getTagsForStencil(gn, &#039;Directory Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dns_server;&#039;, w * 153, h * 185, &#039;&#039;, &#039;DNS Server&#039;, null, null, this.getTagsForStencil(gn, &#039;DNS Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;document;&#039;, w * 94, h * 144, &#039;&#039;, &#039;Document&#039;, null, null, this.getTagsForStencil(gn, &#039;Document&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;edgesight_server;&#039;, w * 153, h * 180, &#039;&#039;, &#039;EdgeSight Server&#039;, null, null, this.getTagsForStencil(gn, &#039;EdgeSight Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;file_server;&#039;, w * 142, h * 194, &#039;&#039;, &#039;File Server&#039;, null, null, this.getTagsForStencil(gn, &#039;File Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;firewall;&#039;, w * 150, h * 186, &#039;&#039;, &#039;Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;Firewall&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ftp_server;&#039;, w * 142, h * 194, &#039;&#039;, &#039;FTP Server&#039;, null, null, this.getTagsForStencil(gn, &#039;FTP Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;geolocation_database;&#039;, w * 106, h * 98, &#039;&#039;, &#039;Geolocation Database&#039;, null, null, this.getTagsForStencil(gn, &#039;Geolocation Database&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;globe;&#039;, w * 157, h * 150, &#039;&#039;, &#039;Globe&#039;, null, null, this.getTagsForStencil(gn, &#039;Globe&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;goto_meeting;fillColor=#FAB616;gradientColor=#E12800;gradientDirection=north;&#039;, w * 74, h * 74, &#039;&#039;, &#039;GoTo Meeting&#039;, null, null, this.getTagsForStencil(gn, &#039;GoTo Meeting&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;government;&#039;, w * 238, h * 104, &#039;&#039;, &#039;Government&#039;, null, null, this.getTagsForStencil(gn, &#039;Government&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;home_office;&#039;, w * 160, h * 111, &#039;&#039;, &#039;Home Office&#039;, null, null, this.getTagsForStencil(gn, &#039;Home Office&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;hq_enterprise;&#039;, w * 184, h * 176, &#039;&#039;, &#039;HQ / Enterprise&#039;, null, null, this.getTagsForStencil(gn, &#039;HQ Enterprise&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inspection;&#039;, w * 140, h * 130, &#039;&#039;, &#039;Inspection&#039;, null, null, this.getTagsForStencil(gn, &#039;Inspection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ip_phone;&#039;, w * 153, h * 74, &#039;&#039;, &#039;IP Phone&#039;, null, null, this.getTagsForStencil(gn, &#039;IP Phone&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;kiosk;&#039;, w * 130, h * 170, &#039;&#039;, &#039;Kiosk&#039;, null, null, this.getTagsForStencil(gn, &#039;Kiosk&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;laptop_1;&#039;, w * 182, h * 154, &#039;&#039;, &#039;Laptop&#039;, null, null, this.getTagsForStencil(gn, &#039;Laptop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;laptop_2;&#039;, w * 232, h * 173, &#039;&#039;, &#039;Laptop&#039;, null, null, this.getTagsForStencil(gn, &#039;Laptop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;license_server;&#039;, w * 130, h * 170, &#039;&#039;, &#039;License Server&#039;, null, null, this.getTagsForStencil(gn, &#039;License Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;merchandising_server;&#039;, w * 150, h * 180, &#039;&#039;, &#039;Merchandising Server&#039;, null, null, this.getTagsForStencil(gn, &#039;Merchandising Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;middleware;&#039;, w * 228, h * 136, &#039;&#039;, &#039;Middleware&#039;, null, null, this.getTagsForStencil(gn, &#039;Middleware&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;netscaler_gateway;&#039;, w * 200, h * 78, &#039;&#039;, &#039;NetScaler Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;NetScaler Gateway&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;netscaler_mpx;&#039;, w * 200, h * 78, &#039;&#039;, &#039;NetScaler MPX&#039;, null, null, this.getTagsForStencil(gn, &#039;NetScaler MPX&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;netscaler_sdx;&#039;, w * 200, h * 95, &#039;&#039;, &#039;NetScaler SDX&#039;, null, null, this.getTagsForStencil(gn, &#039;NetScaler SDX&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;netscaler_vpx;&#039;, w * 194, h * 72, &#039;&#039;, &#039;NetScaler VPX&#039;, null, null, this.getTagsForStencil(gn, &#039;NetScaler VPX&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;pbx_server;&#039;, w * 130, h * 170, &#039;&#039;, &#039;PBX Server&#039;, null, null, this.getTagsForStencil(gn, &#039;PBX Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;pda;&#039;, w * 60, h * 122, &#039;&#039;, &#039;PDA&#039;, null, null, this.getTagsForStencil(gn, &#039;PDA&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;podio;fillColor=#72B8DE;gradientColor=#186BA2;gradientDirection=south;&#039;, w * 74, h * 74, &#039;&#039;, &#039;Podio&#039;, null, null, this.getTagsForStencil(gn, &#039;Podio&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;printer;&#039;, w * 140, h * 140, &#039;&#039;, &#039;Printer&#039;, null, null, this.getTagsForStencil(gn, &#039;Printer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;process;&#039;, w * 104, h * 124, &#039;&#039;, &#039;Process&#039;, null, null, this.getTagsForStencil(gn, &#039;Process&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;provisioning_server;&#039;, w * 152, h * 174, &#039;&#039;, &#039;Provisioning Server&#039;, null, null, this.getTagsForStencil(gn, &#039;Provisioning Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;proxy_server;&#039;, w * 153, h * 180, &#039;&#039;, &#039;Proxy Server&#039;, null, null, this.getTagsForStencil(gn, &#039;Proxy Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;radius_server;&#039;, w * 151, h * 182, &#039;&#039;, &#039;Radius Server&#039;, null, null, this.getTagsForStencil(gn, &#039;Radius Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;remote_office;&#039;, w * 184, h * 83, &#039;&#039;, &#039;Remote Office&#039;, null, null, this.getTagsForStencil(gn, &#039;Remote Office&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;reporting;&#039;, w * 123, h * 138, &#039;&#039;, &#039;Reporting&#039;, null, null, this.getTagsForStencil(gn, &#039;Reporting&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_appcontroller;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role AppController&#039;, null, null, this.getTagsForStencil(gn, &#039;Role AppController&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_applications;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role Applications&#039;, null, null, this.getTagsForStencil(gn, &#039;Role Applications&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_cloudbridge;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role CloudBridge&#039;, null, null, this.getTagsForStencil(gn, &#039;Role CloudBridge&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_desktops;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role Desktops&#039;, null, null, this.getTagsForStencil(gn, &#039;Role Desktops&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_load_testing_controller;&#039;, w * 48, h * 48, &#039;&#039;, &#039;Role Load Testing Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;Role Load Testing Controller&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_load_testing_launcher;&#039;, w * 82, h * 76, &#039;&#039;, &#039;Role Load Testing Launcher&#039;, null, null, this.getTagsForStencil(gn, &#039;Role Load Testing Launcher&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_receiver;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role Receiver&#039;, null, null, this.getTagsForStencil(gn, &#039;Role Receiver&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_repeater;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role Repeater&#039;, null, null, this.getTagsForStencil(gn, &#039;Role Repeater&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_secure_access;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role Secure Access&#039;, null, null, this.getTagsForStencil(gn, &#039;Role Secure Access&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_security;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role Security&#039;, null, null, this.getTagsForStencil(gn, &#039;Role Security&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_services;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role Services&#039;, null, null, this.getTagsForStencil(gn, &#039;Role Services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_storefront;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role StoreFront&#039;, null, null, this.getTagsForStencil(gn, &#039;Role StoreFront&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_storefront_services;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role StoreFront Services&#039;, null, null, this.getTagsForStencil(gn, &#039;Role StoreFront Services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_synchronizer;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role Synchronizer&#039;, null, null, this.getTagsForStencil(gn, &#039;Role Synchronizer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_xenmobile;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;Role XenMobile&#039;, null, null, this.getTagsForStencil(gn, &#039;Role XenMobile&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role_xenmobile_device_manager;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 70, h * 76, &#039;&#039;, &#039;Role XenMobile Device Manager&#039;, null, null, this.getTagsForStencil(gn, &#039;Role XenMobile Device Manager&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;router;&#039;, w * 110, h * 73, &#039;&#039;, &#039;Router&#039;, null, null, this.getTagsForStencil(gn, &#039;Router&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;security;&#039;, w * 81, h * 142, &#039;&#039;, &#039;Security&#039;, null, null, this.getTagsForStencil(gn, &#039;Security&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;sharefile;fillColor=#386510;gradientColor=#C6CF2B;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;ShareFile&#039;, null, null, this.getTagsForStencil(gn, &#039;ShareFile&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;site;&#039;, w * 214, h * 202, &#039;&#039;, &#039;Site&#039;, null, null, this.getTagsForStencil(gn, &#039;Site&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;smtp_server;&#039;, w * 152, h * 184, &#039;&#039;, &#039;SMTP Server&#039;, null, null, this.getTagsForStencil(gn, &#039;SMTP Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;storefront_services;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 152, h * 182, &#039;&#039;, &#039;Storefront Services&#039;, null, null, this.getTagsForStencil(gn, &#039;Storefront Services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;switch;&#039;, w * 184, h * 83, &#039;&#039;, &#039;Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;Switch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;tablet_1;&#039;, w * 122, h * 158, &#039;&#039;, &#039;Tablet&#039;, null, null, this.getTagsForStencil(gn, &#039;Tablet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;tablet_2;&#039;, w * 164, h * 172, &#039;&#039;, &#039;Tablet&#039;, null, null, this.getTagsForStencil(gn, &#039;Tablet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;thin_client;&#039;, w * 142, h * 142, &#039;&#039;, &#039;Thin Client&#039;, null, null, this.getTagsForStencil(gn, &#039;Thin Client&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;tower_server;&#039;, w * 130, h * 170, &#039;&#039;, &#039;Tower Server&#039;, null, null, this.getTagsForStencil(gn, &#039;Tower Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;users;&#039;, w * 129, h * 110, &#039;&#039;, &#039;Users&#039;, null, null, this.getTagsForStencil(gn, &#039;Users&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;user_control;&#039;, w * 206, h * 168, &#039;&#039;, &#039;User Control&#039;, null, null, this.getTagsForStencil(gn, &#039;User Control&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;web_server;&#039;, w * 153, h * 180, &#039;&#039;, &#039;Web Server&#039;, null, null, this.getTagsForStencil(gn, &#039;Web Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;web_service;&#039;, w * 126, h * 120, &#039;&#039;, &#039;Web Service&#039;, null, null, this.getTagsForStencil(gn, &#039;Web Service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;worxenroll;fillColor=#386510;gradientColor=#C6CF2B;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;WorxEnroll&#039;, null, null, this.getTagsForStencil(gn, &#039;WorxEnroll&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;worxhome;fillColor=#DB9EFF;gradientColor=#712FA2;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;WorxHome&#039;, null, null, this.getTagsForStencil(gn, &#039;WorxHome&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;worxmail;fillColor=#112356;gradientColor=#63AFC6;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;WorxMail&#039;, null, null, this.getTagsForStencil(gn, &#039;WorxMail&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;worxweb;fillColor=#2A3437;gradientColor=#B8B9B9;gradientDirection=south;&#039;, w * 76, h * 76, &#039;&#039;, &#039;WorxWeb&#039;, null, null, this.getTagsForStencil(gn, &#039;WorxWeb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;xenapp_server;&#039;, w * 152, h * 178, &#039;&#039;, &#039;XenApp Server&#039;, null, null, this.getTagsForStencil(gn, &#039;XenApp Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;xenapp_services;&#039;, w * 152, h * 180, &#039;&#039;, &#039;XenApp Services&#039;, null, null, this.getTagsForStencil(gn, &#039;XenApp Services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;xenapp_web;&#039;, w * 152, h * 180, &#039;&#039;, &#039;XenApp Web&#039;, null, null, this.getTagsForStencil(gn, &#039;XenApp Web&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;xencenter;&#039;, w * 152, h * 178, &#039;&#039;, &#039;XenCenter&#039;, null, null, this.getTagsForStencil(gn, &#039;XenCenter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;xenclient;&#039;, w * 182, h * 154, &#039;&#039;, &#039;XenClient&#039;, null, null, this.getTagsForStencil(gn, &#039;XenClient&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;xenclient_synchronizer;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 152, h * 182, &#039;&#039;, &#039;XenClient Synchronizer&#039;, null, null, this.getTagsForStencil(gn, &#039;Synchronizer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;xendesktop_server;&#039;, w * 150, h * 182, &#039;&#039;, &#039;XenDesktop Server&#039;, null, null, this.getTagsForStencil(gn, &#039;XenDesktop Server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;xenmobile;fillColor=#CCCCCC;gradientColor=#000000;gradientDirection=south;&#039;, w * 140, h * 178, &#039;&#039;, &#039;XenMobile&#039;, null, null, this.getTagsForStencil(gn, &#039;XenMobile&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;xenserver;&#039;, w * 153, h * 180, &#039;&#039;, &#039;XenServer&#039;, null, null, this.getTagsForStencil(gn, &#039;XenServer&#039;, dt).join(&#039; &#039;))
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

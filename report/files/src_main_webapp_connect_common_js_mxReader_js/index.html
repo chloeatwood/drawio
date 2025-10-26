@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\connect\common\js\mxReader.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\connect\common\js\mxReader.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">61.43</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">831</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">76.53</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">9.30</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+/**
+ * A Draw.io diagram viewer component with configurable toolbar buttons for editing, deleting and zooming buttons.
+ * Parameters :
+ * diagramName - name of the diagram
+ * attachmentId - ID of the diagram attachment
+ * ceoId - page ID or issue key
+ * readerOpts - JSON object with options :
+ * 		loadUrl - url from which to load the diagram
+ * 		editUrl - url of the editor
+ * 		stylePath - url from which to load the css
+ * 		stencilPath - url from which to load the stencils
+ * 		imagePath - url from which to load the graph mages
+ * 		resourcePath - path to the translations
+ * 		viewerToolbar - show toolbar or not
+ * 		autoSize - resizes the graph container to match the graph bounds
+ * 		width - width of the container
+ * 		height - height of the container
+ * 		disableButtons - disables all buttons
+ * 		center - should the diagram be horizontally centered or not
+ * 		evaluation - evaluation mode
+ * lightbox - boolean indicating if this viewer is a lightbox
+ * graphDocument - optional document containing the XML data
+ */
+function DrawioViewer(diagramName, attachmentId, ceoId, readerOpts, lightbox, graphDocument, connect)
+{
+	this.id = attachmentId;
+	this.diagramName = diagramName;
+	this.ceoId = ceoId;
+	this.options = readerOpts;
+	this.lightbox = lightbox;
+	this.graphDocument = graphDocument;
+	this.connect = connect;
+	this.paddingBottom = (connect) ? 0 : 30;
+
+	// Overrides browser language with Confluence user language
+	var lang = null;
+	
+	// Language is in the readOpts in Server and in the URL in Connect
+	if (!connect &amp;&amp; readerOpts.language != null)
+	{
+		lang = readerOpts.language
+	}
+	else if (connect != null &amp;&amp; urlParams[&#039;loc&#039;] != null)
+	{
+		lang = urlParams[&#039;loc&#039;];
+		var dash = lang.indexOf(&#039;-&#039;);
+		
+		if (dash &gt;= 0)
+		{
+			lang = lang.substring(0, dash);
+		}
+	}
+	
+	// Only german and english supported currently. English is default.
+	if (lang == &#039;de&#039;)
+	{
+		mxClient.language = &#039;de&#039;;
+	}
+
+	// Special extension used for the message bundle. For this bundle there is only a German
+	// translation and the default English bundle so we temporarily override isLanguageSupported
+	// to return true only if German is used and fallback to English for all other languages.
+	var prevExtension = mxResources.extension;
+	var prevIsLangSupported = mxResources.isLanguageSupported;
+	mxResources.extension = &#039;.txt&#039;;
+	
+	mxResources.isLanguageSupported = function(lan)
+	{
+		return lan == &#039;de&#039;;
+	};
+	
+	mxResources.add(this.options.resourcePath);
+	
+	// Restores previous settings
+	mxResources.extension = prevExtension;
+	mxResources.isLanguageSupported = prevIsLangSupported;
+	
+	this.buttons = this.createButtons();
+	
+	this.transparentImage = Editor.prototype.transparentImage;
+	this.extractGraphModel = Editor.prototype.extractGraphModel;
+	this.setGraphXml = Editor.prototype.setGraphXml;
+	this.readGraphState = Editor.prototype.readGraphState;
+	this.resetGraph = Editor.prototype.resetGraph;
+	this.decompress = Editor.prototype.decompress;
+	this.updateGraphComponents = Editor.prototype.updateGraphComponents;
+	this.fireEvent = Editor.prototype.fireEvent;
+	this.addListener = Editor.prototype.addListener;
+	this.originalNoForeignObject = Editor.prototype.originalNoForeignObject;
+	this.gridImage = &#039;&#039;;
+	
+	this.addListener(&#039;resetGraphView&#039;, this.resetGraphView);
+}
+
+DrawioViewer.prototype = new mxEventSource();
+
+DrawioViewer.prototype.graph = null;
+DrawioViewer.prototype.id = null;
+DrawioViewer.prototype.toolbar = null;
+DrawioViewer.prototype.options = null;
+DrawioViewer.prototype.originX = 0;
+DrawioViewer.prototype.originY = 0;
+DrawioViewer.prototype.popupWindow = null;
+DrawioViewer.prototype.buttons = {};
+
+DrawioViewer.prototype.graphXmlString = null;
+
+DrawioViewer.prototype.installToolbar = function()
+{
+	this.toolbar = document.createElement(&#039;div&#039;);
+	var toolbar = this.toolbar;
+	var container = this.graph.container;
+	toolbar.id = &#039;diagramly-reader-toolbar-&#039; + this.id;
+	toolbar.className = &#039;diagramly-reader-toolbar&#039;;
+	toolbar.style.position = &#039;absolute&#039;;
+	
+	container.parentNode.appendChild(toolbar);
+
+	toolbar.style.height = &#039;30px&#039;;
+	toolbar.style.width = this.countVisibleButtons() * 29 + &#039;px&#039;;
+
+	// Makes sure the toolbar is always visible and
+	// disables toolbar for all overflow content
+	container.parentNode.style.overflow = &#039;visible&#039;;
+	
+	if (this.lightbox)
+	{
+		toolbar.style.bottom = &#039;4px&#039;;
+		toolbar.style.left = &#039;50%&#039;;
+		toolbar.style.width = this.countVisibleButtons() * 29 + &#039;px&#039;;
+		toolbar.style.marginLeft = -Math.round(this.countVisibleButtons() * 29 / 2) + &#039;px&#039;
+	}
+	else
+	{
+		container.parentNode.style.paddingBottom = this.paddingBottom + &#039;px&#039;;
+
+		var bs = this.graph.getBorderSizes();
+		toolbar.style.bottom = (container.offsetTop + bs.y + 4) + &#039;px&#039;;
+		toolbar.style.left = (container.offsetLeft + bs.x) + &#039;px&#039;;
+	
+		if (!mxClient.IS_TOUCH) 
+		{
+			toolbar.style.display = &#039;none&#039;;
+			
+			$(container.parentNode).hover(function() 
+			{
+				toolbar.style.bottom = (container.offsetTop + bs.y + 4) + &#039;px&#039;;
+				toolbar.style.left = (container.offsetLeft + bs.x) + &#039;px&#039;;
+				
+				$(toolbar).fadeIn(100);
+			},
+			function() 
+			{
+				$(toolbar).fadeOut(100);
+			});
+		}
+	}
+}
+
+DrawioViewer.prototype.countVisibleButtons = function() 
+{
+	var counter = 0;
+	
+	for(var key in this.buttons) 
+	{
+		var button = this.buttons[key];
+		
+		if (button.visible)
+		{
+			counter++;
+		}
+	}
+	
+	return counter;
+}
+
+DrawioViewer.prototype.init = function()
+{
+	this.loadStylesheet();
+	
+	// Makes the shadow brighter
+	mxConstants.SHADOWCOLOR = &#039;#000000&#039;;
+	mxConstants.SHADOW_OPACITY = 0.25;
+	this.graph.setEnabled(false);
+	this.graph.autoScroll = false;
+	this.graph.container.style.overflow = &#039;hidden&#039;;
+	this.graph.container.style.cursor = &#039;move&#039;;
+	
+	// Panning only enabled in lightbox to allow text selection in viewer
+	this.graph.setPanning(true);
+	
+	// Workaround for context trigger starting panning if ignoreCell is true
+	this.graph.panningHandler.useLeftButtonForPanning = true;
+	this.graph.panningHandler.usePopupTrigger = false;
+	this.graph.panningHandler.ignoreCell = true;
+	
+	this.graph.panningHandler.isForcePanningEvent = function(me)
+	{
+		return mxEvent.isLeftMouseButton(me.getEvent());
+	};
+
+	// Folding only enabled in lightbox
+	this.graph.foldingEnabled = this.lightbox;
+	
+	// Overrides click handler to ignore graph enabled state
+	if (this.graph.foldingEnabled)
+	{
+		this.graph.cellRenderer.createControlClickHandler = function(state)
+		{
+			var graph = state.view.graph;
+			
+			return function (evt)
+			{
+				var collapse = !graph.isCellCollapsed(state.cell);
+				graph.foldCells(collapse, false, [state.cell], null, evt);
+				mxEvent.consume(evt);
+			};
+		};
+	}
+	else
+	{
+		// Hides collapse/expand icon if folding is disabled
+		this.graph.getFoldingImage = function()
+		{
+			return null;
+		};
+	};
+
+	// HTML entities are displayed as plain text in wrapped plain text labels
+	this.graph.cellRenderer.getLabelValue = function(state)
+	{
+		var result = mxCellRenderer.prototype.getLabelValue.apply(this, arguments);
+		
+		if (state.view.graph.isHtmlLabel(state.cell))
+		{
+			if (state.style[&#039;html&#039;] != 1)
+			{
+				result = mxUtils.htmlEntities(result, false);
+			}
+			else
+			{
+				result = Graph.sanitizeHtml(result);
+			}
+		}
+		
+		return result;
+	};
+
+	// Enables links if graph is &quot;disabled&quot; (ie. read-only)
+	this.graph.click = function(me)
+	{
+		var cell = me.getCell();
+		
+		if (cell != null &amp;&amp; !me.isConsumed() &amp;&amp; (mxEvent.isTouchEvent(me.getEvent()) ||
+			mxEvent.isLeftMouseButton(me.getEvent())))
+		{
+			var href = this.getLinkForCell(cell);
+			
+			// Test cases:
+			// 1) the relative link without the Conf base path, with a leading slash, e.g. /download/attachment/....
+			// 2) the relative link with the Conf base path, with a leading slash, e.g. /confluence/download/attachmentss/...
+			// 3) the relative link without the conf base path, without a leading slash, e.g. download/attachments/...
+			// 4) the full absolute path, e.g. https://localhost:1990/confluence/download/attachments/...
+			// 5) full path without protocol, e.g. //confluence/download/attachments/...
+
+			if (href != null)
+			{
+				var r = new RegExp(&#039;^(?:[a-z]+:)?//&#039;, &#039;i&#039;); // https://stackoverflow.com/questions/10687099/how-to-test-if-a-url-string-is-absolute-or-relative
+				
+				if (!r.test(href))
+				{
+					// relative link
+
+					if (href.lastIndexOf(&#039;/&#039;, 0) !== 0) // http://stackoverflow.com/a/4579228/226469 seems to be the fastest check
+					{
+						// Need a leading slash in case we need to prepend the base path
+						href = &#039;/&#039; + href;
+					}
+
+					// var cp = AJS.Confluence.getContextPath(); // TODO confluence call in a common module
+					
+					// Originally, links included the base path (but not the host), so there might be cases of the base path
+					// already being prepended. If the base path has changed, we can&#039;t recover those cases
+					// window.location.href = href.substring(0, cp.length) === cp ? href : cp + href; // prepends the context path if it&#039;s not already there
+					window.location.href = href;
+				}
+				else
+				{
+					// Test if it&#039;s an absolute URL, but on the same domain (i.e. open in same window)
+					// There&#039;s a security setting (unknown which) that seems to stop the IE hack below working in
+					// IE 11, https://drawio.atlassian.net/browse/DS-175, https://drawio.atlassian.net/browse/DFCS-52
+					// Worst case is these users will open an absolute same domain link in a window
+
+					var link = document.createElement(&#039;a&#039;);
+					link.href = href;
+					link.href = link.href; // hack to populate &#039;host&#039; under IE
+				
+					if (link.host === location.host)
+					{
+						window.location.href = href;
+					}
+					else
+					{
+						window.open(href);
+					}
+				}
+			}
+			
+			me.consume();
+		}
+	};
+
+	this.graph.setTooltips(!mxClient.IS_TOUCH);
+
+	if (this.options.width != null) 
+	{
+		this.graph.container.style.width = this.options.width + &#039;px&#039;;
+	}
+	
+	if (this.options.height != null) 
+	{
+		this.graph.container.style.height = this.options.height + &#039;px&#039;;
+	}
+
+	// Accumulates the zoom factor while the rendering is taking place
+	// so that not the complete sequence of zoom steps must be painted
+	var graph = this.graph;
+	graph.updateZoomTimeout = null;
+	graph.cumulativeZoomFactor = 1;
+	
+	graph.lazyZoom = function(zoomIn)
+	{
+		if (this.updateZoomTimeout != null)
+		{
+			window.clearTimeout(this.updateZoomTimeout);
+		}
+
+		if (zoomIn)
+		{
+			this.cumulativeZoomFactor *= this.zoomFactor;
+		}
+		else
+		{
+			this.cumulativeZoomFactor /= this.zoomFactor;
+		}
+		
+		this.cumulativeZoomFactor = Math.round(this.view.scale * this.cumulativeZoomFactor * 100) / 100 / this.view.scale;
+		
+		this.updateZoomTimeout = window.setTimeout(mxUtils.bind(this, function()
+		{
+			this.zoom(this.cumulativeZoomFactor);					
+			this.cumulativeZoomFactor = 1;
+			this.updateZoomTimeout = null;
+		}), 20);
+	};
+	
+	if (this.lightbox)
+	{
+		mxEvent.addMouseWheelListener(mxUtils.bind(this, function(evt, up)
+		{
+			if (!mxClient.IS_MAC || !mxEvent.isControlDown(evt))
+			{
+				var source = mxEvent.getSource(evt);
+				
+				while (source != null)
+				{
+					if (source == graph.container)
+					{
+						graph.lazyZoom(up);
+						mxEvent.consume(evt);
+						
+						return;
+					}
+					
+					source = source.parentNode;
+				}
+			}
+		}));
+	}
+};
+
+DrawioViewer.prototype.resetGraphView = function()
+{
+	this.graph.pageBreaksVisible = false;
+	this.graph.preferPageSize = false;
+	this.graph.pageVisible = false;
+	
+	if (!this.lightbox)
+	{
+		var update = mxUtils.bind(this, function()
+		{
+			this.graph.centerZoom = this.graph.panningHandler.panningEnabled;
+			
+			// If width and height are specified the height is overridden to match the diagram size
+			var autoSizeWidth = this.options.width == null;
+			var autoSizeHeight = this.options.height == null;
+			var bounds = this.graph.getGraphBounds();
+			var ratio = bounds.width / bounds.height;
+			
+			var width = autoSizeWidth ? bounds.width + 2 : this.options.width;
+			var height = autoSizeHeight ? (width / ratio) + 1 : this.options.height;
+	
+			this.graph.container.style.width = Math.ceil(width) + &#039;px&#039;;
+			this.graph.container.style.height = Math.ceil(height) + &#039;px&#039;;
+			this.graph.container.style.maxWidth = &#039;100%&#039;;
+			
+			if (autoSizeWidth &amp;&amp; autoSizeHeight)
+			{
+				this.translateOrigin();
+				
+				// Used for fast restore of initial position in zoom to fit button
+				this.initialX = this.graph.view.translate.x;
+				this.initialY = this.graph.view.translate.y;
+			}
+			else if (this.options.zoomToFit)
+			{
+				this.graph.fit();
+			}
+	
+			//set the border after calling updateGraphComponnets() because the call sets it to &#039;&#039;
+			this.graph.container.style.border = this.options.border ? &#039;1px solid #DDDDDD&#039; : &#039;none&#039;;
+			this.graph.container.style.backgroundColor = (this.graph.background == null ||
+					this.graph.background == &#039;none&#039;) ? &#039;#ffffff&#039; : this.graph.background;
+		});
+		
+		// Workaround for invisible container is to move the container to the document body for rendering
+		if (!this.connect &amp;&amp; (this.graph.container.clientWidth == 0 || this.graph.container.clientHeight == 0))
+		{
+			var previousParent = this.graph.container.parentNode;
+			var nextSibling = this.graph.container.nextSibling;
+			var prevPosition = this.graph.container.style.position;
+			var prevVisible = this.graph.container.style.visible;
+			
+			// Moves to document body for rendering (needed for text measuring)
+			this.graph.container.style.position = &#039;absolute&#039;;
+			this.graph.container.style.visible = &#039;hidden&#039;;
+			
+			document.body.appendChild(this.graph.container);
+			
+			// Refresh required in visible DOM to update text bounding boxes
+			this.graph.refresh();
+			update();
+			
+			// Move it back into DOM tree position
+			if (nextSibling != null)
+			{
+				nextSibling.parentNode.insertBefore(this.graph.container, nextSibling);
+			}
+			else
+			{
+				previousParent.appendChild(this.graph.container);
+			}
+			
+			// Restore position CSS
+			this.graph.container.style.visible = prevVisible;
+			this.graph.container.style.position = prevPosition;
+		}
+		else
+		{
+			update();
+		}
+	}
+	else
+	{
+		this.graph.container.style.backgroundColor = (this.graph.background == null ||
+			this.graph.background == &#039;none&#039;) ? &#039;#ffffff&#039; : this.graph.background;
+	}
+};
+
+DrawioViewer.prototype.translateOrigin = function()
+{
+	var bounds = this.graph.getGraphBounds();
+	this.graph.view.setTranslate(this.originX - Math.floor(bounds.x), this.originY - Math.floor(bounds.y));
+};
+
+DrawioViewer.prototype.loadGraph = function(diagramName, ceoId)
+{
+	var spinner = this.createSpinner(this.graph.container);
+
+	try
+	{
+		mxUtils.get(this.options.loadUrl, mxUtils.bind(this, function(req)
+		{
+			spinner.stop();
+			
+			if (req.getStatus() &lt; 200 || req.getStatus() &gt; 299)
+			{
+				this.showWarning(mxResources.get(&#039;error&#039;) + &#039; &#039; + req.getStatus());
+				this.graph.container.style.border = this.options.border ? &#039;1px solid #DDDDDD&#039; : &#039;none&#039;;
+				this.graph.container.style.backgroundColor = &#039;#ffffff&#039;;
+				this.graph.container.style.height = &#039;20px&#039;;
+			}
+			else
+			{
+				var json = JSON.parse(req.getText());
+				this.graphXmlString = json.xml;
+				var doc = mxUtils.parseXml(json.xml);
+				this.xmlDoc = doc;
+				this.filename = json.filename;
+				this.setGraphXml(doc.documentElement);
+				this.graphDocument = doc;
+			}
+		}),
+		function()
+		{
+			spinner.stop();
+		});
+	}
+	catch (e)
+	{
+		spinner.stop();
+	}
+};
+
+DrawioViewer.prototype.loadStylesheet = function()
+{
+	var node = mxUtils.load(this.options.stylePath + &#039;/default.xml&#039;).getDocumentElement();
+	var dec = new mxCodec(node.ownerDocument);
+	dec.decode(node, this.graph.getStylesheet());
+};
+
+DrawioViewer.prototype.renderButtons = function()
+{
+	for (var key in this.buttons) 
+	{
+		var button = this.buttons[key];
+		
+		if (button.visible) 
+		{
+			this.addToolbarButton(this.toolbar, button);
+		}
+	}
+};
+
+DrawioViewer.prototype.addToolbarButton = function(toolbar, drawioButton)
+{
+	var enabled = typeof drawioButton.enabled === &#039;undefined&#039; ? true : enabled;
+	var button = drawioButton.linkButton ? document.createElement(&#039;a&#039;) : document.createElement(&#039;div&#039;);
+	button.className = &#039;diagramly-reader-toolbar-button&#039;;
+
+	if (drawioButton.icon != null)
+	{
+		var img = document.createElement(&#039;img&#039;);
+		img.setAttribute(&#039;src&#039;, drawioButton.icon);
+		img.style.verticalAlign = &#039;middle&#039;;
+		img.style.marginRight = &#039;2px&#039;;
+		button.appendChild(img);
+		button.title = drawioButton.label;
+	}
+
+	if (!drawioButton.enabled)
+	{
+		button.style.opacity = 0.2;
+
+	} else
+	{
+		if(drawioButton.linkButton) 
+		{
+			button.href = drawioButton.url;
+		}
+		else 
+		{
+			mxEvent.addListener(button, &#039;click&#039;, function(evt)
+			{
+				drawioButton.clickHandler.apply(this, arguments);
+			});
+		}
+		mxEvent.addListener(button, &#039;mouseover&#039;, function(evt)
+		{
+			button.classList.add(&#039;diagramly-reader-toolbar-button-hover&#039;);
+		});
+		mxEvent.addListener(button, &#039;mouseout&#039;, function(evt)
+		{
+			button.className = &#039;diagramly-reader-toolbar-button&#039;;
+		});
+	}
+
+	toolbar.appendChild(button);
+	return button;
+};
+
+DrawioViewer.prototype.createSpinner = function(container)
+{
+	var opts =
+	{
+		lines : 12, // The number of lines to draw
+		length : 12, // The length of each line
+		width : 5, // The line thickness
+		radius : 10, // The radius of the inner circle
+		rotate : 0, // The rotation offset
+		color : &#039;#000&#039;, // #rgb or #rrggbb
+		speed : 1, // Rounds per second
+		trail : 60, // Afterglow percentage
+		shadow : false, // Whether to render a shadow
+		hwaccel : false, // Whether to use hardware acceleration
+		className : &#039;spinner&#039;, // The CSS class to assign to the spinner
+		zIndex : 2e9 // The z-index (defaults to 2000000000)
+	};
+
+	return new Spinner(opts).spin(container);
+};
+
+DrawioViewer.prototype.show = function(container) 
+{
+	this.graph = new Graph(container);
+	this.graph.id = this.id;
+	this.init();
+
+	// Uses the XML document that was loaded for the viewer in the lightbox
+	if (this.graphDocument != null)
+	{
+		this.setGraphXml(this.graphDocument.documentElement);
+	}
+	else
+	{
+		this.loadGraph(this.diagramName, this.ceoId);
+	}
+	
+	if (this.options.viewerToolbar) 
+	{
+		this.installToolbar();
+		this.renderButtons();
+	}
+	
+	if (this.options.licenseStatus == &#039;NO_LICENSE&#039;) 
+	{
+		this.showWarning(mxResources.get(&#039;drawio.reader.noLicense&#039;));
+	} 
+	else if (this.options.licenseStatus == &#039;EVAL_LICENSE&#039;) 
+	{
+		this.showWarning(mxResources.get(&#039;drawio.reader.evaluation&#039;));
+	} 
+	else if (this.options.licenseStatus == &#039;EVAL_EXPIRED&#039;) 
+	{
+		this.showWarning(mxResources.get(&#039;drawio.reader.evaluationExpired&#039;));
+	} 
+	else if (this.options.licenseStatus == &#039;VERSION_MISMATCH&#039;) 
+	{
+		this.showWarning(mxResources.get(&#039;drawio.reader.versionMismatch&#039;, [&#039;https://support.draw.io/pages/viewpage.action?pageId=11829320&#039;]));
+	}
+	else if (this.options.licenseStatus == &#039;USER_MISMATCH&#039;) 
+	{
+		this.showWarning(mxResources.get(&#039;drawio.reader.userMismatch&#039;, [&#039;https://support.draw.io/pages/viewpage.action?pageId=11829323&#039;]));
+	}
+	
+	
+};
+
+DrawioViewer.prototype.showWarning = function(msg) 
+{
+	var div = document.createElement(&#039;div&#039;);
+	div.style.position = &#039;absolute&#039;;
+	div.style.overflow = &#039;hidden&#039;;
+	div.style.left = &#039;0px&#039;;
+	div.style.top = &#039;0px&#039;;
+	div.style.right = &#039;0px&#039;;
+	div.style.fontSize = &#039;12px&#039;;
+	div.style.margin = &#039;2px&#039;;
+	mxUtils.setOpacity(div, 50);
+	div.style.color = &#039;gray&#039;;
+	div.style.textAlign = &#039;center&#039;;
+	div.style.whiteSpace = &#039;nowrap&#039;;
+	span = document.createElement(&#039;span&#039;);
+	span.innerHTML = msg;
+	
+	div.appendChild(span);
+	
+	this.graph.container.parentNode.appendChild(div);
+};
+
+DrawioViewer.prototype.showLightbox = function() 
+{
+	console.log(&#039;Lightbox feature not implemented.&#039;);
+};
+
+DrawioViewer.prototype.createButtons = function() 
+{
+	var viewer = this;
+	var buttons = {}; 
+	
+	var enableButton = typeof this.options.disableButtons === &#039;undefined&#039; ? true : !this.options.disableButtons;
+	var canEdit = this.options.userCanEdit &amp;&amp; enableButton;
+	var canRemove = this.options.userCanRemove &amp;&amp; enableButton;
+
+	var autoSizeWidth = this.options.width == null;
+	var autoSizeHeight = this.options.height == null;
+	
+	buttons[DrawioViewerActions.EDIT] = new DrawioViewerButton(
+	{
+		label : mxResources.get(&#039;diagramly.reader.edit&#039;),
+		icon : viewer.options.imagePath + &#039;/edit.png&#039;, 
+		url : viewer.options.editUrl,
+		enabled : canEdit,
+		linkButton : true
+	});
+	
+	buttons[DrawioViewerActions.REMOVE] = new DrawioViewerButton(
+	{
+		label : mxResources.get(&#039;diagramly.reader.remove&#039;),
+		icon : viewer.options.imagePath + &#039;/remove.png&#039;, 
+		clickHandler : function()
+		{
+			if (confirm(mxResources.get(&#039;diagramly.reader.confirmDelete&#039;)))
+			{
+				window.location.href = viewer.options.removeUrl;
+			}
+		},
+		enabled : canRemove
+	});
+	
+	buttons[DrawioViewerActions.ACTUAL_SIZE] = new DrawioViewerButton(
+	{
+		label : mxResources.get(&#039;diagramly.reader.zoomActual&#039;),
+		icon : viewer.options.imagePath + &#039;/zoomActual.png&#039;, 
+		clickHandler : function()
+		{
+			viewer.graph.zoomActual();
+			viewer.translateOrigin();
+		},
+		enabled : enableButton
+	});
+	
+	buttons[DrawioViewerActions.ZOOM_TO_FIT] = new DrawioViewerButton(
+	{
+		label : (this.lightbox) ? mxResources.get(&#039;diagramly.reader.zoomActual&#039;) : mxResources.get(&#039;diagramly.reader.fit&#039;),
+		icon : (this.lightbox) ? viewer.options.imagePath + &#039;/zoomActual.png&#039; : viewer.options.imagePath + &#039;/zoomFit.gif&#039;, 
+		clickHandler : mxUtils.bind(this, function()
+		{
+			if (this.lightbox)
+			{
+				// NOTE: Maxscale is 1 here so only make smaller but not larger
+				viewer.graph.fit(8);
+				viewer.graph.center(true, true, null, 0.42);
+			}
+			else
+			{
+				if (autoSizeWidth &amp;&amp; autoSizeHeight)
+				{
+					this.graph.view.scaleAndTranslate(1, this.initialX, this.initialY);
+				}
+				else
+				{
+					this.graph.fit();
+				}
+			}
+		}),
+		enabled : enableButton
+	});
+	
+	buttons[DrawioViewerActions.ZOOM_OUT] = new DrawioViewerButton(
+	{
+		label : mxResources.get(&#039;diagramly.reader.zoomOut&#039;),
+		icon : viewer.options.imagePath + &#039;/zoomOut.gif&#039;, 
+		clickHandler : function()
+		{
+			viewer.graph.zoomOut();
+		},
+		enabled : enableButton
+	});
+	
+	buttons[DrawioViewerActions.ZOOM_IN] = new DrawioViewerButton(
+	{
+		label : mxResources.get(&#039;diagramly.reader.zoomIn&#039;),
+		icon : viewer.options.imagePath + &#039;/zoomIn.gif&#039;, 
+		clickHandler : function()
+		{
+			viewer.graph.zoomIn();
+		},
+		enabled : enableButton
+	});
+	
+	buttons[DrawioViewerActions.EXPAND] = new DrawioViewerButton(
+	{
+		label : mxResources.get(&#039;diagramly.reader.fullScreen&#039;),
+		icon : viewer.options.imagePath + &#039;/largeView.png&#039;, 
+		clickHandler : mxUtils.bind(this, function()
+		{
+			this.showLightbox();
+		}),
+		enabled : enableButton
+	});
+	
+	buttons[DrawioViewerActions.CLOSE] = new DrawioViewerButton(
+	{
+		label : mxResources.get(&#039;diagramly.reader.closeFullScreen&#039;),
+		icon : viewer.options.imagePath + &#039;/closeLargeView.gif&#039;, 
+		clickHandler : function()
+		{
+			viewer.popupWindow.remove();
+		},
+		enabled : enableButton,
+		visible : false
+	});
+	
+	return buttons;
+};
+
+DrawioViewerActions = 
+{
+	EDIT : &#039;edit&#039;,
+	REMOVE : &#039;remove&#039;,
+	ACTUAL_SIZE : &#039;actualSize&#039;,
+	ZOOM_TO_FIT : &#039;zoomToFit&#039;,
+	ZOOM_OUT : &#039;zoomOut&#039;,
+	ZOOM_IN : &#039;zoomIn&#039;,
+	EXPAND : &#039;expand&#039;,
+	CLOSE : &#039;close&#039;
+};
+
+function DrawioViewerButton(options) 
+{
+	this.label = options.label;
+	this.clickHandler = options.clickHandler;
+	this.enabled = typeof options.enabled != &#039;undefined&#039; ? options.enabled : true;
+	this.icon = options.icon;
+	this.visible = typeof options.visible != &#039;undefined&#039; ? options.visible : true;
+	this.linkButton = typeof options.linkButton != &#039;undefined&#039; ? options.linkButton : false;
+	this.url = options.url;
+};
+
+DrawioViewerButton.prototype.label = null;
+DrawioViewerButton.prototype.clickHandler = null;
+DrawioViewerButton.prototype.enabled = true;
+DrawioViewerButton.prototype.icon = null;
+DrawioViewerButton.prototype.visible = true;
+DrawioViewerButton.prototype.linkButton = false;
+DrawioViewerButton.prototype.url = null;</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

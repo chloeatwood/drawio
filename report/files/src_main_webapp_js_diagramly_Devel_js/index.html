@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\Devel.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\Devel.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">51.81</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">303</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">12.82</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.77</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/*
+ * Copyright (c) 2006-2020, JGraph Holdings Ltd
+ * 
+ * This provides an indirection to make sure the mxClient.js
+ * loads before the dependent classes below are loaded. This
+ * is used for development mode where the JS is in separate
+ * files and the mxClient.js loads other files.
+ */
+if (!mxIsElectron)
+{
+	(function()
+	{
+		var hashes = &#039;default-src \&#039;self\&#039;; &#039; +
+			&#039;script-src %script-src% \&#039;self\&#039; https://viewer.diagrams.net https://apis.google.com https://*.pusher.com &#039; +
+			// Below are the SHAs of the two script blocks in index.html.
+			// These must be updated here and in the CDN after changes.
+			// Note: Desktop app uses only the newest hashes (replace it in electron.js [The one in index.html needs to be changed only if the second script block changes])
+			//----------------------------------------------------------//
+			//------------- Bootstrap script in index.html -------------//
+			//----------------------------------------------------------//
+			// Version 24.4.4
+			&#039;\&#039;sha256-f6cHSTUnCvbQqwa6rKcbWIpgN9dLl0ROfpEKTQUQPr8=\&#039; &#039; +
+			//---------------------------------------------------------//
+			//------------- App.main script in index.html -------------//
+			//---------------------------------------------------------//
+			// Version 13.8.2
+			&#039;\&#039;sha256-vS/MxlVD7nbY7AnV+0t1Ap338uF7vrcs7y23KjERhKc=\&#039; &#039; +
+			//---------------------------------------------------------//
+			&#039;; &#039;;
+
+		var styleHashes = &#039;\&#039;sha256-pVoUz0B9cDvBP/6KP+5uOMqPh1c14hF0KFqSELqeyNQ=\&#039; &#039; + // index.html
+			&#039;\&#039;sha256-D9Gy46rimBnLRtBqv9U464kXQ5oT5JvkurboVMjtN0Q=\&#039; &#039; + // MinimalCss/Light
+			&#039;\&#039;sha256-C9BzsAi3ukZpBZzbdTpUNpxHfPR/+KJbeueKj1U6QGY=\&#039; &#039; + // MinimalCss/Dark
+			&#039;\&#039;sha256-7kY8ozVqKLIIBwZ24dhdmZkM26PsOlZmEi72RhmZKoM=\&#039; &#039; + // mxTooltipHandler.js
+			&#039;\&#039;sha256-kuk5TvxZ/Kwuobo4g6uasb1xRQwr1+nfa1A3YGePO7U=\&#039; &#039; + // MathJax
+			&#039;\&#039;sha256-ByOXYIXIkfNC3flUR/HoxR4Ak0pjOEF1q8XmtuIa6po=\&#039; &#039; + // purify.min.js
+			&#039;\&#039;sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=\&#039; &#039; + // spin.min.js
+			&#039;\&#039;sha256-nzHi23DROym7G011m6y0DyDd9mvQL2hSJ0Gy3g2T/5Q=\&#039; &#039; + // dropins.js
+			&#039;\&#039;sha256-xjAW8oXqJlP0CWqxT9s80kgOtOjvENMmfnnfulL6p1A=\&#039; &#039; + // gapi
+			&#039;\&#039;unsafe-hashes\&#039;; &#039;; // Required for hashes for style attribute
+		
+		var directives = &#039;connect-src %connect-src% \&#039;self\&#039; https://*.draw.io https://*.diagrams.net &#039; +
+			&#039;https://*.googleapis.com wss://app.diagrams.net wss://*.pusher.com https://*.pusher.com &#039; +
+			&#039;https://api.github.com https://raw.githubusercontent.com https://gitlab.com &#039; +
+			&#039;https://graph.microsoft.com https://my.microsoftpersonalcontent.com https://*.sharepoint.com https://*.sharepoint.de  &#039; +
+			&#039;https://*.1drv.com https://api.onedrive.com https://dl.dropboxusercontent.com https://api.openai.com &#039; +
+			&#039;https://*.google.com https://fonts.gstatic.com https://fonts.googleapis.com; &#039; +
+			// font-src about: is required for MathJax HTML-CSS output with STIX
+			&#039;img-src * data: blob:; media-src * data:; font-src * data: about:; &#039; +
+			// www.draw.io required for browser data migration to app.diagrams.net and
+			// viewer.diagrams.net required for iframe embed preview
+			&#039;frame-src %frame-src% \&#039;self\&#039; https://viewer.diagrams.net https://www.draw.io https://*.google.com; &#039; +
+			&#039;style-src %style-src% \&#039;self\&#039; https://fonts.googleapis.com &#039; +
+			// Replaces unsafe-inline style-src with hashes with safe-style-src URL parameter
+			((urlParams[&#039;safe-style-src&#039;] == &#039;1&#039;) ? styleHashes : &#039;\&#039;unsafe-inline\&#039;; &#039;) +
+			&#039;base-uri \&#039;none\&#039;;&#039; +
+			&#039;child-src \&#039;self\&#039;;&#039; +
+			&#039;object-src \&#039;none\&#039;;&#039;;
+			
+		var csp = hashes + directives;
+		var devCsp = csp.
+			// Adds script tags and loads shapes with eval
+			replace(/%script-src%/g, &#039;https://www.dropbox.com https://api.trello.com \&#039;unsafe-eval\&#039;&#039;).
+			// Adds Trello and Dropbox backend storage
+			replace(/%connect-src%/g, &#039;https://*.dropboxapi.com https://trello.com https://api.trello.com https://my.microsoftpersonalcontent.com&#039;).
+			// Loads common.css from mxgraph
+			replace(/%style-src%/g, &#039;&#039;).
+			replace(/%frame-src%/g, &#039;&#039;).
+			replace(/  /g, &#039; &#039;);
+
+		mxmeta(null, devCsp, &#039;Content-Security-Policy&#039;);
+
+		if (urlParams[&#039;print-csp&#039;] == &#039;1&#039;)
+		{
+			console.log(&#039;Content-Security-Policy&#039;);
+			var app_diagrams_net = csp.replace(/%script-src%/g, &#039;https://www.dropbox.com https://api.trello.com&#039;).
+				replace(/%connect-src%/g, &#039;https://*.dropboxapi.com https://api.trello.com&#039;).
+				replace(/%frame-src%/g, &#039;&#039;).
+					replace(/%style-src%/g, &#039;&#039;).
+					replace(/  /g, &#039; &#039;) + &#039; frame-ancestors \&#039;self\&#039; https://teams.microsoft.com https://*.cloud.microsoft;&#039;;
+			console.log(&#039;app.diagrams.net:&#039;, app_diagrams_net);
+
+			var viewer_diagrams_net = hashes.replace(/%script-src%/g, &#039;https://www.dropbox.com https://api.trello.com https://app.diagrams.net&#039;) +
+				&#039;connect-src *; &#039; +
+				&#039;img-src * data: blob:; &#039; +
+				&#039;media-src * data:; &#039; +
+				&#039;font-src * data: about:; &#039; +
+				&#039;style-src \&#039;self\&#039; https://fonts.googleapis.com \&#039;unsafe-inline\&#039;; &#039; +
+				&#039;base-uri \&#039;none\&#039;;&#039; +
+				&#039;object-src \&#039;none\&#039;;&#039; +
+				&#039;worker-src https://viewer.diagrams.net/service-worker.js;&#039;
+			console.log(&#039;viewer.diagrams.net:&#039;, viewer_diagrams_net);
+
+			var teams_diagrams_net = csp
+				.replace(/%script-src%/g, &#039;&#039;)
+				.replace(/%connect-src%/g, &#039;https://res.cdn.office.net&#039;)
+				.replace(/%frame-src%/g, &#039;&#039;)
+				.replace(/%style-src%/g, &#039;&#039;)
+				.replace(/  /g, &#039; &#039;) +
+				&quot; frame-ancestors &#039;self&#039; https://teams.microsoft.com https://*.cloud.microsoft;&quot; +
+				&quot; worker-src https://app.diagrams.net/service-worker.js;&quot;;
+				
+			console.log(&#039;teams.diagrams.net:&#039;, teams_diagrams_net);
+
+			var ac_draw_io = csp.replace(/%script-src%/g, &#039;https://aui-cdn.atlassian.com https://connect-cdn.atl-paas.net&#039;).
+					replace(/%frame-src%/g, &#039;https://www.lucidchart.com https://app.lucidchart.com https://lucid.app blob:&#039;).
+					replace(/%style-src%/g, &#039;https://aui-cdn.atlassian.com https://*.atlassian.net https://connect-cdn.atl-paas.net&#039;).
+					replace(/%connect-src%/g, &#039;&#039;).
+					replace(/  /g, &#039; &#039;) +
+					&#039;worker-src https://ac.draw.io/service-worker.js;&#039;;
+			console.log(&#039;ac.draw.io:&#039;, ac_draw_io);
+
+			var aj_draw_io = csp.replace(/%script-src%/g, &#039;https://aui-cdn.atlassian.com https://connect-cdn.atl-paas.net&#039;).
+					replace(/%frame-src%/g, &#039;blob:&#039;).
+					replace(/%style-src%/g, &#039;https://aui-cdn.atlassian.com https://*.atlassian.net https://connect-cdn.atl-paas.net&#039;).
+					replace(/%connect-src%/g, &#039;https://api.atlassian.com https://api.media.atlassian.com&#039;).
+					replace(/  /g, &#039; &#039;) +
+					&#039;worker-src https://aj.draw.io/service-worker.js;&#039;;
+			console.log(&#039;aj.draw.io:&#039;, aj_draw_io);
+
+			console.log(&#039;import.diagrams.net:&#039;, &#039;default-src \&#039;self\&#039;; worker-src blob:; img-src \&#039;self\&#039; blob: data: https://www.lucidchart.com &#039; +
+					&#039;https://app.lucidchart.com https://lucid.app; style-src \&#039;self\&#039; \&#039;unsafe-inline\&#039;; frame-src https://www.lucidchart.com https://app.lucidchart.com https://lucid.app;&#039;);
+			console.log(&#039;Development:&#039;, devCsp);
+
+			console.log(&#039;Remember to add index.html new hashes to Desktop app (electron.js). In desktop, only newest hashes are needed.&#039;);
+		}
+	})();
+}
+
+mxscript(drawDevUrl + &#039;js/cryptojs/aes.min.js&#039;);
+mxscript(drawDevUrl + &#039;js/spin/spin.min.js&#039;);
+mxscript(drawDevUrl + &#039;js/deflate/pako.min.js&#039;);
+mxscript(drawDevUrl + &#039;js/deflate/base64.js&#039;);
+mxscript(drawDevUrl + &#039;js/sanitizer/purify.min.js&#039;);
+mxscript(drawDevUrl + &#039;js/rough/rough.min.js&#039;);
+mxscript(drawDevUrl + &#039;js/freehand/perfect-freehand.js&#039;);
+
+// Uses grapheditor from devhost
+mxscript(geBasePath +&#039;/Editor.js&#039;);
+mxscript(geBasePath +&#039;/EditorUi.js&#039;);
+mxscript(geBasePath +&#039;/Sidebar.js&#039;);
+mxscript(geBasePath +&#039;/Graph.js&#039;);
+mxscript(geBasePath +&#039;/Format.js&#039;);
+mxscript(geBasePath +&#039;/Shapes.js&#039;);
+mxscript(geBasePath +&#039;/Actions.js&#039;);
+mxscript(geBasePath +&#039;/Menus.js&#039;);
+mxscript(geBasePath +&#039;/Toolbar.js&#039;);
+mxscript(geBasePath +&#039;/Dialogs.js&#039;);
+
+// Loads main classes
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-ActiveDirectory.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Advanced.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-AlibabaCloud.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-AlliedTelesis.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Android.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-ArchiMate.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-ArchiMate3.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Arrows2.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Atlassian.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-AWS.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-AWS3.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-AWS3D.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-AWS4.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-AWS4b.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Azure.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Azure2.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Basic.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Bootstrap.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-BPMN.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-C4.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Cabinet.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Cisco.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Cisco19.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-CiscoSafe.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Citrix.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Citrix2.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Cumulus.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-DFD.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Dynamics365.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-EIP.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Electrical.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-ER.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Floorplan.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Flowchart.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-FluidPower.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-GCP.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-GCP2.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-GCPIcons.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Gmdl.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-IBM.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-IBMCloud.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Infographic.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Ios.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Ios7.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Kubernetes.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-LeanMapping.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Mockup.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-MSCAE.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Network.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Network2.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Office.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-OpenStack.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-PID.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Rack.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Salesforce.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-SAP.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Signs.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Sitemap.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Sysml.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-ThreatModeling.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-UML25.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Veeam.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-Veeam2.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-VVD.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/sidebar/Sidebar-WebIcons.js&#039;);
+
+mxscript(drawDevUrl + &#039;js/diagramly/util/mxJsCanvas.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/util/mxAsyncCanvas.js&#039;);
+
+mxscript(drawDevUrl + &#039;js/diagramly/DrawioFile.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/LocalFile.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/LocalLibrary.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/StorageFile.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/StorageLibrary.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/RemoteFile.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/RemoteLibrary.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/EmbedFile.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/Dialogs.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/Editor.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/EditorUi.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DiffSync.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/Settings.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DrawioFilePolling.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DrawioFileSync.js&#039;);
+
+//Comments
+mxscript(drawDevUrl + &#039;js/diagramly/DrawioComment.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DriveComment.js&#039;);
+
+// Excluded in base.min.js
+mxscript(drawDevUrl + &#039;js/diagramly/DrawioClient.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DrawioUser.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/UrlLibrary.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DriveFile.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DriveLibrary.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DriveClient.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DropboxFile.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DropboxLibrary.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DropboxClient.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/GitHubFile.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/GitHubLibrary.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/GitHubClient.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/OneDriveFile.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/OneDriveLibrary.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/OneDriveClient.js&#039;);
+mxscript(drawDevUrl + &#039;js/onedrive/mxODPicker.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/TrelloFile.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/TrelloLibrary.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/TrelloClient.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/GitLabFile.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/GitLabLibrary.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/GitLabClient.js&#039;);
+
+mxscript(drawDevUrl + &#039;js/diagramly/App.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/Menus.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/Pages.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/Trees.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/Minimal.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DistanceGuides.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/mxRuler.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/mxFreehand.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/P2PCollab.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/DevTools.js&#039;);
+
+if (!window.DRAWIO_PUBLIC_BUILD)
+{
+	mxscript(drawDevUrl + &#039;js/diagramly/Simple.js&#039;);
+	mxscript(drawDevUrl + &#039;js/diagramly/vsdx/VsdxExport.js&#039;);
+}
+
+mxscript(drawDevUrl + &#039;js/mermaid/mermaid2drawio.js&#039;);	
+
+// Vsdx/vssx support
+mxscript(drawDevUrl + &#039;js/diagramly/vsdx/mxVsdxCanvas2D.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/vsdx/bmpDecoder.js&#039;);
+mxscript(drawDevUrl + &#039;js/diagramly/vsdx/importer.js&#039;);
+mxscript(drawDevUrl + &#039;js/jszip/jszip.min.js&#039;);
+
+// GraphMl Import
+mxscript(drawDevUrl + &#039;js/diagramly/graphml/mxGraphMlCodec.js&#039;);
+
+// Org Chart Layout
+if (urlParams[&#039;orgChartDev&#039;] == &#039;1&#039;)
+{
+	mxscript(drawDevUrl + &#039;js/orgchart/bridge.min.js&#039;);
+	mxscript(drawDevUrl + &#039;js/orgchart/bridge.collections.min.js&#039;);
+	mxscript(drawDevUrl + &#039;js/orgchart/OrgChart.Layout.min.js&#039;);
+	mxscript(drawDevUrl + &#039;js/orgchart/mxOrgChartLayout.js&#039;);
+}
+
+// Miro Import
+mxscript(drawDevUrl + &#039;js/diagramly/miro/MiroImporter.js&#039;);</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-LeanMapping.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-LeanMapping.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">63.88</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">131</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">24.60</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">3.34</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds Lean Mapping shapes
+	Sidebar.prototype.addLeanMappingPalette = function()
+	{
+		var w = 100;
+		var h = 100;
+		var s = mxConstants.STYLE_STROKEWIDTH + &#039;=2;html=1;shape=mxgraph.lean_mapping.&#039;;
+		var s2 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;strokeWidth=2;shape=mxgraph.lean_mapping.&#039;;
+		var sb = this;
+		
+		//default tags
+		var dt = &#039;value stream lean mapping &#039;;
+		var gn = &#039;mxgraph.lean_mapping&#039;;
+		this.setCurrentSearchEntryLibrary(&#039;lean_mapping&#039;);
+
+		var fns =
+		[
+			this.createVertexTemplateEntry(s2 + &#039;boat_shipment;align=center;&#039;, w, h, &#039;&#039;, &#039;Boat Shipment&#039;, null, null, this.getTagsForStencil(gn, &#039;boat_shipment&#039;, dt).join(&#039; &#039;)),
+			this.addDataEntry(dt + &#039;data box&#039;, 60, 100, &#039;Data Box&#039;,
+				&#039;1ZXNbsIwEISfxlcUHJpy5afl0qoHKvWItmSJrTpxlGxJ0qfvmpgCAgSqWqQcIm1mPfbOd7BFOEnrWQG5erYxGhE+iHBSWEttldYTNEbIQMcinAopA/6EfDzT7W+6QQ4FZnSNQbaGNZhPbJVWKKkxXiipsB/4pmNSLEgRjhWlPOi0z2WpIHfr0jpxGXoGIVukkOc6S3oxECzebX1o8SdiQVifnXoj+ZFnaFOkouEllZ+Cu1EbLFCoE7V1BV6EshWSH+uOARcew2kk4RESZ3nd0tlHwwn45PHKZjTXX04cOiY5LDn+E67IA3Nh9RLMyOgkc7R0HLs99rFUShPO2eq2qRjmtajkr1DJPyA1OEnqpWukmkMiNwB3dwRuDLRUHQU3uB246AjcaA3adBRcdDtw95fv+Q4AG/4bMP7dPbqb3sGb/A0=&#039;),
+		   	
+			this.createVertexTemplateEntry(s + &#039;outside_sources;whiteSpace=wrap;align=center;&#039;, w, h * 0.7, 
+					&#039;&lt;table cellpadding=&quot;5&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+					&#039;&lt;tr&gt;&lt;td height=&quot;50%&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&#039; +
+					&#039;&lt;tr&gt;&lt;td align=&quot;center&quot; height=&quot;50%&quot;&gt;XYZ Corp&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;,
+					&#039;Customer/Supplier&#039;, null, null, this.getTagsForStencil(gn, &#039;outside_sources&#039;, dt).join(&#039; &#039;)),
+
+			this.addEntry(dt + &#039;dedicated process manufacturing&#039;, function()
+			{
+				var bg = new mxCell(&#039;\nDescription&#039;, new mxGeometry(0, 0, 100, 70), s + &#039;manufacturing_process;fontSize=12;verticalAlign=middle;html=1;align=center;whiteSpace=wrap;&#039;);
+			   	bg.vertex = true;
+			   	var text1 = new mxCell(&#039;Process&#039;, new mxGeometry(0, 0, 100, 13), &#039;text;fontSize=12;spacingLeft=2;verticalAlign=top;html=1;align=center;spacingTop=-5;resizeWidth=1;whiteSpace=wrap;&#039;);
+			   	text1.vertex = true;
+			   	bg.insert(text1);
+
+	   			return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Dedicated Process&#039;);
+			}),
+		   	
+			this.createVertexTemplateEntry(s + &#039;manufacturing_process_shared;spacingTop=-5;align=center;whiteSpace=wrap;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039;, w, h * 0.7, 
+					&#039;Process&#039;,
+					&#039;Shared Process&#039;, null, null, this.getTagsForStencil(gn, &#039;manufacturing_process_shared&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;work_cell;pointerEvents=1;&#039;, w * 0.7, h * 0.6, &#039;&#039;, &#039;Workcell&#039;, null, null, this.getTagsForStencil(gn, &#039;work_cell&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;inventory_box;&#039;, w, h * 0.9, &#039;&#039;, &#039;Inventory Box&#039;, null, null, this.getTagsForStencil(gn, &#039;inventory_box&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;push_arrow;&#039;, w, h * 0.3,&#039;&#039;, &#039;Push Arrow&#039;, null, null, this.getTagsForStencil(gn, &#039;push_arrow&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;supermarket;&#039;, w * 0.6, h,&#039;&#039;, &#039;Supermarket&#039;, null, null, this.getTagsForStencil(gn, &#039;supermarket&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;physical_pull;pointerEvents=1;&#039;, w, h,&#039;&#039;, &#039;Material Pull&#039;, null, null, this.getTagsForStencil(gn, &#039;physical_pull&#039;, dt + &#039;circular arrow&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;fifo_lane;overflow=fill;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;align=center;&#039;, w, h * 0.5, 
+					&#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+					&#039;&lt;tr&gt;&lt;td height=&quot;0%&quot;&gt;MAX=XX&lt;/td&gt;&lt;/tr&gt;&#039; +
+					&#039;&lt;tr&gt;&lt;td align=&quot;center&quot; height=&quot;100%&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;,
+					&#039;FIFO Lane&#039;, null, null, this.getTagsForStencil(gn, &#039;fifo_lane&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;buffer_or_safety_stock;&#039;, w * 0.4, h,&#039;&#039;, &#039;Safety Stock&#039;, null, null, this.getTagsForStencil(gn, &#039;buffer_or_safety_stock&#039;, dt).join(&#039; &#039;)),
+
+			this.addEntry(this.getTagsForStencil(gn, &#039;truck_shipment&#039;, dt).join(&#039; &#039;), function()
+			{
+			   	var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 100, 100), s + &#039;truck_shipment;&#039;);
+			   	bg.vertex = true;
+			   	var text1 = new mxCell(&#039;2x per\nWeek&#039;, new mxGeometry(0, 0, 60, 80), &#039;text;fontSize=12;verticalAlign=middle;html=1;align=center;whiteSpace=wrap;&#039;);
+			   	text1.vertex = true;
+			   	bg.insert(text1);
+
+	   			return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Truck Shipment&#039;);
+			}),
+		   	
+		   	this.createVertexTemplateEntry(s + &#039;schedule;whiteSpace=wrap;align=center;&#039;, w, h * 0.7, &#039;Production\nControl&#039;, &#039;Production Control&#039;, null, null, this.getTagsForStencil(gn, &#039;schedule&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;schedule;whiteSpace=wrap;align=center;&#039;, w, h * 0.7, &#039;Other\nInformation&#039;, &#039;Other Information&#039;, null, null, this.getTagsForStencil(gn, &#039;schedule&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;go_see_production_scheduling;pointerEvents=1;&#039;, 92, 60, &#039;&#039;, &#039;Go See Production Scheduling&#039;, null, null, this.getTagsForStencil(gn, &#039;go_see_production_scheduling&#039;, dt).join(&#039; &#039;)),
+
+			this.addEntry(this.getTagsForStencil(gn, &#039;kaizen_lightening_burst&#039;, dt).join(&#039; &#039;), function()
+			{
+			   	var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 90, 40), s2 + &#039;kaizen_lightening_burst;&#039;);
+			   	bg.vertex = true;
+			   	var text1 = new mxCell(&#039;&#039;, new mxGeometry(8, 8, 74, 24), &#039;rect;fillColor=strokeColor;&#039;);
+			   	text1.vertex = true;
+			   	bg.insert(text1);
+
+		   		return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Kaizen Lightening Burst&#039;);
+			}),
+		   	
+			this.createVertexTemplateEntry(s2 + &#039;kanban_post;&#039;, 50, 100, &#039;&#039;, &#039;Kanban Post&#039;, null, null, this.getTagsForStencil(gn, &#039;kanban_post&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;load_leveling;&#039;, 100, 30, &#039;&#039;, &#039;Load Leveling&#039;, null, null, this.getTagsForStencil(gn, &#039;load_leveling&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;move_by_forklift;&#039;, 92, 100, &#039;&#039;, &#039;Move by Forklift&#039;, null, null, this.getTagsForStencil(gn, &#039;move_by_forklift&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;mrp_erp;whiteSpace=wrap;&#039;, 70, 100, &#039;&#039;, &#039;MRP/ERP&#039;, null, null, this.getTagsForStencil(gn, &#039;mrp_erp&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;operator;&#039;, 100, 84, &#039;&#039;, &#039;Operator&#039;, null, null, this.getTagsForStencil(gn, &#039;operator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;quality_problem;fontSize=24;fontStyle=1;whiteSpace=wrap;align=center;&#039;, 80, 100, &#039;Q&#039;, &#039;Quality Problem&#039;, null, null, this.getTagsForStencil(gn, &#039;quality_problem&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;verbal;pointerEvents=1;&#039;, 50, 100, &#039;&#039;, &#039;Verbal Information&#039;, null, null, this.getTagsForStencil(gn, &#039;verbal&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;fifo_sequence_flow;pointerEvents=1;fontStyle=0;fontSize=20;align=center;&#039;, w, h * 0.5, &#039;FIFO&#039;, &#039;FIFO Sequence&#039;, null, null, this.getTagsForStencil(gn, &#039;fifo_sequence_flow&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;production_kanban;overflow=fill;&#039;, w, h, 
+					&#039;&lt;p style=&quot;font-size:2em;margin-right:35px;margin-top:13px;text-align:right&quot;&gt;P&lt;/p&gt;&#039;,
+					&#039;Production Kanban&#039;, null, null, this.getTagsForStencil(gn, &#039;production_kanban&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;withdrawal_kanban;overflow=fill;&#039;, w, h, 
+					&#039;&lt;p style=&quot;font-size:2em;margin-right:35px;margin-top:13px;text-align:right&quot;&gt;W&lt;/p&gt;&#039;,
+					&#039;Withdrawal Kanban&#039;, null, null, this.getTagsForStencil(gn, &#039;withdrawal_kanban&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;signal_kanban;overflow=fill;&#039;, w, h * 0.9, 
+					&#039;&lt;p style=&quot;font-size:2em;margin-right:35px;margin-top:4px;text-align:right&quot;&gt;S&lt;/p&gt;&#039;,
+					&#039;Signal Kanban&#039;, null, null, this.getTagsForStencil(gn, &#039;signal_kanban&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;sequenced_pull_ball;&#039;, w * 0.6, h * 0.6, &#039;&#039;, &#039;Sequenced Pull Ball&#039;, null, null, this.getTagsForStencil(gn, &#039;sequenced_pull_ball&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rail_shipment;&#039;, w, h * 0.3, &#039;&#039;, &#039;Rail Shipment&#039;, null, null, this.getTagsForStencil(gn, &#039;rail_shipment&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;airplane_7;&#039;, 100, 45, &#039;&#039;, &#039;Air Freight&#039;, null, null, this.getTagsForStencil(gn, &#039;airplane_7&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;warehouse;&#039;, w, h * 0.6, &#039;&#039;, &#039;Warehouse&#039;, null, null, this.getTagsForStencil(gn, &#039;warehouse&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;timeline2;dx1=0;dy1=1;dx2=30;dy2=0;dx3=160;dy3=1;dx4=230;dy4=0;dx5=310;dy5=1;dy6=0;&#039;, w * 4, h * 0.4, &#039;&#039;, &#039;Timeline&#039;, null, null, this.getTagsForStencil(gn, &#039;timeline&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;crossDock;&#039;, w, h * 0.8, &#039;&#039;, &#039;Cross-Dock&#039;, null, null, this.getTagsForStencil(gn, &#039;crossDock&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;orders;overflow=fill;&#039;, w, h * 0.6, 
+					&#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1.5em;width:100%;height:100%;&quot;&gt;&#039; +
+					&#039;&lt;tr&gt;&lt;td height=&quot;65%&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&#039; +
+					&#039;&lt;tr&gt;&lt;td align=&quot;center&quot; height=&quot;35%&quot;&gt;IN&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;,
+					&#039;Orders&#039;, null, null, this.getTagsForStencil(gn, &#039;orders&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;batched_kanban;&#039;, w * 2, h * 0.8, &#039;&#039;, &#039;Batched Kanban&#039;, null, null, this.getTagsForStencil(gn, &#039;batched_kanban&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;control_center;&#039;, w * 0.8, h * 0.8, &#039;&#039;, &#039;Control Center&#039;, null, null, this.getTagsForStencil(gn, &#039;control_center&#039;, dt).join(&#039; &#039;)),
+		    this.createEdgeTemplateEntry(&#039;shape=flexArrow;html=1;&#039;, 100, 100, &#039;&#039;, &#039;Shipments&#039;, null, this.getTagsForStencil(gn, &#039;arrow&#039;, dt).join(&#039; &#039;)),
+		    this.createEdgeTemplateEntry(&#039;shape=mxgraph.lean_mapping.manual_info_flow_edge;html=1;&#039;, 100, 100, &#039;Daily&#039;, &#039;Manual Information&#039;, null, this.getTagsForStencil(gn, &#039;manual_info_flow_edge&#039;, dt).join(&#039; &#039;)),
+		    this.createEdgeTemplateEntry(&#039;shape=mxgraph.lean_mapping.electronic_info_flow_edge;html=1;&#039;, 100, 100, &#039;Monthly&#039;, &#039;Electronic Information&#039;, null, this.getTagsForStencil(gn, &#039;electronic_info_flow_edge&#039;, dt).join(&#039; &#039;))
+		];
+		
+		this.addPalette(&#039;lean_mapping&#039;, &#039;Value Stream Mapping&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

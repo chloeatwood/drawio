@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Salesforce.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Salesforce.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">49.99</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">773</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">54.28</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">17.12</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds Salesforce stencils
+	Sidebar.prototype.addSalesforcePalette = function()
+	{
+		var w = 60;
+		var h = 60;
+
+		this.setCurrentSearchEntryLibrary(&#039;salesforce&#039;, &#039;salesforceComponents&#039;);
+		this.addSalesforceComponentsPalette(w, h);
+		this.setCurrentSearchEntryLibrary(&#039;salesforce&#039;, &#039;salesforceProduct&#039;);
+		this.addSalesforceProductPalette(w, h);
+		this.setCurrentSearchEntryLibrary(&#039;salesforce&#039;, &#039;salesforcePlatform&#039;);
+		this.addSalesforcePlatformPalette(w, h);
+		this.setCurrentSearchEntryLibrary(&#039;salesforce&#039;, &#039;salesforceIndustry&#039;);
+		this.addSalesforceIndustryPalette(w, h);
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+	
+	Sidebar.prototype.addSalesforceComponentsPalette = function(w, h)
+	{
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;html=1;shape=mxgraph.salesforce.&#039;;
+		var gn = &#039;mxgraph.salesforce&#039;;
+		var dt = &#039;salesforce components &#039;;
+		
+		this.addPaletteFunctions(&#039;salesforceComponents&#039;, &#039;Salesforce / Components&#039;, false,
+		[
+		   	this.addEntry(dt + &#039;header&#039;, function()
+		   	{
+			   	var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 930, 160), 
+					&#039;strokeColor=none;fillColor=#d9d9d9;&#039;);
+			   	bg.vertex = true;
+			   	
+			   	var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 350, 160), 
+					&#039;shape=delay;whiteSpace=wrap;html=1;strokeColor=none;resizeHeight=1;part=1;&#039;);
+			   	item1.geometry.relative = true;
+			   	item1.vertex = true;
+			   	bg.insert(item1);
+			    
+			   	var item2 = new mxCell(&#039;Your Logo Here&#039;, new mxGeometry(0, 0, 90, 20), 
+					&#039;rounded=0;whiteSpace=wrap;html=1;fillColor=#fd7298;strokeColor=none;align=left;spacingLeft=5;fontSize=10;part=1;&#039;);
+			   	item2.geometry.relative = true;
+			   	item2.geometry.offset = new mxPoint(20, 10);
+			   	item2.vertex = true;
+			   	item1.insert(item2);
+			    
+			   	var item3 = new mxCell(&#039;&lt;h3&gt;&lt;font style=&quot;font-weight: normal; font-size: 14px;&quot;&gt;Diagram Title Goes Here&lt;/font&gt;&lt;/h3&gt;&lt;p&gt;&lt;font style=&quot;font-size: 9px;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac semper velit. Quisque eget elit eros. Donec ullamcorper, sem viverra convallis cursus, ex eros aliquam ante, nec bibendum lacus augue non tellus.&lt;/font&gt;&lt;/p&gt;&#039;, 
+					new mxGeometry(0, 0, 310, 100), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;part=1;&#039;);
+			   	item3.geometry.relative = true;
+			   	item3.geometry.offset = new mxPoint(20, 40);
+			   	item3.vertex = true;
+			   	item1.insert(item3);
+			    
+			   	var item4 = new mxCell(&#039;Key&#039;, 
+					new mxGeometry(1, 0, 270, 120), 
+					&#039;rounded=1;whiteSpace=wrap;html=1;strokeColor=none;verticalAlign=top;align=left;spacingLeft=10;fontSize=11;part=1;&#039;);
+			   	item4.geometry.relative = true;
+			   	item4.geometry.offset = new mxPoint(-290, 20);
+			   	item4.vertex = true;
+			   	bg.insert(item4);
+			    
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Header&#039;);
+			}),
+
+		   	this.addEntry(dt + &#039;header&#039;, function()
+		   	{
+			   	var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 930, 160), 
+					&#039;strokeColor=none;fillColor=#d9d9d9;&#039;);
+			   	bg.vertex = true;
+			   	
+			   	var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 480, 160), 
+					&#039;shape=delay;whiteSpace=wrap;html=1;strokeColor=none;resizeHeight=1;part=1;&#039;);
+			   	item1.geometry.relative = true;
+			   	item1.vertex = true;
+			   	bg.insert(item1);
+			    
+			   	var item2 = new mxCell(&#039;Your Logo Here&#039;, new mxGeometry(0, 0, 90, 20), 
+					&#039;rounded=0;whiteSpace=wrap;html=1;fillColor=#fd7298;strokeColor=none;align=left;spacingLeft=5;fontSize=10;part=1;&#039;);
+			   	item2.geometry.relative = true;
+			   	item2.geometry.offset = new mxPoint(20, 10);
+			   	item2.vertex = true;
+			   	item1.insert(item2);
+			    
+			   	var item3 = new mxCell(&#039;&lt;h3&gt;&lt;font style=&quot;font-weight: normal; font-size: 14px;&quot;&gt;A Very, Very, Long Diagram Title Should Go Right Here&lt;/font&gt;&lt;/h3&gt;&lt;p&gt;&lt;font style=&quot;font-size: 9px;&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac semper velit. Quisque eget elit eros. Donec ullamcorper, sem viverra convallis cursus, ex eros aliquam ante, nec bibendum lacus augue non tellus.&lt;/font&gt;&lt;/p&gt;&#039;, 
+					new mxGeometry(0, 0, 440, 100), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;part=1;&#039;);
+			   	item3.geometry.relative = true;
+			   	item3.geometry.offset = new mxPoint(20, 40);
+			   	item3.vertex = true;
+			   	item1.insert(item3);
+			    
+			   	var item4 = new mxCell(&#039;Larger Key&#039;, 
+					new mxGeometry(1, 0, 410, 120), 
+					&#039;rounded=1;whiteSpace=wrap;html=1;strokeColor=none;verticalAlign=top;align=left;spacingLeft=10;fontSize=11;part=1;&#039;);
+			   	item4.geometry.relative = true;
+			   	item4.geometry.offset = new mxPoint(-430, 20);
+			   	item4.vertex = true;
+			   	bg.insert(item4);
+			    
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Header&#039;);
+			}),
+
+		   	this.addEntry(dt + &#039;card&#039;, function()
+		   	{
+			   	var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 200, 240), 
+					&#039;rounded=1;whiteSpace=wrap;html=1;strokeColor=#B3B3B3;arcSize=20;absoluteArcSize=1;&#039;);
+			   	bg.vertex = true;
+			   	
+			   	var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 46, 46), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item1.geometry.relative = true;
+			   	item1.geometry.offset = new mxPoint(15, 10);
+			   	item1.vertex = true;
+			   	bg.insert(item1);
+			    
+			   	var item2 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 19, 19), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item2.geometry.relative = true;
+			   	item2.geometry.offset = new mxPoint(-9.5, -9.5);
+			   	item2.vertex = true;
+			   	item1.insert(item2);
+			    
+			   	var item3 = new mxCell(&#039;Card Title&#039;, 
+					new mxGeometry(1, 0, 130, 30), 
+					&#039;shape=partialRectangle;whiteSpace=wrap;html=1;top=0;left=0;fillColor=none;right=0;fontStyle=1;align=left;strokeColor=#B3B3B3;part=1;&#039;);
+			   	item3.geometry.relative = true;
+			   	item3.geometry.offset = new mxPoint(-130, 20);
+			   	item3.vertex = true;
+			   	bg.insert(item3);
+			    
+			   	var item4 = new mxCell(&#039;Attribute One&#039;, 
+					new mxGeometry(1, 0, 130, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;part=1;&#039;);
+			   	item4.geometry.relative = true;
+			   	item4.geometry.offset = new mxPoint(-130, 54);
+			   	item4.vertex = true;
+			   	bg.insert(item4);
+			    
+			   	var item5 = new mxCell(&#039;Attribute 02&#039;, 
+					new mxGeometry(1, 0, 130, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;part=1;&#039;);
+			   	item5.geometry.relative = true;
+			   	item5.geometry.offset = new mxPoint(-130, 78);
+			   	item5.vertex = true;
+			   	bg.insert(item5);
+			    
+			   	var item6 = new mxCell(&#039;Attribute Three 03&#039;, 
+					new mxGeometry(1, 0, 130, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;part=1;&#039;);
+			   	item6.geometry.relative = true;
+			   	item6.geometry.offset = new mxPoint(-130, 102);
+			   	item6.vertex = true;
+			   	bg.insert(item6);
+			    
+			   	var item7 = new mxCell(&#039;A long footer title can go here and wraps text&#039;, 
+					new mxGeometry(0, 0, 200, 48), 
+					&#039;text;html=1;strokeColor=none;fillColor=#e5e5e5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;spacingLeft=5;resizeWidth=1;part=1;&#039;);
+			   	item7.geometry.relative = true;
+			   	item7.geometry.offset = new mxPoint(0, 126);
+			   	item7.vertex = true;
+			   	bg.insert(item7);
+			    
+			   	var item8 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 40, 40), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item8.geometry.relative = true;
+			   	item8.geometry.offset = new mxPoint(-50, -55);
+			   	item8.vertex = true;
+			   	bg.insert(item8);
+			    
+			   	var item9 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 16, 16), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item9.geometry.relative = true;
+			   	item9.geometry.offset = new mxPoint(-8, -8);
+			   	item9.vertex = true;
+			   	item8.insert(item9);
+			    
+			   	var item10 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 40, 40), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item10.geometry.relative = true;
+			   	item10.geometry.offset = new mxPoint(10, -55);
+			   	item10.vertex = true;
+			   	bg.insert(item10);
+			    
+			   	var item11 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 16, 16), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item11.geometry.relative = true;
+			   	item11.geometry.offset = new mxPoint(-8, -8);
+			   	item11.vertex = true;
+			   	item10.insert(item11);
+			    
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Card&#039;);
+			}),
+
+		   	this.addEntry(dt + &#039;card&#039;, function()
+		   	{
+			   	var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 200, 220), 
+					&#039;rounded=1;whiteSpace=wrap;html=1;strokeColor=#B3B3B3;arcSize=20;absoluteArcSize=1;&#039;);
+			   	bg.vertex = true;
+			   	
+			   	var item3 = new mxCell(&#039;Card Title&#039;, 
+					new mxGeometry(0, 0, 200, 30), 
+					&#039;shape=partialRectangle;whiteSpace=wrap;html=1;top=0;left=0;fillColor=none;right=0;fontStyle=1;align=left;strokeColor=#B3B3B3;spacingLeft=15;part=1;resizeWidth=1;&#039;);
+			   	item3.geometry.relative = true;
+			   	item3.geometry.offset = new mxPoint(0, 20);
+			   	item3.vertex = true;
+			   	bg.insert(item3);
+			    
+			   	var item4 = new mxCell(&#039;Attribute One&#039;, 
+					new mxGeometry(0, 0, 200, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=15;part=1;resizeWidth=1;&#039;);
+			   	item4.geometry.relative = true;
+			   	item4.geometry.offset = new mxPoint(0, 54);
+			   	item4.vertex = true;
+			   	bg.insert(item4);
+			    
+			   	var item5 = new mxCell(&#039;Attribute 02&#039;, 
+					new mxGeometry(0, 0, 200, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=15;part=1;resizeWidth=1;&#039;);
+			   	item5.geometry.relative = true;
+			   	item5.geometry.offset = new mxPoint(0, 78);
+			   	item5.vertex = true;
+			   	bg.insert(item5);
+			    
+			   	var item6 = new mxCell(&#039;Attribute Three 03&#039;, 
+					new mxGeometry(0, 0, 200, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=15;part=1;resizeWidth=1;&#039;);
+			   	item6.geometry.relative = true;
+			   	item6.geometry.offset = new mxPoint(0, 102);
+			   	item6.vertex = true;
+			   	bg.insert(item6);
+			    
+			   	var item7 = new mxCell(&#039;Footer Title&#039;, 
+					new mxGeometry(0, 0, 200, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=#e5e5e5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;spacingLeft=5;resizeWidth=1;part=1;&#039;);
+			   	item7.geometry.relative = true;
+			   	item7.geometry.offset = new mxPoint(0, 126);
+			   	item7.vertex = true;
+			   	bg.insert(item7);
+			    
+			   	var item8 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 36, 36), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item8.geometry.relative = true;
+			   	item8.geometry.offset = new mxPoint(-86, -55);
+			   	item8.vertex = true;
+			   	bg.insert(item8);
+			    
+			   	var item9 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 16, 16), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item9.geometry.relative = true;
+			   	item9.geometry.offset = new mxPoint(-8, -8);
+			   	item9.vertex = true;
+			   	item8.insert(item9);
+			    
+			   	var item10 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 36, 36), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item10.geometry.relative = true;
+			   	item10.geometry.offset = new mxPoint(-41, -55);
+			   	item10.vertex = true;
+			   	bg.insert(item10);
+			    
+			   	var item11 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 16, 16), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item11.geometry.relative = true;
+			   	item11.geometry.offset = new mxPoint(-8, -8);
+			   	item11.vertex = true;
+			   	item10.insert(item11);
+			    
+			   	var item12 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 36, 36), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item12.geometry.relative = true;
+			   	item12.geometry.offset = new mxPoint(5, -55);
+			   	item12.vertex = true;
+			   	bg.insert(item12);
+			    
+			   	var item13 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 16, 16), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item13.geometry.relative = true;
+			   	item13.geometry.offset = new mxPoint(-8, -8);
+			   	item13.vertex = true;
+			   	item12.insert(item13);
+			    
+			   	var item14 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 36, 36), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item14.geometry.relative = true;
+			   	item14.geometry.offset = new mxPoint(50, -55);
+			   	item14.vertex = true;
+			   	bg.insert(item14);
+			    
+			   	var item15 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 16, 16), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item15.geometry.relative = true;
+			   	item15.geometry.offset = new mxPoint(-8, -8);
+			   	item15.vertex = true;
+			   	item14.insert(item15);
+			    
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Card&#039;);
+			}),
+
+		   	this.addEntry(dt + &#039;card&#039;, function()
+		   	{
+			   	var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 200, 170), 
+					&#039;rounded=1;whiteSpace=wrap;html=1;strokeColor=#B3B3B3;arcSize=20;absoluteArcSize=1;&#039;);
+			   	bg.vertex = true;
+			   	
+			   	var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 46, 46), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item1.geometry.relative = true;
+			   	item1.geometry.offset = new mxPoint(15, 10);
+			   	item1.vertex = true;
+			   	bg.insert(item1);
+			    
+			   	var item2 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 19, 19), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item2.geometry.relative = true;
+			   	item2.geometry.offset = new mxPoint(-9.5, -9.5);
+			   	item2.vertex = true;
+			   	item1.insert(item2);
+			    
+			   	var item3 = new mxCell(&#039;Card Title&#039;, 
+					new mxGeometry(1, 0, 130, 30), 
+					&#039;shape=partialRectangle;whiteSpace=wrap;html=1;top=0;left=0;fillColor=none;right=0;fontStyle=1;align=left;strokeColor=#B3B3B3;part=1;&#039;);
+			   	item3.geometry.relative = true;
+			   	item3.geometry.offset = new mxPoint(-130, 20);
+			   	item3.vertex = true;
+			   	bg.insert(item3);
+			    
+			   	var item4 = new mxCell(&#039;Attribute One&#039;, 
+					new mxGeometry(1, 0, 130, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;part=1;&#039;);
+			   	item4.geometry.relative = true;
+			   	item4.geometry.offset = new mxPoint(-130, 54);
+			   	item4.vertex = true;
+			   	bg.insert(item4);
+			    
+			   	var item5 = new mxCell(&#039;Attribute 02&#039;, 
+					new mxGeometry(1, 0, 130, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;part=1;&#039;);
+			   	item5.geometry.relative = true;
+			   	item5.geometry.offset = new mxPoint(-130, 78);
+			   	item5.vertex = true;
+			   	bg.insert(item5);
+			    
+			   	var item8 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 36, 36), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item8.geometry.relative = true;
+			   	item8.geometry.offset = new mxPoint(-86, -55);
+			   	item8.vertex = true;
+			   	bg.insert(item8);
+			    
+			   	var item9 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 16, 16), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item9.geometry.relative = true;
+			   	item9.geometry.offset = new mxPoint(-8, -8);
+			   	item9.vertex = true;
+			   	item8.insert(item9);
+			    
+			   	var item10 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 36, 36), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item10.geometry.relative = true;
+			   	item10.geometry.offset = new mxPoint(-41, -55);
+			   	item10.vertex = true;
+			   	bg.insert(item10);
+			    
+			   	var item11 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 16, 16), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item11.geometry.relative = true;
+			   	item11.geometry.offset = new mxPoint(-8, -8);
+			   	item11.vertex = true;
+			   	item10.insert(item11);
+			    
+			   	var item12 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 36, 36), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item12.geometry.relative = true;
+			   	item12.geometry.offset = new mxPoint(5, -55);
+			   	item12.vertex = true;
+			   	bg.insert(item12);
+			    
+			   	var item13 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 16, 16), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item13.geometry.relative = true;
+			   	item13.geometry.offset = new mxPoint(-8, -8);
+			   	item13.vertex = true;
+			   	item12.insert(item13);
+			    
+			   	var item14 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 1, 36, 36), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item14.geometry.relative = true;
+			   	item14.geometry.offset = new mxPoint(50, -55);
+			   	item14.vertex = true;
+			   	bg.insert(item14);
+			    
+			   	var item15 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 16, 16), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item15.geometry.relative = true;
+			   	item15.geometry.offset = new mxPoint(-8, -8);
+			   	item15.vertex = true;
+			   	item14.insert(item15);
+			    
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Card&#039;);
+			}),
+
+		   	this.addEntry(dt + &#039;card&#039;, function()
+		   	{
+			   	var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 200, 190), 
+					&#039;rounded=1;whiteSpace=wrap;html=1;strokeColor=#B3B3B3;arcSize=20;absoluteArcSize=1;&#039;);
+			   	bg.vertex = true;
+			   	
+			   	var item3 = new mxCell(&#039;Card Title&#039;, 
+					new mxGeometry(0, 0, 200, 30), 
+					&#039;shape=partialRectangle;whiteSpace=wrap;html=1;top=0;left=0;fillColor=none;right=0;fontStyle=1;align=left;strokeColor=#B3B3B3;spacingLeft=15;part=1;resizeWidth=1;&#039;);
+			   	item3.geometry.relative = true;
+			   	item3.geometry.offset = new mxPoint(0, 20);
+			   	item3.vertex = true;
+			   	bg.insert(item3);
+			    
+			   	var item4 = new mxCell(&#039;Attribute One&#039;, 
+					new mxGeometry(0, 0, 200, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=15;part=1;resizeWidth=1;&#039;);
+			   	item4.geometry.relative = true;
+			   	item4.geometry.offset = new mxPoint(0, 54);
+			   	item4.vertex = true;
+			   	bg.insert(item4);
+			    
+			   	var item5 = new mxCell(&#039;Attribute 02&#039;, 
+					new mxGeometry(0, 0, 200, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=15;part=1;resizeWidth=1;&#039;);
+			   	item5.geometry.relative = true;
+			   	item5.geometry.offset = new mxPoint(0, 78);
+			   	item5.vertex = true;
+			   	bg.insert(item5);
+			    
+			   	var item6 = new mxCell(&#039;Attribute Three 03&#039;, 
+					new mxGeometry(0, 0, 200, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=15;part=1;resizeWidth=1;&#039;);
+			   	item6.geometry.relative = true;
+			   	item6.geometry.offset = new mxPoint(0, 102);
+			   	item6.vertex = true;
+			   	bg.insert(item6);
+			    
+			   	var item7 = new mxCell(&#039;Attribute 04&#039;, 
+					new mxGeometry(0, 0, 200, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=15;part=1;resizeWidth=1;&#039;);
+			   	item7.geometry.relative = true;
+			   	item7.geometry.offset = new mxPoint(0, 126);
+			   	item7.vertex = true;
+			   	bg.insert(item7);
+			    
+			   	var item8 = new mxCell(&#039;Attribute 05&#039;, 
+					new mxGeometry(0, 0, 200, 24), 
+					&#039;text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=15;part=1;resizeWidth=1;&#039;);
+			   	item8.geometry.relative = true;
+			   	item8.geometry.offset = new mxPoint(0, 150);
+			   	item8.vertex = true;
+			   	bg.insert(item8);
+			    
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Card&#039;);
+			}),
+
+		   	this.addEntry(dt + &#039;card&#039;, function()
+		   	{
+			   	var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 200, 70), 
+					&#039;rounded=1;whiteSpace=wrap;html=1;strokeColor=#B3B3B3;arcSize=20;absoluteArcSize=1;&#039;);
+			   	bg.vertex = true;
+			   	
+			   	var item3 = new mxCell(&#039;Card Title&#039;, 
+					new mxGeometry(0, 0, 200, 30), 
+					&#039;shape=partialRectangle;whiteSpace=wrap;html=1;top=0;left=0;fillColor=none;right=0;fontStyle=1;align=left;strokeColor=#B3B3B3;spacingLeft=15;part=1;resizeWidth=1;&#039;);
+			   	item3.geometry.relative = true;
+			   	item3.geometry.offset = new mxPoint(0, 20);
+			   	item3.vertex = true;
+			   	bg.insert(item3);
+			    
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Card&#039;);
+			}),
+
+		   	this.addEntry(dt + &#039;card&#039;, function()
+		   	{
+			   	var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 200, 70), 
+					&#039;rounded=1;whiteSpace=wrap;html=1;strokeColor=#B3B3B3;arcSize=20;absoluteArcSize=1;&#039;);
+			   	bg.vertex = true;
+			   	
+			   	var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 46, 46), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item1.geometry.relative = true;
+			   	item1.geometry.offset = new mxPoint(15, 10);
+			   	item1.vertex = true;
+			   	bg.insert(item1);
+			    
+			   	var item2 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 19, 19), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item2.geometry.relative = true;
+			   	item2.geometry.offset = new mxPoint(-9.5, -9.5);
+			   	item2.vertex = true;
+			   	item1.insert(item2);
+			    
+			   	var item3 = new mxCell(&#039;Card Title&#039;, 
+					new mxGeometry(1, 0, 130, 30), 
+					&#039;shape=partialRectangle;whiteSpace=wrap;html=1;top=0;left=0;fillColor=none;right=0;fontStyle=1;align=left;strokeColor=#B3B3B3;part=1;&#039;);
+			   	item3.geometry.relative = true;
+			   	item3.geometry.offset = new mxPoint(-130, 20);
+			   	item3.vertex = true;
+			   	bg.insert(item3);
+			    
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Card&#039;);
+			}),
+
+		   	this.addEntry(dt + &#039;card&#039;, function()
+		   	{
+			   	var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 220, 160), 
+					&#039;rounded=1;whiteSpace=wrap;html=1;strokeColor=#B3B3B3;arcSize=20;absoluteArcSize=1;collapsible=0;recursiveResize=1;&#039;);
+			   	bg.vertex = true;
+			   	
+			   	var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 46, 46), 
+					&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#e5e5e5;part=1;&#039;);
+			   	item1.geometry.relative = true;
+			   	item1.geometry.offset = new mxPoint(15, 10);
+			   	item1.vertex = true;
+			   	bg.insert(item1);
+			    
+			   	var item2 = new mxCell(&#039;&#039;, new mxGeometry(0.5, 0.5, 19, 19), 
+					&#039;html=1;strokeColor=none;fillColor=#fd7298;part=1;&#039;);
+			   	item2.geometry.relative = true;
+			   	item2.geometry.offset = new mxPoint(-9.5, -9.5);
+			   	item2.vertex = true;
+			   	item1.insert(item2);
+			    
+			   	var item3 = new mxCell(&#039;Card Title&#039;, 
+					new mxGeometry(1, 0, 130, 30), 
+					&#039;shape=partialRectangle;whiteSpace=wrap;html=1;top=0;left=0;fillColor=none;right=0;fontStyle=1;align=left;strokeColor=#B3B3B3;part=1;&#039;);
+			   	item3.geometry.relative = true;
+			   	item3.geometry.offset = new mxPoint(-130, 20);
+			   	item3.vertex = true;
+			   	bg.insert(item3);
+			    
+			   	var bg2 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 200, 70), 
+					&#039;shape=rect;rounded=1;whiteSpace=wrap;html=1;strokeColor=#B3B3B3;arcSize=20;absoluteArcSize=1;part=1;resizeWidth=1;&#039;);
+			   	bg2.geometry.relative = true;
+			   	bg2.geometry.offset = new mxPoint(10, 70);
+			   	bg2.vertex = true;
+			   	bg.insert(bg2);
+
+			   	var item4 = new mxCell(&#039;Card Title&#039;, 
+					new mxGeometry(0, 0, 200, 30), 
+					&#039;shape=partialRectangle;whiteSpace=wrap;html=1;top=0;left=0;fillColor=none;right=0;fontStyle=1;align=left;strokeColor=#B3B3B3;spacingLeft=15;part=1;resizeWidth=1;&#039;);
+			   	item4.geometry.relative = true;
+			   	item4.vertex = true;
+			   	bg2.insert(item4);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Card&#039;);
+			}),
+
+			this.addEntry(&#039;relationship&#039;, function()
+			{
+		    	var cell1 = new mxCell(&#039;Relationship&#039;, new mxGeometry(50, 0, 80, 30), &#039;html=1;rounded=1;absoluteArcSize=1;arcSize=80;whiteSpace=wrap;fontSize=11;&#039;);
+		    	cell1.vertex = true;
+
+				var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 50, 0), &#039;edgeStyle=entityRelationEdgeStyle;html=1;startArrow=manyOptional;startFill=1;endArrow=none;rounded=0;endFill=0;&#039;);
+				edge1.geometry.setTerminalPoint(new mxPoint(0, 15), true);
+				edge1.geometry.relative = true;
+				edge1.edge = true;
+				cell1.insertEdge(edge1, false);
+				
+				var edge2 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 180, 0), &#039;edgeStyle=entityRelationEdgeStyle;html=1;endArrow=manyOptional;endFill=1;startArrow=none;rounded=0;startFill=0;&#039;);
+				edge2.geometry.setTerminalPoint(new mxPoint(180, 15), false);
+				edge2.geometry.relative = true;
+				edge2.edge = true;
+				cell1.insertEdge(edge2, true);
+
+				return sb.createEdgeTemplateFromCells([edge1, cell1, edge2], 130, 30, &#039;Relationship&#039;);
+			}),
+
+			this.addEntry(&#039;relationship&#039;, function()
+			{
+		    	var cell1 = new mxCell(&#039;Relationship&#039;, new mxGeometry(50, 0, 80, 30), &#039;html=1;rounded=1;absoluteArcSize=1;arcSize=80;whiteSpace=wrap;fontSize=11;&#039;);
+		    	cell1.vertex = true;
+
+				var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 50, 0), &#039;edgeStyle=entityRelationEdgeStyle;html=1;startArrow=manyOptional;startFill=0;endArrow=none;rounded=0;endFill=0;dashed=1;&#039;);
+				edge1.geometry.setTerminalPoint(new mxPoint(0, 15), true);
+				edge1.geometry.relative = true;
+				edge1.edge = true;
+				cell1.insertEdge(edge1, false);
+				
+				var edge2 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 180, 0), &#039;edgeStyle=entityRelationEdgeStyle;html=1;endArrow=manyOptional;endFill=0;startArrow=none;rounded=0;startFill=0;dashed=1;&#039;);
+				edge2.geometry.setTerminalPoint(new mxPoint(180, 15), false);
+				edge2.geometry.relative = true;
+				edge2.edge = true;
+				cell1.insertEdge(edge2, true);
+
+				return sb.createEdgeTemplateFromCells([edge1, cell1, edge2], 130, 30, &#039;Relationship&#039;);
+			}),
+
+			this.addEntry(&#039;integration&#039;, function()
+			{
+		    	var cell1 = new mxCell(&#039;Relationship&#039;, new mxGeometry(50, 0, 80, 30), &#039;html=1;rounded=1;absoluteArcSize=1;arcSize=80;whiteSpace=wrap;fontSize=11;&#039;);
+		    	cell1.vertex = true;
+
+				var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 50, 0), &#039;edgeStyle=entityRelationEdgeStyle;html=1;startArrow=blockThin;startFill=1;endArrow=none;rounded=0;endFill=0;&#039;);
+				edge1.geometry.setTerminalPoint(new mxPoint(0, 15), true);
+				edge1.geometry.relative = true;
+				edge1.edge = true;
+				cell1.insertEdge(edge1, false);
+				
+				var edge2 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 180, 0), &#039;edgeStyle=entityRelationEdgeStyle;html=1;endArrow=blockThin;endFill=1;startArrow=none;rounded=0;startFill=0;&#039;);
+				edge2.geometry.setTerminalPoint(new mxPoint(180, 15), false);
+				edge2.geometry.relative = true;
+				edge2.edge = true;
+				cell1.insertEdge(edge2, true);
+
+				return sb.createEdgeTemplateFromCells([edge1, cell1, edge2], 130, 30, &#039;Integration&#039;);
+			}),
+
+			this.addEntry(&#039;integration&#039;, function()
+			{
+		    	var cell1 = new mxCell(&#039;Relationship&#039;, new mxGeometry(50, 0, 80, 30), &#039;html=1;rounded=1;absoluteArcSize=1;arcSize=80;whiteSpace=wrap;fontSize=11;&#039;);
+		    	cell1.vertex = true;
+
+				var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 50, 0), &#039;edgeStyle=entityRelationEdgeStyle;html=1;startArrow=blockThin;startFill=1;endArrow=none;rounded=0;endFill=0;dashed=1;&#039;);
+				edge1.geometry.setTerminalPoint(new mxPoint(0, 15), true);
+				edge1.geometry.relative = true;
+				edge1.edge = true;
+				cell1.insertEdge(edge1, false);
+				
+				var edge2 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 180, 0), &#039;edgeStyle=entityRelationEdgeStyle;html=1;endArrow=blockThin;endFill=1;startArrow=none;rounded=0;startFill=0;dashed=1;&#039;);
+				edge2.geometry.setTerminalPoint(new mxPoint(180, 15), false);
+				edge2.geometry.relative = true;
+				edge2.edge = true;
+				cell1.insertEdge(edge2, true);
+
+				return sb.createEdgeTemplateFromCells([edge1, cell1, edge2], 130, 30, &#039;Integration&#039;);
+			}),
+
+		 	this.createEdgeTemplateEntry(&#039;edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=manyOptional;endFill=1;startArrow=none;rounded=0;startFill=0;&#039;, w, h, &#039;&#039;, &#039;Default Relationship Connector&#039;, null, dt + &#039;default relationship connector&#039;),
+		 	this.createEdgeTemplateEntry(&#039;edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=manyOptional;endFill=0;startArrow=none;rounded=0;startFill=0;dashed=1;&#039;, w, h, &#039;&#039;, &#039;Default Relationship Connector&#039;, null, dt + &#039;default relationship connector&#039;),
+		 	this.createEdgeTemplateEntry(&#039;edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=blockThin;endFill=1;startArrow=none;rounded=0;startFill=0;&#039;, w, h, &#039;&#039;, &#039;Default Relationship Connector&#039;, null, dt + &#039;default relationship connector&#039;),
+		 	this.createEdgeTemplateEntry(&#039;edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=blockThin;endFill=1;startArrow=none;rounded=0;startFill=0;dashed=1;&#039;, w, h, &#039;&#039;, &#039;Default Relationship Connector&#039;, null, dt + &#039;default relationship connector&#039;)
+		]);
+	};
+
+	Sidebar.prototype.addSalesforceProductPalette = function(w, h)
+	{
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;aspect=fixed;html=1;shape=mxgraph.salesforce.&#039;;
+		var gn = &#039;mxgraph.salesforce&#039;;
+		var dt = &#039;salesforce product &#039;;
+		this.addPaletteFunctions(&#039;salesforceProduct&#039;, &#039;Salesforce / Product&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;sales;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#04e1cb;fillColor3=#ffffff;fillColor4=#0b827c;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Sales&#039;, null, null, this.getTagsForStencil(gn, &#039;sales&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;service;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#e26e8c;fillColor3=#8a033e;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h * 0.82, &#039;&#039;, &#039;Service&#039;, null, null, this.getTagsForStencil(gn, &#039;service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;marketing;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#dd7a01;fillColor3=#ffffff;fillColor4=#ffba90;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Marketing&#039;, null, null, this.getTagsForStencil(gn, &#039;marketing&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;commerce;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#70bf75;fillColor3=#ffffff;fillColor4=#396547;fillColor=none;strokeColor=none;&#039;, w, h * 0.88, &#039;&#039;, &#039;Commerce&#039;, null, null, this.getTagsForStencil(gn, &#039;commerce&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;platform;fillColorStyles=fillColor2,fillColor3;strokeColorStyles=strokeColor2;fillColor2=#8a8ed1;fillColor3=#200d38;strokeColor2=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.65, h, &#039;&#039;, &#039;Platform&#039;, null, null, this.getTagsForStencil(gn, &#039;platform&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;analytics;fillColorStyles=fillColor2,fillColor3,fillColor4,fillColor5,fillColor6,fillColor7,fillColor8;fillColor2=#7099a6;fillColor3=#eb912c;fillColor4=#c72035;fillColor5=#1f447e;fillColor6=#59879b;fillColor7=#e8762c;fillColor8=#5b6591;fillColor=none;strokeColor=none;&#039;, w, h * 0.98, &#039;&#039;, &#039;Analytics&#039;, null, null, this.getTagsForStencil(gn, &#039;salesforce&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;integration;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Integration&#039;, null, null, this.getTagsForStencil(gn, &#039;integration&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;employees;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#d83a00;fillColor3=#ff784f;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.97, h, &#039;&#039;, &#039;Employees&#039;, null, null, this.getTagsForStencil(gn, &#039;employees&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;learning;fillColorStyles=fillColor2,fillColor3,fillColor4,fillColor5,fillColor6,fillColor7,fillColor8;fillColor2=#032d60;fillColor3=#009a44;fillColor4=#741b89;fillColor5=#a372b5;fillColor6=#90d0fe;fillColor7=#ffffff;fillColor8=#046a38;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Learning&#039;, null, null, this.getTagsForStencil(gn, &#039;learning&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;industries;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#481a54;fillColor3=#8c5ec6;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.89, h, &#039;&#039;, &#039;Industries&#039;, null, null, this.getTagsForStencil(gn, &#039;industries&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;partners;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#e4a201;fillColor3=#ffffff;fillColor4=#f9e3b6;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Partners&#039;, null, null, this.getTagsForStencil(gn, &#039;partners&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;success;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.68, h, &#039;&#039;, &#039;Success&#039;, null, null, this.getTagsForStencil(gn, &#039;success&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inbox;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#00857d;fillColor3=#00b2a9;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h * 0.75, &#039;&#039;, &#039;Inbox&#039;, null, null, this.getTagsForStencil(gn, &#039;inbox&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;field_service;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#7f2443;fillColor3=#d3679d;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.75, h, &#039;&#039;, &#039;Field Service&#039;, null, null, this.getTagsForStencil(gn, &#039;field service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;iot;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#7f2443;fillColor3=#c996b6;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;IoT&#039;, null, null, this.getTagsForStencil(gn, &#039;iot&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;social_studio;fillColorStyles=fillColor2,fillColor3,fillColor4,fillColor5;fillColor2=#ea7600;fillColor3=#fdb163;fillColor4=#ea7600;fillColor5=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Social Studio&#039;, null, null, this.getTagsForStencil(gn, &#039;social studio&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;customer_360;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032e61;fillColor3=#00a1e0;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h * 0.91, &#039;&#039;, &#039;Customer 360&#039;, null, null, this.getTagsForStencil(gn, &#039;customer 360&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;heroku;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#211746;fillColor3=#7673c0;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Heroku&#039;, null, null, this.getTagsForStencil(gn, &#039;heroku&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;work_com;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032e61;fillColor3=#00a1e0;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h * 0.98, &#039;&#039;, &#039;Work.com&#039;, null, null, this.getTagsForStencil(gn, &#039;work com&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;loyalty;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h * 0.68, &#039;&#039;, &#039;Loyalty&#039;, null, null, this.getTagsForStencil(gn, &#039;loyalty&#039;, dt).join(&#039; &#039;)),
+
+			this.createVertexTemplateEntry(s + &#039;sales2;fillColorStyles=fillColor2,fillColor3;fillColor2=#0b827c;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Sales&#039;, null, null, this.getTagsForStencil(gn, &#039;sales&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;service2;fillColorStyles=fillColor2,fillColor3;fillColor2=#8a033e;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Service&#039;, null, null, this.getTagsForStencil(gn, &#039;service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;marketing2;fillColorStyles=fillColor2,fillColor3;fillColor2=#dd7a01;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Marketing&#039;, null, null, this.getTagsForStencil(gn, &#039;marketing&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;commerce2;fillColorStyles=fillColor2,fillColor3;fillColor2=#396547;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Commerce&#039;, null, null, this.getTagsForStencil(gn, &#039;commerce&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;platform2;fillColorStyles=fillColor2,fillColor3;fillColor2=#200d38;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Platform&#039;, null, null, this.getTagsForStencil(gn, &#039;platform&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;analytics2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Analytics&#039;, null, null, this.getTagsForStencil(gn, &#039;salesforce&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;integration2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Integration&#039;, null, null, this.getTagsForStencil(gn, &#039;integration&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;employees2;fillColorStyles=fillColor2,fillColor3;fillColor2=#d83a00;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Employees&#039;, null, null, this.getTagsForStencil(gn, &#039;employees&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;learning2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Learning&#039;, null, null, this.getTagsForStencil(gn, &#039;learning&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;industries2;fillColorStyles=fillColor2,fillColor3;fillColor2=#481a54;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Industries&#039;, null, null, this.getTagsForStencil(gn, &#039;industries&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;partners2;fillColorStyles=fillColor2,fillColor3;fillColor2=#e4a201;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Partners&#039;, null, null, this.getTagsForStencil(gn, &#039;partners&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;success2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Success&#039;, null, null, this.getTagsForStencil(gn, &#039;success&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inbox2;fillColorStyles=fillColor2,fillColor3;fillColor2=#00857d;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Inbox&#039;, null, null, this.getTagsForStencil(gn, &#039;inbox&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;field_service2;fillColorStyles=fillColor2,fillColor3;fillColor2=#7f2443;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Field Service&#039;, null, null, this.getTagsForStencil(gn, &#039;field service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;iot2;fillColorStyles=fillColor2,fillColor3;fillColor2=#7f2443;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;IoT&#039;, null, null, this.getTagsForStencil(gn, &#039;iot&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;social_studio2;fillColorStyles=fillColor2,fillColor3;fillColor2=#ea7600;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Social Studio&#039;, null, null, this.getTagsForStencil(gn, &#039;social studio&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;customer_3602;fillColorStyles=fillColor2,fillColor3;fillColor2=#032e61;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Customer 360&#039;, null, null, this.getTagsForStencil(gn, &#039;customer 360&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;heroku2;fillColorStyles=fillColor2,fillColor3;fillColor2=#211746;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Heroku&#039;, null, null, this.getTagsForStencil(gn, &#039;heroku&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;work_com2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032e61;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Work.com&#039;, null, null, this.getTagsForStencil(gn, &#039;work com&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;loyalty2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Loyalty&#039;, null, null, this.getTagsForStencil(gn, &#039;loyalty&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+
+	Sidebar.prototype.addSalesforcePlatformPalette = function(w, h)
+	{
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;aspect=fixed;html=1;shape=mxgraph.salesforce.&#039;;
+		var gn = &#039;mxgraph.salesforce&#039;;
+		var dt = &#039;salesforce platform &#039;;
+		this.addPaletteFunctions(&#039;salesforcePlatform&#039;, &#039;Salesforce / Platform&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;apps;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.57, h, &#039;&#039;, &#039;Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;apps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;web;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h * 0.79, &#039;&#039;, &#039;Web&#039;, null, null, this.getTagsForStencil(gn, &#039;web&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;channels;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Channels&#039;, null, null, this.getTagsForStencil(gn, &#039;channels&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;bots;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h * 0.95, &#039;&#039;, &#039;Bots&#039;, null, null, this.getTagsForStencil(gn, &#039;bots&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;automation;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h * 0.97, &#039;&#039;, &#039;Automation&#039;, null, null, this.getTagsForStencil(gn, &#039;automation&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;workflow;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Workflow&#039;, null, null, this.getTagsForStencil(gn, &#039;workflow&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;personalization;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h * 0.75, &#039;&#039;, &#039;Personalization&#039;, null, null, this.getTagsForStencil(gn, &#039;personalization&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;builders;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.92, h, &#039;&#039;, &#039;Builders&#039;, null, null, this.getTagsForStencil(gn, &#039;builders&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;data;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.81, h, &#039;&#039;, &#039;Data&#039;, null, null, this.getTagsForStencil(gn, &#039;data&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;stream;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Stream&#039;, null, null, this.getTagsForStencil(gn, &#039;stream&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;segments;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Segments&#039;, null, null, this.getTagsForStencil(gn, &#039;segments&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;privacy;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032d60;fillColor3=#0d9dda;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.77, h, &#039;&#039;, &#039;Privacy&#039;, null, null, this.getTagsForStencil(gn, &#039;privacy&#039;, dt).join(&#039; &#039;)),
+
+			this.createVertexTemplateEntry(s + &#039;apps2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;apps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;web2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Web&#039;, null, null, this.getTagsForStencil(gn, &#039;web&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;channels2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Channels&#039;, null, null, this.getTagsForStencil(gn, &#039;channels&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;bots2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Bots&#039;, null, null, this.getTagsForStencil(gn, &#039;bots&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;automation2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Automation&#039;, null, null, this.getTagsForStencil(gn, &#039;automation&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;workflow2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Workflow&#039;, null, null, this.getTagsForStencil(gn, &#039;workflow&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;personalization2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Personalization&#039;, null, null, this.getTagsForStencil(gn, &#039;personalization&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;builders2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Builders&#039;, null, null, this.getTagsForStencil(gn, &#039;builders&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;data2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Data&#039;, null, null, this.getTagsForStencil(gn, &#039;data&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;stream2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Stream&#039;, null, null, this.getTagsForStencil(gn, &#039;stream&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;segments2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Segments&#039;, null, null, this.getTagsForStencil(gn, &#039;segments&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;privacy2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Privacy&#039;, null, null, this.getTagsForStencil(gn, &#039;privacy&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+
+	Sidebar.prototype.addSalesforceIndustryPalette = function(w, h)
+	{
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;aspect=fixed;html=1;shape=mxgraph.salesforce.&#039;;
+		var gn = &#039;mxgraph.salesforce&#039;;
+		var dt = &#039;salesforce industry&#039;;
+		this.addPaletteFunctions(&#039;salesforceIndustry&#039;, &#039;Salesforce / Industry&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;government;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor=none;strokeColor=none;&#039;, w * 0.86, h, &#039;&#039;, &#039;Government&#039;, null, null, this.getTagsForStencil(gn, &#039;government&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;media;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Media&#039;, null, null, this.getTagsForStencil(gn, &#039;media&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;consumer_goods;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.9, h, &#039;&#039;, &#039;Consumer Goods&#039;, null, null, this.getTagsForStencil(gn, &#039;consumer goods&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;transportation_and_technology;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Transportation and Technology&#039;, null, null, this.getTagsForStencil(gn, &#039;transportation and technology&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;financial_services;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.96, h, &#039;&#039;, &#039;Financial Services&#039;, null, null, this.getTagsForStencil(gn, &#039;financial services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;automotive;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Automotive&#039;, null, null, this.getTagsForStencil(gn, &#039;automotive&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;energy;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.75, h, &#039;&#039;, &#039;Energy&#039;, null, null, this.getTagsForStencil(gn, &#039;energy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;smb;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#032e61;fillColor3=#00a1e0;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h * 0.82, &#039;&#039;, &#039;SMB&#039;, null, null, this.getTagsForStencil(gn, &#039;smb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;communications;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.79, h, &#039;&#039;, &#039;Communications&#039;, null, null, this.getTagsForStencil(gn, &#039;communications&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;retail;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.75, h, &#039;&#039;, &#039;Retail&#039;, null, null, this.getTagsForStencil(gn, &#039;retail&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;manufacturing;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Manufacturing&#039;, null, null, this.getTagsForStencil(gn, &#039;manufacturing&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;health;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h * 0.84, &#039;&#039;, &#039;Health&#039;, null, null, this.getTagsForStencil(gn, &#039;health&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;philantrophy;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w * 0.83, h, &#039;&#039;, &#039;Philantrophy&#039;, null, null, this.getTagsForStencil(gn, &#039;philantrophy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;non_profit;fillColorStyles=fillColor2,fillColor3,fillColor4;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor4=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h * 0.93, &#039;&#039;, &#039;Non-profit&#039;, null, null, this.getTagsForStencil(gn, &#039;non profit&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;education;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#7d52c2;fillColor=none;strokeColor=none;&#039;, w, h * 0.67, &#039;&#039;, &#039;Education&#039;, null, null, this.getTagsForStencil(gn, &#039;education&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;sustainability;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#0d9dda;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Sustainability&#039;, null, null, this.getTagsForStencil(gn, &#039;sustainability&#039;, dt).join(&#039; &#039;)),
+
+			this.createVertexTemplateEntry(s + &#039;government2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Government&#039;, null, null, this.getTagsForStencil(gn, &#039;government&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;media2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Media&#039;, null, null, this.getTagsForStencil(gn, &#039;media&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;consumer_goods2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Consumer Goods&#039;, null, null, this.getTagsForStencil(gn, &#039;consumer goods&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;transportation_and_technology2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Transportation and Technology&#039;, null, null, this.getTagsForStencil(gn, &#039;transportation and technology&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;financial_services2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Financial Services&#039;, null, null, this.getTagsForStencil(gn, &#039;financial services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;automotive2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Automotive&#039;, null, null, this.getTagsForStencil(gn, &#039;automotive&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;energy2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Energy&#039;, null, null, this.getTagsForStencil(gn, &#039;energy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;smb2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032e61;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;SMB&#039;, null, null, this.getTagsForStencil(gn, &#039;smb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;communications2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Communications&#039;, null, null, this.getTagsForStencil(gn, &#039;communications&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;retail2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Retail&#039;, null, null, this.getTagsForStencil(gn, &#039;retail&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;manufacturing2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Manufacturing&#039;, null, null, this.getTagsForStencil(gn, &#039;manufacturing&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;health2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Health&#039;, null, null, this.getTagsForStencil(gn, &#039;health&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;philantrophy2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Philantrophy&#039;, null, null, this.getTagsForStencil(gn, &#039;philantrophy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;non_profit2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Non-profit&#039;, null, null, this.getTagsForStencil(gn, &#039;non profit&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;education2;fillColorStyles=fillColor2,fillColor3;fillColor2=#4c2248;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Education&#039;, null, null, this.getTagsForStencil(gn, &#039;education&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;sustainability2;fillColorStyles=fillColor2,fillColor3;fillColor2=#032d60;fillColor3=#ffffff;fillColor=none;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Sustainability&#039;, null, null, this.getTagsForStencil(gn, &#039;sustainability&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

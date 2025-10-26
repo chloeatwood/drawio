@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-ArchiMate3.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-ArchiMate3.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">61.30</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">551</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">61.30</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">15.05</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds ArchiMate v3.2 shapes
+	Sidebar.prototype.addArchimate3Palette = function()
+	{
+		this.setCurrentSearchEntryLibrary(&#039;archimate3&#039;, &#039;archimate3Generic&#039;);
+		this.addArchimate3GenericPalette();
+		this.setCurrentSearchEntryLibrary(&#039;archimate3&#039;, &#039;archimate3Relationships&#039;);
+		this.addArchimate3RelationshipsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;archimate3&#039;, &#039;archimate3Motivation&#039;);
+		this.addArchimate3MotivationPalette();
+		this.setCurrentSearchEntryLibrary(&#039;archimate3&#039;, &#039;archimate3Strategy&#039;);
+		this.addArchimate3StrategyPalette();
+		this.setCurrentSearchEntryLibrary(&#039;archimate3&#039;, &#039;archimate3Business&#039;);
+		this.addArchimate3BusinessPalette();
+		this.setCurrentSearchEntryLibrary(&#039;archimate3&#039;, &#039;archimate3Application&#039;);
+		this.addArchimate3ApplicationPalette();
+		this.setCurrentSearchEntryLibrary(&#039;archimate3&#039;, &#039;archimate3Technology&#039;);
+		this.addArchimate3TechnologyPalette();
+		this.setCurrentSearchEntryLibrary(&#039;archimate3&#039;, &#039;archimate3Implementation and Migration&#039;);
+		this.addArchimate3ImplementationAndMigrationPalette();
+	};
+	
+	Sidebar.prototype.addArchimate3GenericPalette = function()
+	{
+		var am = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#EBEBEB;shape=mxgraph.archimate3.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.archimate3&#039;;
+		var dt = &#039;archimate generic &#039;;
+		
+		var w = 1.0;
+		var h = 1.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(am + &#039;application;appType=generic;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Internal Active Structure Element&#039;, &#039;Internal Active Structure Element&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;internal active structure element&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=collab;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Collaboration&#039;, &#039;Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;collaboration&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;collaboration;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;collaboration&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=interface;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Interface&#039;, &#039;Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interface&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;interface;&#039;, 
+					w * 70, h * 35, &#039;&#039;, &#039;Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interface&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=generic;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Internal Behavior Element&#039;, &#039;Internal Behavior Element&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;internal behavior element&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=proc;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Process&#039;, &#039;Process&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;process&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;process;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Process&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;process&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=func;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Function&#039;, &#039;Function&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;function&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;function;&#039;, 
+					w * 45, h * 45, &#039;&#039;, &#039;Function&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;function&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=interaction;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Interaction&#039;, &#039;Interaction&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interaction&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;interaction;&#039;, 
+					w * 45, h * 45, &#039;&#039;, &#039;Interaction&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interaction&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=serv;archiType=rounded&#039;, 
+					w * 150, h * 75, &#039;Service&#039;, &#039;Service&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;service;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Service&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=event;archiType=rounded&#039;, 
+					w * 150, h * 75, &#039;Event&#039;, &#039;Event&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;event&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;event;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Event&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;event&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=passive;archiType=square&#039;, 
+					w * 150, h * 75, &#039;Passive Structure Element&#039;, &#039;Passive Structure Element&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;passive structure element&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;passive;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Passive Structure Element&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;passive structure element&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=generic;archiType=oct;&#039;, 
+					w * 150, h * 75, &#039;Motivation Element&#039;, &#039;Motivation Element&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;motivation element&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;html=1;outlineConnect=0;whiteSpace=wrap;shape=mxgraph.archimate3.application;appType=grouping;archiType=square;dashed=1;fillColor=none;&#039;, 
+					w * 150, h * 75, &#039;Grouping&#039;, &#039;Grouping&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;grouping&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;html=1;outlineConnect=0;whiteSpace=wrap;shape=mxgraph.archimate3.grouping;fillColor=none;dashed=1;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Grouping&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;grouping&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;html=1;outlineConnect=0;whiteSpace=wrap;shape=mxgraph.archimate3.application;appType=location;archiType=square;fillColor=#efd1e4;&#039;, 
+					w * 150, h * 75, &#039;Location&#039;, &#039;Location&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;location&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;html=1;outlineConnect=0;whiteSpace=wrap;shape=mxgraph.archimate3.locationIcon;fillColor=#efd1e4;aspect=fixed;&#039;, 
+					w * 35, h * 50, &#039;&#039;, &#039;Location&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;location&#039;).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;archimate3Generic&#039;, &#039;Archimate 3.2 / Generic&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+
+	Sidebar.prototype.addArchimate3ApplicationPalette = function()
+	{
+		var am = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#99ffff;shape=mxgraph.archimate3.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.archimate3&#039;;
+		var dt = &#039;archimate application layer &#039;;
+		
+		var w = 1.0;
+		var h = 1.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(am + &#039;application;appType=comp;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Application Component&#039;, &#039;Application Component&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;component&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;component;&#039;, 
+					w * 48, h * 40, &#039;&#039;, &#039;Component&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;component&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=collab;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Application Collaboration&#039;, &#039;Application Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;collaboration&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;collaboration;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;collaboration&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=interface;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Application Interface&#039;, &#039;Application Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;component&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;interface;&#039;, 
+					w * 70, h * 35, &#039;&#039;, &#039;Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interface&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=func;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Application Function&#039;, &#039;Application Function&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;function&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;function;&#039;, 
+					w * 60, h * 40, &#039;&#039;, &#039;Function&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;function&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=interaction;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Application Interaction&#039;, &#039;Application Interaction&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interaction&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;interaction;&#039;, 
+					w * 40, h * 40, &#039;&#039;, &#039;Interaction&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interaction&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=proc;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Application Process&#039;, &#039;Application Process&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;process&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;process;&#039;, 
+					w * 60, h * 30, &#039;&#039;, &#039;Process&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;process&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=event;archiType=rounded&#039;, 
+					w * 150, h * 75, &#039;Application Event&#039;, &#039;Application Event&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;event&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;event;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Event&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;event&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=serv;archiType=rounded&#039;, 
+					w * 150, h * 75, &#039;Application Service&#039;, &#039;Application Service&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;service;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Service&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=passive;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Data Object&#039;, &#039;Data Object&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;businessObject;overflow=fill;&#039;, 
+					w * 70, h * 40, &#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&lt;tr style=&quot;height:20px;&quot;&gt;&lt;td align=&quot;center&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;left&quot; valign=&quot;top&quot; style=&quot;padding:4px;&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;, 
+					&#039;Data Object&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;data object&#039;).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;archimate3Application&#039;, &#039;Archimate 3.2 / Application&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+
+	Sidebar.prototype.addArchimate3BusinessPalette = function()
+	{
+		var am2 = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.&#039;;
+		var am3 = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.archimate3.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.archimate3&#039;;
+		var dt = &#039;archimate business layer &#039;;
+		
+		var w = 1.0;
+		var h = 1.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=actor;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Business Actor&#039;, &#039;Business Actor&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;actor&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am3 + &#039;actor;&#039;, 
+					w * 26.5, h * 50, &#039;&#039;, &#039;Actor&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;actor&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=role;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Business Role&#039;, &#039;Business Role&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;role&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;role;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Business Role&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;role&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=collab;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Business Collaboration&#039;, &#039;Business Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;collaboration&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;collaboration;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;collaboration&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=interface;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Business Interface&#039;, &#039;Business Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;component&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;interface;&#039;, 
+					w * 70, h * 35, &#039;&#039;, &#039;Business Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interface&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=proc;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Business Process&#039;, &#039;Business Process&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;process&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;process;&#039;, 
+					w * 60, h * 30, &#039;&#039;, &#039;Business Process&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;process&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=func;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Business Function&#039;, &#039;Business Function&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;function&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;function;&#039;, 
+					w * 60, h * 40, &#039;&#039;, &#039;Business Function&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;function&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=interaction;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Business Interaction&#039;, &#039;Business Interaction&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interaction&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;interaction;&#039;, 
+					w * 40, h * 40, &#039;&#039;, &#039;Business Interaction&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interaction&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=event;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Business Event&#039;, &#039;Business Event&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;business event&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;event;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Business Event&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;business event&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=serv;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Business Service&#039;, &#039;Business Service&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;service;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Business Service&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=passive;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Business Object&#039;, &#039;Business Object&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;businessObject;overflow=fill;&#039;, 
+					w * 70, h * 40, &#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&lt;tr style=&quot;height:20px;&quot;&gt;&lt;td align=&quot;center&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;left&quot; valign=&quot;top&quot; style=&quot;padding:4px;&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;, 
+					&#039;Business Object&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;data object&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=contract;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Contract&#039;, &#039;Contract&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;contract&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;contract;&#039;, 
+					w * 70, h * 40, &#039;&#039;, &#039;Contract&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;contract&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=representation;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Representation&#039;, &#039;Representation&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;contract&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;representation;&#039;, 
+					w * 70, h * 40, &#039;&#039;, &#039;Representation&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;representation&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=product;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Product&#039;, &#039;Product&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;product&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;product;&#039;, 
+					w * 70, h * 40, &#039;&#039;, &#039;Product&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;product&#039;).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;archimate3Business&#039;, &#039;Archimate 3.2 / Business&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+
+	Sidebar.prototype.addArchimate3ImplementationAndMigrationPalette = function()
+	{
+		var am2 = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#FFE0E0;shape=mxgraph.archimate3.&#039;;
+		var am3 = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#E0FFE0;shape=mxgraph.archimate3.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.archimate3&#039;;
+		var dt = &#039;archimate implementation migration element &#039;;
+		
+		var w = 1.0;
+		var h = 1.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=workPackage;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Work Package&#039;, &#039;Work Package&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;work package&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;workPackage;strokeWidth=5;&#039;, 
+					w * 60, h * 50, &#039;&#039;, &#039;Work Package&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;work package&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=deliverable;&#039;, 
+					w * 150, h * 75, &#039;Deliverable&#039;, &#039;Deliverable&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;deliverable&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;deliverable;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Deliverable&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;deliverable&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=event;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Implementation Event&#039;, &#039;Implementation Event&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;implementation event&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;event;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Event&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;event&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=plateau;&#039;, 
+					w * 150, h * 75, &#039;Plateau&#039;, &#039;Plateau&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;plateau&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;plateau;&#039;, 
+					w * 60, h * 40, &#039;&#039;, &#039;Plateau&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;plateau&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;application;appType=gap;&#039;, 
+					w * 150, h * 75, &#039;Gap&#039;, &#039;Gap&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;gap&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am2 + &#039;gapIcon;&#039;, 
+					w * 55, h * 40, &#039;&#039;, &#039;Gap&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;gap&#039;).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;archimate3Implementation and Migration&#039;, &#039;Archimate 3.2 / Implementation and Migration&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addArchimate3MotivationPalette = function()
+	{
+		var am = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#CCCCFF;shape=mxgraph.archimate3.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.archimate3&#039;;
+		var dt = &#039;archimate implementation motivation element &#039;;
+		
+		var w = 1.0;
+		var h = 1.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(am + &#039;application;appType=role;archiType=oct;&#039;, 
+					w * 150, h * 75, &#039;Stakeholder&#039;, &#039;Stakeholder&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;stakeholder&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;role;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Stakeholder&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;stakeholder&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=driver;archiType=oct;&#039;, 
+					w * 150, h * 75, &#039;Driver&#039;, &#039;Driver&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;driver&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;driver;&#039;, 
+					w * 40, h * 40, &#039;&#039;, &#039;Driver&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;driver&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=assess;archiType=oct;&#039;, 
+					w * 150, h * 75, &#039;Assessment&#039;, &#039;Assessment&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;assessment&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;assess;&#039;, 
+					w * 40, h * 40, &#039;&#039;, &#039;Assessment&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;assessment&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=goal;archiType=oct;&#039;, 
+					w * 150, h * 75, &#039;Goal&#039;, &#039;Goal&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;goal&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;goal;&#039;, 
+					w * 40, h * 40, &#039;&#039;, &#039;Goal&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;goal&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=outcome;archiType=oct;&#039;, 
+					w * 150, h * 75, &#039;Outcome&#039;, &#039;Outcome&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;outcome&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;outcome;strokeWidth=2;&#039;, 
+					w * 60, h * 60, &#039;&#039;, &#039;Outcome&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;outcome&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=principle;archiType=oct;&#039;, 
+					w * 150, h * 75, &#039;Principle&#039;, &#039;Principle&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;principle&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;principle;strokeWidth=2;&#039;, 
+					w * 40, h * 40, &#039;&#039;, &#039;Principle&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;principle&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=requirement;archiType=oct;&#039;, 
+					w * 150, h * 75, &#039;Requirement&#039;, &#039;Requirement&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;requirement&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;requirement;&#039;, 
+					w * 70, h * 35, &#039;&#039;, &#039;Requirement&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;requirement&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=constraint;archiType=oct;&#039;, 
+					w * 150, h * 75, &#039;Constraint&#039;, &#039;Constraint&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;constraint&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;constraint;&#039;, 
+					w * 70, h * 35, &#039;&#039;, &#039;Constraint&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;constraint&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=meaning;archiType=oct;&#039;, 
+					w * 150, h * 75, &#039;Meaning&#039;, &#039;Meaning&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;meaning&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.basic.cloud_callout;html=1;whiteSpace=wrap;fillColor=#CCCCFF;&#039;, 
+					w * 70, h * 45, &#039;&#039;, &#039;Meaning&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;meaning&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=amValue;archiType=oct;&#039;, 
+					w * 150, h * 75, &#039;Value&#039;, &#039;Value&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;value&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=ellipse;html=1;whiteSpace=wrap;fillColor=#CCCCFF;&#039;, 
+					w * 70, h * 35, &#039;&#039;, &#039;Value&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;value&#039;).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;archimate3Motivation&#039;, &#039;Archimate 3.2 / Motivation&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addArchimate3RelationshipsPalette = function()
+	{
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.archimate3&#039;;
+		var dt = &#039;archimate relationship &#039;;
+		
+		var w = 1.0;
+		var h = 1.0;
+		
+		var fns =
+		[
+			this.createEdgeTemplateEntry(&#039;html=1;startArrow=diamondThin;startFill=1;edgeStyle=elbowEdgeStyle;elbow=vertical;startSize=10;endArrow=none;endFill=0;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Composition&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;composition&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;html=1;startArrow=diamondThin;startFill=0;edgeStyle=elbowEdgeStyle;elbow=vertical;startSize=10;endArrow=none;endFill=0;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Aggregation&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;aggregation&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;endArrow=block;html=1;endFill=1;startArrow=oval;startFill=1;edgeStyle=elbowEdgeStyle;elbow=vertical;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Assignment&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;assignment&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=block;elbow=vertical;endFill=0;dashed=1;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Realization&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;realization&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=open;elbow=vertical;endFill=1;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Serving&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;serving&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=none;elbow=vertical;dashed=1;startFill=0;dashPattern=1 4;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Access&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;access&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=open;elbow=vertical;endFill=0;dashed=1;startArrow=open;startFill=0;dashPattern=1 4;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Access&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;access&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=open;elbow=vertical;endFill=0;dashed=1;dashPattern=1 4;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Access&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;access&#039;).join(&#039; &#039;)),
+					
+			this.addEntry(&#039;uml influence&#039;, function()
+			{
+				var edge = new mxCell(&#039;+/-&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=open;elbow=vertical;endFill=0;dashed=1;dashPattern=6 4;&#039;);
+				edge.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+				edge.geometry.setTerminalPoint(new mxPoint(160, 0), false);
+				edge.geometry.relative = true;
+				edge.geometry.x = 1;
+				edge.geometry.y = 10;
+				edge.edge = true;
+			
+				return sb.createEdgeTemplateFromCells([edge], 160, 0, &#039;Influence&#039;);
+			}),
+					
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=none;elbow=vertical;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Association&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;association&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=openAsync;elbow=vertical;rounded=0;endFill=0;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Association&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;association&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=block;dashed=0;elbow=vertical;endFill=1;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Triggering&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;triggering&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;html=1;endArrow=block;dashed=1;elbow=vertical;endFill=1;dashPattern=6 4;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Flow&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;flow&#039;).join(&#039; &#039;)),
+			this.createEdgeTemplateEntry(&#039;endArrow=block;html=1;endFill=0;edgeStyle=elbowEdgeStyle;elbow=vertical;&#039;,
+					w * 160, 0, &#039;&#039;, &#039;Specialization&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;specialization&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;ellipse;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;fillColor=strokeColor&#039;, 
+					10, 10, &#039;&#039;, &#039;And Junction&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;junction&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;ellipse;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;fillColor=#ffffff&#039;, 
+					10, 10, &#039;&#039;, &#039;Or Junction&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;junction&#039;).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;archimate3Relationships&#039;, &#039;Archimate 3.2 / Relationships&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addArchimate3StrategyPalette = function()
+	{
+		var am = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#F5DEAA;shape=mxgraph.archimate3.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.archimate3&#039;;
+		var dt = &#039;archimate strategy &#039;;
+		
+		var w = 1.0;
+		var h = 1.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(am + &#039;application;appType=resource;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Resource&#039;, &#039;Resource&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;resource&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;resource;&#039;, 
+					w * 60, h * 40, &#039;&#039;, &#039;Resource&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;resource&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=capability;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Capability&#039;, &#039;Capability&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;capability&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;capability;&#039;, 
+					w * 40, h * 40, &#039;&#039;, &#039;Capability&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;capability&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=valueStream;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Value Stream&#039;, &#039;Value Stream&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;value stream&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;valueStream;&#039;, 
+					w * 70, h * 35, &#039;&#039;, &#039;Value Stream&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;value stream&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=course;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Course of Action&#039;, &#039;Course of Action&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;course action&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;course;&#039;, 
+					w * 40, h * 40, &#039;&#039;, &#039;Course of Action&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;course of action&#039;).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;archimate3Strategy&#039;, &#039;Archimate 3.2 / Strategy&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addArchimate3TechnologyPalette = function()
+	{
+		var am = &#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#AFFFAF;shape=mxgraph.archimate3.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.archimate3&#039;;
+		var dt = &#039;archimate technology &#039;;
+		
+		var w = 1.0;
+		var h = 1.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(am + &#039;application;appType=node;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Node&#039;, &#039;Node&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;node&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;node;&#039;, 
+					w * 70, h * 40, &#039;&#039;, &#039;Node&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;node&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=device;&#039;, 
+					w * 150, h * 75, &#039;Device&#039;, &#039;Device&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;device&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;device;&#039;, 
+					w * 70, h * 35, &#039;&#039;, &#039;Device&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;device&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=sysSw;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;System Software&#039;, &#039;System Software&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;system software&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;sysSw;&#039;, 
+					w * 40, h * 40, &#039;&#039;, &#039;System Software&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;device&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=collab;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Technology Collaboration&#039;, &#039;Technology Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;collaboration&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;collaboration;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;collaboration&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=interface;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Technology Interface&#039;, &#039;Technology Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;component&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;interface;&#039;, 
+					w * 70, h * 35, &#039;&#039;, &#039;Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interface&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=path;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Path&#039;, &#039;Path&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;communication network&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;path;strokeWidth=6;&#039;, 
+					w * 100, h * 30, &#039;&#039;, &#039;Path&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;path&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=netw;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Communication Network&#039;, &#039;Communication Network&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;communication network&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;network;&#039;, 
+					w * 65, h * 50, &#039;&#039;, &#039;Communication Network&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;communication network&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=func;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Technology Function&#039;, &#039;Technology Function&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;function&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;function;&#039;, 
+					w * 60, h * 40, &#039;&#039;, &#039;Function&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;function&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=proc;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Technology Process&#039;, &#039;Technology Process&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;process&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;process;&#039;, 
+					w * 70, h * 35, &#039;&#039;, &#039;Process&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;process&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=interaction;archiType=rounded;&#039;, 
+					w * 150, h * 75, &#039;Technology Interaction&#039;, &#039;Technology Interaction&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interaction&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;interaction;&#039;, 
+					w * 40, h * 40, &#039;&#039;, &#039;Interaction&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;interaction&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=event;archiType=rounded&#039;, 
+					w * 150, h * 75, &#039;Technology Event&#039;, &#039;Technology Event&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;event&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;event;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Event&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;event&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=serv;archiType=rounded&#039;, 
+					w * 150, h * 75, &#039;Technology Service&#039;, &#039;Technology Service&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;service;&#039;, 
+					w * 60, h * 35, &#039;&#039;, &#039;Service&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;service&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=artifact;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Artifact&#039;, &#039;Artifact&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;artifact&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#AFFFAF;shape=note;size=14;&#039;, 
+					w * 70, h * 35, &#039;&#039;, &#039;Artifact&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;artifact&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=equipment;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Equipment&#039;, &#039;Equipment&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;artifact&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;equipment;&#039;,
+					w * 50, h * 50, &#039;&#039;, &#039;Equipment&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;artifact&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=facility;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Facility&#039;, &#039;Facility&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;facility&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;facility;&#039;,
+					w * 60, h * 40, &#039;&#039;, &#039;Facility&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;facility&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=distribution;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Distribution Network&#039;, &#039;Distribution Network&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;distribution network&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;distribution;strokeWidth=4;&#039;,
+					w * 70, h * 30, &#039;&#039;, &#039;Distribution Network&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;distribution network&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;application;appType=material;archiType=square;&#039;, 
+					w * 150, h * 75, &#039;Material&#039;, &#039;Material&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;material&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(am + &#039;material;&#039;, 
+					w * 60, h * 50, &#039;&#039;, &#039;Material&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;material&#039;).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;archimate3Technology&#039;, &#039;Archimate 3.2 / Technology&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

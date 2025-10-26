@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-AWS3D.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-AWS3D.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">60.19</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">165</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">22.11</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">5.27</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds AWS 3D shapes
+	Sidebar.prototype.addAWS3DPalette = function()
+	{
+		var w = 100;
+		var h = 100;
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039; + mxConstants.STYLE_STROKEWIDTH + &#039;=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.&#039;;
+		var gn = &#039;mxgraph.aws3d&#039;;
+		var dt = &#039;aws 3d amazon web service&#039;;
+		this.setCurrentSearchEntryLibrary(&#039;aws3d&#039;);
+
+		this.addPaletteFunctions(&#039;aws3d&#039;, &#039;AWS 3D&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;ami;aspect=fixed;fillColor=#E8CA45;strokeColor=#FFF215;strokeColor2=#292929;&#039;, 
+					w * 0.92, h * 0.6, &#039;&#039;, &#039;AMI&#039;, null, null, this.getTagsForStencil(gn, &#039;ami&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ami2;aspect=fixed;fillColor=#FF9900;strokeColor=#ffffff;strokeColor2=#292929;&#039;, 
+					w * 0.74, h * 0.5, &#039;&#039;, &#039;AMI&#039;, null, null, this.getTagsForStencil(gn, &#039;ami&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;application;fillColor=#4286c5;strokeColor=#57A2D8;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 0.62, h * 0.688, &#039;&#039;, &#039;Application&#039;, null, null, this.getTagsForStencil(gn, &#039;application&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;application2;fillColor=#86E83A;strokeColor=#B0F373;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 0.62, h * 0.53, &#039;&#039;, &#039;Application&#039;, null, null, this.getTagsForStencil(gn, &#039;application&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;application_server;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.23, h * 1.24, &#039;&#039;, &#039;EC2 Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;ec2 instance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;client;aspect=fixed;strokeColor=none;fillColor=#777777;&#039;, 
+					w * 0.6, h * 1.04, &#039;&#039;, &#039;Client&#039;, null, null, this.getTagsForStencil(gn, &#039;client&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cloudfront;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.038, h * 1.698, &#039;&#039;, &#039;CloudFront&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudfront&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;file;aspect=fixed;strokeColor=#2d6195;fillColor=#ffffff;&#039;, 
+					w * 0.308, h * 0.706, &#039;&#039;, &#039;Content&#039;, null, null, this.getTagsForStencil(gn, &#039;content&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;customerGateway;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.167, h * 1.028, &#039;&#039;, &#039;Customer Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;customer gateway&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dataCenter;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.23, h * 1.42, &#039;&#039;, &#039;Data Center&#039;, null, null, this.getTagsForStencil(gn, &#039;data center&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dataServer;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.23, h * 1.06, &#039;&#039;, &#039;Data Server&#039;, null, null, this.getTagsForStencil(gn, &#039;data server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;decider;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 0.74, h * 0.5, &#039;&#039;, &#039;Decider&#039;, null, null, this.getTagsForStencil(gn, &#039;decider&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dynamoDb;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.815, h * 2.1, &#039;&#039;, &#039;DynamoDB&#039;, null, null, this.getTagsForStencil(gn, &#039;dynamodb db database&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ebs;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 0.92, h * 0.6, &#039;&#039;, &#039;EBS&#039;, null, null, this.getTagsForStencil(gn, &#039;ebs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ebs2;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 0.92, h * 0.6, &#039;&#039;, &#039;EBS&#039;, null, null, this.getTagsForStencil(gn, &#039;ebs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;elasticBeanstalk;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.82, h * 1.4, &#039;&#039;, &#039;Elastic Beanstalk&#039;, null, null, this.getTagsForStencil(gn, &#039;elastic beanstalk&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;elasticLoadBalancing;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 0.92, h * 0.8817, &#039;&#039;, &#039;Elastic Load Balancing&#039;, null, null, this.getTagsForStencil(gn, &#039;elastic load balancing elb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;elasticMapReduce;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.23, h * 1.33, &#039;&#039;, &#039;Elastic MapReduce&#039;, null, null, this.getTagsForStencil(gn, &#039;elastic mapreduce&#039;, dt).join(&#039; &#039;)),
+					
+		   	this.addEntry(dt + &#039;elasticache&#039;, function()
+	   		{
+			   	var bg1 = new mxCell(&#039;&#039;, new mxGeometry(70, 0, 123, 124), s + &#039;application_server;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;);
+			   	bg1.vertex = true;
+			   	var bg2 = new mxCell(&#039;&#039;, new mxGeometry(0, 40, 123, 124), s + &#039;application_server;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;);
+			   	bg2.vertex = true;
+			   	var bg3 = new mxCell(&#039;&#039;, new mxGeometry(140, 40, 123, 124), s + &#039;application_server;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;);
+			   	bg3.vertex = true;
+			   	var bg4 = new mxCell(&#039;&#039;, new mxGeometry(70, 80, 123, 124), s + &#039;application_server;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;);
+			   	bg4.vertex = true;
+				
+		   		return sb.createVertexTemplateFromCells([bg1, bg2, bg3, bg4], 264, 204, &#039;Elasticache&#039;);
+			}),
+	
+			this.createVertexTemplateEntry(s + &#039;email;aspect=fixed;strokeColor=#292929;&#039;, 
+					w * 0.43, h * 0.57, &#039;&#039;, &#039;Email&#039;, null, null, this.getTagsForStencil(gn, &#039;email&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;email_service;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.51, h * 1.92, &#039;&#039;, &#039;Email Service&#039;, null, null, this.getTagsForStencil(gn, &#039;email service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;file;aspect=fixed;strokeColor=#292929;&#039;, 
+					w * 0.308, h * 0.706, &#039;&#039;, &#039;File&#039;, null, null, this.getTagsForStencil(gn, &#039;file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;glacier;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.81, h * 1.92, &#039;&#039;, &#039;Glacier&#039;, null, null, this.getTagsForStencil(gn, &#039;glacier&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;image;strokeColor=none;fillColor=#777777;aspect=fixed;&#039;, 
+					w * 0.5, h * 0.86, &#039;&#039;, &#039;Image/Video&#039;, null, null, this.getTagsForStencil(gn, &#039;image video&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;internetGateway;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.167, h * 1.028, &#039;&#039;, &#039;Internet Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;internet gateway&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;lambda;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;strokeColor3=#ffffff;&#039;, 
+					w * 0.92, h * 1.095, &#039;&#039;, &#039;Lambda&#039;, null, null, this.getTagsForStencil(gn, &#039;lambda&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;mobile_worker;aspect=fixed;strokeColor=none;fillColor=#777777;&#039;, 
+					w * 0.36, h * 0.90, &#039;&#039;, &#039;Mobile Worker&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile worker&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;oracleDataCenter;fillColor=#ffffff;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;fillColor2=#ff0000;fillColor3=#ffffff;&#039;, 
+					w * 1.23, h * 1.42, &#039;&#039;, &#039;Oracle Data Center&#039;, null, null, this.getTagsForStencil(gn, &#039;oracle data center&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;oracleDbServer;fillColor=#ffffff;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;fillColor2=#ff0000;fillColor3=#ffffff;&#039;, 
+					w * 1.23, h * 1.33, &#039;&#039;, &#039;Oracle Database Server&#039;, null, null, this.getTagsForStencil(gn, &#039;oracle database server db&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;oracleServer;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;fillColor2=#ff0000;fillColor3=#ffffff;&#039;, 
+					w * 1.23, h * 1.42, &#039;&#039;, &#039;Oracle Server&#039;, null, null, this.getTagsForStencil(gn, &#039;oracle server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rds;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;strokeColor3=#ffffff;&#039;, 
+					w * 1.23, h * 1.33, &#039;&#039;, &#039;RDS&#039;, null, null, this.getTagsForStencil(gn, &#039;rds&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rdsMaster;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.23, h * 1.33, &#039;&#039;, &#039;RDS Master&#039;, null, null, this.getTagsForStencil(gn, &#039;rds master&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rdsSlave;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.23, h * 1.33, &#039;&#039;, &#039;RDS Slave&#039;, null, null, this.getTagsForStencil(gn, &#039;rds slave&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;redshift;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.50, h * 1.90, &#039;&#039;, &#039;Redshift&#039;, null, null, this.getTagsForStencil(gn, &#039;redshift&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;route53;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.1717, h * 1.344, &#039;&#039;, &#039;Route 53&#039;, null, null, this.getTagsForStencil(gn, &#039;route&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;s3;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 2.315, h * 2.39, &#039;&#039;, &#039;S3&#039;, null, null, this.getTagsForStencil(gn, &#039;s3&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;s3Bucket;fillColor=#4286c5;strokeColor=#57A2D8;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 0.615, h * 0.638, &#039;&#039;, &#039;S3 Bucket&#039;, null, null, this.getTagsForStencil(gn, &#039;s3 bucket&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;searchEngine;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.80, h * 1.92, &#039;&#039;, &#039;Search Engine&#039;, null, null, this.getTagsForStencil(gn, &#039;search engine&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;secureConnection;fillColor=#000000;strokeColor=#ffffff;aspect=fixed;&#039;, 
+					w * 0.57, h * 0.34, &#039;&#039;, &#039;Secure Connection&#039;, null, null, this.getTagsForStencil(gn, &#039;secure connection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;securityTokenService;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.80, h * 1.92, &#039;&#039;, &#039;Security Token Service&#039;, null, null, this.getTagsForStencil(gn, &#039;security token service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;simpleDb;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.23, h * 1.33, &#039;&#039;, &#039;SimpleDB&#039;, null, null, this.getTagsForStencil(gn, &#039;simpledb simple db database&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;simpleDb2;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.815, h * 1.926, &#039;&#039;, &#039;SimpleDB&#039;, null, null, this.getTagsForStencil(gn, &#039;simpledb simple db database&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;snapshot;fillColor=#4286c5;strokeColor=#57A2D8;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 0.92, h * 0.6, &#039;&#039;, &#039;Snapshot&#039;, null, null, this.getTagsForStencil(gn, &#039;snapshot&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;instance;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.23, h * 0.97, &#039;&#039;, &#039;Spot Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;spot instance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;sqs;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.84, h * 2.1275, &#039;&#039;, &#039;SQS&#039;, null, null, this.getTagsForStencil(gn, &#039;sqs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;end_user;strokeColor=none;fillColor=#777777;aspect=fixed;&#039;, 
+					w * 0.49, h * 1.0046, &#039;&#039;, &#039;User&#039;, null, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;vpcGateway;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.167, h * 1.028, &#039;&#039;, &#039;VPC Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;vpc gateway&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;worker;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 0.74, h * 0.5, &#039;&#039;, &#039;Worker&#039;, null, null, this.getTagsForStencil(gn, &#039;worker&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;workflowService;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;strokeColor2=#292929;&#039;, 
+					w * 1.822, h * 1.484, &#039;&#039;, &#039;Workflow Service&#039;, null, null, this.getTagsForStencil(gn, &#039;workflow service&#039;, dt).join(&#039; &#039;)),
+
+			this.createVertexTemplateEntry(s + &#039;arrowNE;fillColor=#000000;aspect=fixed;&#039;, 
+					w * 0.455, h * 0.26, &#039;&#039;, &#039;Arrow NE&#039;, null, null, this.getTagsForStencil(gn, &#039;arrow ne north east northeast&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;arrowSE;fillColor=#000000;aspect=fixed;&#039;, 
+					w * 0.455, h * 0.26, &#039;&#039;, &#039;Arrow SE&#039;, null, null, this.getTagsForStencil(gn, &#039;arrow ne north east northeast&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;arrowSW;fillColor=#000000;aspect=fixed;&#039;, 
+					w * 0.455, h * 0.26, &#039;&#039;, &#039;Arrow SW&#039;, null, null, this.getTagsForStencil(gn, &#039;arrow ne north east northeast&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;arrowNW;fillColor=#000000;aspect=fixed;&#039;, 
+					w * 0.455, h * 0.26, &#039;&#039;, &#039;Arrow NW&#039;, null, null, this.getTagsForStencil(gn, &#039;arrow ne north east northeast&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;arrowlessNE;fillColor=#000000;aspect=fixed;&#039;, 
+					w * 0.316, h * 0.18, &#039;&#039;, &#039;Arrowless NE&#039;, null, null, this.getTagsForStencil(gn, &#039;arrow ne north east northeast&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dashedEdgeDouble2;strokeColor=#2D6195;aspect=fixed;&#039;, 
+					w * 0.316, h * 0.18, &#039;&#039;, &#039;Dashed Edge Double Arrow&#039;, null, null, this.getTagsForStencil(gn, &#039;arrow ne north east northeast&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dashedArrowlessEdge2;strokeColor=#2D6195;aspect=fixed;&#039;, 
+					w * 0.316, h * 0.18, &#039;&#039;, &#039;Dashed Arrowless Edge&#039;, null, null, this.getTagsForStencil(gn, &#039;arrow ne north east northeast&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dashedEdge2;strokeColor=#2D6195;aspect=fixed;&#039;, 
+					w * 0.316, h * 0.18, &#039;&#039;, &#039;Dashed Edge&#039;, null, null, this.getTagsForStencil(gn, &#039;arrow ne north east northeast&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;flatEdge2;strokeColor=none;fillColor=#F4B934;aspect=fixed;&#039;, 
+					w * 0.632, h * 0.36, &#039;&#039;, &#039;Flat Edge&#039;, null, null, this.getTagsForStencil(gn, &#039;arrow ne north east northeast&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;flatDoubleEdge2;strokeColor=none;fillColor=#F4B934;aspect=fixed;&#039;, 
+					w * 2.528, h * 1.44, &#039;&#039;, &#039;Flat Double Edge&#039;, null, null, this.getTagsForStencil(gn, &#039;arrow ne north east northeast&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;arrowhead2;fillColor=#000000;aspect=fixed;&#039;, 
+					w * 0.19, h * 0.11, &#039;&#039;, &#039;Arrowhead&#039;, null, null, this.getTagsForStencil(gn, &#039;arrowhead&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;edge2;strokeColor=#000000;aspect=fixed;&#039;, 
+					w * 0.97, h * 1.074, &#039;&#039;, &#039;Edge&#039;, null, null, this.getTagsForStencil(gn, &#039;edge&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;reference2;fillColor=#2d6195;strokeColor=none;aspect=fixed;&#039;, 
+					w * 0.295, h * 0.195, &#039;&#039;, &#039;Reference&#039;, null, null, this.getTagsForStencil(gn, &#039;reference&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;spot2;fillColor=#F4B934;strokeColor=none;aspect=fixed;&#039;, 
+					w * 0.62, h * 0.36, &#039;&#039;, &#039;Spot&#039;, null, null, this.getTagsForStencil(gn, &#039;spot&#039;, dt).join(&#039; &#039;)),
+		 	this.createEdgeTemplateEntry(&#039;edgeStyle=isometricEdgeStyle;endArrow=none;html=1;&#039;, 50, 100, &#039;isometric edge&#039;, &#039;Isometric Edge 1&#039;),
+		 	this.createEdgeTemplateEntry(&#039;edgeStyle=isometricEdgeStyle;endArrow=none;html=1;elbow=vertical;&#039;, 50, 100, &#039;isometric edge&#039;, &#039;Isometric Edge 2&#039;)
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

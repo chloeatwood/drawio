@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\mxFreehand.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\mxFreehand.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">61.30</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">552</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">71.68</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">5.25</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+function mxFreehand(graph)
+{
+	// Graph must have a container
+	var svgElement = (graph.view != null &amp;&amp; graph.view.canvas != null) ? graph.view.canvas.ownerSVGElement : null;
+	
+	if (graph.container == null || svgElement == null)
+	{
+		return;
+	}
+	
+	// Stops drawing on escape
+	graph.addListener(mxEvent.ESCAPE, mxUtils.bind(this, function()
+	{
+		this.stopDrawing();
+	}));
+	
+	//Code inspired by https://stackoverflow.com/questions/40324313/svg-smooth-freehand-drawing
+	var bufferSize = mxFreehand.prototype.MILD_SMOOTHING;
+	var path = null;
+	var partPathes = [];
+	var strPath;
+	var drawPoints = [];
+	var lastPart;
+	var closedPath = false; 
+	var autoClose = true;
+	var autoInsert = true;
+	var autoScroll = true;
+	var openFill = true;
+	var buffer = []; // Contains the last positions of the mouse cursor
+	var enabled = false;
+	var stopClickEnabled = false;
+	var selectInserted = false;
+	var currentStrokeColor = &#039;default&#039;;
+	var perfectFreehandOptions = {
+		size: 5,
+		thinning: 0.5,
+		smoothing: 0.5,
+		streamline: 0.5,
+	//	easing: (t) =&gt; t,
+		start: {
+		  taper: 0,
+	//	  easing: (t) =&gt; t,
+		  cap: true
+		},
+		end: {
+		  taper: 0,
+	//	  easing: (t) =&gt; t,
+		  cap: true
+		}
+	};
+
+	var perfectFreehandMode = true;
+
+	this.setClosedPath = function(isClosed)//TODO add closed settings
+	{
+		closedPath = isClosed;
+	};
+	
+	this.setAutoClose = function(isAutoClose)//TODO add auto closed settings
+	{
+		autoClose = isAutoClose;
+	};
+
+	this.setAutoInsert = function(value)
+	{
+		autoInsert = value;
+	};
+	
+	this.setAutoScroll = function(value)
+	{
+		autoScroll = value;
+	};
+		
+	this.setOpenFill = function(value)
+	{
+		openFill = value;
+	};
+	
+	this.setStopClickEnabled = function(enabled)
+	{
+		stopClickEnabled = enabled;
+	};
+
+	this.setSelectInserted = function(value)
+	{
+		selectInserted = value;
+	};
+
+	this.setSmoothing = function(smoothing)
+	{
+		bufferSize = smoothing;
+	};
+
+	this.getSmoothing = function()
+	{
+		return bufferSize;
+	};
+	
+	this.setPerfectFreehandMode = function(value)
+	{
+		perfectFreehandMode = value;
+	};
+
+	this.isPerfectFreehandMode = function()
+	{
+		return perfectFreehandMode;
+	};
+
+	this.setBrushSize = function(value)
+	{
+		perfectFreehandOptions.size = value;
+	};
+
+	this.getBrushSize = function()
+	{
+		return perfectFreehandOptions.size;
+	};
+
+	var setEnabled = function(isEnabled)
+	{
+		enabled = isEnabled;
+		graph.getRubberband().setEnabled(!isEnabled);
+		graph.graphHandler.setSelectEnabled(!isEnabled);
+		graph.graphHandler.setMoveEnabled(!isEnabled);
+		graph.container.style.cursor = (isEnabled) ? &#039;crosshair&#039; : &#039;&#039;;
+		graph.fireEvent(new mxEventObject(&#039;freehandStateChanged&#039;));
+	};
+	
+	this.startDrawing = function()
+	{
+		setEnabled(true);
+	}
+	
+	this.isDrawing = function()
+	{
+		return enabled;
+	};
+	
+	var endPath = mxUtils.bind(this, function(e)
+	{
+	    if (path)
+	    {
+			var lastLength = lastPart.length;
+		
+	    	// Click stops drawing
+	    	var doStop = stopClickEnabled &amp;&amp; drawPoints.length &gt; 0 &amp;&amp;
+	    		lastPart != null &amp;&amp; lastPart.length &lt; 2;
+			
+			if (!doStop)
+			{
+				drawPoints.push.apply(drawPoints, lastPart);
+			}
+			
+	        lastPart = [];
+			drawPoints.push(null);
+	        partPathes.push(path);
+	        path = null;
+	        
+			if (doStop || autoInsert)
+			{
+				this.stopDrawing();
+			}
+			
+			if (autoInsert &amp;&amp; (!doStop || lastLength &gt;= 2))
+			{
+				this.startDrawing();
+			}
+			
+	        mxEvent.consume(e);
+	    }
+	});
+
+	// Used to retrieve default styles
+	var edge = new mxCell();
+	edge.edge = true;
+
+	this.getStrokeColor = function(allowDefault)
+	{
+		var strokeColor = (currentStrokeColor != null) ? currentStrokeColor :
+			mxUtils.getValue(graph.currentVertexStyle, mxConstants.STYLE_STROKECOLOR,
+			mxUtils.getValue(graph.getCurrentCellStyle(edge),
+			mxConstants.STYLE_STROKECOLOR, &#039;#000&#039;))
+
+		if (strokeColor == &#039;default&#039; &amp;&amp; !allowDefault)
+		{
+			strokeColor = graph.shapeForegroundColor;
+		}
+
+		return strokeColor;
+	};
+
+	this.setStrokeColor = function(value)
+	{
+		currentStrokeColor = value;
+	};
+
+	this.createStyle = function(stencil)
+	{
+		var style = &#039;;fillColor=none;&#039;;
+
+		if (perfectFreehandMode)
+		{
+			style = &#039;;lineShape=1;&#039;;
+		}
+
+		style += &#039;strokeColor=&#039; + this.getStrokeColor(true) + &#039;;&#039;;
+
+		return mxConstants.STYLE_SHAPE + &#039;=&#039; + stencil + style;
+	};
+	
+	this.stopDrawing = function() 
+	{
+	    if (partPathes.length &gt; 0)
+	    {
+			if (perfectFreehandMode)
+			{
+				var tmpPoints = [];
+				
+				for (var i = 0; i &lt; drawPoints.length; i++) 
+				{
+					if (drawPoints[i] != null)
+					{
+						tmpPoints.push([drawPoints[i].x, drawPoints[i].y]);
+					}
+				}
+
+				var output = PerfectFreehand.getStroke(tmpPoints, perfectFreehandOptions);
+				drawPoints = [];
+				
+				for (var i = 0; i &lt; output.length; i++) 
+				{
+					drawPoints.push({x: output[i][0], y: output[i][1]});
+				}
+				
+				drawPoints.push(null);
+			}
+
+	        var maxX = drawPoints[0].x, minX = drawPoints[0].x, maxY = drawPoints[0].y, minY = drawPoints[0].y;
+	        
+	        for (var i = 1; i &lt; drawPoints.length; i++) 
+	        {
+	        	if (drawPoints[i] == null) continue;
+	        	
+	        	maxX = Math.max(maxX, drawPoints[i].x);
+	        	minX = Math.min(minX, drawPoints[i].x);
+	        	maxY = Math.max(maxY, drawPoints[i].y);
+	        	minY = Math.min(minY, drawPoints[i].y);
+	        }
+	        
+	        var w = maxX - minX, h = maxY - minY;
+
+	        if (w &gt; 0 &amp;&amp; h &gt; 0)
+	        {
+		        var xScale = 100 / w;
+		        var yScale = 100 / h;
+		        
+		        drawPoints.map(function(p) 
+		        {
+		        	if (p == null) return p;
+		        	
+		        	p.x = (p.x - minX) * xScale;
+		        	p.y = (p.y - minY) * yScale;
+		        	return p;
+		        });
+		        
+		        //toFixed(2) to reduce size of output
+		        var drawShape = &#039;&lt;shape strokewidth=&quot;inherit&quot;&gt;&lt;foreground&gt;&#039;;
+		        
+		        var start = 0;
+		        
+		        for (var i = 0; i &lt; drawPoints.length; i++) 
+		        {
+		        	var p = drawPoints[i];
+
+		        	if (p == null)
+	        		{
+		        		var tmpClosedPath = false;
+				        var startP =  drawPoints[start], endP = drawPoints[i - 1];
+				        
+				        if (!closedPath &amp;&amp; autoClose)
+				        {
+					        var xdiff = startP.x - endP.x, ydiff = startP.y - endP.y;
+					        var startEndDist = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
+					        
+					        tmpClosedPath = startEndDist &lt;= graph.tolerance;
+				        }
+				        
+				        if (closedPath || tmpClosedPath) 
+			        	{
+				        	drawShape += &#039;&lt;line x=&quot;&#039;+ startP.x.toFixed(2) + &#039;&quot; y=&quot;&#039; + startP.y.toFixed(2) + &#039;&quot;/&gt;&#039;;
+			        	}
+				        
+		        		drawShape += &#039;&lt;/path&gt;&#039; + ((openFill || closedPath || tmpClosedPath)? &#039;&lt;fillstroke/&gt;&#039; : &#039;&lt;stroke/&gt;&#039;);
+		        		start = i + 1;
+	        		}
+		        	else if (i == start)
+	        		{
+		        		drawShape += &#039;&lt;path&gt;&lt;move x=&quot;&#039;+ p.x.toFixed(2) + &#039;&quot; y=&quot;&#039; + p.y.toFixed(2) + &#039;&quot;/&gt;&#039;
+	        		}
+		        	else
+		        	{
+		        		drawShape += &#039;&lt;line x=&quot;&#039;+ p.x.toFixed(2) + &#039;&quot; y=&quot;&#039; + p.y.toFixed(2) + &#039;&quot;/&gt;&#039;;
+		        	}
+		        }
+		        
+		        drawShape += &#039;&lt;/foreground&gt;&lt;/shape&gt;&#039;;
+
+				if (graph.isEnabled() &amp;&amp; !graph.isCellLocked(graph.getDefaultParent()))
+				{
+	                var style = this.createStyle(&#039;stencil(&#039; + Graph.compress(drawShape) + &#039;)&#039;);
+	                var s = graph.view.scale;
+	            	var tr = graph.view.translate;
+	            	
+	                var cell = new mxCell(&#039;&#039;, new mxGeometry(minX / s - tr.x, minY / s - tr.y, w / s, h / s), style);
+	                cell.vertex = 1;
+	                
+	                graph.model.beginUpdate();
+	                try
+					{
+	                	cell = graph.addCell(cell);
+		                
+		                graph.fireEvent(new mxEventObject(&#039;cellsInserted&#039;, &#039;cells&#039;, [cell]));
+		                graph.fireEvent(new mxEventObject(&#039;freehandInserted&#039;, &#039;cell&#039;, cell));
+					}
+	                finally
+					{
+	                	graph.model.endUpdate();
+					}
+					
+					if (selectInserted)
+					{
+						graph.setSelectionCells([cell]);
+					}
+				}
+	        }
+
+	        for (var i = 0; i &lt; partPathes.length; i++)
+	        {
+	        	partPathes[i].parentNode.removeChild(partPathes[i]);
+	        }
+	        
+	        path = null;
+	        partPathes = [];
+	        drawPoints = [];
+	    }
+
+        setEnabled(false);
+	};
+
+	// Stops all interactions if freehand is enabled
+	graph.addListener(mxEvent.FIRE_MOUSE_EVENT, mxUtils.bind(this, function(sender, evt)
+	{
+		var evtName = evt.getProperty(&#039;eventName&#039;);
+		var me = evt.getProperty(&#039;event&#039;);
+		
+		if (evtName == mxEvent.MOUSE_MOVE &amp;&amp; enabled)
+		{
+			if (me.sourceState != null)
+			{
+				me.sourceState.setCursor(&#039;crosshair&#039;);
+			}
+			
+			me.consume();
+		}
+	}));
+	
+	// Implements a listener for hover and click handling
+	graph.addMouseListener(
+	{
+	    mouseDown: mxUtils.bind(this, function(sender, me)
+	    {
+			if (graph.isEnabled() &amp;&amp; !graph.isCellLocked(graph.getDefaultParent()))
+		    {
+				var e = me.getEvent();
+				
+				if (!enabled || mxEvent.isPopupTrigger(e) ||
+					mxEvent.isMiddleMouseButton(e) ||
+					mxEvent.isMultiTouchEvent(e))
+				{
+					return;
+				}
+				
+				var strokeWidth = parseFloat(graph.currentVertexStyle[mxConstants.STYLE_STROKEWIDTH] || 1);
+				strokeWidth = Math.max(1, strokeWidth * graph.view.scale);
+				var strokeColor = this.getStrokeColor();
+
+			    path = document.createElementNS(&#039;http://www.w3.org/2000/svg&#039;, &#039;path&#039;);
+			    path.setAttribute(&#039;fill&#039;, perfectFreehandMode? strokeColor : &#039;none&#039;);
+				path.setAttribute(&#039;pointer-events&#039;, &#039;none&#039;);
+			    path.setAttribute(&#039;stroke&#039;, strokeColor);
+			    path.setAttribute(&#039;stroke-width&#039;, strokeWidth);
+			    
+			    if (graph.currentVertexStyle[mxConstants.STYLE_DASHED] == &#039;1&#039;)
+			    {
+			    	var dashPattern = graph.currentVertexStyle[mxConstants.STYLE_DASH_PATTERN] || &#039;3 3&#039;;
+			    	
+			    	dashPattern = dashPattern.split(&#039; &#039;).map(function(p)
+					{
+			    		return parseFloat(p) * strokeWidth;
+					}).join(&#039; &#039;);
+			    	path.setAttribute(&#039;stroke-dasharray&#039;, dashPattern);
+			    }
+			    
+			    buffer = [];
+			    var pt = getMousePosition(e);
+			    appendToBuffer(pt);
+			    strPath = &#039;M&#039; + pt.x + &#039; &#039; + pt.y;
+			    drawPoints.push(pt);
+			    lastPart = [];
+			    path.setAttribute(&#039;d&#039;, perfectFreehandMode? 
+					PerfectFreehand.getSvgPathFromStroke([[pt.x, pt.y]], perfectFreehandOptions)
+					: strPath);
+			    svgElement.appendChild(path);
+	
+				me.consume();
+			}
+	    }),
+	    mouseMove: mxUtils.bind(this, function(sender, me)
+	    {
+		    if (path != null &amp;&amp; graph.isEnabled() &amp;&amp;
+				!graph.isCellLocked(graph.getDefaultParent()))
+		    {
+	    		var e = me.getEvent();
+				var pt = getMousePosition(e);
+		        appendToBuffer(pt);
+		        updateSvgPath();
+				
+				if (autoScroll)
+				{
+					var tr = graph.view.translate;
+					graph.scrollRectToVisible(new mxRectangle(pt.x - tr.x, pt.y - tr.y).grow(20));
+				}
+				
+				me.consume();
+		    }
+	    }),
+	    mouseUp: mxUtils.bind(this, function(sender, me)
+	    {
+			if (path != null &amp;&amp; graph.isEnabled() &amp;&amp;
+				!graph.isCellLocked(graph.getDefaultParent())) 
+			{
+				endPath(me.getEvent());
+				me.consume();
+			}
+	    })	
+	});
+
+	var getMousePosition = function (e) 
+	{
+	    return mxUtils.convertPoint(graph.container, mxEvent.getClientX(e), mxEvent.getClientY(e));
+	};
+
+	var appendToBuffer = function (pt) 
+	{
+	    buffer.push(pt);
+	    
+	    while (buffer.length &gt; bufferSize) 
+	    {
+	        buffer.shift();
+	    }
+	};
+
+	// Calculate the average point, starting at offset in the buffer
+	var getAveragePoint = function (offset) 
+	{
+	    var len = buffer.length;
+	    
+	    if (len % 2 === 1 || len &gt;= bufferSize) 
+	    {
+	        var totalX = 0;
+	        var totalY = 0;
+	        var pt, i;
+	        var count = 0;
+	        
+	        for (i = offset; i &lt; len; i++) 
+	        {
+	            count++;
+	            pt = buffer[i];
+	            totalX += pt.x;
+	            totalY += pt.y;
+	        }
+	        
+	        return {
+	            x: totalX / count,
+	            y: totalY / count
+	        }
+	    }
+	    
+	    return null;
+	};
+
+	var updateSvgPath = function () 
+	{
+	    var pt = getAveragePoint(0);
+
+	    if (pt) 
+	    {
+	        drawPoints.push(pt);
+
+			if (perfectFreehandMode)
+			{
+				var tmpPoints = [];
+
+				for (var i = 0; i &lt; drawPoints.length; i++)
+				{
+					tmpPoints.push([drawPoints[i].x, drawPoints[i].y]);
+				}
+
+				lastPart = [];
+				
+				for (var offset = 2; offset &lt; buffer.length; offset += 2) 
+				{
+					pt = getAveragePoint(offset);
+					tmpPoints.push([pt.x, pt.y]);
+					lastPart.push(pt);
+				}
+
+				path.setAttribute(&#039;d&#039;, PerfectFreehand.getSvgPathFromStroke(tmpPoints, perfectFreehandOptions));
+			}
+			else
+			{
+				// Get the smoothed part of the path that will not change
+				strPath += &#039; L&#039; + pt.x + &#039; &#039; + pt.y;
+				// Get the last part of the path (close to the current mouse position)
+				// This part will change if the mouse moves again
+				var tmpPath = &#039;&#039;;
+				lastPart = [];
+				
+				for (var offset = 2; offset &lt; buffer.length; offset += 2) 
+				{
+					pt = getAveragePoint(offset);
+					tmpPath += &#039; L&#039; + pt.x + &#039; &#039; + pt.y;
+					lastPart.push(pt);
+				}
+
+				// Set the complete current path coordinates
+				path.setAttribute(&#039;d&#039;, strPath + tmpPath);
+			}
+	    }
+	};
+};
+
+mxFreehand.prototype.NO_SMOOTHING = 1;
+mxFreehand.prototype.MILD_SMOOTHING = 4;
+mxFreehand.prototype.NORMAL_SMOOTHING = 8;
+mxFreehand.prototype.VERY_SMOOTH_SMOOTHING = 12;
+mxFreehand.prototype.SUPER_SMOOTH_SMOOTHING = 16;
+mxFreehand.prototype.HYPER_SMOOTH_SMOOTHING = 20;</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

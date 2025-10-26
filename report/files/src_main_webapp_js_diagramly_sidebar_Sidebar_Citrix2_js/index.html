@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Citrix2.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Citrix2.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">64.50</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">235</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">19.11</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">11.04</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addCitrix2Palette = function()
+	{
+		var s = &#039;sketch=0;verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;fillColor=#000000;align=center;outlineConnect=0;pointerEvents=1;shape=mxgraph.citrix2.&#039;;
+		var gn = &#039;mxgraph.citrix2&#039;;
+		var sb = this;
+
+		var sc = 0.5;
+		var w = sc * 100;
+		var h = sc * 100;
+
+		this.setCurrentSearchEntryLibrary(&#039;citrix2&#039;, &#039;citrix2Locations&#039;);
+		this.addCitrix2LocationsPalette(s, w, h, gn, sb);
+		this.setCurrentSearchEntryLibrary(&#039;citrix2&#039;, &#039;citrix2Users and Devices&#039;);
+		this.addCitrix2UsersAndDevicesPalette(s, w, h, gn, sb);
+		this.setCurrentSearchEntryLibrary(&#039;citrix2&#039;, &#039;citrix2Cloud Services&#039;);
+		this.addCitrix2CloudServicesPalette(s, w, h, gn, sb);
+		this.setCurrentSearchEntryLibrary(&#039;citrix2&#039;, &#039;citrix2Components&#039;);
+		this.addCitrix2ComponentsPalette(s, w, h, gn, sb);
+		this.setCurrentSearchEntryLibrary(&#039;citrix2&#039;, &#039;citrix2Resources&#039;);
+		this.addCitrix2ResourcesPalette(s, w, h, gn, sb);
+		this.setCurrentSearchEntryLibrary(&#039;citrix2&#039;, &#039;citrix2NetScaler&#039;);
+		this.addCitrix2NetScalerPalette(s, w, h, gn, sb);
+		this.setCurrentSearchEntryLibrary(&#039;citrix2&#039;, &#039;citrix2Networking&#039;);
+		this.addCitrix2NetworkingPalette(s, w, h, gn, sb);
+		this.setCurrentSearchEntryLibrary(&#039;citrix2&#039;, &#039;citrix2Authentication&#039;);
+		this.addCitrix2AuthenticationPalette(s, w, h, gn, sb);
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+	Sidebar.prototype.addCitrix2LocationsPalette = function(s, w, h, gn, sb)
+	{
+		var dt = &#039;citrix locations &#039;;
+		
+		this.addPaletteFunctions(&#039;citrix2Locations&#039;, &#039;Citrix / Locations&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;office;&#039;, w, h * 0.9846, &#039;&#039;, &#039;Office&#039;, null, null, this.getTagsForStencil(gn, &#039;office&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;home;&#039;, w, h * 0.8588, &#039;&#039;, &#039;Home&#039;, null, null, this.getTagsForStencil(gn, &#039;home&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;data_center;&#039;, w * 0.9848, h, &#039;&#039;, &#039;Data Center&#039;, null, null, this.getTagsForStencil(gn, &#039;data center&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;factory;&#039;, w, h * 0.9883, &#039;&#039;, &#039;Factory&#039;, null, null, this.getTagsForStencil(gn, &#039;factory&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;hospital;&#039;, w, h * 0.884, &#039;&#039;, &#039;Hospital&#039;, null, null, this.getTagsForStencil(gn, &#039;hospital&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;finance_government;&#039;, w, h * 0.9147, &#039;&#039;, &#039;Finance / Government&#039;, null, null, this.getTagsForStencil(gn, &#039;finance government&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;airport;&#039;, w * 0.9615, h, &#039;&#039;, &#039;Airport&#039;, null, null, this.getTagsForStencil(gn, &#039;airport&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cloud;&#039;, w, h * 0.5692, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;hybrid_cloud;&#039;, w, h * 0.5618, &#039;&#039;, &#039;Hybrid Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;hybrid cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;private_cloud;&#039;, w, h * 0.5773, &#039;&#039;, &#039;Private Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;private cloud&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+
+	Sidebar.prototype.addCitrix2UsersAndDevicesPalette = function(s, w, h, gn, sb)
+	{
+		var dt = &#039;citrix users devices &#039;;
+		
+		this.addPaletteFunctions(&#039;citrix2Users and Devices&#039;, &#039;Citrix / Users and Devices&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;user;&#039;, w * 0.9768, h, &#039;&#039;, &#039;User&#039;, null, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;users;&#039;, w, h * 0.5287, &#039;&#039;, &#039;Users&#039;, null, null, this.getTagsForStencil(gn, &#039;users&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;external_users;&#039;, w * 0.969, h, &#039;&#039;, &#039;External Users&#039;, null, null, this.getTagsForStencil(gn, &#039;external users&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;internal_users;&#039;, w, h * 0.9619, &#039;&#039;, &#039;Internal Users&#039;, null, null, this.getTagsForStencil(gn, &#039;internal users&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;admins;&#039;, w, h, &#039;&#039;, &#039;Admins&#039;, null, null, this.getTagsForStencil(gn, &#039;admins&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;desktop;&#039;, w, h * 0.7732, &#039;&#039;, &#039;Desktop&#039;, null, null, this.getTagsForStencil(gn, &#039;desktop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;managed_desktop;&#039;, w, h * 0.7732, &#039;&#039;, &#039;Managed Desktop&#039;, null, null, this.getTagsForStencil(gn, &#039;managed desktop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;laptop;&#039;, w, h * 0.7714, &#039;&#039;, &#039;Laptop&#039;, null, null, this.getTagsForStencil(gn, &#039;laptop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;mobile;&#039;, w * 0.5051, h, &#039;&#039;, &#039;Mobile Phone&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;tablet;&#039;, w * 0.7385, h, &#039;&#039;, &#039;Tablet&#039;, null, null, this.getTagsForStencil(gn, &#039;tablet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;devices;&#039;, w * 2.266, h, &#039;&#039;, &#039;Devices&#039;, null, null, this.getTagsForStencil(gn, &#039;devices&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;thin_client;&#039;, w * 0.7313, h, &#039;&#039;, &#039;Thin Client&#039;, null, null, this.getTagsForStencil(gn, &#039;thin client&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+
+	Sidebar.prototype.addCitrix2CloudServicesPalette = function(s, w, h, gn, sb)
+	{
+		var dt = &#039;citrix cloud services &#039;;
+		
+		this.addPaletteFunctions(&#039;citrix2Cloud Services&#039;, &#039;Citrix / Cloud Services&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;daas;&#039;, w, h * 0.7547, &#039;&#039;, &#039;DaaS&#039;, null, null, this.getTagsForStencil(gn, &#039;daas&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cloud_storefront;&#039;, w, h * 0.7976, &#039;&#039;, &#039;Cloud Storefront&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud storefront&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;endpoint_management;&#039;, w, h * 0.7659, &#039;&#039;, &#039;Endpoint Management&#039;, null, null, this.getTagsForStencil(gn, &#039;endpoint management&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;secure_private_access;&#039;, w, h * 0.7205, &#039;&#039;, &#039;Secure Private Access&#039;, null, null, this.getTagsForStencil(gn, &#039;secure private access&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_gateway_service;&#039;, w, h * 0.7171, &#039;&#039;, &#039;Citrix Gateway Service&#039;, null, null, this.getTagsForStencil(gn, &#039;gateway service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;netscaler_console;&#039;, w, h * 0.7187, &#039;&#039;, &#039;NetScaler Console&#039;, null, null, this.getTagsForStencil(gn, &#039;netscaler console&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;netscaler_itm;&#039;, w, h * 0.807, &#039;&#039;, &#039;NetScaler ITM&#039;, null, null, this.getTagsForStencil(gn, &#039;netscaler itm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_analytics;&#039;, w, h * 0.691, &#039;&#039;, &#039;Citrix Analytics&#039;, null, null, this.getTagsForStencil(gn, &#039;analytics&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;workspace_environment_management;&#039;, w, h * 0.7748, &#039;&#039;, &#039;Workspace Environment Management&#039;, null, null, this.getTagsForStencil(gn, &#039;workspace environment management&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;itsm_adapter_for_servicenow;&#039;, w, h * 0.8055, &#039;&#039;, &#039;ITSM Adapter for ServiceNow&#039;, null, null, this.getTagsForStencil(gn, &#039;itsm adapter for servicenow&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;remote_browser_isolation;&#039;, w, h * 0.719, &#039;&#039;, &#039;Remote Browser Isolation&#039;, null, null, this.getTagsForStencil(gn, &#039;remote browser isolation&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_cloud_api;&#039;, w, h * 0.7492, &#039;&#039;, &#039;Citrix Cloud API&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud api application programming interface&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cloud_connector;&#039;, w, h * 0.7787, &#039;&#039;, &#039;Cloud Connector&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud connector&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;global_app_configuration_service;&#039;, w, h * 0.7541, &#039;&#039;, &#039;Global App Configuration Service&#039;, null, null, this.getTagsForStencil(gn, &#039;global app configuration service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;daas_monitor;&#039;, w, h * 0.7844, &#039;&#039;, &#039;DaaS Monitor&#039;, null, null, this.getTagsForStencil(gn, &#039;daas monitor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;device_posture_service;&#039;, w, h * 0.8403, &#039;&#039;, &#039;Device Posture Service&#039;, null, null, this.getTagsForStencil(gn, &#039;device posture service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_federated_authentication_service;&#039;, w, h * 0.7055, &#039;&#039;, &#039;Citrix Federated Authentication Service&#039;, null, null, this.getTagsForStencil(gn, &#039;federated authentication service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;session_recording_service;&#039;, w, h * 0.6953, &#039;&#039;, &#039;Session Recording Service&#039;, null, null, this.getTagsForStencil(gn, &#039;session recording service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;vda_upgrade_service;&#039;, w, h * 0.7879, &#039;&#039;, &#039;VDA Upgrade Service&#039;, null, null, this.getTagsForStencil(gn, &#039;vda upgrade service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_cloud;&#039;, w, h * 0.7234, &#039;&#039;, &#039;Citrix Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_cloud_studio;&#039;, w, h * 0.6916, &#039;&#039;, &#039;Citrix Cloud Studio&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud studio&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+
+	Sidebar.prototype.addCitrix2ComponentsPalette = function(s, w, h, gn, sb)
+	{
+		var dt = &#039;citrix components &#039;;
+		
+		this.addPaletteFunctions(&#039;citrix2Components&#039;, &#039;Citrix / Components&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;netscaler_gateway;&#039;, w, h * 0.8943, &#039;&#039;, &#039;NetScaler Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;netscaler gateway&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;storefront;&#039;, w, h * 0.8627, &#039;&#039;, &#039;StoreFront&#039;, null, null, this.getTagsForStencil(gn, &#039;storefront&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;workspace_environment_management2;&#039;, w * 0.9595, h, &#039;&#039;, &#039;Workspace Environment Management&#039;, null, null, this.getTagsForStencil(gn, &#039;workspace environment management&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;delivery_controller;&#039;, w, h, &#039;&#039;, &#039;Delivery Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;delivery controller&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;director;&#039;, w, h * 0.8611, &#039;&#039;, &#039;Director&#039;, null, null, this.getTagsForStencil(gn, &#039;director&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;studio_web_studio;&#039;, w, h * 0.8597, &#039;&#039;, &#039;Studio / Web Studio&#039;, null, null, this.getTagsForStencil(gn, &#039;studio web studio&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;vda;&#039;, w, h * 0.8237, &#039;&#039;, &#039;VDA&#039;, null, null, this.getTagsForStencil(gn, &#039;vda&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;beacon;&#039;, w * 0.7008, h, &#039;&#039;, &#039;Beacon&#039;, null, null, this.getTagsForStencil(gn, &#039;beacon&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;zones;&#039;, w, h * 0.8894, &#039;&#039;, &#039;Zones&#039;, null, null, this.getTagsForStencil(gn, &#039;zones&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_app_layering;&#039;, w, h * 0.9167, &#039;&#039;, &#039;Citrix App Layering&#039;, null, null, this.getTagsForStencil(gn, &#039;app layering&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;machine_catalog;&#039;, w, h * 0.8884, &#039;&#039;, &#039;Machine Catalog&#039;, null, null, this.getTagsForStencil(gn, &#039;machine catalog&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;delivery_group;&#039;, w, h, &#039;&#039;, &#039;Delivery Group&#039;, null, null, this.getTagsForStencil(gn, &#039;delivery group&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;app_group;&#039;, w, h * 0.9865, &#039;&#039;, &#039;App Group&#039;, null, null, this.getTagsForStencil(gn, &#039;app group&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_provisioning_server;&#039;, w, h * 0.6447, &#039;&#039;, &#039;Citrix Provisioning Server&#039;, null, null, this.getTagsForStencil(gn, &#039;provisioning server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_app;&#039;, w, h, &#039;&#039;, &#039;Citrix App&#039;, null, null, this.getTagsForStencil(gn, &#039;app&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;site_database;&#039;, w * 0.9079, h, &#039;&#039;, &#039;Site Database&#039;, null, null, this.getTagsForStencil(gn, &#039;site database&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;site_database;&#039;, w * 0.9079, h, &#039;&#039;, &#039;Monitoring Database&#039;, null, null, this.getTagsForStencil(gn, &#039;monitoring database&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;site_database;&#039;, w * 0.9079, h, &#039;&#039;, &#039;Logging Database&#039;, null, null, this.getTagsForStencil(gn, &#039;logging database&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_license_server;&#039;, w, h * 0.7167, &#039;&#039;, &#039;Citrix License Server&#039;, null, null, this.getTagsForStencil(gn, &#039;license server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_session_recording_server;&#039;, w, h * 0.6638, &#039;&#039;, &#039;Citrix Session Recording Server&#039;, null, null, this.getTagsForStencil(gn, &#039;session recording server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_federated_authentication_service2;&#039;, w, h * 0.6019, &#039;&#039;, &#039;Citrix Federated Authentication Service&#039;, null, null, this.getTagsForStencil(gn, &#039;federated authentication service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;secure_private_access2;&#039;, w, h * 0.6964, &#039;&#039;, &#039;Secure Private Access&#039;, null, null, this.getTagsForStencil(gn, &#039;secure private access&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;xenserver_console;&#039;, w, h * 0.861, &#039;&#039;, &#039;XenServer Console&#039;, null, null, this.getTagsForStencil(gn, &#039;xenserver console&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;hypervisor_xenserver;&#039;, w, h * 0.6199, &#039;&#039;, &#039;Hypervisor: XenServer&#039;, null, null, this.getTagsForStencil(gn, &#039;hypervisor xenserver&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;app_protection;&#039;, w * 0.9522, h, &#039;&#039;, &#039;App Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;app protection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_policies;&#039;, w, h * 0.9915, &#039;&#039;, &#039;Citrix Policies&#039;, null, null, this.getTagsForStencil(gn, &#039;policies&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;image_portability_service;&#039;, w * 0.9993, h, &#039;&#039;, &#039;Image Portability Service&#039;, null, null, this.getTagsForStencil(gn, &#039;image portability service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_terraform_provider;&#039;, w * 0.9146, h, &#039;&#039;, &#039;Citrix Terraform Provider&#039;, null, null, this.getTagsForStencil(gn, &#039;terraform provider&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_uber_agent;&#039;, w, h * 0.5284, &#039;&#039;, &#039;Citrix Uber Agent&#039;, null, null, this.getTagsForStencil(gn, &#039;uber agent&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+
+	Sidebar.prototype.addCitrix2ResourcesPalette = function(s, w, h, gn, sb)
+	{
+		var dt = &#039;citrix resources &#039;;
+		
+		this.addPaletteFunctions(&#039;citrix2Resources&#039;, &#039;Citrix / Resources&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;linux_app;&#039;, w, h * 0.9869, &#039;&#039;, &#039;Linux App&#039;, null, null, this.getTagsForStencil(gn, &#039;linux app&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;windows_app;&#039;, w, h * 0.9869, &#039;&#039;, &#039;Windows App&#039;, null, null, this.getTagsForStencil(gn, &#039;windows app&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;linux_apps;&#039;, w * 0.8543, h, &#039;&#039;, &#039;Linux Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;linux apps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;windows_apps;&#039;, w, h * 0.8457, &#039;&#039;, &#039;Windows Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;windows apps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;web_saas_apps;&#039;, w, h * 0.769, &#039;&#039;, &#039;Web / SaaS Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;web saas apps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;virtual_desktop;&#039;, w * 0.7846, h * 1, &#039;&#039;, &#039;Virtual Desktop&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual desktop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;professional_graphics_desktop;&#039;, w, h * 0.9994, &#039;&#039;, &#039;Professional Graphics Desktop&#039;, null, null, this.getTagsForStencil(gn, &#039;professional graphics desktop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_remote_pc;&#039;, w * 0.8491, h, &#039;&#039;, &#039;Citrix Remote PC&#039;, null, null, this.getTagsForStencil(gn, &#039;remote pc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_provisioning_target_device;&#039;, w * 0.8363, h, &#039;&#039;, &#039;Citrix Provisioning Target Device&#039;, null, null, this.getTagsForStencil(gn, &#039;provisioning target device&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;single_and_multi_session_windows_and_linux_desktops;&#039;, w * 0.977, h, &#039;&#039;, &#039;Single and Multi-Session Windows and Linux Desktops&#039;, null, null, this.getTagsForStencil(gn, &#039;single and multi session windows and linux desktops&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;windows_and_linux_virtualized_apps;&#039;, w, h * 0.7904, &#039;&#039;, &#039;Windows and Linux Virtualized Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;windows and linux virtualized apps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;windows_server_apps_and_desktops;&#039;, w, h * 0.6025, &#039;&#039;, &#039;Windows Server Apps and Desktops&#039;, null, null, this.getTagsForStencil(gn, &#039;windows server apps and desktops&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_vda_for_macos;&#039;, w * 0.7246, h, &#039;&#039;, &#039;Citrix VDA for MacOS&#039;, null, null, this.getTagsForStencil(gn, &#039;vda for macos&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;windows_image;&#039;, w * 0.7407, h, &#039;&#039;, &#039;Windows Image&#039;, null, null, this.getTagsForStencil(gn, &#039;windows image&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;linux_image;&#039;, w * 0.7407, h, &#039;&#039;, &#039;Linux Image&#039;, null, null, this.getTagsForStencil(gn, &#039;linux image&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;citrix_enterprise_browser;&#039;, w, h * 0.8591, &#039;&#039;, &#039;Citrix Enterprise Browser&#039;, null, null, this.getTagsForStencil(gn, &#039;enterprise browser&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;hdx;&#039;, w * 1, h * 0.5119, &#039;&#039;, &#039;HDX&#039;, null, null, this.getTagsForStencil(gn, &#039;hdx&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+
+	Sidebar.prototype.addCitrix2NetScalerPalette = function(s, w, h, gn, sb)
+	{
+		var dt = &#039;citrix netscaler &#039;;
+		
+		this.addPaletteFunctions(&#039;citrix2NetScaler&#039;, &#039;Citrix / NetScaler&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;netscaler_blx;&#039;, w, h * 0.8853, &#039;&#039;, &#039;NetScaler BLX&#039;, null, null, this.getTagsForStencil(gn, &#039;netscaler blx&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;netscaler_cpx;&#039;, w * 0.8974, h, &#039;&#039;, &#039;NetScaler CPX&#039;, null, null, this.getTagsForStencil(gn, &#039;netscaler cpx&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;netscaler_mpx;&#039;, w, h * 0.8245, &#039;&#039;, &#039;NetScaler MPX&#039;, null, null, this.getTagsForStencil(gn, &#039;netscaler mpx&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;netscaler_sdx;&#039;, w, h * 0.8245, &#039;&#039;, &#039;NetScaler SDX&#039;, null, null, this.getTagsForStencil(gn, &#039;netscaler sdx&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;netscaler_vpx;&#039;, w * 0.8974, h, &#039;&#039;, &#039;NetScaler VPX&#039;, null, null, this.getTagsForStencil(gn, &#039;netscaler vpx&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;netscaler_gateway2;&#039;, w, h * 0.8443, &#039;&#039;, &#039;NetScaler Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;netscaler gateway&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;waf;&#039;, w, h * 0.4941, &#039;&#039;, &#039;WAF&#039;, null, null, this.getTagsForStencil(gn, &#039;waf&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;api_protection;&#039;, w, h * 0.9177, &#039;&#039;, &#039;API Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;api protection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ddos_protection;&#039;, w, h * 0.9177, &#039;&#039;, &#039;DDoS Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;ddos protection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;bot_mitigation;&#039;, w, h * 0.9177, &#039;&#039;, &#039;Bot Mitigation&#039;, null, null, this.getTagsForStencil(gn, &#039;bot mitigation&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;load_balancing;&#039;, w * 1.92, h * 0.4026, &#039;&#039;, &#039;Load Balancing&#039;, null, null, this.getTagsForStencil(gn, &#039;load balancing&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ssl_tls_offloading;&#039;, w * 0.9294, h, &#039;&#039;, &#039;SSL / TLS Offloading&#039;, null, null, this.getTagsForStencil(gn, &#039;ssl tls offloading&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;gslb;&#039;, w * 2.08, h * 1, &#039;&#039;, &#039;GSLB&#039;, null, null, this.getTagsForStencil(gn, &#039;gslb&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+
+	Sidebar.prototype.addCitrix2NetworkingPalette = function(s, w, h, gn, sb)
+	{
+		var dt = &#039;citrix networking &#039;;
+		
+		this.addPaletteFunctions(&#039;citrix2Networking&#039;, &#039;Citrix / Networking&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;tunnel;&#039;, w, h * 0.215, &#039;&#039;, &#039;Tunnel&#039;, null, null, this.getTagsForStencil(gn, &#039;tunnel&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;bridge;&#039;, w, h * 0.5464, &#039;&#039;, &#039;Bridge&#039;, null, null, this.getTagsForStencil(gn, &#039;bridge&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;switch;&#039;, w, h * 0.5464, &#039;&#039;, &#039;Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;switch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;network;&#039;, w * 0.9638, h, &#039;&#039;, &#039;Network&#039;, null, null, this.getTagsForStencil(gn, &#039;network&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;router;&#039;, w, h, &#039;&#039;, &#039;Router&#039;, null, null, this.getTagsForStencil(gn, &#039;router&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;sd_wan;&#039;, w, h * 0.9992, &#039;&#039;, &#039;SD-WAN&#039;, null, null, this.getTagsForStencil(gn, &#039;sd wan wide area network&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;firewall;&#039;, w, h * 0.9983, &#039;&#039;, &#039;Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;firewall&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;wifi_router;&#039;, w * 0.998, h, &#039;&#039;, &#039;Wifi Router&#039;, null, null, this.getTagsForStencil(gn, &#039;wifi router&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dns;&#039;, w, h, &#039;&#039;, &#039;DNS&#039;, null, null, this.getTagsForStencil(gn, &#039;dns domain name server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;internet;&#039;, w, h, &#039;&#039;, &#039;Internet&#039;, null, null, this.getTagsForStencil(gn, &#039;internet&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+
+	Sidebar.prototype.addCitrix2AuthenticationPalette = function(s, w, h, gn, sb)
+	{
+		var dt = &#039;citrix authentication &#039;;
+		
+		this.addPaletteFunctions(&#039;citrix2Authentication&#039;, &#039;Citrix / Authentication&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;authentication_adaptive;&#039;, w, h, &#039;&#039;, &#039;Authentication: Adaptive&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication adaptive&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_cert;&#039;, w, h, &#039;&#039;, &#039;Authentication: Cert&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication cert&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_totp;&#039;, w, h, &#039;&#039;, &#039;Authentication: TOTP&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication totp&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_selection;&#039;, w, h, &#039;&#039;, &#039;Authentication: Selection&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication selection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_saml;&#039;, w, h, &#039;&#039;, &#039;Authentication: SAML&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication saml&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_radius;&#039;, w, h, &#039;&#039;, &#039;Authentication: RADIUS&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication radius&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_epa;&#039;, w, h, &#039;&#039;, &#039;Authentication: EPA&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication epa&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_failure;&#039;, w, h, &#039;&#039;, &#039;Authentication: Failure&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication failure&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_fido2;&#039;, w, h, &#039;&#039;, &#039;Authentication: FIDO2&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication fido2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_mfa;&#039;, w, h, &#039;&#039;, &#039;Authentication: MFA&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication mfa&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_oidc;&#039;, w, h, &#039;&#039;, &#039;Authentication: OIDC&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication oidc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_push;&#039;, w, h, &#039;&#039;, &#039;Authentication: Push&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication push&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_okta;&#039;, w, h, &#039;&#039;, &#039;Authentication: Okta&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication okta&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_google;&#039;, w, h, &#039;&#039;, &#039;Authentication: Google&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication google&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;authentication_ms_entra_id;&#039;, w, h, &#039;&#039;, &#039;Authentication: MS Entra ID&#039;, null, null, this.getTagsForStencil(gn, &#039;authentication ms entra id&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ldap;&#039;, w, h, &#039;&#039;, &#039;LDAP&#039;, null, null, this.getTagsForStencil(gn, &#039;ldap&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

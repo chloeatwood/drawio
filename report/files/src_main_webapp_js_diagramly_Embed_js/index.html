@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\Embed.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\Embed.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">56.73</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">847</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">60.67</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">7.83</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function(stylesheet, stencils)
+{
+	// Callbacks:
+	// mxClientOnLoad is called  after the script is loaded with the stylesheet and the function to create a
+	//     graph (wich takes the container as an argument and returns the graph instance that was created).
+	// mxClientOnCreate is called when a graph has been created with the graph.
+	mxStencilRegistry.dynamicLoading = false;
+
+	// Adds CSS for tooltips
+	try
+	{
+		var style = document.createElement(&#039;style&#039;)
+		style.type = &#039;text/css&#039;
+		style.innerHTML = [&#039;div.mxTooltip {&#039;,
+			&#039;-webkit-box-shadow: 3px 3px 12px #C0C0C0;&#039;,
+			&#039;-moz-box-shadow: 3px 3px 12px #C0C0C0;&#039;,
+			&#039;box-shadow: 3px 3px 12px #C0C0C0;&#039;,
+			&#039;background: #FFFFCC;&#039;,
+			&#039;border-style: solid;&#039;,
+			&#039;border-width: 1px;&#039;,
+			&#039;border-color: black;&#039;,
+			&#039;font-family: Arial;&#039;,
+			&#039;font-size: 8pt;&#039;,
+			&#039;position: absolute;&#039;,
+			&#039;cursor: default;&#039;,
+			&#039;padding: 4px;&#039;,
+			&#039;color: black;}&#039;].join(&#039;\n&#039;);
+		document.getElementsByTagName(&#039;head&#039;)[0].appendChild(style)
+	}
+	catch (e)
+	{
+		// ignore
+	}
+
+	var mathJaxLoading = typeof MathJax !== &#039;undefined&#039; &amp;&amp; typeof MathJax.typeset === &#039;function&#039;;
+	var mathJaxQueue = [];
+
+	function renderMath(nodes)
+	{
+		try
+		{
+			MathJax.typesetClear(nodes);
+			MathJax.typeset(nodes);
+		}
+		catch (e)
+		{
+			MathJax.typesetClear(nodes);
+
+			if (e.retry != null)
+			{
+				e.retry.then(function()
+				{
+					MathJax.typesetPromise(nodes);
+				});
+			}
+			else if (window.console != null)
+			{
+				console.log(&#039;Error in MathJax: &#039; + e.toString());
+			}
+		}
+	};
+	
+	function loadMathJax()
+	{
+		// Uses existing configuration if MathJax already in page
+		if (!mathJaxLoading)
+		{
+			mathJaxLoading = true;
+
+			window.MathJax =
+			{
+				options:
+				{
+					skipHtmlTags: {&#039;[+]&#039;: [&#039;text&#039;]}
+				},
+				loader:
+				{
+					load: [(urlParams[&#039;math-output&#039;] == &#039;html&#039;) ?
+						&#039;output/chtml&#039; : &#039;output/svg&#039;, &#039;input/tex&#039;,
+						&#039;input/asciimath&#039;, &#039;ui/safe&#039;]
+				},
+				startup:
+				{
+					pageReady: function()
+					{
+						renderMath(mathJaxQueue);
+					}
+				}
+			};
+
+			var script = document.createElement(&#039;script&#039;);
+			script.type = &#039;text/javascript&#039;;
+			script.src = &#039;https://app.diagrams.net/math/es5/startup.js&#039;;
+			document.getElementsByTagName(&#039;head&#039;)[0].appendChild(script);
+		}
+	};
+	
+	function addMathJaxGraph(graph)
+	{
+		// Initial rendering when MathJax finished loading
+		if (typeof MathJax !== &#039;undefined&#039; &amp;&amp; typeof MathJax.typeset === &#039;function&#039;)
+		{
+			renderMath([graph.container]);
+		}
+		else
+		{
+			mathJaxQueue.push(graph.container);
+		}
+	};
+	
+	// Handles relative images
+	mxGraph.prototype.getImageFromBundles = function(key)
+	{
+		if (key != null)
+		{
+			if (key.substring(0, 7) != &#039;http://&#039; &amp;&amp; key.substring(0, 8) != &#039;https://&#039; &amp;&amp; key.substring(0, 10) != &#039;data:image&#039;)
+			{
+				if (key.charAt(0) == &#039;/&#039;)
+				{
+					key = key.substring(1, key.length);
+				}
+				
+				key = &#039;https://app.diagrams.net/&#039; + key;
+			}
+			
+			return key;
+		}
+		
+		return null;
+	};
+	
+	if (stencils != null)
+	{
+		for (var i = 0; i &lt; stencils.length; i++)
+		{
+			var xmlDoc = mxUtils.parseXml(stencils[i]);
+			mxStencilRegistry.parseStencilSet(xmlDoc.documentElement);
+		}
+	}
+	
+	// Panning for touch devices
+	if (mxClient.IS_TOUCH)
+	{
+		mxPanningHandler.prototype.isPanningTrigger = function(me)
+		{
+			return true;
+		};
+	}
+	
+	(function()
+	{
+		function initGraph(container)
+		{
+			try
+			{
+				var child = container.firstChild;
+				
+				while (child != null &amp;&amp; child.nodeType != mxConstants.NODETYPE_ELEMENT)
+				{
+					child = child.nextSibling;
+				}
+				
+				var xml = mxUtils.trim(child.innerHTML);
+				container.innerText = &#039;&#039;;
+
+				// Instance needed for decompress helper function
+				var graph = new Graph(container);
+
+				if (xml.substring(0, 4) == &#039;&amp;lt;&#039;)
+				{
+					xml = xml.replace(/&amp;lt;/g, &#039;&lt;&#039;).replace(/&amp;gt;/g, &#039;&gt;&#039;).
+						replace(/&amp;amp;gt;/g, &#039;&amp;gt;&#039;).replace(/&amp;amp;lt;/g, &#039;&amp;lt;&#039;).
+						replace(/&amp;amp;quot;/g, &#039;&amp;quot;&#039;).replace(/&amp;#xa;/g, &#039;\n&#039;);
+				}
+				else if (xml.substring(0, 3) == &#039;%3C&#039;)
+				{
+					xml = decodeURIComponent(xml);
+				}
+				else
+				{
+					xml = Graph.decompress(xml);
+				}
+				
+				var xmlDocument = mxUtils.parseXml(xml);
+				var configNode = null;
+				var diagrams = null;
+
+				if (xmlDocument.documentElement != null &amp;&amp; xmlDocument.documentElement.nodeName == &#039;mxfile&#039;)
+				{
+					diagrams = xmlDocument.documentElement.getElementsByTagName(&#039;diagram&#039;);
+					configNode = xmlDocument.documentElement;
+					
+					if (diagrams.length &gt; 0)
+					{
+						xml = mxUtils.getTextContent(diagrams[0]);
+						xml = Graph.decompress(xml);
+						xmlDocument = mxUtils.parseXml(xml);
+					}
+				}
+				
+				if (xmlDocument.documentElement != null &amp;&amp; xmlDocument.documentElement.nodeName == &#039;mxGraphModel&#039;)
+				{
+					var decoder = new mxCodec(xmlDocument);
+					var node = xmlDocument.documentElement;
+					
+					if (configNode == null)
+					{
+						configNode = node;
+					}
+
+					graph.resetViewOnRootChange = false;
+					graph.setEnabled(false);
+
+					if (diagrams != null &amp;&amp; diagrams.length &gt; 0)
+					{
+						/**
+						 * Adds placeholder for %page% and %pagenumber%
+						 */
+						var graphGetGlobalVariable = graph.getGlobalVariable;
+						
+						graph.getGlobalVariable = function(name)
+						{
+							if (name == &#039;page&#039;)
+							{
+								return diagrams[0].getAttribute(&#039;name&#039;) || &#039;Page-1&#039;;
+							}
+							else if (name == &#039;pagenumber&#039;)
+							{
+								return 1;
+							}
+							else if (name == &#039;pagecount&#039;)
+							{
+								return diagrams.length;
+							}
+							
+							return graphGetGlobalVariable.apply(this, arguments);
+						};
+					}
+					
+					graph.foldingEnabled = configNode.getAttribute(&#039;nav&#039;) == &#039;1&#039;;
+					graph.cellRenderer.forceControlClickHandler = graph.foldingEnabled;
+					
+					var tooltips = configNode.getAttribute(&#039;tooltips&#039;);
+					
+			    	if (tooltips != &#039;0&#039;)
+			    	{
+			    		graph.setTooltips(true);
+			    	}
+			    	else
+			    	{
+			    		graph.setTooltips(false);
+			    	}
+					
+					// Loads the stylesheet
+					if (stylesheet != null)
+					{
+						var xmlDoc = mxUtils.parseXml(stylesheet);
+						var dec = new mxCodec(xmlDoc);
+						dec.decode(xmlDoc.documentElement, graph.getStylesheet());
+					}
+					
+					var math = configNode.getAttribute(&#039;math&#039;);
+					
+					if (math == &#039;1&#039;)
+					{
+						loadMathJax();
+					}
+					
+					// Enables panning with left mouse button
+					var pan = configNode.getAttribute(&#039;pan&#039;);
+					
+					if (pan != &#039;0&#039;)
+					{
+						graph.panningHandler.useLeftButtonForPanning = true;
+						graph.panningHandler.ignoreCell = true;
+						container.style.cursor = &#039;move&#039;;
+						graph.setPanning(true);
+					}
+					else
+					{
+						container.style.cursor = &#039;default&#039;;
+					}
+					
+					var resize = configNode.getAttribute(&#039;resize&#039;);
+					var border = Number(configNode.getAttribute(&#039;border&#039;) || 0);
+					graph.border = border;
+
+					var fit = configNode.getAttribute(&#039;fit&#039;);
+					
+					if ((container.style.width != &#039;100%&#039; &amp;&amp; fit != &#039;1&#039; &amp;&amp; resize != &#039;0&#039;) ||
+						(container.style.width == &#039;&#039; &amp;&amp; container.style.height == &#039;&#039;))
+					{
+						graph.resizeContainer = true;
+						graph.centerZoom = false;
+					}
+					else
+					{
+						// Updates the container height for autosize width
+						if (resize != &#039;0&#039; &amp;&amp; container.style.width == &#039;100%&#039; &amp;&amp; container.style.height == &#039;&#039;)
+						{
+							graph.resizeContainer = true;
+							graph.centerZoom = false;
+							
+							graph.doResizeContainer = function(width, height)
+							{
+								// Fixes container size for different box models
+								if (mxClient.IS_IE)
+								{
+									if (document.documentMode &gt;= 9)
+									{
+										width += 3;
+										height += 5;
+									}
+									else
+									{
+										width += 1;
+										height += 1;
+									}
+								}
+								else
+								{
+									height += 1;
+								}
+								
+								if (this.maximumContainerSize != null)
+								{
+									width = Math.min(this.maximumContainerSize.width, width);
+									height = Math.min(this.maximumContainerSize.height, height);
+								}
+
+								this.container.style.height = Math.ceil(height + 18) + &#039;px&#039;;
+							};
+						}
+						else
+						{
+							graph.centerZoom = true;
+						}
+					}
+					
+					// Adds handling for hyperlinks, tooltips
+					var links = configNode.getAttribute(&#039;links&#039;);
+					var hl = configNode.getAttribute(&#039;highlight&#039;);
+					
+					if (links != &#039;0&#039; || tooltips != &#039;0&#039;)
+					{
+						var cursor = container.style.cursor;
+				    	var tol = graph.getTolerance();
+						
+						graph.addMouseListener(
+						{
+						    currentState: null,
+						    currentLink: null,
+						    highlight: (hl != null &amp;&amp; hl != &#039;&#039; &amp;&amp; hl != mxConstants.NONE) ?
+						    	new mxCellHighlight(graph, hl, 2) : null,
+						    startX: 0,
+						    startY: 0,
+						    mouseDown: function(sender, me)
+						    {
+						    	this.startX = me.getGraphX();
+						    	this.startY = me.getGraphY();
+						    },
+						    mouseMove: function(sender, me)
+						    {
+						    	if (graph.isMouseDown)
+						    	{
+						    		if (this.currentLink != null)
+						    		{
+								    	var dx = Math.abs(this.startX - me.getGraphX());
+								    	var dy = Math.abs(this.startY - me.getGraphY());
+								    	
+								    	if (dx &gt; tol || dy &gt; tol)
+								    	{
+								    		this.clear();
+								    	}
+						    		}
+						    	}
+						    	else
+						    	{
+							    	if (this.currentState != null &amp;&amp; (me.getState() == this.currentState || me.getState() == null) &amp;&amp;
+							    		graph.intersects(this.currentState, me.getGraphX(), me.getGraphY()))
+							    	{
+						    			return;
+							    	}
+							    	
+									var tmp = graph.view.getState(me.getCell());
+
+							      	if (tmp != this.currentState)
+							      	{
+							        	if (this.currentState != null)
+							        	{
+							          		this.clear();
+							        	}
+							        
+						        		this.currentState = tmp;
+							        
+							        	if (this.currentState != null)
+							        	{
+							          		this.activate(this.currentState);
+							        	}
+							      	}
+						    	}
+						    },
+						    mouseUp: function(sender, me)
+						    {
+						    	var tmp = this.currentLink;
+						    	this.clear();
+						    	
+						    	if (tmp != null) 
+						    	{
+						    		if (tmp.charAt(0) == &#039;#&#039;)
+						    		{
+						    			window.location.hash = tmp;
+						    		}
+						    		else
+						    		{
+						    			window.open(tmp);
+						    		}
+						    	}
+						    },
+						    activate: function(state)
+						    {
+						    	this.currentLink = graph.getLinkForCell(state.cell);
+						    	
+						    	if (this.currentLink != null)
+						    	{
+						    		container.style.cursor = &#039;pointer&#039;;
+
+						    		if (this.highlight != null)
+						    		{
+						    			this.highlight.highlight(state);
+						    		}
+							    }
+						    },
+						    clear: function()
+						    {
+						    	container.style.cursor = cursor;
+						    	this.currentState = null;
+						    	this.currentLink = null;
+						    	
+						    	if (this.highlight != null)
+						    	{
+						    		this.highlight.hide();
+						    	}
+						    }
+						});
+					}
+					
+					var x0 = Number(configNode.getAttribute(&#039;x0&#039;) || 0);
+					var y0 = Number(configNode.getAttribute(&#039;y0&#039;) || 0);
+					graph.view.translate.x = -x0 + border;
+					graph.view.translate.y = -y0 + border;
+					
+					function graphAdded(node)
+					{
+						var img = node.getAttribute(&#039;backgroundImage&#039;);
+						
+						if (img != null)
+						{
+							img = JSON.parse(img);
+							graph.setBackgroundImage(new mxImage(img.src, img.width, img.height));
+							graph.view.validateBackgroundImage();
+						}
+						
+						if (fit != &#039;0&#039;)
+						{
+							graph.fit(border);
+						}
+						
+						if (math == &#039;1&#039;)
+						{
+							addMathJaxGraph(graph);
+						}
+						
+						// Keeps hashtag links on same page
+						var links = graph.container.getElementsByTagName(&#039;a&#039;);
+						
+						if (links != null)
+						{
+							for (var i = 0; i &lt; links.length; i++)
+							{
+								var href = links[i].getAttribute(&#039;href&#039;);
+								
+								if (href != null &amp;&amp; href.charAt(0) == &#039;#&#039; &amp;&amp;
+									links[i].getAttribute(&#039;target&#039;) == &#039;_blank&#039;)
+								{
+									links[i].removeAttribute(&#039;target&#039;);
+								}
+							}
+						}
+					};
+					
+					// Load from URL via url attribute
+					var url = configNode.getAttribute(&#039;url&#039;);
+					
+					if (url != null)
+					{
+						try
+						{
+							// Workaround for unsupported CORS in IE9 XHR
+							var xhr = (navigator.userAgent != null &amp;&amp; navigator.userAgent.indexOf(&#039;MSIE 9&#039;) &gt; 0) ?
+								new XDomainRequest() : new XMLHttpRequest();
+							xhr.open(&#039;GET&#039;, url);
+							
+						    xhr.onload = mxUtils.bind(this, function()
+						    {
+						    	try
+						    	{
+							    	var data = (xhr.getText != null) ? xhr.getText() : xhr.responseText;
+
+							    	if (data != null)
+							    	{
+							    		var newDocument = mxUtils.parseXml(data);
+							    		
+							    		// LATER: Add support for .png (with XML) files
+							    		// Adds support for HTML 
+							    		if (newDocument != null &amp;&amp; newDocument.documentElement.nodeName == &#039;html&#039;)
+							    		{
+							    			var divs = newDocument.documentElement.getElementsByTagName(&#039;div&#039;);
+							    			
+							    			if (divs.length &gt; 0 &amp;&amp; divs[0].getAttribute(&#039;class&#039;) == &#039;mxgraph&#039;)
+							    			{
+							    				var divs2 = divs[0].getElementsByTagName(&#039;div&#039;);
+							    				
+							    				if (divs2.length &gt; 0)
+							    				{
+							    					var data = mxUtils.getTextContent(divs2[0]);
+							    	        		data = Graph.decompress(data);
+							    	        		
+							    	        		if (data.length &gt; 0)
+							    	        		{
+							    	        			newDocument = mxUtils.parseXml(data);
+							    	        		}
+							    				}
+							    			}
+							    		}
+							    		
+							    		if (newDocument != null &amp;&amp; newDocument.documentElement.nodeName == &#039;svg&#039;)
+							    		{
+							    			var tmp = newDocument.documentElement.getAttribute(&#039;content&#039;);
+							    			
+							    			if (tmp != null &amp;&amp; tmp.charAt(0) != &#039;&lt;&#039; &amp;&amp; tmp.charAt(0) != &#039;%&#039;)
+							    			{
+							    				tmp = unescape((window.atob) ? atob(tmp) : Base64.decode(cont, tmp));
+							    			}
+							    			
+							    			if (tmp != null &amp;&amp; tmp.charAt(0) == &#039;%&#039;)
+							    			{
+							    				tmp = decodeURIComponent(tmp);
+							    			}
+							    			
+							    			if (tmp != null &amp;&amp; tmp.length &gt; 0)
+							    			{
+							    				newDocument = mxUtils.parseXml(tmp);
+							    			}
+							    		}
+							    		
+							    		if (newDocument.documentElement.nodeName == &#039;mxfile&#039;)
+							    		{
+							    			var diagrams = newDocument.documentElement.getElementsByTagName(&#039;diagram&#039;);
+							    			
+							    			if (diagrams.length &gt; 0)
+							    			{
+												var text = mxUtils.trim(mxUtils.getTextContent(diagrams[0]));
+												
+												if (text.length &gt; 0)
+												{
+													var tmp = Graph.decompress(text);
+													
+													if (tmp != null &amp;&amp; tmp.length &gt; 0)
+													{
+														newDocument = mxUtils.parseXml(tmp);
+													}
+												}
+												else
+												{
+													var temp = mxUtils.getChildNodes(diagrams[0]);
+													
+													if (temp.length &gt; 0)
+													{
+														// Creates new document for unique IDs within mxGraphModel
+														newDocument = mxUtils.createXmlDocument();
+														newDocument.appendChild(newDocument.importNode(temp[0], true));
+													}
+												}
+							    			}
+							    		}
+							    		
+							    		decoder = new mxCodec(newDocument);
+							    		decoder.decode(newDocument.documentElement, graph.getModel());
+							    		graphAdded(newDocument.documentElement);
+							    	}
+							    	else
+							    	{
+							    		graph.container.innerText = &#039;Cannot load &#039; + url;
+							    	}
+						    	}
+								catch (e)
+								{
+									graph.container.innerText = &#039;Cannot load &#039; + url + &#039;: &#039; + e.message;
+								}
+						    });
+						    
+						    xhr.onerror = function()
+						    {
+						    	graph.container.innerText = &#039;Cannot load &#039; + url;
+						    };
+						
+						    xhr.send();
+						}
+						catch (e)
+						{
+							graph.container.innerText = &#039;Cannot load &#039; + url + &#039;: &#039; + e.message;
+						}
+					}
+					else
+					{
+						decoder.decode(node, graph.getModel());
+						graphAdded(node);
+					}
+
+					if (container.style.width != &#039;100%&#039; &amp;&amp; fit != &#039;0&#039; &amp;&amp; resize == &#039;1&#039;)
+					{
+						graph.resizeContainer = true;
+						graph.centerZoom = false;
+					}
+					
+					// Adds zoom, edit etc in top, left corner
+					var buttons = document.createElement(&#039;div&#039;);
+					buttons.style.position = &#039;absolute&#039;;
+					buttons.style.overflow = &#039;visible&#039;;
+					buttons.style.cursor = &#039;pointer&#039;;
+
+					var bs = graph.getBorderSizes();
+					
+					var left = 0;
+					var fontSize = 10;
+					var bw = 16;
+					var bh = 16;
+					
+					if (mxClient.IS_TOUCH)
+					{
+						bw = 24;
+						bh = 24;
+						var fontSize = 14;
+					}
+					
+					function addButton(label, funct)
+					{
+						var btn = document.createElement(&#039;div&#039;);
+						btn.style.position = &#039;absolute&#039;;
+						btn.style.border = &#039;1px solid gray&#039;;
+						btn.style.textAlign = &#039;center&#039;;
+						btn.style.cursor = &#039;hand&#039;;
+						btn.style.width = bw + &#039;px&#039;;
+						btn.style.height = bh + &#039;px&#039;;
+						btn.style.left = left + &#039;px&#039;;
+						btn.style.top = &#039;0px&#039;;
+						btn.style.backgroundColor = &#039;white&#039;;
+						mxUtils.setOpacity(btn, 50);
+						
+						var table = document.createElement(&#039;table&#039;);
+						table.style.borderWidth = &#039;0px&#039;;
+						table.style.width = &#039;100%&#039;;
+						table.style.height = &#039;100%&#039;;
+						var tbody = document.createElement(&#039;tbody&#039;);
+						var tr = document.createElement(&#039;tr&#039;);
+						var td = document.createElement(&#039;td&#039;);
+						td.style.verticalAlign = &#039;middle&#039;;
+						td.style.textAlign = &#039;center&#039;;
+						td.style.fontSize = fontSize + &#039;px&#039;;
+						td.style.padding = &#039;0px&#039;;
+						mxUtils.write(td, label);
+						tr.appendChild(td);
+						tbody.appendChild(tr);
+						table.appendChild(tbody);
+						btn.appendChild(table);
+		
+						mxEvent.addListener(btn, (mxClient.IS_POINTER) ? &#039;pointerdown&#039; : &#039;mousedown&#039;, function(evt)
+						{
+							mxEvent.consume(evt);
+						});
+						
+						mxEvent.addListener(btn, (mxClient.IS_POINTER) ? &#039;pointerup&#039; : &#039;mouseup&#039;, function(evt)
+						{
+							funct();
+							mxEvent.consume(evt);
+						});
+
+						if (!mxClient.IS_POINTER &amp;&amp; mxClient.IS_TOUCH)
+						{
+							mxEvent.addListener(btn, &#039;touchstart&#039;, function(evt)
+							{
+								mxEvent.consume(evt);
+							});
+							
+							mxEvent.addListener(btn, &#039;touchend&#039;, function(evt)
+							{
+								funct();
+								mxEvent.consume(evt);
+							});
+						}
+						
+						left += bw;
+						buttons.appendChild(btn);
+						
+						return btn;
+					};
+													
+					var zoom = configNode.getAttribute(&#039;zoom&#039;);
+					
+					if (zoom != &#039;0&#039;)
+					{
+						addButton(&#039;+&#039;, function()
+						{
+							graph.zoomIn();
+						});
+						
+						addButton(&#039;-&#039;, function()
+						{
+							graph.zoomOut();
+						});
+					}
+					
+					var edit = configNode.getAttribute(&#039;edit&#039;);
+					
+					if (edit != null)
+					{
+						var button = addButton(&#039;&#039;, function()
+						{
+							// _blank is a special value to open a new editor
+							// in client mode and send the XML as a message
+							if (edit == &#039;_blank&#039;)
+							{
+								if (url != null)
+								{
+									window.open(&#039;https://app.diagrams.net/#U&#039; + encodeURIComponent(url));
+								}
+								else
+								{
+									var wnd = null;
+								
+									var receive = function(evt)
+									{
+										if (evt.data == &#039;ready&#039; &amp;&amp; evt.source == wnd)
+										{
+											wnd.postMessage(xml, &#039;*&#039;);
+											window.removeEventListener(&#039;message&#039;, receive);
+										}
+									};
+									
+									window.addEventListener(&#039;message&#039;, receive);
+									wnd = window.open(&#039;https://app.diagrams.net/?client=1&#039;);
+								}
+							}
+							else
+							{
+								window.open(edit);
+							}
+						});
+						
+						// Do not use HTML entity to avoid problems with XHTML
+						button.innerText = &#039;...&#039;;
+					}
+					
+					function show()
+					{
+						buttons.style.top = (container.offsetTop + bs.y) + &#039;px&#039;;
+						buttons.style.left = (container.offsetLeft + bs.x) + &#039;px&#039;;
+						buttons.style.visibility = &#039;visible&#039;;
+					};
+					
+					if (!mxClient.IS_POINTER &amp;&amp; !mxClient.IS_TOUCH)
+					{
+						function hide()
+						{
+							buttons.style.visibility = &#039;hidden&#039;;
+						};
+						
+						mxEvent.addListener(container, &#039;mouseover&#039;, show);
+						mxEvent.addListener(buttons, &#039;mouseover&#039;, show);
+						mxEvent.addListener(container, &#039;mouseout&#039;, hide);
+						mxEvent.addListener(buttons, &#039;mouseout&#039;, hide);
+						hide();
+					}
+					else
+					{
+						show();
+					}
+					
+					if (buttons.firstChild != null)
+					{
+						if (container.nextSibling != null)
+						{
+							container.parentNode.insertBefore(buttons, container.nextSibling);
+						}
+						else
+						{
+							container.parentNode.appendChild(buttons);
+						}
+					}
+					
+					if (typeof(window.mxClientOnCreate) == &#039;function&#039;)
+					{
+						window.mxClientOnCreate(graph);
+					}
+				}
+			}
+			catch (err)
+			{
+				if (window.console != null)
+				{
+					console.log(&#039;Error:&#039;, err);
+				}
+			}
+			
+			return graph;
+		};
+		
+		if (typeof(mxClientOnLoad) == &#039;function&#039;)
+		{
+			mxClientOnLoad(stylesheet, initGraph);
+		}
+		else if (mxClient.isBrowserSupported())
+		{
+			var tmp = document.getElementsByTagName(&#039;*&#039;);
+			var divs = [];
+			
+			for (var i = 0; i &lt; tmp.length; i++)
+			{
+				divs.push(tmp[i]);
+			}
+			
+			for (var i = 0; i &lt; divs.length; i++)
+			{
+				if (divs[i].className.toString().indexOf(&#039;mxgraph&#039;) &gt;= 0)
+				{
+					initGraph(divs[i]);
+				}
+			}
+		}
+	})();
+// Last line will be replaced by servlet for passing arguments.
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

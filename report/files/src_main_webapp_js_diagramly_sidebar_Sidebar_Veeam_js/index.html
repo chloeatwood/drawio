@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Veeam.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Veeam.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">58.82</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">914</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">34.73</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">30.61</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addVeeamPalette = function()
+	{
+//		this.setCurrentSearchEntryLibrary(&#039;veeam&#039;, &#039;veeamData Center&#039;);
+		this.addVeeamDataCenterPalette();
+//		this.setCurrentSearchEntryLibrary(&#039;veeam&#039;, &#039;veeamMisc&#039;);
+		this.addVeeamMiscPalette();
+//		this.setCurrentSearchEntryLibrary(&#039;veeam&#039;, &#039;veeamSoftware&#039;);
+		this.addVeeamSoftwarePalette();
+//		this.setCurrentSearchEntryLibrary(&#039;veeam&#039;, &#039;veeamStorage&#039;);
+		this.addVeeamStoragePalette();
+//		this.setCurrentSearchEntryLibrary(&#039;veeam&#039;, &#039;veeamUsersStatus&#039;);
+		this.addVeeamUsersStatusPalette();
+//		this.setCurrentSearchEntryLibrary(&#039;veeam&#039;, &#039;veeamVASComponents&#039;);
+		this.addVeeamVASComponentsPalette();
+//		this.setCurrentSearchEntryLibrary(&#039;veeam&#039;, &#039;veeamBackup Replication&#039;);
+		this.addVeeamBackupReplicationPalette();
+//		this.setCurrentSearchEntryLibrary(&#039;veeam&#039;, &#039;veeamProducts&#039;);
+		this.addVeeamProductsPalette();
+//		this.setCurrentSearchEntryLibrary(&#039;veeam&#039;, &#039;veeamVMs and Tape&#039;);
+		this.addVeeamVMsTapePalette();
+		this.setCurrentSearchEntryLibrary(&#039;veeam2&#039;, &#039;veeam23D&#039;);
+		this.addVeeam3DPalette();
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+	Sidebar.prototype.addVeeamDataCenterPalette = function()
+	{
+		var sn = &#039;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s = &#039;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s2 = &#039;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s3 = &#039;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+		var s4 = &#039;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.veeam.data_center&#039;;
+		var dt = &#039;veeam vmware virtual machine data center&#039;;
+		
+		var w = 4.0;
+		var h = 4.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s3 + &#039;hyper_v_vmware_host;&#039;,
+					w * 27, h * 26, &#039;&#039;, &#039;VMware/Hyper-V Host&#039;, null, null, this.getTagsForStencil(gn, &#039;hyper vmware host&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;hyper_v_host;&#039;,
+					w * 27, h * 26, &#039;&#039;, &#039;Hyper-V Host&#039;, null, null, this.getTagsForStencil(gn, &#039;hyper host&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;vmware_host;&#039;,
+					w * 27, h * 26, &#039;&#039;, &#039;VMware Host&#039;, null, null, this.getTagsForStencil(gn, &#039;vmware host&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;virtual_host;&#039;,
+					w * 27, h * 26, &#039;&#039;, &#039;Virtual Host&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual host&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;production_site;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Production Site&#039;, null, null, this.getTagsForStencil(gn, &#039;production site&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;dr_site;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;DR Site&#039;, null, null, this.getTagsForStencil(gn, &#039;dr site&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;esx_esxi;&#039;,
+					w * 8.3, h * 12.7, &#039;&#039;, &#039;Physical Server&#039;, null, null, this.getTagsForStencil(gn, &#039;esx esxi&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;server;&#039;,
+					w * 17.9, h * 4.7, &#039;&#039;, &#039;Server&#039;, null, null, this.getTagsForStencil(gn, &#039;esx esxi&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;server_stack;&#039;,
+					w * 14.3, h * 12.4, &#039;&#039;, &#039;Server stack&#039;, null, null, this.getTagsForStencil(gn, &#039;server stack&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;data_center;&#039;,
+					w * 19, h * 12.5, &#039;&#039;, &#039;Data center&#039;, null, null, this.getTagsForStencil(gn, &#039;data center&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;cluster;&#039;,
+					w * 25.7, h * 12.3, &#039;&#039;, &#039;Cluster&#039;, null, null, this.getTagsForStencil(gn, &#039;cluster&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;controller;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;controller&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;cpu;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;CPU&#039;, null, null, this.getTagsForStencil(gn, &#039;cpu&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;cpu_socket;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;CPU socket&#039;, null, null, this.getTagsForStencil(gn, &#039;cpu socket&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cloud_gateway;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud gateway&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;laptop;&#039;,
+					w * 14.6, h * 11, &#039;&#039;, &#039;Laptop&#039;, null, null, this.getTagsForStencil(gn, &#039;laptop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;monitor;&#039;,
+					w * 10.8, h * 11.9, &#039;&#039;, &#039;Monitor&#039;, null, null, this.getTagsForStencil(gn, &#039;monitor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;proxy;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Proxy&#039;, null, null, this.getTagsForStencil(gn, &#039;proxy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;proxy_appliance;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Proxy Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;proxy appliance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;ram;&#039;,
+					w * 12.1, h * 6.3, &#039;&#039;, &#039;RAM&#039;, null, null, this.getTagsForStencil(gn, &#039;ram random access memory&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;raid_controller;&#039;,
+					w * 10.5, h * 7.3, &#039;&#039;, &#039;RAID controller&#039;, null, null, this.getTagsForStencil(gn, &#039;raid controller&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;sd_card;&#039;,
+					w * 8.1, h * 9.7, &#039;&#039;, &#039;SD card&#039;, null, null, this.getTagsForStencil(gn, &#039;sd card&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;workstation;&#039;,
+					w * 19.1, h * 12.8, &#039;&#039;, &#039;Workstation&#039;, null, null, this.getTagsForStencil(gn, &#039;workstation&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;wan_accelerator;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;WAN Accelerator&#039;, null, null, this.getTagsForStencil(gn, &#039;wan accelerator wireless area network&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;usb;&#039;,
+					w * 13.2, h * 4.6, &#039;&#039;, &#039;USB&#039;, null, null, this.getTagsForStencil(gn, &#039;usb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;network_card;&#039;,
+					w * 10.7, h * 7.5, &#039;&#039;, &#039;Network Card&#039;, null, null, this.getTagsForStencil(gn, &#039;network card&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;switch;&#039;,
+					w * 16, h * 2.7, &#039;&#039;, &#039;Network Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;network switch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;service_vnic;&#039;,
+					w * 14.2, h * 13.5, &#039;&#039;, &#039;Service vNIC&#039;, null, null, this.getTagsForStencil(gn, &#039;service vnic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;virtual_switch;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Virtual Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;switch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;vnic;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;vNIC&#039;, null, null, this.getTagsForStencil(gn, &#039;vnic&#039;, dt).join(&#039; &#039;))
+					
+		];
+			
+		this.addPalette(&#039;veeamData Center&#039;, &#039;Veeam / Data Center&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addVeeamMiscPalette = function()
+	{
+		var sn = &#039;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s2 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s3 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+		var s4 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.veeam.misc&#039;;
+		var dt = &#039;veeam vmware virtual machine misc miscellaneous&#039;;
+		
+		var w = 4.0;
+		var h = 4.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;alarm;&#039;,
+					w * 13.2, h * 9.4, &#039;&#039;, &#039;Alarm&#039;, null, null, this.getTagsForStencil(gn, &#039;alarm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;building;&#039;,
+					w * 15.8, h * 13.8, &#039;&#039;, &#039;Building&#039;, null, null, this.getTagsForStencil(gn, &#039;building&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cloud;&#039;,
+					w * 14.7, h * 10.4, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;checked_doc;&#039;,
+					w * 12.7, h * 15.4, &#039;&#039;, &#039;Checked doc&#039;, null, null, this.getTagsForStencil(gn, &#039;checked doc document&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;download;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Download&#039;, null, null, this.getTagsForStencil(gn, &#039;download&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;dns;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;DNS&#039;, null, null, this.getTagsForStencil(gn, &#039;dns domain name server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;encryption_key;&#039;,
+					w * 9.2, h * 12.7, &#039;&#039;, &#039;Encryption key&#039;, null, null, this.getTagsForStencil(gn, &#039;dns domain name server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;file;&#039;,
+					w * 9.2, h * 12.7, &#039;&#039;, &#039;File&#039;, null, null, this.getTagsForStencil(gn, &#039;file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;folder;&#039;,
+					w * 13.8, h * 12.8, &#039;&#039;, &#039;Folder&#039;, null, null, this.getTagsForStencil(gn, &#039;folder&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;globe;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Globe&#039;, null, null, this.getTagsForStencil(gn, &#039;globe&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;iso;&#039;,
+					w * 9.2, h * 12.7, &#039;&#039;, &#039;ISO&#039;, null, null, this.getTagsForStencil(gn, &#039;iso international standard organization&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;letter;&#039;,
+					w * 11.6, h * 8.7, &#039;&#039;, &#039;Letter&#039;, null, null, this.getTagsForStencil(gn, &#039;letter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;library;&#039;,
+					w * 12, h * 9.2, &#039;&#039;, &#039;Library&#039;, null, null, this.getTagsForStencil(gn, &#039;library&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;license;&#039;,
+					w * 12.7, h * 14.1, &#039;&#039;, &#039;License&#039;, null, null, this.getTagsForStencil(gn, &#039;license&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;magnifying_glass;pointerEvents=1;&#039;,
+					w * 13.8, h * 13.6, &#039;&#039;, &#039;Magnifying Glass&#039;, null, null, this.getTagsForStencil(gn, &#039;magnifying glass&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;script;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Script&#039;, null, null, this.getTagsForStencil(gn, &#039;script&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;search;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Search&#039;, null, null, this.getTagsForStencil(gn, &#039;search&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;smb;pointerEvents=1;&#039;,
+					w * 20, h * 14.1, &#039;&#039;, &#039;SMB&#039;, null, null, this.getTagsForStencil(gn, &#039;smb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;tasks;&#039;,
+					w * 9.2, h * 12.7, &#039;&#039;, &#039;Tasks&#039;, null, null, this.getTagsForStencil(gn, &#039;tasks&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;table;&#039;,
+					w * 12.7, h * 12.7, &#039;&#039;, &#039;Table&#039;, null, null, this.getTagsForStencil(gn, &#039;table&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;time;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Time&#039;, null, null, this.getTagsForStencil(gn, &#039;time&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;resource_pool;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Part&#039;, null, null, this.getTagsForStencil(gn, &#039;resource pool&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;private_key;&#039;,
+					w * 13.9, h * 12.7, &#039;&#039;, &#039;Private Key&#039;, null, null, this.getTagsForStencil(gn, &#039;private key&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;report;&#039;,
+					w * 9.2, h * 12.7, &#039;&#039;, &#039;Report&#039;, null, null, this.getTagsForStencil(gn, &#039;report&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;privilege;&#039;,
+					w * 15.1, h * 14.5, &#039;&#039;, &#039;Policy&#039;, null, null, this.getTagsForStencil(gn, &#039;policy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;restore;pointerEvents=1;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Restore&#039;, null, null, this.getTagsForStencil(gn, &#039;restore&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;role;&#039;,
+					w * 9.2, h * 12.7, &#039;&#039;, &#039;Role&#039;, null, null, this.getTagsForStencil(gn, &#039;role&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;transportation;&#039;,
+					w * 13.8, h * 9.6, &#039;&#039;, &#039;Transportation&#039;, null, null, this.getTagsForStencil(gn, &#039;transportation&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;veeamMisc&#039;, &#039;Veeam / Miscellaneous&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addVeeamSoftwarePalette = function()
+	{
+		var sn = &#039;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s2 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s3 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+		var s4 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.veeam.software&#039;;
+		var dt = &#039;veeam vmware virtual machine software&#039;;
+		
+		var w = 4.0;
+		var h = 4.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(&#039;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#07B152;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.veeam_logo;&#039;,
+					w * 27.4, h * 4.8, &#039;&#039;, &#039;Veeam logo&#039;, null, null, this.getTagsForStencil(gn, &#039;veeam logo&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;active_directory;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Active Directory&#039;, null, null, this.getTagsForStencil(gn, &#039;active directory&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;agent;pointerEvents=1;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Agent&#039;, null, null, this.getTagsForStencil(gn, &#039;agent&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;automated_testing;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Automated Testing&#039;, null, null, this.getTagsForStencil(gn, &#039;automated testing&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;backup_browser;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Backup Browser&#039;, null, null, this.getTagsForStencil(gn, &#039;backup browser&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;data_mover;pointerEvents=1;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Data Mover&#039;, null, null, this.getTagsForStencil(gn, &#039;data mover&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;database;&#039;,
+					w * 15.7, h * 13.5, &#039;&#039;, &#039;Database&#039;, null, null, this.getTagsForStencil(gn, &#039;database db&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;deduplication;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Deduplication&#039;, null, null, this.getTagsForStencil(gn, &#039;deduplication&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;failover_plan;&#039;,
+					w * 9.6, h * 13.6, &#039;&#039;, &#039;Failover plan&#039;, null, null, this.getTagsForStencil(gn, &#039;failover plan&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;file_system_browser;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;File System Browser&#039;, null, null, this.getTagsForStencil(gn, &#039;file system browser&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;failover_protective_snapshot;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Failover Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;failover protection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;interface;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Interface&#039;, null, null, this.getTagsForStencil(gn, &#039;interface&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;monitoring_console;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Monitoring Console&#039;, null, null, this.getTagsForStencil(gn, &#039;monitoring console&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;linux;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Linux&#039;, null, null, this.getTagsForStencil(gn, &#039;linux&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;ms_sharepoint;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;MS SharePoint&#039;, null, null, this.getTagsForStencil(gn, &#039;sharepoint&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;ms_sql;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;MS SQL&#039;, null, null, this.getTagsForStencil(gn, &#039;sql&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;ms_exchange;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;MS Exchange&#039;, null, null, this.getTagsForStencil(gn, &#039;exchange&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;ms_exchange_items;&#039;,
+					w * 20.4, h * 17.3, &#039;&#039;, &#039;MS Exchange items&#039;, null, null, this.getTagsForStencil(gn, &#039;exchange items&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;ms_office;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;MS Office&#039;, null, null, this.getTagsForStencil(gn, &#039;office&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;ms_outlook;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;MS Outlook&#039;, null, null, this.getTagsForStencil(gn, &#039;outlook&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;web_console;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Web Console&#039;, null, null, this.getTagsForStencil(gn, &#039;web console&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;vpn;&#039;,
+					w * 13.5, h * 9.5, &#039;&#039;, &#039;VPN&#039;, null, null, this.getTagsForStencil(gn, &#039;vpn virtual private network&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;service;&#039;,
+					w * 8.3, h * 8.3, &#039;&#039;, &#039;Service&#039;, null, null, this.getTagsForStencil(gn, &#039;service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#75B4DB;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.volume_shadow_copy;&#039;,
+					w * 14.3, h * 14.3, &#039;&#039;, &#039;Volume shadow copy&#039;, null, null, this.getTagsForStencil(gn, &#039;volume shadow copy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;ms_windows;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;MS Windows&#039;, null, null, this.getTagsForStencil(gn, &#039;windows&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;powershell_extension;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;PowerShell Extension&#039;, null, null, this.getTagsForStencil(gn, &#039;powershell extension&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;vcloud_director&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;vCloud Director&#039;, null, null, this.getTagsForStencil(gn, &#039;vcloud director virtual cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;vsphere&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;vSphere&#039;, null, null, this.getTagsForStencil(gn, &#039;vsphere virtual sphere&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;web_ui;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Web UI&#039;, null, null, this.getTagsForStencil(gn, &#039;web ui user interface&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;transport_service;pointerEvents=1;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Transport Service&#039;, null, null, this.getTagsForStencil(gn, &#039;transport service&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;veeamSoftware&#039;, &#039;Veeam / Software&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addVeeamStoragePalette = function()
+	{
+		var sn = &#039;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s2 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s3 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+		var s4 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.veeam.storage&#039;;
+		var dt = &#039;veeam vmware virtual machine storage&#039;;
+		
+		var w = 4.0;
+		var h = 4.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;backup_repository;&#039;,
+					w * 13.5, h * 12.5, &#039;&#039;, &#039;Backup Repository&#039;, null, null, this.getTagsForStencil(gn, &#039;backup repository&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;remote_repository;&#039;,
+					w * 11.9, h * 11.6, &#039;&#039;, &#039;Remote Repository&#039;, null, null, this.getTagsForStencil(gn, &#039;remote repository&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;shared_folder;&#039;,
+					w * 13.8, h * 16, &#039;&#039;, &#039;Shared Folder&#039;, null, null, this.getTagsForStencil(gn, &#039;shared folder&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;datastore;&#039;,
+					w * 11.1, h * 11.3, &#039;&#039;, &#039;Datastore&#039;, null, null, this.getTagsForStencil(gn, &#039;datastore&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;snapshot;&#039;,
+					w * 13.9, h * 12.2, &#039;&#039;, &#039;Snapshot&#039;, null, null, this.getTagsForStencil(gn, &#039;snapshot&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;storage_cluster;&#039;,
+					w * 13.9, h * 14, &#039;&#039;, &#039;Storage Cluster&#039;, null, null, this.getTagsForStencil(gn, &#039;storage cluster&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;datastore_volume;&#039;,
+					w * 15.8, h * 4.2, &#039;&#039;, &#039;Data Volume&#039;, null, null, this.getTagsForStencil(gn, &#039;data volume&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;physical_storage;&#039;,
+					w * 14.8, h * 5, &#039;&#039;, &#039;Physical Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;physical storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#75B4DB;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.datastore;&#039;,
+					w * 10.8, h * 11.1, &#039;&#039;, &#039;Datastore&#039;, null, null, this.getTagsForStencil(gn, &#039;datastore&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;full_datastore;&#039;,
+					w * 10.8, h * 11.1, &#039;&#039;, &#039;Full Datastore&#039;, null, null, this.getTagsForStencil(gn, &#039;full datastore&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;medium_datastore;&#039;,
+					w * 10.8, h * 11.1, &#039;&#039;, &#039;Medium Datastore&#039;, null, null, this.getTagsForStencil(gn, &#039;medium datastore&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;free_datastore;&#039;,
+					w * 10.8, h * 11.1, &#039;&#039;, &#039;Free Datastore&#039;, null, null, this.getTagsForStencil(gn, &#039;free datastore&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;remote_storage;&#039;,
+					w * 11.6, h * 11.6, &#039;&#039;, &#039;Remote Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;remote storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;vm_backup;&#039;,
+					w * 14.3, h * 13.3, &#039;&#039;, &#039;VM Backup&#039;, null, null, this.getTagsForStencil(gn, &#039;vm backup&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;lost_space;&#039;,
+					w * 10.8, h * 11.1, &#039;&#039;, &#039;Lost Space&#039;, null, null, this.getTagsForStencil(gn, &#039;lost space&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;hard_drive;&#039;,
+					w * 10, h * 12, &#039;&#039;, &#039;Hard Drive&#039;, null, null, this.getTagsForStencil(gn, &#039;hard drive&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;disk_partition;&#039;,
+					w * 14.3, h * 14.3, &#039;&#039;, &#039;Disk partition&#039;, null, null, this.getTagsForStencil(gn, &#039;disk partition&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;local_disk;&#039;,
+					w * 14.3, h * 14.2, &#039;&#039;, &#039;Local disk&#039;, null, null, this.getTagsForStencil(gn, &#039;local disk&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;audio_file;&#039;,
+					w * 9.2, h * 12.7, &#039;&#039;, &#039;Audio file&#039;, null, null, this.getTagsForStencil(gn, &#039;audio file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;backup_file;&#039;,
+					w * 14.4, h * 13.3, &#039;&#039;, &#039;Backup file&#039;, null, null, this.getTagsForStencil(gn, &#039;audio file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;data_file;&#039;,
+					w * 11.8, h * 15.2, &#039;&#039;, &#039;Data file&#039;, null, null, this.getTagsForStencil(gn, &#039;data file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;google_document;&#039;,
+					w * 9.2, h * 12.7, &#039;&#039;, &#039;Google document&#039;, null, null, this.getTagsForStencil(gn, &#039;google document&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;video_file;&#039;,
+					w * 9.2, h * 12.7, &#039;&#039;, &#039;Video file&#039;, null, null, this.getTagsForStencil(gn, &#039;video file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;vsb_file;&#039;,
+					w * 9.2, h * 12.7, &#039;&#039;, &#039;VSB file&#039;, null, null, this.getTagsForStencil(gn, &#039;vsb file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;windows_repository;&#039;,
+					w * 13.3, h * 12.3, &#039;&#039;, &#039;Windows Repository&#039;, null, null, this.getTagsForStencil(gn, &#039;windows repository&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;linux_repository;&#039;,
+					w * 13.4, h * 12.4, &#039;&#039;, &#039;Linux Repository&#039;, null, null, this.getTagsForStencil(gn, &#039;linux repository&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;veeamStorage&#039;, &#039;Veeam / Storage&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addVeeamUsersStatusPalette = function()
+	{
+		var sn = &#039;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s2 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s3 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+		var s4 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.veeam.storage&#039;;
+		var dt = &#039;veeam vmware virtual machine users status&#039;;
+		
+		var w = 4.0;
+		var h = 4.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;user;&#039;,
+					w * 8, h * 14.5, &#039;&#039;, &#039;User&#039;, null, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;group;&#039;,
+					w * 13.4, h * 15.1, &#039;&#039;, &#039;User Group&#039;, null, null, this.getTagsForStencil(gn, &#039;user group&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;company_user;&#039;,
+					w * 11.1, h * 12.2, &#039;&#039;, &#039;Company User&#039;, null, null, this.getTagsForStencil(gn, &#039;company user&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;company_owner;&#039;,
+					w * 11.1, h * 12.2, &#039;&#039;, &#039;Company Owner&#039;, null, null, this.getTagsForStencil(gn, &#039;company owner&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;portal_admin;&#039;,
+					w * 11.1, h * 12.2, &#039;&#039;, &#039;Portal Admin&#039;, null, null, this.getTagsForStencil(gn, &#039;portal admin&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;company_administrator;&#039;,
+					w * 11.1, h * 12.2, &#039;&#039;, &#039;Company Administrator&#039;, null, null, this.getTagsForStencil(gn, &#039;company administrator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;alert;&#039;,
+					w * 8.3, h * 8.3, &#039;&#039;, &#039;Alert&#039;, null, null, this.getTagsForStencil(gn, &#039;alert&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;zipped;pointerEvents=1;&#039;,
+					w * 1.7, h * 14.3, &#039;&#039;, &#039;Zipped&#039;, null, null, this.getTagsForStencil(gn, &#039;zipped&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;shared;&#039;,
+					w * 11.5, h * 6.2, &#039;&#039;, &#039;Shared&#039;, null, null, this.getTagsForStencil(gn, &#039;shared&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;checked;&#039;,
+					w * 9, h * 9, &#039;&#039;, &#039;Checked&#039;, null, null, this.getTagsForStencil(gn, &#039;checked&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;eject;&#039;,
+					w * 9, h * 9, &#039;&#039;, &#039;Eject&#039;, null, null, this.getTagsForStencil(gn, &#039;eject&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;recording;&#039;,
+					w * 9, h * 9, &#039;&#039;, &#039;Recording&#039;, null, null, this.getTagsForStencil(gn, &#039;recording&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;powered;&#039;,
+					w * 9, h * 9, &#039;&#039;, &#039;Powered&#039;, null, null, this.getTagsForStencil(gn, &#039;powered&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;failed;&#039;,
+					w * 9, h * 9, &#039;&#039;, &#039;Failed&#039;, null, null, this.getTagsForStencil(gn, &#039;failed&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;paused;&#039;,
+					w * 9, h * 9, &#039;&#039;, &#039;Paused&#039;, null, null, this.getTagsForStencil(gn, &#039;paused&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;unavailable;&#039;,
+					w * 9, h * 9, &#039;&#039;, &#039;Unavailable&#039;, null, null, this.getTagsForStencil(gn, &#039;unavailable&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;active;&#039;,
+					w * 9, h * 9, &#039;&#039;, &#039;Active&#039;, null, null, this.getTagsForStencil(gn, &#039;active&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;delayed;&#039;,
+					w * 9, h * 9, &#039;&#039;, &#039;Delayed&#039;, null, null, this.getTagsForStencil(gn, &#039;delayed&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;restore;pointerEvents=1;&#039;,
+					w * 7.8, h * 7.4, &#039;&#039;, &#039;Restore&#039;, null, null, this.getTagsForStencil(gn, &#039;restore&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;locked;&#039;,
+					w * 7.6, h * 8.6, &#039;&#039;, &#039;Locked&#039;, null, null, this.getTagsForStencil(gn, &#039;locked&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;unlocked;&#039;,
+					w * 10.4, h * 8.7, &#039;&#039;, &#039;Unlocked&#039;, null, null, this.getTagsForStencil(gn, &#039;unlocked&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;veeamUsersStatus&#039;, &#039;Veeam / Users and Status&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addVeeamVASComponentsPalette = function()
+	{
+		var sn = &#039;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s2 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s3 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+		var s4 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.veeam.vascomponent&#039;;
+		var dt = &#039;veeam vmware virtual machine vas availability suite component&#039;;
+		
+		var w = 4.0;
+		var h = 4.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s3 + &#039;database_server;&#039;,
+					w * 19, h * 18, &#039;&#039;, &#039;Database Server&#039;, null, null, this.getTagsForStencil(gn, &#039;database server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;gateway_server;&#039;,
+					w * 19, h * 18, &#039;&#039;, &#039;Gateway Server&#039;, null, null, this.getTagsForStencil(gn, &#039;gateway server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;mount_server;&#039;,
+					w * 19, h * 18, &#039;&#039;, &#039;Mount Server&#039;, null, null, this.getTagsForStencil(gn, &#039;mount server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;proxy_server;&#039;,
+					w * 19, h * 18, &#039;&#039;, &#039;Proxy Server&#039;, null, null, this.getTagsForStencil(gn, &#039;proxy server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;repository_server;&#039;,
+					w * 19, h * 18, &#039;&#039;, &#039;Repository Server&#039;, null, null, this.getTagsForStencil(gn, &#039;repository server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;veeam_backup_search_server;&#039;,
+					w * 19, h * 18, &#039;&#039;, &#039;Search Server&#039;, null, null, this.getTagsForStencil(gn, &#039;backup search server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;tape_server;&#039;,
+					w * 19, h * 18, &#039;&#039;, &#039;Tape Server&#039;, null, null, this.getTagsForStencil(gn, &#039;tape server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;vsphere_server;&#039;,
+					w * 19, h * 18, &#039;&#039;, &#039;vSphere Server&#039;, null, null, this.getTagsForStencil(gn, &#039;vsphere server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;windows_linux_server;&#039;,
+					w * 19, h * 18, &#039;&#039;, &#039;Windows Linux Server&#039;, null, null, this.getTagsForStencil(gn, &#039;windows linux server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;veeam_backup_and_replication_server;&#039;,
+					w * 19, h * 18, &#039;&#039;, &#039;Backup and Replication Server&#039;, null, null, this.getTagsForStencil(gn, &#039;backup and replication server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;veeam_backup_enterprise_manager_server;&#039;,
+					w * 19, h * 18, &#039;&#039;, &#039;Backup Enterprise Manager Server&#039;, null, null, this.getTagsForStencil(gn, &#039;backup enterprise manager server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;one_server;&#039;,
+					w * 19, h * 18, &#039;&#039;, &#039;ONE Server&#039;, null, null, this.getTagsForStencil(gn, &#039;one server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeam_explorer_for_active_directory;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Explorer for Active Directory&#039;, null, null, this.getTagsForStencil(gn, &#039;explorer for active directory&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeam_explorer_for_exchange;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Explorer for Exchange&#039;, null, null, this.getTagsForStencil(gn, &#039;explorer for exchange&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;explorer_for_oracle;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Explorer for Oracle&#039;, null, null, this.getTagsForStencil(gn, &#039;explorer for oracle&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeam_explorer_for_sharepoint;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Explorer for SharePoint&#039;, null, null, this.getTagsForStencil(gn, &#039;explorer for sharepoint&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;explorer_for_storage_snapshots;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Explorer for Storage Snapshots&#039;, null, null, this.getTagsForStencil(gn, &#039;explorer for storage snapshots&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeam_explorer_for_sql;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Explorer for SQL&#039;, null, null, this.getTagsForStencil(gn, &#039;explorer for sql&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeam_availability_suite;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Availability Suite&#039;, null, null, this.getTagsForStencil(gn, &#039;availability suite&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;backup_replication;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Backup and Replication&#039;, null, null, this.getTagsForStencil(gn, &#039;backup and replication&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;enterprise_manager;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Enterprise Manager&#039;, null, null, this.getTagsForStencil(gn, &#039;enterprise manager&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;linux_repository;&#039;,
+					w * 12.2, h * 11.2, &#039;&#039;, &#039;Linux Repository&#039;, null, null, this.getTagsForStencil(gn, &#039;linux repository&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;windows_repository;&#039;,
+					w * 12.2, h * 11.2, &#039;&#039;, &#039;Windows Repository&#039;, null, null, this.getTagsForStencil(gn, &#039;windows repository&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;flr_helper_appliance;&#039;,
+					w * 12.4, h * 12.5, &#039;&#039;, &#039;FLR Helper Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;flr helper appliance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;one_client;&#039;,
+					w * 22.7, h * 15.4, &#039;&#039;, &#039;ONE client&#039;, null, null, this.getTagsForStencil(gn, &#039;one client&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;veeamVASComponents&#039;, &#039;Veeam / Availability Suite components&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addVeeamBackupReplicationPalette = function()
+	{
+		var sn = &#039;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s2 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s3 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+		var s4 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.veeam.backup_replication&#039;;
+		var dt = &#039;veeam vmware virtual machine backup replication&#039;;
+		
+		var w = 4.0;
+		var h = 4.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s2 + &#039;built_in_wan_acceleration;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Built-in WAN Acceleration&#039;, null, null, this.getTagsForStencil(gn, &#039;built in wan acceleration wireless area network&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;1_click_failover_orchestration;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;1 Click Failover Orchestration&#039;, null, null, this.getTagsForStencil(gn, &#039;one click failover orchestration&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;advanced_refs_integration;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Advanced ReFS integration&#039;, null, null, this.getTagsForStencil(gn, &#039;advanced refs integration&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;assisted_failover_and_failback;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Assisted Failover and Failback&#039;, null, null, this.getTagsForStencil(gn, &#039;assisted failover and failback&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;chargeback_and_billing_capabilities;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Chargeback and billing capabilities&#039;, null, null, this.getTagsForStencil(gn, &#039;chargeback and billing capabilities&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeam_cloud_connect;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Cloud Connect&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud connect&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;built_in_management_for_agents;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Built-in Management for agents&#039;, null, null, this.getTagsForStencil(gn, &#039;built in management for agents&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;disaster_recovery;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Disaster Recovery&#039;, null, null, this.getTagsForStencil(gn, &#039;disaster recovery&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;emc_data_domain_boost;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Dell EMC Data Domain Boost&#039;, null, null, this.getTagsForStencil(gn, &#039;emc data domain boost&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;end_to_end_encryption;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;End-to-end Encryption&#039;, null, null, this.getTagsForStencil(gn, &#039;end to end encryption&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;backup_from_storage_snapshots;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Backup from Storage Snapshots&#039;, null, null, this.getTagsForStencil(gn, &#039;backup from storage snapshots&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;direct_restore_to_ms_azure;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Direct Restore to MS Azure&#039;, null, null, this.getTagsForStencil(gn, &#039;direct restore to ms azure&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;draas_enhancements;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;DRaaS Enhancements&#039;, null, null, this.getTagsForStencil(gn, &#039;draas enhancements&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;full_ms_integration;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Full MS Integration&#039;, null, null, this.getTagsForStencil(gn, &#039;full ms integration&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;native_tape_support;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Native Tape Support&#039;, null, null, this.getTagsForStencil(gn, &#039;native tape support&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;enterprise_scalability_enhancements;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Enterprise scalability enhancements&#039;, null, null, this.getTagsForStencil(gn, &#039;enterprise scalability enhancements&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;on_demand_sandbox;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;On Demand Sandbox&#039;, null, null, this.getTagsForStencil(gn, &#039;on demand sandbox&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;nas_backup;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;NAS Backup&#039;, null, null, this.getTagsForStencil(gn, &#039;nas backup&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;quick_migration;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Quick Migration&#039;, null, null, this.getTagsForStencil(gn, &#039;quick migration&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;replication_from_a_backup;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Replication from a Backup&#039;, null, null, this.getTagsForStencil(gn, &#039;replication from a backup&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;primary_storage_integration;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Primary Storage integration&#039;, null, null, this.getTagsForStencil(gn, &#039;primary storage integration&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;sure_replica;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Sure Replica&#039;, null, null, this.getTagsForStencil(gn, &#039;sure replica&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;archive_tier;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Archive Tier&#039;, null, null, this.getTagsForStencil(gn, &#039;archive tier&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;restore_data_from_the_vm_backup;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Restore Data from VM Backup&#039;, null, null, this.getTagsForStencil(gn, &#039;restore data from vm backup&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;scheduled_backups;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Scheduled Backups&#039;, null, null, this.getTagsForStencil(gn, &#039;Scheduled Backups&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;restful_apis;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;RESTful API&#039;, null, null, this.getTagsForStencil(gn, &#039;restful apis api&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;self_service_recovery;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Self-Service Recovery&#039;, null, null, this.getTagsForStencil(gn, &#039;self service recovery&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;reporting;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Reporting&#039;, null, null, this.getTagsForStencil(gn, &#039;reporting&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;continuous_data_protection;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Continuous Data Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;continuous data protection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;vcloud_director_support;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;vCloud Director Support&#039;, null, null, this.getTagsForStencil(gn, &#039;vcloud director support&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;virtual_lab;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Virtual Lab&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual lab&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;sure_backup;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;SureBackup&#039;, null, null, this.getTagsForStencil(gn, &#039;sure backup&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;scale_out_repository;&#039;,
+					w * 16.2, h * 14.3, &#039;&#039;, &#039;Scale Out Repository&#039;, null, null, this.getTagsForStencil(gn, &#039;scale out repository&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeamzip;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;VeeamZIP&#039;, null, null, this.getTagsForStencil(gn, &#039;veeamzip zip&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeam_explorer;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Veeam Explorer&#039;, null, null, this.getTagsForStencil(gn, &#039;explorer&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;veeamBackup Replication&#039;, &#039;Veeam / Backup and Replication&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addVeeamProductsPalette = function()
+	{
+		var sn = &#039;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s2 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s3 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+		var s4 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.veeam.products&#039;;
+		var dt = &#039;veeam vmware virtual machine products&#039;;
+		
+		var w = 4.0;
+		var h = 4.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(&#039;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#07B152;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.veeam_logo;&#039;,
+					w * 27.4, h * 4.8, &#039;&#039;, &#039;Veeam logo&#039;, null, null, this.getTagsForStencil(gn, &#039;veeam logo&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;backup_replication;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Backup and Replication&#039;, null, null, this.getTagsForStencil(gn, &#039;backup and replication&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;enterprise_manager;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Enterprise Manager&#039;, null, null, this.getTagsForStencil(gn, &#039;enterprise manager&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeam_availability_suite;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Availability Suite&#039;, null, null, this.getTagsForStencil(gn, &#039;availability suite&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;availability_console;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Availability Console&#039;, null, null, this.getTagsForStencil(gn, &#039;availability console&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;availability_orchestrator;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Availability Orchestrator&#039;, null, null, this.getTagsForStencil(gn, &#039;availability orchestrator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;agents;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Agents&#039;, null, null, this.getTagsForStencil(gn, &#039;agents&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;powered_network;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Powered Network&#039;, null, null, this.getTagsForStencil(gn, &#039;powered network&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;backup_for_office_365;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Backup for Office 365&#039;, null, null, this.getTagsForStencil(gn, &#039;backup for office 365&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;endpoint_backup;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;Endpoint Backup&#039;, null, null, this.getTagsForStencil(gn, &#039;endpoint backup&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeam_one_monitor;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;ONE Monitor&#039;, null, null, this.getTagsForStencil(gn, &#039;one monitor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeam_one_reporter;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;ONE Reporter&#039;, null, null, this.getTagsForStencil(gn, &#039;one reporter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeam_one_business_view;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;ONE (Business View)&#039;, null, null, this.getTagsForStencil(gn, &#039;one business view&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;veeam_one_server;&#039;,
+					w * 11.2, h * 11.2, &#039;&#039;, &#039;ONE Server&#039;, null, null, this.getTagsForStencil(gn, &#039;one server&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;veeamProducts&#039;, &#039;Veeam / Products&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addVeeamVMsTapePalette = function()
+	{
+		var sn = &#039;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s2 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.&#039;;
+		var s3 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+		var s4 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.veeam.vmstape&#039;;
+		var dt = &#039;veeam vmware virtual machine vm tape&#039;;
+		
+		var w = 4.0;
+		var h = 4.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;virtual_machine;&#039;,
+					w * 11.2, h * 11, &#039;&#039;, &#039;Virtual Machine&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;vm_checked;&#039;,
+					w * 13.5, h * 13, &#039;&#039;, &#039;VM Checked&#039;, null, null, this.getTagsForStencil(gn, &#039;checked&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;vm_running;&#039;,
+					w * 13.5, h * 13, &#039;&#039;, &#039;VM Started&#039;, null, null, this.getTagsForStencil(gn, &#039;vm started&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;vm_locked;&#039;,
+					w * 13.9, h * 13, &#039;&#039;, &#039;VM Locked&#039;, null, null, this.getTagsForStencil(gn, &#039;vm locked&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;vm_paused;&#039;,
+					w * 13.5, h * 13, &#039;&#039;, &#039;VM Paused&#039;, null, null, this.getTagsForStencil(gn, &#039;vm paused&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;vm_failed;&#039;,
+					w * 13.5, h * 13, &#039;&#039;, &#039;VM Failed&#039;, null, null, this.getTagsForStencil(gn, &#039;vm failed&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;vm_kernel;&#039;,
+					w * 13.5, h * 13, &#039;&#039;, &#039;VM Kernel&#039;, null, null, this.getTagsForStencil(gn, &#039;vm kernel&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;vm_windows;&#039;,
+					w * 14.3, h * 13.8, &#039;&#039;, &#039;VM Windows&#039;, null, null, this.getTagsForStencil(gn, &#039;vm windows&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;vm_linux;&#039;,
+					w * 14.3, h * 13.8, &#039;&#039;, &#039;VM Linux&#039;, null, null, this.getTagsForStencil(gn, &#039;vm linux&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#A2C6E0;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.vm_snapshot;&#039;,
+					w * 15.2, h * 14.6, &#039;&#039;, &#039;VM Snapshot&#039;, null, null, this.getTagsForStencil(gn, &#039;vm snapshot&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;vapp;&#039;,
+					w * 11.2, h * 11, &#039;&#039;, &#039;vApp&#039;, null, null, this.getTagsForStencil(gn, &#039;vapp&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;tape;&#039;,
+					w * 15.5, h * 8.4, &#039;&#039;, &#039;Tape&#039;, null, null, this.getTagsForStencil(gn, &#039;tape&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;tape_device;&#039;,
+					w * 26.3, h * 26.5, &#039;&#039;, &#039;Tape Device&#039;, null, null, this.getTagsForStencil(gn, &#039;tape device&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;tape_library;&#039;,
+					w * 24.2, h * 24.5, &#039;&#039;, &#039;Tape Library&#039;, null, null, this.getTagsForStencil(gn, &#039;tape library&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;tape_writing_device;&#039;,
+					w * 20.6, h * 10.9, &#039;&#039;, &#039;Tape writing device&#039;, null, null, this.getTagsForStencil(gn, &#039;tape writing device&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;media_pool;&#039;,
+					w * 18.6, h * 17.9, &#039;&#039;, &#039;Media pool&#039;, null, null, this.getTagsForStencil(gn, &#039;media pool&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;unknown_tape;&#039;,
+					w * 16.8, h * 15.6, &#039;&#039;, &#039;Unknown tape&#039;, null, null, this.getTagsForStencil(gn, &#039;unknown tape&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;tape_ejecting;&#039;,
+					w * 18.9, h * 12.4, &#039;&#039;, &#039;Tape eject&#039;, null, null, this.getTagsForStencil(gn, &#039;tape eject&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;tape_locked;&#039;,
+					w * 17.6, h * 10, &#039;&#039;, &#039;Tape locked&#039;, null, null, this.getTagsForStencil(gn, &#039;tape locked&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;tape_licensed;&#039;,
+					w * 18.8, h * 11.1, &#039;&#039;, &#039;Tape Licensed&#039;, null, null, this.getTagsForStencil(gn, &#039;tape licensed&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;tape_recording;&#039;,
+					w * 17.8, h * 11.8, &#039;&#039;, &#039;Tape Recording&#039;, null, null, this.getTagsForStencil(gn, &#039;tape recording&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;tape_checked;&#039;,
+					w * 18.8, h * 11.4, &#039;&#039;, &#039;Tape Checked&#039;, null, null, this.getTagsForStencil(gn, &#039;tape checked&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;veeamVMs and Tape&#039;, &#039;Veeam / VMs and Tape&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addVeeam3DPalette = function()
+	{
+		var sn = &#039;shadow=0;dashed=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.3d.&#039;;
+		var s = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.3d.&#039;;
+		var s2 = &#039;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.3d.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.veeam.3d&#039;;
+		var dt = &#039;veeam 3d vmware virtual machine &#039;;
+		
+		var w = 2.0;
+		var h = 2.0;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(sn + &#039;1ftvm;&#039;,
+					w * 34, h * 31, &#039;&#039;, &#039;1FTVM&#039;, null, null, this.getTagsForStencil(gn, &#039;1ftvm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;1ftvm_error;&#039;,
+					w * 34, h * 31, &#039;&#039;, &#039;1FTVM Error&#039;, null, null, this.getTagsForStencil(gn, &#039;1ftvm error&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;1ftvm_running;&#039;,
+					w * 34, h * 31, &#039;&#039;, &#039;1FTVM Running&#039;, null, null, this.getTagsForStencil(gn, &#039;1ftvm running&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;1ftvm_unavailable;&#039;,
+					w * 34, h * 31, &#039;&#039;, &#039;1FTVM Unavailable&#039;, null, null, this.getTagsForStencil(gn, &#039;1ftvm unavailable&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;1ftvm_warning;&#039;,
+					w * 34, h * 31, &#039;&#039;, &#039;1FTVM Warning&#039;, null, null, this.getTagsForStencil(gn, &#039;1ftvm warning&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;2ftvm;&#039;,
+					w * 34, h * 31, &#039;&#039;, &#039;2FTVM&#039;, null, null, this.getTagsForStencil(gn, &#039;2ftvm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;2ftvm_error;&#039;,
+					w * 34, h * 31, &#039;&#039;, &#039;2FTVM Error&#039;, null, null, this.getTagsForStencil(gn, &#039;2ftvm error&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;2ftvm_running;&#039;,
+					w * 34, h * 31, &#039;&#039;, &#039;2FTVM Running&#039;, null, null, this.getTagsForStencil(gn, &#039;2ftvm running&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;2ftvm_unavailable;&#039;,
+					w * 34, h * 31, &#039;&#039;, &#039;2FTVM Unavailable&#039;, null, null, this.getTagsForStencil(gn, &#039;2ftvm unavailable&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;2ftvm_warning;&#039;,
+					w * 34, h * 31, &#039;&#039;, &#039;2FTVM Warning&#039;, null, null, this.getTagsForStencil(gn, &#039;2ftvm warning&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;backup_repository;&#039;,
+					w * 31, h * 31, &#039;&#039;, &#039;Backup Repository&#039;, null, null, this.getTagsForStencil(gn, &#039;backup repository&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;backup_repository_2;&#039;,
+					w * 31, h * 31, &#039;&#039;, &#039;Backup Repository&#039;, null, null, this.getTagsForStencil(gn, &#039;backup repository&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;cd;&#039;,
+					w * 34, h * 13, &#039;&#039;, &#039;CD&#039;, null, null, this.getTagsForStencil(gn, &#039;cd&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;database;&#039;,
+					w * 29, h * 31, &#039;&#039;, &#039;Database&#039;, null, null, this.getTagsForStencil(gn, &#039;database&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;datastore;&#039;,
+					w * 22, h * 30, &#039;&#039;, &#039;Datastore&#039;, null, null, this.getTagsForStencil(gn, &#039;datastore&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;datastore_snapshot;&#039;,
+					w * 27, h * 17, &#039;&#039;, &#039;Datastore Snapshot&#039;, null, null, this.getTagsForStencil(gn, &#039;datastore snapshot&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;datastore_volume;&#039;,
+					w * 27, h * 17, &#039;&#039;, &#039;Datastore Volume&#039;, null, null, this.getTagsForStencil(gn, &#039;datastore volume&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;esx_esxi;&#039;,
+					w * 19, h * 26, &#039;&#039;, &#039;ESX ESXi&#039;, null, null, this.getTagsForStencil(gn, &#039;esx esxi&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;failover_protective_snapshot;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Failover Protective Snapshot&#039;, null, null, this.getTagsForStencil(gn, &#039;failover protective snapshot&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;failover_protective_snapshot_locked;&#039;,
+					w * 28, h * 23, &#039;&#039;, &#039;Failover Protective Snapshot Locked&#039;, null, null, this.getTagsForStencil(gn, &#039;failover protective snapshot locked&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;failover_protective_snapshot_running;&#039;,
+					w * 29, h * 23, &#039;&#039;, &#039;Failover Protective Snapshot Running&#039;, null, null, this.getTagsForStencil(gn, &#039;failover protective snapshot running&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;free_datastore;&#039;,
+					w * 22, h * 30, &#039;&#039;, &#039;Free Datastore&#039;, null, null, this.getTagsForStencil(gn, &#039;free datastore&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;full_datastore;&#039;,
+					w * 22, h * 30, &#039;&#039;, &#039;Full Datastore&#039;, null, null, this.getTagsForStencil(gn, &#039;full datastore&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;hard_drive;fillColor=#637D8A;gradientColor=#324752;strokeColor=none;&#039;,
+					w * 31, h * 14, &#039;&#039;, &#039;Hard Drive&#039;, null, null, this.getTagsForStencil(gn, &#039;hard drive&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;hyper_v_host;&#039;,
+					w * 55, h * 49, &#039;&#039;, &#039;Hyper-V Host&#039;, null, null, this.getTagsForStencil(gn, &#039;hyper-v host&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;lost_space;&#039;,
+					w * 22, h * 30, &#039;&#039;, &#039;Lost Space&#039;, null, null, this.getTagsForStencil(gn, &#039;lost space&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;lun;&#039;,
+					w * 36, h * 20, &#039;&#039;, &#039;LUN&#039;, null, null, this.getTagsForStencil(gn, &#039;lun&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;medium_datastore;&#039;,
+					w * 22, h * 30, &#039;&#039;, &#039;Medium Datastore&#039;, null, null, this.getTagsForStencil(gn, &#039;medium datastore&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;network_card;&#039;,
+					w * 19, h * 20, &#039;&#039;, &#039;Network Card&#039;, null, null, this.getTagsForStencil(gn, &#039;network card&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;physical_storage;&#039;,
+					w * 54, h * 30, &#039;&#039;, &#039;Physical Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;physical_storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;proxy;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Proxy&#039;, null, null, this.getTagsForStencil(gn, &#039;proxy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;proxy_appliance;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Proxy Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;proxy appliance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;remote_site;&#039;,
+					w * 23, h * 30, &#039;&#039;, &#039;Remote Site&#039;, null, null, this.getTagsForStencil(gn, &#039;remote site&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;remote_storage;&#039;,
+					w * 26, h * 31, &#039;&#039;, &#039;Remote Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;remote storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;resource_pool;&#039;,
+					w * 28, h * 16, &#039;&#039;, &#039;Resource Pool&#039;, null, null, this.getTagsForStencil(gn, &#039;resource pool&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;service_vnic;&#039;,
+					w * 36, h * 32, &#039;&#039;, &#039;Service vNIC&#039;, null, null, this.getTagsForStencil(gn, &#039;service vnic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;switch;&#039;,
+					w * 55, h * 29, &#039;&#039;, &#039;Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;switch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;tape;&#039;,
+					w * 29, h * 29, &#039;&#039;, &#039;Tape&#039;, null, null, this.getTagsForStencil(gn, &#039;tape&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;tape_checked;&#039;,
+					w * 35, h * 29, &#039;&#039;, &#039;Tape Checked&#039;, null, null, this.getTagsForStencil(gn, &#039;tape checked&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;tape_ejecting;&#039;,
+					w * 35, h * 29, &#039;&#039;, &#039;Tape Ejecting&#039;, null, null, this.getTagsForStencil(gn, &#039;tape ejecting&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;tape_library;&#039;,
+					w * 31, h * 37, &#039;&#039;, &#039;Tape Library&#039;, null, null, this.getTagsForStencil(gn, &#039;tape library&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;tape_licensed;&#039;,
+					w * 35, h * 29, &#039;&#039;, &#039;Tape Licensed&#039;, null, null, this.getTagsForStencil(gn, &#039;tape licensed&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;tape_recording;&#039;,
+					w * 35, h * 29, &#039;&#039;, &#039;Tape Recording&#039;, null, null, this.getTagsForStencil(gn, &#039;tape recording&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;tape_server;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Tape Server&#039;, null, null, this.getTagsForStencil(gn, &#039;tape server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;vapp;&#039;,
+					w * 46, h * 31, &#039;&#039;, &#039;vApp&#039;, null, null, this.getTagsForStencil(gn, &#039;vapp&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;vapp_started;&#039;,
+					w * 46, h * 31, &#039;&#039;, &#039;vApp Started&#039;, null, null, this.getTagsForStencil(gn, &#039;vapp started&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;veeam_availability_suite;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Veeam Availability Suite&#039;, null, null, this.getTagsForStencil(gn, &#039;veeam availability suite&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;veeam_backup_and_replication_server;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Veeam Backup and Replication Server&#039;, null, null, this.getTagsForStencil(gn, &#039;veeam backup and replication server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;veeam_backup_enterprise_manager_server;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Veeam Backup Enterprise Manager Server&#039;, null, null, this.getTagsForStencil(gn, &#039;veeam backup enterprise manager server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;veeam_backup_search_server;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Veeam Backup Search Server&#039;, null, null, this.getTagsForStencil(gn, &#039;veeam backup search server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;veeam_one_business_view;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Veeam ONE Business View&#039;, null, null, this.getTagsForStencil(gn, &#039;veeam one business view&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;veeam_one_monitor;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Veeam ONE Monitor&#039;, null, null, this.getTagsForStencil(gn, &#039;veeam one monitor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;veeam_one_reporter;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Veeam ONE Reporter&#039;, null, null, this.getTagsForStencil(gn, &#039;veeam one reporter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;veeam_one_server;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Veeam ONE Server&#039;, null, null, this.getTagsForStencil(gn, &#039;veeam one server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;virtual_machine;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;Virtual Machine&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual machine&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;vmware_host;&#039;,
+					w * 55, h * 49, &#039;&#039;, &#039;VMware Host&#039;, null, null, this.getTagsForStencil(gn, &#039;vmware host&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;vm_failed;&#039;,
+					w * 28, h * 23, &#039;&#039;, &#039;VM Failed&#039;, null, null, this.getTagsForStencil(gn, &#039;vm failed&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;vm_linux;&#039;,
+					w * 23, h * 30, &#039;&#039;, &#039;VM Linux&#039;, null, null, this.getTagsForStencil(gn, &#039;vm linux&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;vm_no_network;&#039;,
+					w * 29, h * 23, &#039;&#039;, &#039;VM No Network&#039;, null, null, this.getTagsForStencil(gn, &#039;vm no network&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;vm_problem;&#039;,
+					w * 28, h * 23, &#039;&#039;, &#039;VM Problem&#039;, null, null, this.getTagsForStencil(gn, &#039;vm problem&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;vm_running;&#039;,
+					w * 28, h * 23, &#039;&#039;, &#039;VM Running&#039;, null, null, this.getTagsForStencil(gn, &#039;vm running&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;vm_saved_state;&#039;,
+					w * 29, h * 24, &#039;&#039;, &#039;VM Saved State&#039;, null, null, this.getTagsForStencil(gn, &#039;vm saved state&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;vm_windows;&#039;,
+					w * 23, h * 30, &#039;&#039;, &#039;VM Windows&#039;, null, null, this.getTagsForStencil(gn, &#039;vm windows&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;vnic;&#039;,
+					w * 31, h * 31, &#039;&#039;, &#039;vNIC&#039;, null, null, this.getTagsForStencil(gn, &#039;vnic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;wan_accelerator;&#039;,
+					w * 23, h * 23, &#039;&#039;, &#039;WAN Accelerator&#039;, null, null, this.getTagsForStencil(gn, &#039;wan accelerator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sn + &#039;workstation;&#039;,
+					w * 38, h * 31, &#039;&#039;, &#039;Workstation&#039;, null, null, this.getTagsForStencil(gn, &#039;workstation&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;veeam3D&#039;, &#039;Veeam / 3D&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

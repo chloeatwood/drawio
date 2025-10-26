@@ -1,0 +1,3098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\GraphViewer.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\GraphViewer.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">61.04</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">2981</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">127.01</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">34.27</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2006-2016, JGraph Holdings Ltd
+ */
+// Disables theme in viewer and lightbox
+Editor.currentTheme = &#039;&#039;;
+window.uiTheme = &#039;&#039;;
+
+/**
+ * No CSS and resources available in embed mode. Parameters and docs:
+ * https://www.drawio.com/doc/faq/embed-html-options
+ */
+GraphViewer = function(container, xmlNode, graphConfig)
+{
+	this.init(container, xmlNode, graphConfig);
+};
+
+// Editor inherits from mxEventSource
+mxUtils.extend(GraphViewer, mxEventSource);
+
+/**
+ * Redirects editing to absolue URLs.
+ */
+GraphViewer.prototype.editBlankUrl = (urlParams[&#039;dev&#039;] == &#039;1&#039;) ? 
+	&#039;https://test.draw.io/&#039; : &#039;https://app.diagrams.net/&#039;;
+
+/**
+ * Base URL for relative images.
+ */
+GraphViewer.prototype.imageBaseUrl = window.DRAWIO_BASE_URL + &#039;/&#039;;
+
+/**
+ * Redirects editing to absolue URLs.
+ */
+GraphViewer.prototype.toolbarHeight = (document.compatMode == &#039;BackCompat&#039;) ? 24 : 26;
+
+/**
+ * Redirects editing to absolue URLs.
+ */
+GraphViewer.prototype.lightboxChrome = true;
+
+/**
+ * Redirects editing to absolue URLs.
+ */
+GraphViewer.prototype.lightboxZIndex = 999;
+
+/**
+ * Redirects editing to absolue URLs.
+ */
+GraphViewer.prototype.toolbarZIndex = 999;
+
+/**
+ * If automatic fit should be enabled if zoom is disabled. Default is true.
+ */
+GraphViewer.prototype.autoFit = false;
+
+/**
+ * If automatic crop should be enabled when layers are toggled. Default is false.
+ */
+GraphViewer.prototype.autoCrop = false;
+
+/**
+ * Specifies if the graph should be moved if a layer is made visible that
+ * extends the graph beyong the top left corner. Default is true. Is this is
+ * false then the viewport of the viewer will include all cells in all layers
+ * regardless of their initial visible state.
+ */
+GraphViewer.prototype.autoOrigin = true;
+
+/**
+ * If the diagram should be centered. Default is false.
+ */
+GraphViewer.prototype.center = false;
+
+/**
+ * Force centering of the diagram. Default is false.
+ */
+GraphViewer.prototype.forceCenter = false;
+
+/**
+ * Specifies if zooming in for auto fit is allowed. Default is false.
+ */
+GraphViewer.prototype.allowZoomIn = false;
+
+/**
+ * Specifies if zooming out for auto fit is allowed. Default is true.
+ * If toolbar-nohide is true then overflow content is visible.
+ */
+GraphViewer.prototype.allowZoomOut = true;
+
+/**
+ * Whether the title should be shown as a tooltip if the toolbar is disabled.
+ * Default is false.
+ */
+GraphViewer.prototype.showTitleAsTooltip = false;
+
+/**
+ * Specifies if the constructur should delay the rendering if the container
+ * is not visible by default.
+ */
+GraphViewer.prototype.checkVisibleState = true;
+
+/**
+ * Defines the minimum height of the container. Default is 28.
+ */
+GraphViewer.prototype.minHeight = 28;
+
+/**
+ * Defines the minimum width of the container. Default is 100.
+ */
+GraphViewer.prototype.minWidth = 100;
+
+/**
+ * Implements viewBox to keep the contents inside the bounding box
+ * of the container. This is currently not supported in Safari (due
+ * to clipping in labels with viewBox) and all browsers that do not
+ * support foreignObjects (eg. IE11).
+ */
+GraphViewer.prototype.responsive = false;
+
+/**
+ * Dark mode can be one of null, &quot;light&quot;, &quot;dark&quot; or &quot;auto&quot;.
+ */
+GraphViewer.prototype.darkMode = null;
+
+/**
+ * Initializes the viewer.
+ */
+GraphViewer.prototype.init = function(container, xmlNode, graphConfig)
+{
+	GraphViewer.initCss();
+	this.graphConfig = (graphConfig != null) ? graphConfig : {};
+	this.autoFit = (this.graphConfig[&#039;auto-fit&#039;] != null) ?
+		this.graphConfig[&#039;auto-fit&#039;] : this.autoFit;
+	this.autoCrop = (this.graphConfig[&#039;auto-crop&#039;] != null) ?
+		this.graphConfig[&#039;auto-crop&#039;] : this.autoCrop;
+	this.autoOrigin = (this.graphConfig[&#039;auto-origin&#039;] != null) ?
+		this.graphConfig[&#039;auto-origin&#039;] : this.autoOrigin;
+	this.allowZoomOut = (this.graphConfig[&#039;allow-zoom-out&#039;] != null) ?
+		this.graphConfig[&#039;allow-zoom-out&#039;] : this.allowZoomOut;
+	this.allowZoomIn = (this.graphConfig[&#039;allow-zoom-in&#039;] != null) ?
+		this.graphConfig[&#039;allow-zoom-in&#039;] : this.allowZoomIn;
+	this.forceCenter = (this.graphConfig[&#039;forceCenter&#039;] != null) ?
+		this.graphConfig[&#039;forceCenter&#039;] : this.forceCenter;
+	this.center = (this.graphConfig[&#039;center&#039;] != null) ?
+		this.graphConfig[&#039;center&#039;] : (this.center || this.forceCenter);
+	this.checkVisibleState = (this.graphConfig[&#039;check-visible-state&#039;] != null) ?
+		this.graphConfig[&#039;check-visible-state&#039;] : this.checkVisibleState;
+	this.darkMode = (this.graphConfig[&#039;dark-mode&#039;] != null) ?
+		this.graphConfig[&#039;dark-mode&#039;] : this.darkMode;
+	this.toolbarItems = (this.graphConfig.toolbar != null) ?
+		this.graphConfig.toolbar.split(&#039; &#039;) : [];
+	this.zoomEnabled = mxUtils.indexOf(this.toolbarItems, &#039;zoom&#039;) &gt;= 0;
+	this.layersEnabled = mxUtils.indexOf(this.toolbarItems, &#039;layers&#039;) &gt;= 0;
+	this.tagsEnabled = mxUtils.indexOf(this.toolbarItems, &#039;tags&#039;) &gt;= 0;
+	this.lightboxEnabled = mxUtils.indexOf(this.toolbarItems, &#039;lightbox&#039;) &gt;= 0;
+	this.lightboxClickEnabled = this.graphConfig.lightbox != false;
+	this.initialOverflow = document.body.style.overflow;
+	this.initialWidth = (container != null) ? container.style.width : null;
+	this.widthIsEmpty = (this.initialWidth != null) ? this.initialWidth == &#039;&#039; : true;
+	this.currentPage = parseInt(this.graphConfig.page) || 0;
+	this.responsive = ((this.graphConfig[&#039;responsive&#039;] != null) ?
+		this.graphConfig[&#039;responsive&#039;] : this.responsive) &amp;&amp;
+		!this.zoomEnabled &amp;&amp; !mxClient.NO_FO &amp;&amp; !mxClient.IS_SF;
+	this.pageId = this.graphConfig.pageId;
+	this.editor = null;
+	var self = this;
+	
+	if (this.graphConfig[&#039;toolbar-position&#039;] == &#039;inline&#039;)
+	{
+		this.minHeight += this.toolbarHeight;
+	}
+	
+	if (xmlNode != null)
+	{
+		this.xmlDocument = xmlNode.ownerDocument;
+		this.xmlNode = xmlNode;
+		this.xml = mxUtils.getXml(xmlNode);
+
+		if (container != null)
+		{
+			var render = mxUtils.bind(this, function()
+			{
+				this.graph = new Graph(container);
+				this.graph.enableFlowAnimation = true;
+				this.installDarkModeListener();
+				
+				if (this.responsive &amp;&amp; this.graph.dialect == mxConstants.DIALECT_SVG)
+				{
+					var root = this.graph.view.getDrawPane().ownerSVGElement;
+						
+					if (this.graphConfig.border != null)
+					{
+						root.style.padding = this.graphConfig.border + &#039;px&#039;;
+					}
+					else if (container.style.padding == &#039;&#039;)
+					{
+						root.style.padding = &#039;8px&#039;;
+					}
+					
+					root.style.forcedColorAdjust = &#039;none&#039;;
+					root.style.boxSizing = &#039;border-box&#039;;
+					root.style.overflow = &#039;visible&#039;;
+					
+					this.graph.fit = function()
+					{
+						// Automatic
+					};
+					
+					this.graph.sizeDidChange = function()
+					{
+						var bounds = this.view.graphBounds;
+						var tr = this.view.translate;
+						
+						root.setAttribute(&#039;viewBox&#039;,
+							(bounds.x + tr.x - this.panDx) + &#039; &#039; +
+							(bounds.y + tr.y - this.panDy) + &#039; &#039; +
+							(bounds.width + 1) + &#039; &#039; +
+							(bounds.height + 1));
+						this.container.style.backgroundColor =
+							root.style.backgroundColor;
+
+						this.fireEvent(new mxEventObject(mxEvent.SIZE, &#039;bounds&#039;, bounds));
+					};
+				}
+				
+				if (this.graphConfig.move)
+				{
+					this.graph.isMoveCellsEvent = function(evt)
+					{
+						return true;
+					};
+				}
+		
+				// Adds lightbox and link handling for shapes
+				if (this.lightboxClickEnabled)
+				{
+					container.style.cursor = &#039;pointer&#039;;
+				}
+				
+				// Hack for using EditorUi methods on the graph instance
+				this.editor = new Editor(true, null, null, this.graph);
+				this.editor.editBlankUrl = this.editBlankUrl;
+				this.graph.lightbox = true;
+				this.graph.centerZoom = false;
+				this.graph.autoExtend = false;
+				this.graph.autoScroll = false;
+				this.graph.setEnabled(false);
+				
+				if (this.graphConfig[&#039;toolbar-nohide&#039;] == true)
+				{
+					this.editor.defaultGraphOverflow = &#039;visible&#039;;
+				}
+				
+				// Extract graph model from html &amp; svg formats
+				var temp = this.editor.extractGraphModel(this.xmlNode, true);
+				
+				if (temp != null &amp;&amp; temp != xmlNode)
+				{
+					try
+					{
+						this.xml = mxUtils.getXml(temp);
+						this.xmlNode = temp;
+						this.xmlDocument = temp.ownerDocument;
+					}
+					catch (e)
+					{
+						// ignore
+					}
+				}
+				
+				// Handles relative images
+				this.graph.getImageFromBundles = function(key)
+				{
+					return self.getImageUrl(key);
+				};
+				
+				this.graph.addSvgShadow(this.graph.view.canvas.ownerSVGElement, null, true);
+				
+				// Adds page placeholders
+				if (this.xmlNode.nodeName == &#039;mxfile&#039;)
+				{
+					var diagrams = this.xmlNode.getElementsByTagName(&#039;diagram&#039;);
+					
+					if (diagrams.length &gt; 0)
+					{
+						// Finds index for given page ID
+						if (this.pageId != null)
+						{
+							for (var i = 0; i &lt; diagrams.length; i++)
+							{
+								if (this.pageId == diagrams[i].getAttribute(&#039;id&#039;))
+								{
+									this.currentPage = i;
+									break;
+								}
+							}
+						}
+						
+						var graphGetGlobalVariable = this.graph.getGlobalVariable;
+
+						this.graph.getGlobalVariable = function(name)
+						{
+							var diagram = diagrams[self.currentPage];
+							
+							if (name == &#039;page&#039;)
+							{
+								return diagram.getAttribute(&#039;name&#039;) || &#039;Page-&#039; + (self.currentPage + 1);
+							}
+							else if (name == &#039;pagenumber&#039;)
+							{
+								return self.currentPage + 1;
+							}
+							else if (name == &#039;pagecount&#039;)
+							{
+								return diagrams.length;
+							}
+							
+							return graphGetGlobalVariable.apply(this, arguments);
+						};
+					}
+				}
+				
+				this.diagrams = [];
+				var lastXmlNode = null;
+				
+				this.selectPage = function(number)
+				{
+					if(this.handlingResize)
+						return;
+					
+					this.currentPage = mxUtils.mod(number, this.diagrams.length);
+					this.updateGraphXml(Editor.parseDiagramNode(this.diagrams[this.currentPage]));
+				};
+				
+				this.selectPageById = function(id)
+				{
+					var index = this.getIndexById(id);
+					var found = index &gt;= 0;
+
+					if (found)
+					{
+						this.selectPage(index);
+					}
+					
+					return found;
+				};
+				
+				var update = mxUtils.bind(this, function()
+				{
+					if (this.xmlNode == null || this.xmlNode.nodeName != &#039;mxfile&#039;)
+					{
+						this.diagrams = [];
+					}
+					if (this.xmlNode != lastXmlNode)
+					{
+						this.diagrams = this.xmlNode.getElementsByTagName(&#039;diagram&#039;);
+						lastXmlNode = this.xmlNode;
+					}
+				});
+
+				// Replaces background page reference with SVG
+				var graphSetBackgroundImage = this.graph.setBackgroundImage;
+		
+				this.graph.setBackgroundImage = function(img)
+				{
+					if (img != null &amp;&amp; Graph.isPageLink(img.src))
+					{
+						var src = img.src;
+						var comma = src.indexOf(&#039;,&#039;);
+							
+						if (comma &gt; 0)
+						{
+							var index = self.getIndexById(src.substring(comma + 1));
+					
+							if (index &gt;= 0)
+							{
+								img = self.getImageForGraphModel(
+									Editor.parseDiagramNode(
+									self.diagrams[index]));
+								img.originalSrc = src;
+							}
+						}
+					}
+
+					graphSetBackgroundImage.apply(this, arguments);
+				};
+
+				// Overrides graph bounds to include background pages
+				var graphGetGraphBounds = this.graph.getGraphBounds;
+		
+				this.graph.getGraphBounds = function(img)
+				{
+					var bounds = graphGetGraphBounds.apply(this, arguments);
+					var img = this.backgroundImage;
+
+					// Check img.originalSrc to ignore background
+					// images but not background pages
+					if (img != null)
+					{
+						var t = this.view.translate;
+						var s = this.view.scale;
+		
+						bounds = mxRectangle.fromRectangle(bounds);
+						bounds.add(new mxRectangle(
+							(t.x + img.x) * s, (t.y + img.y) * s,
+							img.width * s, img.height * s));
+					}
+
+					return bounds;
+				};
+
+				// LATER: Add event for setGraphXml
+				this.addListener(&#039;xmlNodeChanged&#039;, update);
+				update();
+	
+				// Passes current page via urlParams global variable
+				// to let the parser know which page we&#039;re using
+				urlParams[&#039;page&#039;] = self.currentPage;
+				var visible = null;
+
+				this.graph.getModel().beginUpdate();
+				try
+				{
+					// Required for correct parsing of fold parameter
+					urlParams[&#039;nav&#039;] = (this.graphConfig.nav != false) ? &#039;1&#039; : &#039;0&#039;;
+					
+					this.editor.setGraphXml(this.xmlNode);
+					this.graph.view.scale = this.graphConfig.zoom || 1;
+					visible = this.setLayersVisible();
+					this.fireEvent(new mxEventObject(&#039;graphInitialized&#039;));
+					
+					if (!this.responsive)
+					{
+						this.graph.border = (this.graphConfig.border != null) ? this.graphConfig.border : 8;
+					}
+
+					this.installBackgroundColorHandler();
+					GraphViewer.viewerInitialized(this);
+				}
+				finally
+				{
+					this.graph.getModel().endUpdate();
+				}
+
+				// Adds left-button panning only if scrollbars are visible
+				if (!this.responsive)
+				{
+					this.graph.panningHandler.isForcePanningEvent = function(me)
+					{
+						return !mxEvent.isPopupTrigger(me.getEvent()) &amp;&amp;
+							this.graph.container.style.overflow == &#039;auto&#039;;
+					};
+					
+					this.graph.panningHandler.useLeftButtonForPanning = true;					
+					this.graph.panningHandler.ignoreCell = true;
+					this.graph.panningHandler.usePopupTrigger = false;
+					this.graph.panningHandler.pinchEnabled = false;
+				}
+				
+				this.graph.setPanning(false);
+		
+				if (this.graphConfig.toolbar != null)
+				{
+					this.addToolbar();
+				}
+				else if (this.graphConfig.title != null &amp;&amp; this.showTitleAsTooltip)
+				{
+					container.setAttribute(&#039;title&#039;, this.graphConfig.titleTooltip || this.graphConfig.title);
+				}
+				
+				if (!this.responsive)
+				{
+					this.addSizeHandler();
+				}
+
+				// Crops to visible layers if no layers toolbar button
+				if (this.showLayers(this.graph) &amp;&amp; !this.forceCenter &amp;&amp; (!this.layersEnabled || this.autoCrop))
+				{
+					this.crop();
+				}
+
+				this.addClickHandler(this.graph);
+				this.graph.initialViewState = {
+					translate: this.graph.view.translate.clone(),
+					scale: this.graph.view.scale
+				};
+				
+				if (visible != null)
+				{
+					this.setLayersVisible(visible);
+				}
+				
+				this.graph.customLinkClicked = function(href, associatedCell)
+				{
+					try
+					{
+						if (Graph.isPageLink(href))
+						{
+							var comma = href.indexOf(&#039;,&#039;);
+							
+							if (!self.selectPageById(href.substring(comma + 1)))
+							{
+								alert(mxResources.get(&#039;pageNotFound&#039;) || &#039;Page not found&#039;);
+							}
+						}
+						else
+						{
+							var bounds = this.getGraphBounds();
+							this.handleCustomLink(href, associatedCell);
+							
+							if (!bounds.equals(this.getGraphBounds()))
+							{
+								self.crop();
+							}
+						}
+					}
+					catch (e)
+					{
+						alert(e.message);
+					}
+					
+					return true;
+				};
+				
+				// Updates origin after tree cell folding
+				var graphFoldTreeCell = this.graph.foldTreeCell;
+				
+				this.graph.foldTreeCell = mxUtils.bind(this, function()
+				{
+					this.treeCellFolded = true;
+					
+					return graphFoldTreeCell.apply(this.graph, arguments);
+				});
+				
+				this.fireEvent(new mxEventObject(&#039;render&#039;));
+			});
+
+			var MutObs = window.MutationObserver ||
+				window.WebKitMutationObserver ||
+				window.MozMutationObserver;
+			
+			if (this.checkVisibleState &amp;&amp; container.offsetWidth == 0 &amp;&amp;
+				this.getAncestorDetails(container) == null &amp;&amp;
+				typeof MutObs !== &#039;undefined&#039;)
+			{
+				// Delayed rendering if inside hidden container and event available
+				var par = this.getObservableParent(container);
+			
+				var observer = new MutObs(mxUtils.bind(this, function(mutation)
+				{
+					if (container.offsetWidth &gt; 0)
+					{
+						observer.disconnect();
+						render();
+					}
+				}));
+				
+				observer.observe(par, {attributes: true});
+			}
+			else
+			{
+				// Immediate rendering in all other cases
+				render();
+			}
+		}
+	}
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.installBackgroundColorHandler = function()
+{
+	var graph = this.graph;
+
+	if (graph != null)
+	{
+		if (GraphViewer.shapeBackgroundColor != null)
+		{
+			graph.shapeBackgroundColor = GraphViewer.shapeBackgroundColor;
+		}
+		
+		graph.defaultPageBackgroundColor = &#039;transparent&#039;;
+		graph.diagramBackgroundColor = &#039;transparent&#039;;
+		graph.transparentBackground = false;
+		
+		var originalBackground = graph.background;
+
+		var updateBackground = mxUtils.bind(this, function(validate)
+		{
+			if (graph.getAdaptiveColors() == &#039;none&#039; &amp;&amp;
+				originalBackground == null)
+			{
+				if (this.isDarkMode())
+				{
+					graph.background = &#039;#ffffff&#039;;
+				}
+				else
+				{
+					graph.background = null;
+				}
+
+				if (validate)
+				{
+					graph.view.validateBackground();
+				}
+			}
+		});
+		
+		// Called when pages are changed
+		this.addListener(&#039;graphChanged&#039;, function()
+		{
+			originalBackground = graph.background;
+			updateBackground(true);
+		});
+
+		// Called when the theme changes
+		this.addListener(&#039;darkModeChanged&#039;, function()
+		{
+			updateBackground(true);
+		});
+
+		// Sets initial state
+		updateBackground(false);
+	}
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.installDarkModeListener = function()
+{
+	if (window.matchMedia != null)
+	{
+		window.matchMedia(&#039;(prefers-color-scheme: dark)&#039;)
+			.addEventListener(&#039;change&#039;, mxUtils.bind(this, function()
+		{
+			this.darkModeChanged();
+			this.fireEvent(new mxEventObject(&#039;darkModeChanged&#039;));
+		}));
+	}
+	
+	this.darkModeChanged();
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.darkModeChanged = function()
+{
+	if (this.graph != null)
+	{
+		var container = this.graph.container;
+		var dark = this.isDarkMode();
+
+		if (dark)
+		{
+			container.classList.add(&#039;geDarkMode&#039;);
+		}
+		else
+		{
+			container.classList.remove(&#039;geDarkMode&#039;);
+		}
+
+		container.style.colorScheme = (dark) ? &#039;dark&#039; : &#039;light&#039;;
+	}
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.getAncestorDetails = function(container)
+{
+	while (container != null)
+	{
+		if (container.nodeName == &#039;DETAILS&#039;)
+		{
+			return container;
+		}
+		
+		container = container.parentNode;
+	}
+
+	return null;
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.getObservableParent = function(container)
+{
+	var node = container.parentNode;
+	
+	while (node != document.body &amp;&amp; node.parentNode != null &amp;&amp;
+		mxUtils.getCurrentStyle(node).display !== &#039;none&#039;)
+	{
+		node = node.parentNode;
+	}
+	
+	return node;
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.getImageUrl = function(url)
+{
+	if (url != null &amp;&amp; url.substring(0, 7) != &#039;http://&#039; &amp;&amp;
+		url.substring(0, 8) != &#039;https://&#039; &amp;&amp; url.substring(0, 10) != &#039;data:image&#039;)
+	{
+		if (url.charAt(0) == &#039;/&#039;)
+		{
+			url = url.substring(1, url.length);
+		}
+		
+		url = this.imageBaseUrl + url;
+	}
+	
+	return url;
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.getImageForGraphModel = function(node)
+{
+	var graph = Graph.createOffscreenGraph(this.graph.getStylesheet());
+	graph.getGlobalVariable = this.graph.getGlobalVariable;
+	document.body.appendChild(graph.container);
+
+	var codec = new mxCodec(node.ownerDocument);
+	var root = codec.decode(node).root;
+	graph.model.setRoot(root);
+	
+	var svgRoot = graph.getSvg();
+	var bounds = graph.getGraphBounds();
+	document.body.removeChild(graph.container);
+
+	return new mxImage(Editor.createSvgDataUri(mxUtils.getXml(svgRoot)),
+		bounds.width, bounds.height, bounds.x, bounds.y);
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.getIndexById = function(id)
+{
+	if (this.diagrams != null)
+	{
+		for (var i = 0; i &lt; this.diagrams.length; i++)
+		{
+			if (this.diagrams[i].getAttribute(&#039;id&#039;) == id)
+			{
+				return i;
+			}
+		}
+	}
+
+	return -1;
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.setXmlNode = function(xmlNode)
+{
+	//Extract graph model from html &amp; svg formats 
+	xmlNode = this.editor.extractGraphModel(xmlNode, true);
+
+	this.xmlDocument = xmlNode.ownerDocument;
+	this.xml = mxUtils.getXml(xmlNode);
+	this.xmlNode = xmlNode;
+	
+	this.updateGraphXml(xmlNode);
+	this.fireEvent(new mxEventObject(&#039;xmlNodeChanged&#039;));
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.setFileNode = function(xmlNode)
+{
+	if (this.xmlNode == null)
+	{
+		this.xmlDocument = xmlNode.ownerDocument;
+		this.xml = mxUtils.getXml(xmlNode);
+		this.xmlNode = xmlNode;
+	}
+	
+	this.setGraphXml(xmlNode);
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.updateGraphXml = function(xmlNode)
+{
+	this.setGraphXml(xmlNode);
+	this.fireEvent(new mxEventObject(&#039;graphChanged&#039;));
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.setLayersVisible = function(visible)
+{
+	var allVisible = true;
+	
+	if (!this.autoOrigin)
+	{
+		var result = [];
+		var model = this.graph.getModel();
+		
+		model.beginUpdate();
+		try
+		{
+			for (var i = 0; i &lt; model.getChildCount(model.root); i++)
+			{
+				var layer = model.getChildAt(model.root, i);
+				allVisible = allVisible &amp;&amp; model.isVisible(layer);
+				result.push(model.isVisible(layer));
+				model.setVisible(layer, (visible != null) ? visible[i] : true);
+			}
+		}
+		finally
+		{
+			model.endUpdate();
+		}
+	}
+	
+	return (allVisible) ? null : result;
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.setGraphXml = function(xmlNode)
+{
+	if (this.graph != null)
+	{
+		this.graph.view.translate = new mxPoint();
+		this.graph.view.scale = 1;
+		var visible = null;
+		
+		this.graph.getModel().beginUpdate();
+		try
+		{
+			this.graph.getModel().clear();
+			this.editor.setGraphXml(xmlNode);
+			visible = this.setLayersVisible(true);
+		}
+		finally
+		{
+			this.graph.getModel().endUpdate();
+		}
+	
+		if (!this.responsive)
+		{				
+			// Restores initial CSS state
+			if (this.widthIsEmpty)
+			{
+				this.graph.container.style.width = &#039;&#039;;
+				this.graph.container.style.height = &#039;&#039;;
+			}
+			else
+			{
+				this.graph.container.style.width = this.initialWidth;
+			}
+			
+			this.positionGraph();
+		}
+		
+		this.graph.initialViewState = {
+			translate: this.graph.view.translate.clone(),
+			scale: this.graph.view.scale
+		};
+				
+		if (visible)
+		{
+			this.setLayersVisible(visible);
+		}
+	}
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.isDarkMode = function()
+{
+	return this.darkMode == &#039;dark&#039; || (this.darkMode == &#039;auto&#039; &amp;&amp; window.matchMedia &amp;&amp;
+		window.matchMedia(&#039;(prefers-color-scheme: dark)&#039;).matches);
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.addSizeHandler = function()
+{
+	var container = this.graph.container;
+	var bounds = this.graph.getGraphBounds();
+	var updatingOverflow = false;
+
+	if (this.graphConfig[&#039;toolbar-nohide&#039;] != true)
+	{
+		container.style.overflow = &#039;hidden&#039;;
+	}
+	else
+	{
+		container.style.overflow = &#039;visible&#039;;
+	}
+	
+	var updateOverflow = mxUtils.bind(this, function()
+	{
+		if (!updatingOverflow)
+		{
+			updatingOverflow = true;
+			var tmp = this.graph.getGraphBounds();
+			
+			if (this.graphConfig[&#039;toolbar-nohide&#039;] != true)
+			{
+				// Shows scrollbars if graph is larger than available width
+				if (tmp.width + 2 * this.graph.border &gt; container.offsetWidth - 2)
+				{
+					container.style.overflow = &#039;auto&#039;;
+				}
+				else
+				{
+					container.style.overflow = &#039;hidden&#039;;
+				}
+			}
+			else
+			{
+				container.style.overflow = &#039;visible&#039;;
+			}
+
+			if (this.toolbar != null &amp;&amp; this.graphConfig[&#039;toolbar-nohide&#039;] != true)
+			{
+				var r = container.getBoundingClientRect();
+				
+				// Workaround for position:relative set in ResizeSensor
+				var origin = mxUtils.getScrollOrigin(document.body)
+				var b = (document.body.style.position === &#039;relative&#039;) ?
+					document.body.getBoundingClientRect() :
+					{left: -origin.x, top: -origin.y};
+				r = {left: r.left - b.left, top: r.top - b.top, bottom: r.bottom - b.top, right: r.right - b.left};
+				
+				this.toolbar.style.left = r.left + &#039;px&#039;;
+				
+				if (this.graphConfig[&#039;toolbar-position&#039;] == &#039;bottom&#039;)
+				{
+					this.toolbar.style.top = r.bottom - 1 + &#039;px&#039;;
+				}
+				else
+				{
+					if (this.graphConfig[&#039;toolbar-position&#039;] != &#039;inline&#039;)
+					{
+						this.toolbar.style.width = Math.max(this.minToolbarWidth, container.offsetWidth) + &#039;px&#039;;
+						this.toolbar.style.top = r.top + 1 + &#039;px&#039;;
+					}
+					else
+					{
+						this.toolbar.style.top = r.top + &#039;px&#039;;
+					}
+				}
+			}
+			else if (this.toolbar != null)
+			{
+				this.toolbar.style.width = Math.max(this.minToolbarWidth, container.offsetWidth) + &#039;px&#039;;
+			}
+
+			// Updates origin after tree cell folding
+			if (this.treeCellFolded)
+			{
+				this.treeCellFolded = false;
+				this.positionGraph(this.graph.view.translate);
+				this.graph.initialViewState.translate = this.graph.view.translate.clone();
+			}
+			
+			updatingOverflow = false;
+		}
+	});
+
+	var lastOffsetWidth = null;
+	var cachedOffsetWidth = null;
+	this.handlingResize = false;
+	
+	// Installs function on instance
+	this.fitGraph = mxUtils.bind(this, function(maxScale)
+	{
+		var cachedOffsetWidth = container.offsetWidth;
+		
+		if (cachedOffsetWidth != lastOffsetWidth &amp;&amp; !this.handlingResize)
+		{
+			this.handlingResize = true;
+			
+			// Hides scrollbars to force update of translate
+			if (container.style.overflow == &#039;auto&#039;)
+			{
+				container.style.overflow = &#039;hidden&#039;;
+			}
+			
+			this.graph.maxFitScale = (maxScale != null) ? maxScale : (this.graphConfig.zoom ||
+				((this.allowZoomIn) ? null : 1));
+			this.graph.fit(null, null, null, null, null, true);
+
+			if (this.center || !(this.graphConfig.resize != false || container.style.height == &#039;&#039;))
+			{
+				this.graph.center();
+			}	
+			
+			this.graph.maxFitScale = null;
+			
+			if (this.graphConfig.resize != false || container.style.height == &#039;&#039;)
+			{
+				this.updateContainerHeight(container, Math.max(this.minHeight,
+					this.graph.getGraphBounds().height +
+					2 * this.graph.border + 1));
+			}
+
+			this.graph.initialViewState = {
+				translate: this.graph.view.translate.clone(),
+				scale: this.graph.view.scale
+			};
+			
+			lastOffsetWidth = cachedOffsetWidth;
+			
+			// Workaround for fit triggering scrollbars triggering doResize (infinite loop)
+			window.setTimeout(mxUtils.bind(this, function()
+			{
+				this.handlingResize = false;
+			}), 0);
+		}
+	});
+
+	if (GraphViewer.useResizeSensor)
+	{
+		if (document.documentMode &lt;= 9)
+		{
+			mxEvent.addListener(window, &#039;resize&#039;, updateOverflow);
+			this.graph.addListener(&#039;size&#039;, updateOverflow);
+		}
+		else
+		{
+			new ResizeSensor(this.graph.container, updateOverflow);
+		}
+	}
+	
+	if (this.graphConfig.resize || ((this.zoomEnabled || !this.autoFit) &amp;&amp; this.graphConfig.resize != false))
+	{
+		this.graph.minimumContainerSize = new mxRectangle(0, 0, this.minWidth, this.minHeight);
+		this.graph.resizeContainer = true;
+	}
+	else
+	{
+		// Sets initial size for responsive diagram to stop at actual size
+		if (this.widthIsEmpty &amp;&amp; !(container.style.height != &#039;&#039; &amp;&amp; this.autoFit))
+		{
+			this.updateContainerWidth(container, bounds.width + 2 * this.graph.border);
+		}
+		
+		if (this.graphConfig.resize != false || container.style.height == &#039;&#039;)
+		{
+			this.updateContainerHeight(container, Math.max(this.minHeight, bounds.height + 2 * this.graph.border + 1));
+		}
+
+		if (!this.zoomEnabled &amp;&amp; this.autoFit)
+		{
+			var lastOffsetWidth = null;
+			var scheduledResize = null;
+			
+			var doResize = mxUtils.bind(this, function()
+			{
+				window.clearTimeout(scheduledResize);
+				
+				if (!this.handlingResize)
+				{
+					scheduledResize = window.setTimeout(mxUtils.bind(this, this.fitGraph), 100);
+				}
+			});
+			
+			if (GraphViewer.useResizeSensor)
+			{
+				if (document.documentMode &lt;= 9)
+				{
+					mxEvent.addListener(window, &#039;resize&#039;, doResize);
+				}
+				else
+				{
+					new ResizeSensor(this.graph.container, doResize);
+				}
+			}
+		}
+		else if (!(document.documentMode &lt;= 9))
+		{
+			this.graph.addListener(&#039;size&#039;, updateOverflow);
+		}
+	}
+
+	var positionGraph = mxUtils.bind(this, function(origin)
+	{
+		// Allocates maximum width while setting initial view state
+		var prev = container.style.minWidth;
+		
+		if (this.widthIsEmpty)
+		{
+			container.style.minWidth = &#039;100%&#039;;
+		}
+		
+		var maxHeight = (this.graphConfig[&#039;max-height&#039;] != null) ? this.graphConfig[&#039;max-height&#039;] :
+			((container.style.height != &#039;&#039; &amp;&amp; this.autoFit) ? container.offsetHeight : undefined);
+		
+		if (container.offsetWidth &gt; 0 &amp;&amp; origin == null &amp;&amp; this.allowZoomOut &amp;&amp; (this.allowZoomIn ||
+			bounds.width + 2 * this.graph.border &gt; container.offsetWidth ||
+			bounds.height + 2 * this.graph.border &gt; maxHeight))
+		{
+			var maxScale = null;
+
+			if (maxHeight != null &amp;&amp; bounds.height + 2 * this.graph.border &gt; maxHeight - 2)
+			{
+				maxScale = (maxHeight - 2 * this.graph.border - 2) / bounds.height;
+			}
+
+			this.fitGraph(maxScale);
+		}
+		else if (!this.widthIsEmpty &amp;&amp; origin == null &amp;&amp; !(this.graphConfig.resize != false || container.style.height == &#039;&#039;))
+		{
+			this.graph.center((!this.widthIsEmpty || bounds.width &lt; this.minWidth) &amp;&amp; this.graphConfig.resize != true);
+		}
+		else
+		{
+			origin = (origin != null) ? origin : new mxPoint();
+		
+			this.graph.view.setTranslate(Math.floor(this.graph.border - bounds.x / this.graph.view.scale) + origin.x,
+				Math.floor(this.graph.border - bounds.y / this.graph.view.scale) + origin.y);
+			lastOffsetWidth = container.offsetWidth;
+		}
+		
+		container.style.minWidth = prev
+	});
+
+	if (document.documentMode == 8)
+	{
+		window.setTimeout(positionGraph, 0);
+	}
+	else
+	{
+		positionGraph();
+	}
+
+	// Installs function on instance
+	this.positionGraph = function(origin)
+	{
+		bounds = this.graph.getGraphBounds();
+		lastOffsetWidth = null;
+		positionGraph(origin);
+	};
+};
+
+/**
+ * Moves the origin of the graph to the top, right corner.
+ */
+GraphViewer.prototype.crop = function()
+{
+	var graph = this.graph;
+	var bounds = graph.getGraphBounds();
+	var border = graph.border;
+	var s = graph.view.scale;
+	var x0 = (bounds.x != null) ? Math.floor(graph.view.translate.x - bounds.x / s + border) : border;
+	var y0 = (bounds.y != null) ? Math.floor(graph.view.translate.y - bounds.y / s + border) : border;
+
+	graph.view.setTranslate(x0, y0);
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.updateContainerWidth = function(container, width)
+{
+	container.style.width = width + &#039;px&#039;;
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.updateContainerHeight = function(container, height)
+{
+	if (this.forceCenter || this.zoomEnabled || !this.autoFit || document.compatMode == &#039;BackCompat&#039; ||
+		document.documentMode == 8)
+	{
+		container.style.height = height + &#039;px&#039;;
+	}
+};
+
+/**
+ * Shows the 
+ */
+GraphViewer.prototype.showLayers = function(graph, sourceGraph)
+{
+	var layers = this.graphConfig.layers;
+	var idx = (layers != null &amp;&amp; layers.length &gt; 0) ? layers.split(&#039; &#039;) : [];
+	var layerIds = this.graphConfig.layerIds;
+	var hasLayerIds = layerIds != null &amp;&amp; layerIds.length &gt; 0;
+	var result = false;
+	
+	if (idx.length &gt; 0 || hasLayerIds || sourceGraph != null)
+	{
+		var source = (sourceGraph != null) ? sourceGraph.getModel() : null;
+		var model = graph.getModel();
+		model.beginUpdate();
+		
+		try
+		{
+			var childCount = model.getChildCount(model.root);
+			
+			// Shows specified layers (eg. 0 1 3)
+			if (source == null)
+			{
+				var layersFound = false, visibleLayers = {};
+				
+				if (hasLayerIds)
+				{
+					for (var i = 0; i &lt; layerIds.length; i++)
+					{
+						var layer = model.getCell(layerIds[i]);
+						
+						if (layer != null)
+						{
+							layersFound = true;
+							visibleLayers[layer.id] = true;
+						}
+					}
+				}
+				else
+				{
+					for (var i = 0; i &lt; idx.length; i++)
+					{
+						var layer = model.getChildAt(model.root, parseInt(idx[i]));
+
+						if (layer != null)
+						{
+							layersFound = true;
+							visibleLayers[layer.id] = true;
+						}
+					}
+				}
+				
+				//To prevent hiding all layers, only apply if the specified layers are found
+				//This prevents incorrect settings from showing an empty viewer
+				for (var i = 0; layersFound &amp;&amp; i &lt; childCount; i++)
+				{
+					var layer = model.getChildAt(model.root, i);
+					model.setVisible(layer, visibleLayers[layer.id] || false);
+				}
+			}
+			else
+			{
+				// Match visible layers in source graph
+				for (var i = 0; i &lt; childCount; i++)
+				{
+					model.setVisible(model.getChildAt(model.root, i),
+						source.isVisible(source.getChildAt(source.root, i)));
+				}
+			}
+		}
+		finally
+		{
+			model.endUpdate();
+		}
+
+		result = true;
+	}
+
+	return result;
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.addToolbar = function()
+{
+	var container = this.graph.container;
+	
+	if (this.graphConfig[&#039;toolbar-position&#039;] == &#039;bottom&#039;)
+	{
+		container.style.marginBottom = this.toolbarHeight + &#039;px&#039;;
+	}
+	else if (this.graphConfig[&#039;toolbar-position&#039;] != &#039;inline&#039;)
+	{
+		container.style.marginTop = this.toolbarHeight + &#039;px&#039;;
+	}
+
+	// Creates toolbar for viewer
+	var toolbar = container.ownerDocument.createElement(&#039;div&#039;);
+	toolbar.style.display = &#039;flex&#039;;
+	toolbar.style.alignItems = &#039;center&#039;;
+	toolbar.style.position = &#039;absolute&#039;;
+	toolbar.style.overflow = &#039;hidden&#039;;
+	toolbar.style.boxSizing = &#039;border-box&#039;;
+	toolbar.style.whiteSpace = &#039;nowrap&#039;;
+	toolbar.style.textAlign = &#039;left&#039;;
+	toolbar.style.zIndex = this.toolbarZIndex;
+	toolbar.style.backgroundColor = &#039;light-dark(#eeeeee, &#039; + GraphViewer.darkBackgroundColor + &#039;)&#039;;
+	toolbar.style.height = this.toolbarHeight + &#039;px&#039;;
+
+	var updateDarkMode = mxUtils.bind(this,	function()
+	{
+		if (this.isDarkMode())
+		{
+			toolbar.classList.add(&#039;geDarkMode&#039;);
+			toolbar.style.colorScheme = &#039;dark&#039;;
+		}
+		else
+		{
+			toolbar.classList.remove(&#039;geDarkMode&#039;);
+			toolbar.style.colorScheme = &#039;light&#039;;
+		}
+	});
+
+	this.addListener(&#039;darkModeChanged&#039;, updateDarkMode);
+	this.toolbar = toolbar;
+	updateDarkMode();
+	
+	if (this.graphConfig[&#039;toolbar-position&#039;] == &#039;inline&#039;)
+	{
+		mxUtils.setPrefixedStyle(toolbar.style, &#039;transition&#039;, &#039;opacity 100ms ease-in-out&#039;);
+		mxUtils.setOpacity(toolbar, 30);
+		
+		// Changes toolbar opacity on hover
+		var fadeThread = null;
+		var fadeThread2 = null;
+		
+		var fadeOut = mxUtils.bind(this, function(delay)
+		{
+			if (fadeThread != null)
+			{
+				window.clearTimeout(fadeThread);
+				fadeThead = null;
+			}
+			
+			if (fadeThread2 != null)
+			{
+				window.clearTimeout(fadeThread2);
+				fadeThead2 = null;
+			}
+			
+			fadeThread = window.setTimeout(mxUtils.bind(this, function()
+			{
+			 	mxUtils.setOpacity(toolbar, 0);
+				fadeThread = null;
+			 	
+				fadeThread2 = window.setTimeout(mxUtils.bind(this, function()
+				{
+					toolbar.style.display = &#039;none&#039;;
+					fadeThread2 = null;
+				}), 100);
+			}), delay || 200);
+		});
+		
+		var fadeIn = mxUtils.bind(this, function(opacity)
+		{
+			if (fadeThread != null)
+			{
+				window.clearTimeout(fadeThread);
+				fadeThead = null;
+			}
+			
+			if (fadeThread2 != null)
+			{
+				window.clearTimeout(fadeThread2);
+				fadeThead2 = null;
+			}
+			
+			toolbar.style.display = &#039;flex&#039;;
+			mxUtils.setOpacity(toolbar, opacity || 30);
+		});
+		
+		mxEvent.addListener(this.graph.container, (mxClient.IS_POINTER) ? &#039;pointermove&#039; : &#039;mousemove&#039;, mxUtils.bind(this, function(evt)
+		{
+			if (!mxEvent.isTouchEvent(evt))
+			{
+				fadeIn(30);
+				fadeOut();
+			}
+		}));
+		
+		mxEvent.addListener(toolbar, (mxClient.IS_POINTER) ? &#039;pointermove&#039; : &#039;mousemove&#039;, function(evt)
+		{
+			mxEvent.consume(evt);
+		});
+		
+		mxEvent.addListener(toolbar, &#039;mouseenter&#039;, mxUtils.bind(this, function(evt)
+		{
+			fadeIn(100);
+		}));
+
+		mxEvent.addListener(toolbar, &#039;mousemove&#039;,  mxUtils.bind(this, function(evt)
+		{
+			fadeIn(100);
+			mxEvent.consume(evt);
+		}));
+
+		mxEvent.addListener(toolbar, &#039;mouseleave&#039;,  mxUtils.bind(this, function(evt)
+		{
+			if (!mxEvent.isTouchEvent(evt))
+			{
+				fadeIn(30);
+			}
+		}));
+		
+		// Shows/hides toolbar for touch devices
+		var graph = this.graph;
+		var tol = graph.getTolerance();
+
+		graph.addMouseListener(
+		{
+		    startX: 0,
+		    startY: 0,
+		    scrollLeft: 0,
+		    scrollTop: 0,
+		    mouseDown: function(sender, me)
+		    {
+		    	this.startX = me.getGraphX();
+		    	this.startY = me.getGraphY();
+			    this.scrollLeft = graph.container.scrollLeft;
+			    this.scrollTop = graph.container.scrollTop;
+		    },
+		    mouseMove: function(sender, me) {},
+		    mouseUp: function(sender, me)
+		    {
+		    	if (mxEvent.isTouchEvent(me.getEvent()))
+		    	{
+			    	if ((Math.abs(this.scrollLeft - graph.container.scrollLeft) &lt; tol &amp;&amp;
+			    		Math.abs(this.scrollTop - graph.container.scrollTop) &lt; tol) &amp;&amp;
+			    		(Math.abs(this.startX - me.getGraphX()) &lt; tol &amp;&amp;
+			    		Math.abs(this.startY - me.getGraphY()) &lt; tol))
+			    	{
+			    		if (parseFloat(toolbar.style.opacity || 0) &gt; 0)
+			    		{
+			    			fadeOut();
+			    		}
+			    		else
+			    		{
+			    			fadeIn(30);
+			    		}
+					}
+		    	}
+		    }
+		});
+	}
+	
+	var tokens = this.toolbarItems;
+	var buttonCount = 0;
+	
+	var addButton = mxUtils.bind(this, function(fn, imgSrc, tip, enabled)
+	{
+		var a = this.createToolbarButton(fn, imgSrc, tip, enabled);
+		toolbar.appendChild(a);
+		
+		buttonCount++;
+		
+		return a;
+	});
+
+	var model = this.graph.getModel();
+	var layersDialog = null;
+	var tagsComponent = null;
+	var tagsDialog = null;
+	var pageInfo = null;
+	
+	for (var i = 0; i &lt; tokens.length; i++)
+	{
+		var token = tokens[i];
+		
+		if (token == &#039;pages&#039;)
+		{
+			pageInfo = container.ownerDocument.createElement(&#039;div&#039;);
+			pageInfo.style.display = &#039;inline-flex&#039;;
+			pageInfo.style.position = &#039;relative&#039;;
+			pageInfo.style.alignItems = &#039;center&#039;;
+			pageInfo.style.padding = &#039;4px&#039;;
+			pageInfo.style.fontFamily = GraphViewer.cssFontFamily;
+			pageInfo.style.fontSize = &#039;12px&#039;;
+			pageInfo.style.cursor = &#039;default&#039;;
+			pageInfo.style.color = &#039;light-dark(#000000, #ffffff)&#039;;
+			mxUtils.setOpacity(pageInfo, 70);
+			
+			var prevButton = addButton(mxUtils.bind(this, function()
+			{
+				this.selectPage(this.currentPage - 1);
+			}), Editor.chevronLeftImage, mxResources.get(&#039;previousPage&#039;) || &#039;Previous Page&#039;);
+
+			prevButton.style.borderRightStyle = &#039;none&#039;;
+			prevButton.style.paddingLeft = &#039;0px&#039;;
+			prevButton.style.paddingRight = &#039;0px&#039;;
+			toolbar.appendChild(pageInfo);
+
+			var nextButton = addButton(mxUtils.bind(this, function()
+			{
+				this.selectPage(this.currentPage + 1);
+			}), Editor.chevronRightImage, mxResources.get(&#039;nextPage&#039;) || &#039;Next Page&#039;);
+			
+			nextButton.style.paddingLeft = &#039;0px&#039;;
+			nextButton.style.paddingRight = &#039;0px&#039;;
+			
+			var update = mxUtils.bind(this, function()
+			{
+				pageInfo.innerText = &#039;&#039;;
+				mxUtils.write(pageInfo, (this.currentPage + 1) + &#039; / &#039; + this.diagrams.length);
+				pageInfo.style.display = (this.diagrams.length &gt; 1) ? &#039;inline-flex&#039; : &#039;none&#039;;
+				prevButton.style.display = pageInfo.style.display;
+				nextButton.style.display = pageInfo.style.display;
+			});
+			
+			// LATER: Add event for setGraphXml
+			this.addListener(&#039;graphChanged&#039;, update);
+			update();
+		}
+		else if (token == &#039;zoom&#039;)
+		{
+			if (this.zoomEnabled)
+			{
+				addButton(mxUtils.bind(this, function()
+				{
+					this.graph.zoomOut();
+				}), Editor.zoomOutImage, mxResources.get(&#039;zoomOut&#039;) || &#039;Zoom Out&#039;);
+
+				addButton(mxUtils.bind(this, function()
+				{
+					this.graph.zoomIn();
+				}), Editor.zoomInImage, mxResources.get(&#039;zoomIn&#039;) || &#039;Zoom In&#039;);
+
+				addButton(mxUtils.bind(this, function()
+				{
+					this.graph.view.scaleAndTranslate(this.graph.initialViewState.scale,
+						this.graph.initialViewState.translate.x,
+						this.graph.initialViewState.translate.y);
+				}), Editor.zoomFitImage, mxResources.get(&#039;fit&#039;) || &#039;Fit&#039;);
+			}
+		}
+		else if (token == &#039;layers&#039;)
+		{
+			if (this.layersEnabled)
+			{
+				var layersButton = addButton(mxUtils.bind(this, function(evt)
+				{
+					if (layersDialog != null)
+					{
+						layersDialog.parentNode.removeChild(layersDialog);
+						layersDialog = null;
+					}
+					else
+					{
+						layersDialog = this.graph.createLayersDialog(mxUtils.bind(this, function()
+						{
+							if (this.autoCrop)
+							{
+								this.crop();
+							}
+							else if (this.autoOrigin)
+							{
+								var bounds = this.graph.getGraphBounds();
+								var v = this.graph.view;
+	
+								if (bounds.x &lt; 0 || bounds.y &lt; 0)
+								{
+									this.crop();
+									this.graph.originalViewState = this.graph.initialViewState;
+
+									this.graph.initialViewState = {
+										translate: v.translate.clone(),
+										scale: v.scale
+									};
+								}
+								else if (this.graph.originalViewState != null &amp;&amp;
+									bounds.x / v.scale + this.graph.originalViewState.translate.x - v.translate.x &gt; 0 &amp;&amp;
+									bounds.y / v.scale + this.graph.originalViewState.translate.y - v.translate.y &gt; 0)
+								{
+									v.setTranslate(this.graph.originalViewState.translate.x,
+										this.graph.originalViewState.translate.y);
+									this.graph.originalViewState = null;
+									
+									this.graph.initialViewState = {
+										translate: v.translate.clone(),
+										scale: v.scale
+									};
+								}
+							}
+						}));
+						
+						mxEvent.addListener(layersDialog, &#039;mouseleave&#039;, function()
+						{
+							layersDialog.parentNode.removeChild(layersDialog);
+							layersDialog = null;
+						});
+						
+						var r = layersButton.getBoundingClientRect();
+
+						layersDialog.style.width = &#039;140px&#039;;
+						layersDialog.style.padding = &#039;2px 0px 2px 0px&#039;;
+						layersDialog.style.border = &#039;1px solid #d0d0d0&#039;;
+						layersDialog.style.backgroundColor = &#039;#eee&#039;;
+						layersDialog.style.fontFamily = GraphViewer.cssFontFamily;
+						layersDialog.style.fontSize = &#039;11px&#039;;
+						layersDialog.style.overflowY = &#039;auto&#039;;
+						layersDialog.style.maxHeight = (this.graph.container.clientHeight - this.toolbarHeight - 10) + &#039;px&#039;
+						layersDialog.style.zIndex = this.toolbarZIndex + 1;
+						layersDialog.style.color = &#039;#000&#039;;
+						mxUtils.setOpacity(layersDialog, 85);
+						var origin = mxUtils.getDocumentScrollOrigin(document);
+						layersDialog.style.left = origin.x + r.left - 1 + &#039;px&#039;;
+						layersDialog.style.top = origin.y + r.bottom - 2 + &#039;px&#039;;
+
+						if (this.isDarkMode())
+						{
+							layersDialog.style.filter = &#039;invert(93%) hue-rotate(180deg)&#039;;
+						}
+
+						document.body.appendChild(layersDialog);
+					}
+				}), Editor.layersImage, mxResources.get(&#039;layers&#039;) || &#039;Layers&#039;);
+				
+				model.addListener(mxEvent.CHANGE, function()
+				{
+					layersButton.style.display = (model.getChildCount(model.root) &gt; 1) ? &#039;inline-flex&#039; : &#039;none&#039;;
+				});
+				
+				layersButton.style.display = (model.getChildCount(model.root) &gt; 1) ? &#039;inline-flex&#039; : &#039;none&#039;;
+			}
+		}
+		else if (token == &#039;tags&#039;)
+		{
+			if (this.tagsEnabled)
+			{
+				var tagsButton = addButton(mxUtils.bind(this, function(evt)
+				{
+					if (tagsComponent == null)
+					{
+						tagsComponent = this.graph.createTagsDialog(mxUtils.bind(this, function()
+						{
+							return true;
+						}));
+
+						tagsComponent.div.getElementsByTagName(&#039;div&#039;)[0].style.position = &#039;&#039;;
+						tagsComponent.div.style.maxHeight = &#039;160px&#039;;
+						tagsComponent.div.style.maxWidth = &#039;120px&#039;;
+						tagsComponent.div.style.padding = &#039;2px&#039;;
+						tagsComponent.div.style.overflow = &#039;auto&#039;;
+						tagsComponent.div.style.height = &#039;auto&#039;;
+						tagsComponent.div.style.position = &#039;fixed&#039;;
+						tagsComponent.div.style.fontFamily = GraphViewer.cssFontFamily;
+						tagsComponent.div.style.fontSize = &#039;11px&#039;;
+						tagsComponent.div.style.backgroundColor = &#039;#eee&#039;;
+						tagsComponent.div.style.color = &#039;#000&#039;;
+						tagsComponent.div.style.border = &#039;1px solid #d0d0d0&#039;;
+						tagsComponent.div.style.zIndex = this.toolbarZIndex + 1;
+						
+						if (this.isDarkMode())
+						{
+							tagsComponent.div.style.filter = &#039;invert(93%) hue-rotate(180deg)&#039;;
+						}
+
+						mxUtils.setOpacity(tagsComponent.div, 85);
+					}
+
+					if (tagsDialog != null)
+					{
+						tagsDialog.parentNode.removeChild(tagsDialog);
+						tagsDialog = null;
+					}
+					else
+					{
+						tagsDialog = tagsComponent.div;
+						tagsDialog.style.position = &#039;absolute&#039;;
+						
+						mxEvent.addListener(tagsDialog, &#039;mouseleave&#039;, function()
+						{
+							if (tagsDialog != null)
+							{
+								tagsDialog.parentNode.removeChild(tagsDialog);
+								tagsDialog = null;
+							}
+						});
+						
+						var r = tagsButton.getBoundingClientRect();
+						var origin = mxUtils.getDocumentScrollOrigin(document);
+						tagsDialog.style.left = origin.x + r.left - 1 + &#039;px&#039;;
+						tagsDialog.style.top = origin.y + r.bottom - 2 + &#039;px&#039;;
+						document.body.appendChild(tagsDialog);
+						tagsComponent.refresh();
+					}
+				}), Editor.tagsImage, mxResources.get(&#039;tags&#039;) || &#039;Tags&#039;);
+
+				model.addListener(mxEvent.CHANGE, mxUtils.bind(this, function()
+				{
+					tagsButton.style.display = (this.graph.getAllTags().length &gt; 0) ? &#039;inline-flex&#039; : &#039;none&#039;;
+
+					if (tagsDialog != null &amp;&amp; this.graph.getAllTags().length == 0)
+					{
+						tagsDialog.parentNode.removeChild(tagsDialog);
+						tagsDialog = null;
+					}
+				}));
+				
+				tagsButton.style.display = (this.graph.getAllTags().length &gt; 0) ? &#039;inline-flex&#039; : &#039;none&#039;;
+			}
+		}
+		else if (token == &#039;lightbox&#039;)
+		{
+			if (this.lightboxEnabled)
+			{
+				addButton(mxUtils.bind(this, function()
+				{
+					try
+					{
+						this.showLightbox();
+					}
+					catch (e)
+					{
+						alert(e.message);
+					}
+				}), Editor.fullscreenImage, (mxResources.get(&#039;fullscreen&#039;) || &#039;Fullscreen&#039;));
+			}
+		}
+		else if (this.graphConfig[&#039;toolbar-buttons&#039;] != null)
+		{
+			var def = this.graphConfig[&#039;toolbar-buttons&#039;][token];
+			
+			if (def != null)
+			{
+				def.elem = addButton((def.enabled == null || def.enabled) ? def.handler : function() {},
+					def.image, def.title, def.enabled);
+			}
+		}
+	}
+	
+	if (this.graph.minimumContainerSize != null)
+	{
+		this.graph.minimumContainerSize.width = buttonCount * 34;
+	}
+	
+	if (this.graphConfig.title != null)
+	{
+		var filename = container.ownerDocument.createElement(&#039;div&#039;);
+		filename.style.display = &#039;inline-flex&#039;;
+		filename.style.position = &#039;relative&#039;;
+		filename.style.alignItems = &#039;center&#039;;
+		filename.style.padding = &#039;6px&#039;;
+		filename.style.fontFamily = GraphViewer.cssFontFamily;
+		filename.style.fontSize = &#039;12px&#039;;
+		filename.style.cursor = &#039;default&#039;;
+		filename.style.color = &#039;light-dark(#000000, #ffffff)&#039;;
+		filename.setAttribute(&#039;title&#039;, this.graphConfig.titleTooltip || this.graphConfig.title);
+		mxUtils.write(filename, this.graphConfig.title);
+		mxUtils.setOpacity(filename, 70);
+		
+		toolbar.appendChild(filename);
+		this.filename = filename;
+	}
+	
+	this.minToolbarWidth = buttonCount * 34;
+	var prevBorder = container.style.border;
+	
+	var enter = mxUtils.bind(this, function()
+	{
+		toolbar.style.width = (this.graphConfig[&#039;toolbar-position&#039;] == &#039;inline&#039;) ? &#039;auto&#039; :
+			Math.max(this.minToolbarWidth, container.offsetWidth) + &#039;px&#039;;
+		toolbar.style.border = &#039;1px solid #d0d0d0&#039;;
+
+		if (this.graphConfig[&#039;toolbar-nohide&#039;] != true)
+		{
+			var r = container.getBoundingClientRect();
+	
+			// Workaround for position:relative set in ResizeSensor
+			var origin = mxUtils.getScrollOrigin(document.body)
+			var b = (document.body.style.position === &#039;relative&#039;) ?
+				document.body.getBoundingClientRect() :
+				{left: -origin.x, top: -origin.y};
+			r = {left: r.left - b.left, top: r.top - b.top,
+				bottom: r.bottom - b.top, right: r.right - b.left};
+			
+			toolbar.style.left = r.left + &#039;px&#039;;
+
+			if (this.graphConfig[&#039;toolbar-position&#039;] == &#039;bottom&#039;)
+			{
+				toolbar.style.top = r.bottom - 1 + &#039;px&#039;;
+			}
+			else
+			{
+				if (this.graphConfig[&#039;toolbar-position&#039;] != &#039;inline&#039;)
+				{
+					toolbar.style.marginTop = -this.toolbarHeight + &#039;px&#039;;
+					toolbar.style.top = r.top + 1 + &#039;px&#039;;
+				}
+				else
+				{
+					toolbar.style.top = r.top + &#039;px&#039;;
+				}
+			}
+			
+			if (prevBorder == &#039;1px solid transparent&#039;)
+			{
+				container.style.border = &#039;1px solid #d0d0d0&#039;;
+			}
+			
+			document.body.appendChild(toolbar);
+
+			var hideToolbar = mxUtils.bind(this, function()
+			{
+				if (toolbar.parentNode != null)
+				{
+					toolbar.parentNode.removeChild(toolbar);
+				}
+				
+				if (tagsDialog != null)
+				{
+					tagsDialog.parentNode.removeChild(tagsDialog);
+					tagsDialog = null;
+				}
+
+				if (layersDialog != null)
+				{
+					layersDialog.parentNode.removeChild(layersDialog);
+					layersDialog = null;
+				}
+				
+				container.style.border = prevBorder;
+			});
+			
+			mxEvent.addListener(document, &#039;mousemove&#039;, function(evt)
+			{
+				var source = mxEvent.getSource(evt);
+				
+				while (source != null)
+				{
+					if (source == container ||
+						source == toolbar ||
+						source == layersDialog ||
+						source == tagsDialog)
+					{
+						return;
+					}
+					
+					source = source.parentNode;
+				}
+				
+				hideToolbar();
+			});
+			
+			mxEvent.addListener(document.body, &#039;mouseleave&#039;, function(evt)
+			{
+				hideToolbar();
+			});
+		}
+		else
+		{
+			toolbar.style.top = -this.toolbarHeight + &#039;px&#039;;
+			container.appendChild(toolbar);
+		}
+	});
+	
+	if (this.graphConfig[&#039;toolbar-nohide&#039;] != true)
+	{
+		mxEvent.addListener(container, &#039;mouseenter&#039;, enter);
+	}
+	else
+	{
+		enter();
+	}
+	
+	if (this.responsive &amp;&amp; typeof ResizeObserver !== &#039;undefined&#039;)
+	{
+		new ResizeObserver(function()
+		{
+			if (toolbar.parentNode != null)
+			{
+				enter();
+			}
+		}).observe(container)
+	}
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.createToolbarButton = function(fn, imgSrc, tip, enabled)
+{
+	var a = document.createElement(&#039;div&#039;);
+	a.style.borderRight = &#039;1px solid #d0d0d0&#039;;
+	a.style.display = &#039;inline-flex&#039;;
+	a.style.alignItems = &#039;center&#039;;
+	a.style.padding = &#039;6px&#039;;
+	
+	mxEvent.addListener(a, &#039;click&#039;, fn);
+
+	if (tip != null)
+	{
+		a.setAttribute(&#039;title&#039;, tip);
+	}
+	
+	var img = document.createElement(&#039;img&#039;);
+	img.setAttribute(&#039;border&#039;, &#039;0&#039;);
+	img.setAttribute(&#039;src&#039;, imgSrc);
+	img.style.width = &#039;18px&#039;;
+	img.className = &#039;geAdaptiveAsset&#039;;
+	
+	if (enabled == null || enabled)
+	{
+		mxEvent.addListener(a, &#039;mouseenter&#039;, function()
+		{
+			a.style.backgroundColor = &#039;light-dark(#dddddd,#333333)&#039;;
+		});
+		
+		mxEvent.addListener(a, &#039;mouseleave&#039;, function()
+		{
+			a.style.backgroundColor = &#039;transparent&#039;;
+		});
+
+		mxUtils.setOpacity(img, 60);
+		a.style.cursor = &#039;pointer&#039;;
+	}
+	else
+	{
+		mxUtils.setOpacity(a, 30);
+	}
+	
+	a.appendChild(img);
+
+	return a;
+};
+
+GraphViewer.prototype.disableButton = function(token, tooltip)
+{
+	var def = this.graphConfig[&#039;toolbar-buttons&#039;]? this.graphConfig[&#039;toolbar-buttons&#039;][token] : null;
+			
+	if (def != null)
+	{
+		mxUtils.setOpacity(def.elem, 30);
+		mxEvent.removeListener(def.elem, &#039;click&#039;, def.handler);
+		//Workaround to stop highlighting the disabled button
+		mxEvent.addListener(def.elem, &#039;mouseenter&#039;, function()
+		{
+			def.elem.style.backgroundColor = &#039;#eee&#039;;
+		});
+
+		if (tooltip)
+		{
+			def.elem.setAttribute(&#039;title&#039;, tooltip);
+		}
+	}
+};
+
+/**
+ * Adds event handler for links and lightbox.
+ */
+GraphViewer.prototype.addClickHandler = function(graph, ui)
+{
+	graph.linkPolicy = this.graphConfig.target || graph.linkPolicy;
+
+	graph.addClickHandler(this.graphConfig.highlight, mxUtils.bind(this, function(evt, href, associatedCell)
+	{
+		if (href == null)
+		{
+			var source = mxEvent.getSource(evt);
+			
+			while (source != graph.container &amp;&amp; source != null &amp;&amp; href == null)
+			{
+				if (source.nodeName.toLowerCase() == &#039;a&#039;)
+				{
+					href = source.getAttribute(&#039;href&#039;);
+				}
+				
+				source = source.parentNode;
+			}
+		}
+		
+		if (ui != null)
+		{
+			if (href == null || graph.isCustomLink(href))
+			{
+				mxEvent.consume(evt);
+			}
+			else if (!graph.isExternalProtocol(href) &amp;&amp;
+					!graph.isBlankLink(href))
+			{
+				// Hides lightbox if any links are clicked
+				// Async handling needed for anchors to work
+				window.setTimeout(function()
+				{
+					ui.destroy();
+				}, 0);
+			}
+		}
+		else if (href != null &amp;&amp; ui == null &amp;&amp; graph.isCustomLink(href) &amp;&amp;
+			(mxEvent.isTouchEvent(evt) || !mxEvent.isPopupTrigger(evt)) &amp;&amp;
+			graph.customLinkClicked(href, associatedCell))
+		{
+			// Workaround for text selection in Firefox on Windows
+			mxUtils.clearSelection();
+			mxEvent.consume(evt);
+		}
+	}), mxUtils.bind(this, function(evt)
+	{
+		if (ui == null &amp;&amp; this.lightboxClickEnabled &amp;&amp;
+			(!mxEvent.isTouchEvent(evt) ||
+			this.toolbarItems.length == 0))
+		{
+			try
+			{
+				this.showLightbox();
+			}
+			catch (e)
+			{
+				alert(e.message);
+			}
+		}
+	}));
+};
+
+/**
+ * Adds the given array of stencils to avoid dynamic loading of shapes.
+ */
+GraphViewer.prototype.showLightbox = function(editable, closable, target)
+{
+	if (this.graphConfig.lightbox == &#039;open&#039; || window.self !== window.top)
+	{
+		if (this.lightboxWindow != null &amp;&amp; !this.lightboxWindow.closed)
+		{
+			this.lightboxWindow.focus();
+		}
+		else
+		{
+			editable = (editable != null) ? editable :
+				((this.graphConfig.editable != null) ?
+					this.graphConfig.editable : true);
+			closable = (closable != null) ? closable : true;
+			target = (target != null) ? target : &#039;blank&#039;;
+			
+			var param = {&#039;client&#039;: 1, &#039;target&#039;: target};
+		    
+			if (editable)
+			{
+				param.edit = this.graphConfig.edit || &#039;_blank&#039;;
+			}
+		    
+			if (closable)
+			{
+		    	param.close = 1;
+			}
+
+			if (this.layersEnabled)
+			{
+		    	param.layers = 1;
+			}
+			
+			if (this.tagsEnabled)
+			{
+		    	param.tags = {};
+			}
+
+			if (this.graphConfig != null &amp;&amp; this.graphConfig.nav != false)
+			{
+				param.nav = 1;
+			}
+			
+			if (this.graphConfig != null &amp;&amp; this.graphConfig.highlight != null)
+			{
+				param.highlight = this.graphConfig.highlight.substring(1);
+			}
+			
+			if (this.currentPage != null &amp;&amp; this.currentPage &gt; 0)
+			{
+				param.page = this.currentPage;
+			}
+
+			if (typeof window.postMessage !== &#039;undefined&#039; &amp;&amp; (document.documentMode == null || document.documentMode &gt;= 10))
+			{	
+				if (this.lightboxWindow == null)
+				{
+					mxEvent.addListener(window, &#039;message&#039;, mxUtils.bind(this, function(evt)
+					{
+						if (evt.data == &#039;ready&#039; &amp;&amp; evt.source == this.lightboxWindow)
+						{
+							this.lightboxWindow.postMessage(this.xml, &#039;*&#039;);
+						}
+					}));					
+				}
+			}
+			else
+			{
+				// Data is pulled from global variable after tab loads
+				param.data = encodeURIComponent(this.xml);
+			}
+			
+			if (urlParams[&#039;dev&#039;] == &#039;1&#039;)
+			{
+				param.dev = &#039;1&#039;;
+			}
+			
+		    this.lightboxWindow = window.open(((urlParams[&#039;dev&#039;] != &#039;1&#039;) ?
+		    	EditorUi.lightboxHost : &#039;https://test.draw.io&#039;) +
+		    	&#039;/#P&#039; + encodeURIComponent(JSON.stringify(param)));
+		}
+	}
+	else
+	{
+		this.showLocalLightbox();
+	}
+};
+
+/**
+ * Adds the given array of stencils to avoid dynamic loading of shapes.
+ */
+GraphViewer.prototype.showLocalLightbox = function(container)
+{
+	var backdrop = document.createElement(&#039;div&#039;);
+	backdrop.style.position = &#039;fixed&#039;;
+	backdrop.style.top = &#039;0&#039;;
+	backdrop.style.left = &#039;0&#039;;
+	backdrop.style.bottom = &#039;0&#039;;
+	backdrop.style.right = &#039;0&#039;;
+	backdrop.style.zIndex = this.lightboxZIndex;
+	backdrop.style.backgroundColor = &#039;#000000&#039;;
+	mxUtils.setOpacity(backdrop, 70);
+	
+	document.body.appendChild(backdrop);
+	
+	var closeImg = document.createElement(&#039;img&#039;);
+	closeImg.setAttribute(&#039;border&#039;, &#039;0&#039;);
+	closeImg.setAttribute(&#039;src&#039;, Editor.closeBlackImage);
+	closeImg.style.position = &#039;fixed&#039;;
+	closeImg.style.top = &#039;32px&#039;;
+	closeImg.style.right = &#039;32px&#039;;
+	closeImg.style.cursor = &#039;pointer&#039;;
+	closeImg.className = &#039;geAdaptiveAsset&#039;;
+	
+	var updateDarkMode = mxUtils.bind(this,	function()
+	{
+		ui.setDarkMode(this.isDarkMode());
+	});
+
+	mxEvent.addListener(closeImg, &#039;click&#039;, mxUtils.bind(this, function()
+	{
+		this.removeListener(&#039;darkModeChanged&#039;, updateDarkMode);
+		ui.destroy();
+	}));
+	
+	// LATER: Make possible to assign after instance was created
+	urlParams[&#039;pages&#039;] = &#039;1&#039;;
+	urlParams[&#039;page&#039;] = this.currentPage;
+	urlParams[&#039;page-id&#039;] = this.graphConfig.pageId;
+	urlParams[&#039;layer-ids&#039;] = (this.graphConfig.layerIds != null &amp;&amp; this.graphConfig.layerIds.length &gt; 0)
+														? this.graphConfig.layerIds.join(&#039; &#039;) : null;
+	urlParams[&#039;nav&#039;] = (this.graphConfig.nav != false) ? &#039;1&#039; : &#039;0&#039;;
+	urlParams[&#039;layers&#039;] = (this.layersEnabled) ? &#039;1&#039; : &#039;0&#039;;
+	urlParams[&#039;dark&#039;] = (this.isDarkMode()) ? &#039;1&#039; : &#039;0&#039;;
+
+	if (this.tagsEnabled)
+	{
+		urlParams[&#039;tags&#039;] = &#039;{}&#039;;
+	}
+
+	if (container != null)
+	{
+		try
+		{
+			var toolbarConfig = JSON.parse(decodeURIComponent(urlParams[&#039;toolbar-config&#039;] || &#039;{}&#039;));
+			toolbarConfig.noCloseBtn = true;
+			urlParams[&#039;toolbar-config&#039;] = encodeURIComponent(JSON.stringify(toolbarConfig));
+		}
+		catch (e) {}
+	}
+
+	// PostMessage not working and Permission denied for opened access in IE9-
+	if (document.documentMode == null || document.documentMode &gt;= 10)
+	{
+		Editor.prototype.editButtonLink = this.graphConfig.edit;
+		Editor.prototype.editButtonFunc = this.graphConfig.editFunc;
+	}
+	
+	EditorUi.prototype.updateActionStates = function() {};
+	EditorUi.prototype.addBeforeUnloadListener = function() {};
+	EditorUi.prototype.addChromelessClickHandler = function() {};
+	
+	var ui = new EditorUi(new Editor(true), document.createElement(&#039;div&#039;), true);
+	this.addListener(&#039;darkModeChanged&#039;, updateDarkMode);
+	ui.editor.editBlankUrl = this.editBlankUrl;
+	
+	// Disables refresh
+	ui.refresh = function() {};
+	
+	// Handles escape keystroke
+	var keydownHandler = mxUtils.bind(this, function(evt)
+	{
+		if (evt.keyCode == 27 /* Escape */)
+		{
+			ui.destroy();
+		}
+	});
+
+	var overflow = this.initialOverflow;
+	var destroy = ui.destroy;
+	
+	ui.destroy = function()
+	{
+		if (container == null)
+		{
+			mxEvent.removeListener(document.documentElement, &#039;keydown&#039;, keydownHandler);
+			document.body.removeChild(backdrop);
+			document.body.removeChild(closeImg);
+			document.body.style.overflow = overflow;
+			GraphViewer.resizeSensorEnabled = true;
+			
+			destroy.apply(this, arguments);
+		}
+	};
+	
+	var graph = ui.editor.graph;
+	var lightbox = graph.container;
+	lightbox.style.overflow = &#039;hidden&#039;;
+	lightbox.style.inset = &#039;0&#039;;
+
+	if (this.lightboxChrome &amp;&amp; container == null)
+	{
+		lightbox.style.border = &#039;1px solid #c0c0c0&#039;;
+		lightbox.style.margin = &#039;40px&#039;;
+
+		// Installs the keystroke listener in the target
+		mxEvent.addListener(document.documentElement, &#039;keydown&#039;, keydownHandler);
+	}
+	else
+	{
+		backdrop.style.display = &#039;none&#039;;
+		closeImg.style.display = &#039;none&#039;;
+	}
+	
+	// Handles relative images
+	var self = this;
+	
+	graph.getImageFromBundles = function(key)
+	{
+		return self.getImageUrl(key);
+	};
+	
+	// Handles relative images in print output and temporary graphs
+	var uiCreateTemporaryGraph = ui.createTemporaryGraph;
+	
+	ui.createTemporaryGraph = function()
+	{
+		var newGraph = uiCreateTemporaryGraph.apply(this, arguments);
+		
+		newGraph.getImageFromBundles = function(key)
+		{
+			return self.getImageUrl(key);
+		};
+	
+		return newGraph;
+	};
+	
+	if (this.graphConfig.move)
+	{
+		graph.isMoveCellsEvent = function(evt)
+		{
+			return true;
+		};
+	}
+	
+	mxUtils.setPrefixedStyle(lightbox.style, &#039;border-radius&#039;, &#039;4px&#039;);
+	lightbox.style.position = &#039;fixed&#039;;
+	
+	GraphViewer.resizeSensorEnabled = false;
+	document.body.style.overflow = &#039;hidden&#039;;
+	this.addClickHandler(graph, ui);
+
+	window.setTimeout(mxUtils.bind(this, function()
+	{
+		try
+		{
+			// Click on backdrop closes lightbox
+			mxEvent.addListener(backdrop, &#039;click&#039;, function()
+			{
+				ui.destroy();
+			});
+
+			// Disables focus border in Chrome
+			lightbox.style.outline = &#039;none&#039;;
+			lightbox.style.zIndex = this.lightboxZIndex;
+			closeImg.style.zIndex = this.lightboxZIndex;
+
+			if (container != null)
+			{
+				container.innerHTML = &#039;&#039;;
+				container.appendChild(lightbox);
+			}
+			else
+			{
+				document.body.appendChild(lightbox);
+				document.body.appendChild(closeImg);
+			}
+			
+			ui.setFileData(this.xml);
+			
+			mxUtils.setPrefixedStyle(lightbox.style, &#039;transform&#039;, &#039;rotateY(0deg)&#039;);
+			ui.chromelessToolbar.style.bottom = 60 + &#039;px&#039;;
+			ui.chromelessToolbar.style.zIndex = this.lightboxZIndex;
+			
+			// Workaround for clipping in IE11-
+			(container || document.body).appendChild(ui.chromelessToolbar);
+		
+			ui.getEditBlankXml = mxUtils.bind(this, function()
+			{
+				return this.xml;
+			});
+		
+			this.showLayers(graph, this.graph);
+			ui.lightboxFit();
+			ui.chromelessResize();
+		}
+		catch (e)
+		{
+			ui.handleError(e, null, function()
+			{
+				ui.destroy();
+			});
+		}
+	}), 0);
+
+	return ui;
+};
+
+/**
+ * Removes the dialog from the DOM.
+ */
+Dialog.prototype.getDocumentSize = function()
+{
+	var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+	var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+
+	return new mxRectangle(0, 0, vw, vh);
+};
+
+/**
+ * 
+ */
+GraphViewer.prototype.updateTitle = function(title, titleTooltip)
+{
+	title = title || &#039;&#039;;
+	
+	if (this.showTitleAsTooltip &amp;&amp; this.graph != null &amp;&amp; this.graph.container != null)
+	{
+		this.graph.container.setAttribute(&#039;title&#039;, titleTooltip || title);
+    }
+	
+	if (this.filename != null)
+	{
+		this.filename.innerText = &#039;&#039;;
+		mxUtils.write(this.filename, title);
+		this.filename.setAttribute(&#039;title&#039;, titleTooltip || title);
+	}
+};
+
+/**
+ * 
+ */
+GraphViewer.processElements = function(classname)
+{
+	mxUtils.forEach(GraphViewer.getElementsByClassName(classname || &#039;mxgraph&#039;), function(div)
+	{
+		try
+		{
+			div.innerText = &#039;&#039;;
+			GraphViewer.createViewerForElement(div);
+		}
+		catch (e)
+		{
+			div.innerText = e.message;
+			
+			if (window.console != null)
+			{
+				console.error(e);
+			}
+		}
+	});
+};
+
+/**
+ * Adds the given array of stencils to avoid dynamic loading of shapes.
+ */
+GraphViewer.getElementsByClassName = function(classname)
+{
+	if (document.getElementsByClassName)
+	{
+		var divs = document.getElementsByClassName(classname);
+		
+		// Workaround for changing divs while processing
+		var result = [];
+		
+		for (var i = 0; i &lt; divs.length; i++)
+		{
+			result.push(divs[i]);
+		}
+		
+		return result;
+	}
+	else
+	{
+		var tmp = document.getElementsByTagName(&#039;*&#039;);
+		var divs = [];
+	
+		for (var i = 0; i &lt; tmp.length; i++)
+		{
+			var cls = tmp[i].className;
+
+			if (cls != null &amp;&amp; cls.length &gt; 0)
+			{
+				var tokens = cls.split(&#039; &#039;);
+				
+				if (mxUtils.indexOf(tokens, classname) &gt;= 0)
+				{
+					divs.push(tmp[i]);
+				}
+			}
+		}
+
+		return divs;
+	}
+};
+
+/**
+ * Adds the given array of stencils to avoid dynamic loading of shapes.
+ */
+GraphViewer.createViewerForElement = function(element, callback)
+{
+	var data = element.getAttribute(&#039;data-mxgraph&#039;);
+	
+	if (data != null)
+	{
+		var config = JSON.parse(data);
+		
+		var createViewer = function(xml)
+		{
+			var xmlDoc = mxUtils.parseXml(xml);
+			var viewer = new GraphViewer(element, xmlDoc.documentElement, config);
+			
+			if (callback != null)
+			{
+				callback(viewer);
+			}
+		};
+
+		if (config.url != null)
+		{
+			GraphViewer.getUrl(config.url, function(xml)
+			{
+				createViewer(xml);
+			});
+		}
+		else
+		{
+			createViewer(config.xml);
+		}
+	}
+};
+
+/**
+ *
+ */
+GraphViewer.blockedAncestorFrames = function()
+{
+	try
+	{
+		if (window.location.ancestorOrigins &amp;&amp; window.location.hostname &amp;&amp;
+				window.location.ancestorOrigins.length &amp;&amp; window.location.ancestorOrigins.length &gt; 0)
+		{
+			var hostname = window.location.hostname;
+
+			if (hostname &amp;&amp; hostname.length &gt; 1 &amp;&amp; hostname.charAt(hostname.length - 1) == &#039;/&#039;)
+			{
+				hostname = hostname.substring(0, hostname.length - 1)
+			}
+
+			var message = &#039;&#039;;
+
+			for (var i = 0; i &lt; window.location.ancestorOrigins.length; i++)
+			{
+				message += &#039; -&gt; &#039; + window.location.ancestorOrigins[i];
+
+				// Running commercial, competing services using our infrastructure isn&#039;t allowed.
+				if (message.endsWith(&#039;dan6v7pm1f1a1.cloudfront.net&#039;) || message.endsWith(&#039;confluence-cloud-excalidraw-ll3likebca-uc.a.run.app&#039;))
+				{
+					return true;
+				}
+			}
+
+			if ((hostname.endsWith(&#039;ac.draw.io&#039;) || hostname.endsWith(&#039;aj.draw.io&#039;)) &amp;&amp; window.location.ancestorOrigins.length == 1 &amp;&amp;
+					window.location.ancestorOrigins[0] &amp;&amp; window.location.ancestorOrigins[0].endsWith(&#039;.atlassian.net&#039;))
+			{
+				// do not log *.draw.io domains embedded directly into atlassian.net
+			}
+			// else if (window.location.ancestorOrigins.length &gt; 0)
+			// {
+			// 	var img = new Image();
+			// 	img.src = &#039;https://log.diagrams.net/images/1x1.png?src=ViewerAncestorFrames&#039; +
+			// 		((typeof window.EditorUi !== &#039;undefined&#039;) ? &#039;&amp;v=&#039; + encodeURIComponent(EditorUi.VERSION) : &#039;&#039;) +
+			// 		&#039;&amp;data=&#039; + encodeURIComponent(message);
+			// }
+		}
+	}
+	catch (e)
+	{
+		// ignore
+	}
+
+	return false;
+};
+
+/**
+ * Default dark background color.
+ */
+GraphViewer.darkBackgroundColor = Editor.darkColor;
+
+/**
+ * Default CSS font family.
+ */
+GraphViewer.cssFontFamily = Editor.defaultHtmlFont;
+
+/**
+ * Dark Colors
+ */
+GraphViewer.shapeBackgroundColor = null;
+
+/**
+ * Invoked when the given viewer was initialized.
+ */
+GraphViewer.viewerInitialized = function(graphViewer)
+{
+	// Hook for subclassers
+};
+
+/**
+ * Adds event if grid size is changed.
+ */
+GraphViewer.initCss = function()
+{
+	try
+	{
+		if (GraphViewer.styleElement == null)
+		{
+			GraphViewer.styleElement = document.createElement(&#039;style&#039;)
+			GraphViewer.styleElement.setAttribute(&#039;type&#039;, &#039;text/css&#039;);
+			GraphViewer.styleElement.innerHTML = GraphViewer.getCss();
+			
+			if (!GraphViewer.blockedAncestorFrames())
+			{
+				document.getElementsByTagName(&#039;head&#039;)[0].appendChild(GraphViewer.styleElement);
+			}
+		}
+	}
+	catch (e)
+	{
+		// ignore
+	}
+};
+
+/**
+ * Redirects editing to absolue URLs.
+ */
+GraphViewer.getCss = function()
+{
+	return [
+		&#039;.geDarkMode img {&#039;,
+		&#039;    filter: invert(1);&#039;,
+		&#039;}&#039;,
+		&#039;div.mxTooltip {&#039;,
+		&#039;    box-shadow: 3px 3px 12px light-dark(#c0c0c0, transparent);&#039;,
+		&#039;    background: light-dark(#ffffcc, &#039; + GraphViewer.darkBackgroundColor + &#039;);&#039;,
+		&#039;    border-style: solid;&#039;,
+		&#039;    border-width: 1px;&#039;,
+		&#039;    border-color: black;&#039;,
+		&#039;    font-family: &#039; + GraphViewer.cssFontFamily + &#039;;&#039;,
+		&#039;    font-size: 8pt;&#039;,
+		&#039;    position: absolute;&#039;,
+		&#039;    cursor: default;&#039;,
+		&#039;    padding: 4px;&#039;,
+		&#039;    color: black;&#039;,
+		&#039;}&#039;,
+		&#039;td.mxPopupMenuIcon div {&#039;,
+		&#039;    width: 16px;&#039;,
+		&#039;    height: 16px;&#039;,
+		&#039;}&#039;,
+		&#039;div.mxPopupMenu {&#039;,
+		&#039;    box-shadow: 2px 2px 3px light-dark(#d5d5d5, transparent);&#039;,
+		&#039;    background: white;&#039;,
+		&#039;    position: absolute;&#039;,
+		&#039;    border: 3px solid #e7e7e7;&#039;,
+		&#039;    padding: 3px;&#039;,
+		&#039;}&#039;,
+		&#039;table.mxPopupMenu {&#039;,
+		&#039;    border-collapse: collapse;&#039;,
+		&#039;    margin: 0px;&#039;,
+		&#039;}&#039;,
+		&#039;td.mxPopupMenuItem {&#039;,
+		&#039;    padding: 7px 30px;&#039;,
+		&#039;    font-family: &#039; + GraphViewer.cssFontFamily + &#039;;&#039;,
+		&#039;    font-size: 10pt;&#039;,
+		&#039;}&#039;,
+		&#039;td.mxPopupMenuIcon {&#039;,
+		&#039;    background-color: light-dark(#ffffff, &#039; + GraphViewer.darkBackgroundColor + &#039;);&#039;,
+		&#039;    padding: 0px;&#039;,
+		&#039;}&#039;,
+		&#039;tr.mxPopupMenuItemHover {&#039;,
+		&#039;    background-color: #eeeeee;&#039;,
+		&#039;    color: black;&#039;,
+		&#039;}&#039;,
+		&#039;table.mxPopupMenu hr {&#039;,
+		&#039;    color: #cccccc;&#039;,
+		&#039;    background-color: #cccccc;&#039;,
+		&#039;    border: none;&#039;,
+		&#039;    height: 1px;&#039;,
+		&#039;}&#039;,
+		&#039;table.mxPopupMenu tr {&#039;,
+		&#039;    font-size: 4pt;&#039;,
+		&#039;}&#039;,
+		// Modified to only apply to the print dialog
+		&#039;.geDialog, .geDialog table {&#039;,
+		&#039;    font-family: &#039; + GraphViewer.cssFontFamily + &#039;;&#039;,
+		&#039;    font-size: 10pt;&#039;,
+		&#039;    border: none;&#039;,
+		&#039;    margin: 0px;&#039;,
+		&#039;}&#039;,
+		// These are required for the print dialog
+		&#039;.geDialog {&#039;,
+		&#039;    position: fixed;&#039;,
+		&#039;    background: light-dark(#ffffff, &#039; + GraphViewer.darkBackgroundColor + &#039;);&#039;,
+		&#039;	 color: light-dark(#3f3f3f, #c0c0c0);&#039;,
+		&#039;    box-shadow: 0px 0px 2px 2px light-dark(#d5d5d5, transparent);&#039;,
+		&#039;    border: 1px solid light-dark(#dadada, #565656);&#039;,
+		&#039;    overflow: hidden;&#039;,
+		&#039;    padding: 30px;&#039;,
+		&#039;    left: 50%;&#039;,
+		&#039;    top: 50%;&#039;,
+		&#039;    max-height: 100%;&#039;,
+		&#039;    max-width: 100%;&#039;,
+		&#039;	 box-sizing: border-box;&#039;,
+		&#039;    transform: translate(-50%, -50%);&#039;,
+		&#039;	 z-index: &#039; + (GraphViewer.prototype.lightboxZIndex + 2) + &#039;;&#039;,
+		&#039;}&#039;,
+		&#039;.geBackground {&#039;,
+		&#039;    background-color: light-dark(#ffffff, &#039; + GraphViewer.darkBackgroundColor + &#039;);&#039;,
+		&#039;	 position: fixed;&#039;,
+		&#039;    left: 0px;&#039;,
+		&#039;    top: 0px;&#039;,
+		&#039;    right: 0px;&#039;,
+		&#039;    bottom: 0px;&#039;,
+		&#039;    opacity: 0.9;&#039;, 
+		&#039;	 z-index: &#039; + (GraphViewer.prototype.lightboxZIndex + 1) + &#039;;&#039;,
+		&#039;}&#039;,
+		&#039;.geDialogTitle {&#039;,
+		&#039;    box-sizing: border-box;&#039;,
+		&#039;    white-space: nowrap;&#039;,
+		&#039;    background: light-dark(#f1f3f4, &#039; + GraphViewer.darkBackgroundColor + &#039;);&#039;,
+		&#039;    border-bottom: 1px solid rgb(192, 192, 192);&#039;,
+		&#039;    font-size: 15px;&#039;,
+		&#039;    font-weight: bold;&#039;,
+		&#039;    text-align: center;&#039;,
+		&#039;    color: rgb(35, 86, 149);&#039;,
+		&#039;}&#039;,
+		&#039;.geDialogFooter {&#039;,
+		&#039;    background: light-dark(#f1f3f4, &#039; + GraphViewer.darkBackgroundColor + &#039;);&#039;,
+		&#039;    white-space: nowrap;&#039;,
+		&#039;    text-align: right;&#039;,
+		&#039;    box-sizing: border-box;&#039;,
+		&#039;    border-top: 1px solid #e5e5e5;&#039;,
+		&#039;    color: darkGray;&#039;,
+		&#039;}&#039;,
+		&#039;.geHelpIcon {&#039;,
+		&#039;    width: 16px;&#039;,
+		&#039;    margin: 0 4px;&#039;,
+		&#039;    vertical-align: text-bottom;&#039;,
+		&#039;}&#039;,
+		&#039;.geBtn, .mxWindow .geBtn {&#039;,
+		&#039;    background-color: light-dark(#eeeeee, #1b1d1e);&#039;,
+		&#039;    border: 1px solid light-dark(#d8d8d8, #333333);&#039;,
+		&#039;    color: light-dark(#3f3f3f, #c0c0c0);&#039;,
+		&#039;    font-size: 13px;&#039;,
+		&#039;    font-weight: 500;&#039;,
+		&#039;    border-radius: 4px;&#039;,
+		&#039;    height: 30px;&#039;,
+		&#039;    margin: 0 0 0 8px;&#039;,
+		&#039;    min-width: 72px;&#039;,
+		&#039;    outline: 0;&#039;,
+		&#039;    padding: 0 8px;&#039;,
+		&#039;    text-overflow: ellipsis;&#039;,
+		&#039;    white-space: nowrap;&#039;,
+		&#039;    overflow: hidden;&#039;,
+		&#039;}&#039;,
+		&#039;.geBtn:hover:not(.gePrimaryBtn), .geBtn:focus {&#039;,
+		&#039;    border: 1px solid light-dark(#c6c6c6, #333333);&#039;,
+		&#039;    background: light-dark(#dadada, #333333);&#039;,
+		&#039;}&#039;,
+		&#039;.geBtn:disabled {&#039;,
+		&#039;    opacity: .5;&#039;,
+		&#039;}&#039;,
+		&#039;.gePrimaryBtn {&#039;,
+		&#039;    background: linear-gradient(light-dark(#4d90fe, #003555) 0px, light-dark(#4787ed, #003555) 100%);&#039;,
+		&#039;    border: 1px solid light-dark(#3079ed, transparent);&#039;,
+		&#039;    color: light-dark(#ffffff, #c0c0c0);&#039;,
+		&#039;}&#039;,
+		&#039;.gePrimaryBtn:hover:not([disabled]) {&#039;,
+		&#039;    background: linear-gradient(light-dark(#4d90fe, #004a77) 0px, light-dark(#357ae8, #004a77) 100%);&#039;,
+		&#039;    border: 1px solid light-dark(#2f5bb7, transparent);&#039;,
+		&#039;}&#039;,
+		&#039;.geBtn:disabled {&#039;,
+		&#039;    opacity: .5;&#039;,
+		&#039;}&#039;
+	].join(&#039;\n&#039;);
+};
+
+/**
+ * Lookup for URLs.
+ */
+GraphViewer.cachedUrls = {};
+
+/**
+ * Workaround for unsupported CORS in IE9 XHR
+ */
+GraphViewer.getUrl = function(url, onload, onerror)
+{
+	if (GraphViewer.cachedUrls[url] != null)
+	{
+		onload(GraphViewer.cachedUrls[url]);
+	}
+	else
+	{
+		var xhr = (navigator.userAgent != null &amp;&amp; navigator.userAgent.indexOf(&#039;MSIE 9&#039;) &gt; 0) ?
+			new XDomainRequest() : new XMLHttpRequest();
+		xhr.open(&#039;GET&#039;, url);
+		
+	    xhr.onload = function()
+	    {
+	    	onload((xhr.getText != null) ? xhr.getText() : xhr.responseText);
+		};
+		
+	    xhr.onerror = onerror;
+	    xhr.send();
+	}
+};
+
+/**
+ * Redirects editing to absolue URLs.
+ */
+GraphViewer.resizeSensorEnabled = true;
+
+/**
+ * Specifies if ResizeObserver should be used instead of ResizeSensor.
+ * Default is true.
+ */
+GraphViewer.useResizeObserver = true;
+
+/**
+ * Redirects editing to absolue URLs.
+ */
+GraphViewer.useResizeSensor = true;
+
+/**
+ * Copyright Marc J. Schmidt. See the LICENSE file at the top-level
+ * directory of this distribution and at
+ * https://github.com/marcj/css-element-queries/blob/master/LICENSE.
+ */
+(function() {
+
+    // Only used for the dirty checking, so the event callback count is limted to max 1 call per fps per sensor.
+    // In combination with the event based resize sensor this saves cpu time, because the sensor is too fast and
+    // would generate too many unnecessary events.
+    var requestAnimationFrame = window.requestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        function (fn) {
+            return window.setTimeout(fn, 20);
+        };
+
+    /**
+     * Class for dimension change detection.
+     *
+     * @param {Element|Element[]|Elements|jQuery} element
+     * @param {Function} callback
+     *
+     * @constructor
+     */
+    var ResizeSensor = function(element, fn) {
+    	
+    	var callback = function()
+    	{
+    		if (GraphViewer.resizeSensorEnabled)
+    		{
+    			fn();
+    		}
+    	};
+
+		// Uses ResizeObserver, if available
+		if (GraphViewer.useResizeObserver &amp;&amp; typeof ResizeObserver !== &#039;undefined&#039;)
+		{
+			var callbackThread = null;
+			var active = false;
+
+			new ResizeObserver(function()
+			{
+				if (!active)
+				{
+					if (callbackThread != null)
+					{
+						window.clearTimeout(callbackThread);
+					}
+
+					callbackThread = window.setTimeout(function()
+					{
+						active = true;
+						callback();
+						callbackThread = null;
+						active = false;
+					}, 200);
+				}
+			}).observe(element)
+
+			return
+		}
+    	/**   *
+         * @constructor
+         */
+        function EventQueue() {
+            this.q = [];
+            this.add = function(ev) {
+                this.q.push(ev);
+            };
+
+            var i, j;
+            this.call = function() {
+                for (i = 0, j = this.q.length; i &lt; j; i++) {
+                    this.q[i].call();
+                }
+            };
+        }
+/**   * @param {HTMLElement} element
+         * @param {String}      prop
+         * @returns {String|Number}
+         */
+        function getComputedStyle(element, prop) {
+            if (element.currentStyle) {
+                return element.currentStyle[prop];
+            } else if (window.getComputedStyle) {
+                return window.getComputedStyle(element, null).getPropertyValue(prop);
+            } else {
+                return element.style[prop];
+            }
+        }
+/**   *
+         * @param {HTMLElement} element
+         * @param {Function}    resized
+         */
+        function attachResizeEvent(element, resized) {
+            if (!element.resizedAttached) {
+                element.resizedAttached = new EventQueue();
+                element.resizedAttached.add(resized);
+            } else if (element.resizedAttached) {
+                element.resizedAttached.add(resized);
+                return;
+            }
+
+            element.resizeSensor = document.createElement(&#039;div&#039;);
+            element.resizeSensor.className = &#039;resize-sensor&#039;;
+            var style = &#039;position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;&#039;;
+            var styleChild = &#039;position: absolute; left: 0; top: 0; transition: 0s;&#039;;
+
+            element.resizeSensor.style.cssText = style;
+            element.resizeSensor.innerHTML =
+                &#039;&lt;div class=&quot;resize-sensor-expand&quot; style=&quot;&#039; + style + &#039;&quot;&gt;&#039; +
+                    &#039;&lt;div style=&quot;&#039; + styleChild + &#039;&quot;&gt;&lt;/div&gt;&#039; +
+                &#039;&lt;/div&gt;&#039; +
+                &#039;&lt;div class=&quot;resize-sensor-shrink&quot; style=&quot;&#039; + style + &#039;&quot;&gt;&#039; +
+                    &#039;&lt;div style=&quot;&#039; + styleChild + &#039; width: 200%; height: 200%&quot;&gt;&lt;/div&gt;&#039; +
+                &#039;&lt;/div&gt;&#039;;
+            element.appendChild(element.resizeSensor);
+
+            // FIXME: Should not change element style
+            if (getComputedStyle(element, &#039;position&#039;) == &#039;static&#039;) {
+                element.style.position = &#039;relative&#039;;
+            }
+
+            var expand = element.resizeSensor.childNodes[0];
+            var expandChild = expand.childNodes[0];
+            var shrink = element.resizeSensor.childNodes[1];
+
+            var reset = function() {
+                expandChild.style.width  = 100000 + &#039;px&#039;;
+                expandChild.style.height = 100000 + &#039;px&#039;;
+
+                expand.scrollLeft = 100000;
+                expand.scrollTop = 100000;
+
+                shrink.scrollLeft = 100000;
+                shrink.scrollTop = 100000;
+            };
+
+            reset();
+            var dirty = false;
+
+            var dirtyChecking = function(){
+                if (!element.resizedAttached) return;
+
+                if (dirty) {
+                    element.resizedAttached.call();
+                    dirty = false;
+                }
+
+                requestAnimationFrame(dirtyChecking);
+            };
+
+            requestAnimationFrame(dirtyChecking);
+            var lastWidth, lastHeight;
+            var cachedWidth, cachedHeight; //useful to not query offsetWidth twice
+
+            var onScroll = function() {
+              if ((cachedWidth = element.offsetWidth) != lastWidth || (cachedHeight = element.offsetHeight) != lastHeight) {
+                  dirty = true;
+
+                  lastWidth = cachedWidth;
+                  lastHeight = cachedHeight;
+              }
+              reset();
+            };
+
+            var addEvent = function(el, name, cb) {
+                if (el.attachEvent) {
+                    el.attachEvent(&#039;on&#039; + name, cb);
+                } else {
+                    el.addEventListener(name, cb);
+                }
+            };
+
+            addEvent(expand, &#039;scroll&#039;, onScroll);
+            addEvent(shrink, &#039;scroll&#039;, onScroll);
+        }
+
+        var elementType = Object.prototype.toString.call(element);
+        var isCollectionTyped = (&#039;[object Array]&#039; === elementType
+            || (&#039;[object NodeList]&#039; === elementType)
+            || (&#039;[object HTMLCollection]&#039; === elementType)
+            || (&#039;undefined&#039; !== typeof jQuery &amp;&amp; element instanceof jQuery) //jquery
+            || (&#039;undefined&#039; !== typeof Elements &amp;&amp; element instanceof Elements) //mootools
+        );
+
+        if (isCollectionTyped) {
+            var i = 0, j = element.length;
+            for (; i &lt; j; i++) {
+                attachResizeEvent(element[i], callback);
+            }
+        } else {
+            attachResizeEvent(element, callback);
+        }
+
+        this.detach = function() {
+            if (isCollectionTyped) {
+                var i = 0, j = element.length;
+                for (; i &lt; j; i++) {
+                    ResizeSensor.detach(element[i]);
+                }
+            } else {
+                ResizeSensor.detach(element);
+            }
+        };
+    };
+
+    ResizeSensor.detach = function(element) {
+        if (element.resizeSensor) {
+            element.removeChild(element.resizeSensor);
+            delete element.resizeSensor;
+            delete element.resizedAttached;
+        }
+    };
+
+    window.ResizeSensor = ResizeSensor;
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

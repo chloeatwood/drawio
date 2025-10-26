@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Network2.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Network2.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">41.78</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">82</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">22.98</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">7.02</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addNetwork2Palette = function()
+	{
+		var w = 50;
+		var h = 50;
+		var s = &#039;shape=mxgraph.networks2.icon;aspect=fixed;fillColor=#EDEDED;strokeColor=#000000;gradientColor=#5B6163;network2IconShadow=1;network2bgFillColor=none;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;network2Icon=mxgraph.networks2.&#039;;
+		var sn = &#039;fillColorStyles=neutralFill;neutralFill=#9DA6A8;&#039;;
+		var gn = &#039;mxgraph.networks2&#039;;
+		var dt = &#039;computer network &#039;;
+		var iw,ih; // used in calculations in the following calls
+		var fns = [];
+
+		this.setCurrentSearchEntryLibrary(&#039;network2&#039;);
+
+		fns.push(this.createVertexTemplateEntry(s + &#039;antenna;network2IconYOffset=0.0004;network2IconW=&#039; + (iw = 0.508) + &#039;;network2IconH=&#039; + (ih = 0.9997) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Antenna&#039;, null, null, this.getTagsForStencil(gn, &#039;antenna&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;application;network2IconXOffset=0.0048;network2IconYOffset=-0.0000;network2IconW=&#039; + (iw = 0.5927) + &#039;;network2IconH=&#039; + (ih = 1.02) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Application&#039;, null, null, this.getTagsForStencil(gn, &#039;application&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;big_data;network2IconXOffset=-0.0002;network2IconYOffset=0.0015;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH= &#039; + (ih = 0.996) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Big Data&#039;, null, null, this.getTagsForStencil(gn, &#039;big data&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;biohazard;network2IconXOffset=-0.0048;network2IconYOffset=-0.001;network2IconW=&#039; + (iw = 1.0124) + &#039;;network2IconH=&#039; + (ih = 0.93) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Biohazard&#039;, null, null, this.getTagsForStencil(gn, &#039;biohazard&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;biometric_reader;network2IconXOffset=0.00008;network2IconYOffset=0.00161;network2IconW=&#039; + (iw = 0.8407) + &#039;;network2IconH=&#039; + (ih = 0.9971) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Biometric Reader&#039;, null, null, this.getTagsForStencil(gn, &#039;biometric_reader&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;cctv;network2IconXOffset=-0.0002;network2IconYOffset=-0.0355;network2IconW=&#039; + (iw = 1.0004) + &#039;;network2IconH=&#039; + (ih = 0.7279) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;CCTV&#039;, null, null, this.getTagsForStencil(gn, &#039;cctv&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;cloud;network2IconYOffset=-0.08;network2IconW=&#039; + (iw = 1.0004) + &#039;;network2IconH=&#039; + (ih = 0.7222) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;community;network2IconXOffset=-0.0036;network2IconYOffset=0.00087;network2IconW=&#039; + (iw = 0.876) + &#039;;network2IconH=&#039; + (ih = 1.0029) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Community&#039;, null, null, this.getTagsForStencil(gn, &#039;community&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;copier;network2IconXOffset=0.04746;network2IconYOffset=-0.00027;network2IconW=&#039; + (iw = 0.8861) + &#039;;network2IconH=&#039; + (ih = 0.9979) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Copier&#039;, null, null, this.getTagsForStencil(gn, &#039;copier&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;data_management;network2IconW=&#039; + (iw = 0.8252) + &#039;;network2IconH=&#039; + (ih = 0.9989) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Data Management&#039;, null, null, this.getTagsForStencil(gn, &#039;data management&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;data_storage;network2IconW=&#039; + (iw = 0.8252) + &#039;;network2IconH=&#039; + (ih = 0.9989) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Data Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;data storage&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;desktop_pc;network2IconXOffset=-0.0034;network2IconYOffset=0.00035;network2IconW=&#039; + (iw = 0.453) + &#039;;network2IconH=&#039; + (ih = 0.9995) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Desktop PC&#039;, null, null, this.getTagsForStencil(gn, &#039;desktop pc personal computer&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;encryption;network2IconXOffset=0.0006;network2IconYOffset=0.0881;network2IconW=&#039; + (iw = 1.0001) + &#039;;network2IconH=&#039; + (ih = 0.7019) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Encryption&#039;, null, null, this.getTagsForStencil(gn, &#039;encryption&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;external_storage;network2IconYOffset=-0.0267;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.7987) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;External Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;external storage&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;firewall;network2IconXOffset=0.0001;network2IconYOffset=0.0001;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.608) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;firewall&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;gamepad;network2IconXOffset=0.00005;network2IconYOffset=0.00163;network2IconW=&#039; + (iw = 1.0021) + &#039;;network2IconH=&#039; + (ih = 0.7358) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Gamepad&#039;, null, null, this.getTagsForStencil(gn, &#039;gamepad&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(sn + s + &#039;global_server;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 1) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Global Server&#039;, null, null, this.getTagsForStencil(gn, &#039;global server&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;globe;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 1) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Globe&#039;, null, null, this.getTagsForStencil(gn, &#039;globe&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(sn + s + &#039;hub;network2IconXOffset=0.0001;network2IconYOffset=0.0129;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.2938) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Hub&#039;, null, null, this.getTagsForStencil(gn, &#039;hub&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;internet;network2IconXOffset=0.0012;network2IconYOffset=0.0035;network2IconW=&#039; + (iw = 0.9677) + &#039;;network2IconH=&#039; + (ih = 0.7722) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Internet&#039;, null, null, this.getTagsForStencil(gn, &#039;internet&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;internet_security;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 1) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Internet Security&#039;, null, null, this.getTagsForStencil(gn, &#039;internet security&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;lan;network2IconYOffset=0.0558;network2IconW=&#039; + (iw = 1.0834) + &#039;;network2IconH=&#039; + (ih = 0.7564) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;LAN&#039;, null, null, this.getTagsForStencil(gn, &#039;lan local area network&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;laptop;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.5734) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Laptop&#039;, null, null, this.getTagsForStencil(gn, &#039;laptop&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;load_balancer;network2IconW=&#039; + (iw = 0.86) + &#039;;network2IconH=&#039; + (ih = 0.76) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Load Balancer&#039;, null, null, this.getTagsForStencil(gn, &#039;load balancer&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;lock;network2IconW=&#039; + (iw = 0.8) + &#039;;network2IconH=&#039; + (ih = 0.9999) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Lock&#039;, null, null, this.getTagsForStencil(gn, &#039;lock&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(sn + s + &#039;mail_server;network2IconYOffset=-0.02556;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.7875) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Mail Server&#039;, null, null, this.getTagsForStencil(gn, &#039;mail server&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(sn + s + &#039;mainframe;network2IconW=&#039; + (iw = 0.4721) + &#039;;network2IconH=&#039; + (ih = 1) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Mainframe&#039;, null, null, this.getTagsForStencil(gn, &#039;mainframe&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;mobile_network;network2IconXOffset=0.0049;network2IconW=&#039; + (iw = 0.5297) + &#039;;network2IconH=&#039; + (ih = 1.02) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Mobile Network&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile network&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;mobile_phone;network2IconXOffset=0.0049;network2IconW=&#039; + (iw = 0.5297) + &#039;;network2IconH=&#039; + (ih = 1.02) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Mobile Phone&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile phone cell&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(sn + s + &#039;modem;network2IconYOffset=0.0131;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.2938) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Modem&#039;, null, null, this.getTagsForStencil(gn, &#039;modem&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;monitor;network2IconYOffset=-0.009;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.742) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Monitor&#039;, null, null, this.getTagsForStencil(gn, &#039;monitor&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(sn + s + &#039;nas_filer;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.62) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;NAS Filer&#039;, null, null, this.getTagsForStencil(gn, &#039;nas filer&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;network;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.8601) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Network&#039;, null, null, this.getTagsForStencil(gn, &#039;network&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;network_security;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.86) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Network Security&#039;, null, null, this.getTagsForStencil(gn, &#039;network security&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;patch_panel;network2IconXOffset=0.0001;network2IconYOffset=-0.0211;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.3359) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Patch Panel&#039;, null, null, this.getTagsForStencil(gn, &#039;patch panel&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;pc;network2IconYOffset=-0.0593;network2IconW=&#039; + (iw = 0.9999) + &#039;;network2IconH=&#039; + (ih = 0.7096) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;PC&#039;, null, null, this.getTagsForStencil(gn, &#039;pc personal computer&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;phone;network2IconXOffset=0.0009;network2IconYOffset=-0.0064;network2IconW=&#039; + (iw = 0.9947) + &#039;;network2IconH=&#039; + (ih = 0.7947) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Phone&#039;, null, null, this.getTagsForStencil(gn, &#039;phone&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(sn + s + &#039;printer;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 1.04) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Printer&#039;, null, null, this.getTagsForStencil(gn, &#039;printer&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;projector_canvas;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 1.04) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Projector Canvas&#039;, null, null, this.getTagsForStencil(gn, &#039;projector canvas&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;rack_cabinet;network2IconW=&#039; + (iw = 0.4721) + &#039;;network2IconH=&#039; + (ih = 1) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Rack Cabinet&#039;, null, null, this.getTagsForStencil(gn, &#039;rack cabinet&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(sn + s + &#039;router;network2IconXOffset=0.0001;network2IconYOffset=-0.1142;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.5485) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Router&#039;, null, null, this.getTagsForStencil(gn, &#039;router&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;satellite_dish;network2IconXOffset=-0.0067;network2IconYOffset=0.0022;network2IconW=&#039; + (iw = 1.0065) + &#039;;network2IconH=&#039; + (ih = 0.9957) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Satellite Dish&#039;, null, null, this.getTagsForStencil(gn, &#039;satellite dish&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;satellite;network2IconXOffset=0.0149;network2IconYOffset=-0.00046;network2IconW=&#039; + (iw = 1.1553) + &#039;;network2IconH=&#039; + (ih = 0.9741) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Satellite&#039;, null, null, this.getTagsForStencil(gn, &#039;satellite&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;scanner;network2IconXOffset=0.00024;network2IconYOffset=-0.08;network2IconW=&#039; + (iw = 1.0001) + &#039;;network2IconH=&#039; + (ih = 0.5965) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Scanner&#039;, null, null, this.getTagsForStencil(gn, &#039;scanner&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(sn + s + &#039;server;network2IconW=&#039; + (iw = 1.0001) + &#039;;network2IconH=&#039; + (ih = 0.5812) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Server&#039;, null, null, this.getTagsForStencil(gn, &#039;server&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;social_media;network2IconYOffset=0.0153;network2IconW=&#039; + (iw = 1.02) + &#039;;network2IconH=&#039; + (ih = 0.932) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Social Media&#039;, null, null, this.getTagsForStencil(gn, &#039;social media&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;tablet;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.6566) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Tablet&#039;, null, null, this.getTagsForStencil(gn, &#039;tablet&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;terminal;network2IconW=&#039; + (iw = 0.8554) + &#039;;network2IconH=&#039; + (ih = 1) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Terminal&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;threat;network2IconYOffset=-0.0472;network2IconW=&#039; + (iw = 1.0625) + &#039;;network2IconH=&#039; + (ih = 0.9583) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Threat&#039;, null, null, this.getTagsForStencil(gn, &#039;threat&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;ups;network2IconXOffset=-0.0006;network2IconYOffset=0.0003;network2IconW=&#039; + (iw = 0.62) + &#039;;network2IconH=&#039; + (ih = 1.0006) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;UPS&#039;, null, null, this.getTagsForStencil(gn, &#039;ups uninterruptible power supply&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;user_female;network2IconXOffset=-0.0011;network2IconYOffset=-0.003;network2IconW=&#039; + (iw = 0.8096) + &#039;;network2IconH=&#039; + (ih = 0.994) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;User, Female&#039;, null, null, this.getTagsForStencil(gn, &#039;user female&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;user_male;network2IconW=&#039; + (iw = 0.8918) + &#039;;network2IconH=&#039; + (ih = 1.0003) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;User, Male&#039;, null, null, this.getTagsForStencil(gn, &#039;user male&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;users;network2IconXOffset=0.0019;network2IconYOffset=-0.0004;network2IconW=&#039; + (iw = 1.0353) + &#039;;network2IconH=&#039; + (ih = 0.6623) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Users&#039;, null, null, this.getTagsForStencil(gn, &#039;users&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;video_projector;network2IconYOffset=0.013;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.294) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Video Projector&#039;, null, null, this.getTagsForStencil(gn, &#039;video projector&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;vr;network2IconYOffset=-0.015;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.45) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;VR&#039;, null, null, this.getTagsForStencil(gn, &#039;vr virtual reality&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(s + &#039;web_hosting;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.9125) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Web Hosting&#039;, null, null, this.getTagsForStencil(gn, &#039;web hosting&#039;, dt).join(&#039; &#039;)));
+		fns.push(this.createVertexTemplateEntry(sn + s + &#039;wireless_hub;network2IconYOffset=-0.1142;network2IconW=&#039; + (iw = 1) + &#039;;network2IconH=&#039; + (ih = 0.5485) + &#039;;&#039;, w * iw, h * ih, &#039;&#039;, &#039;Wireless Hub&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless hub&#039;, dt).join(&#039; &#039;)));
+	
+		this.addPaletteFunctions(&#039;network2&#039;, &#039;Network 2025&#039;, false, fns);
+
+		this.setCurrentSearchEntryLibrary();
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

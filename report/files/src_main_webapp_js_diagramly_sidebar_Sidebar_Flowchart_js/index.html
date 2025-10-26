@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Flowchart.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Flowchart.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">61.94</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">59</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">18.71</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.33</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addFlowchartPalette = function()
+	{
+		var w = 100;
+		var h = 100;
+		var s = &#039;strokeWidth=2;html=1;shape=mxgraph.flowchart.&#039;;
+		var s2 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;html=1;shape=mxgraph.flowchart.&#039;;
+		var s3 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;html=1;shape=&#039;;
+		var gn = &#039;mxgraph.flowchart&#039;;
+		var dt = &#039;&#039;;
+		this.setCurrentSearchEntryLibrary(&#039;flowchart&#039;);
+		
+		this.addPaletteFunctions(&#039;flowchart&#039;, mxResources.get(&#039;flowchart&#039;), false,
+		[
+			this.createVertexTemplateEntry(s + &#039;annotation_1;align=left;pointerEvents=1;&#039;, w * 0.5, h, &#039;&#039;, &#039;Annotation&#039;, null, null, this.getTagsForStencil(gn, &#039;annotation_1&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;annotation_2;align=left;labelPosition=right;pointerEvents=1;&#039;, w * 0.5, h, &#039;&#039;, &#039;Annotation&#039;, null, null, this.getTagsForStencil(gn, &#039;annotation_2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;card;whiteSpace=wrap;size=20;arcSize=12;&#039;, w, h * 0.6, &#039;&#039;, &#039;Card&#039;, null, null, this.getTagsForStencil(gn, &#039;card&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;collate;&#039;, w, h, &#039;&#039;, &#039;Collate&#039;, null, null, this.getTagsForStencil(gn, &#039;collate&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;&#039;, w, h * 0.6, &#039;&#039;, &#039;Data&#039;, null, null, this.getTagsForStencil(gn, &#039;data&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;database;whiteSpace=wrap;&#039;, w * 0.6, h * 0.6, &#039;&#039;, &#039;Database&#039;, null, null, this.getTagsForStencil(gn, &#039;database&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;decision;whiteSpace=wrap;&#039;, w, h, &#039;&#039;, &#039;Decision&#039;, null, null, this.getTagsForStencil(gn, &#039;decision&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;delay;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Delay&#039;, null, null, this.getTagsForStencil(gn, &#039;delay&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;direct_data;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Direct Data&#039;, null, null, this.getTagsForStencil(gn, &#039;direct_data&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;display;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Display&#039;, null, null, this.getTagsForStencil(gn, &#039;display&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;document2;whiteSpace=wrap;size=0.25;&#039;, w, h * 0.6, &#039;&#039;, &#039;Document&#039;, null, null, this.getTagsForStencil(gn, &#039;document&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;extract_or_measurement;whiteSpace=wrap;&#039;, w * 0.95, h * 0.6, &#039;&#039;, &#039;Extract or Measurement&#039;, null, null, this.getTagsForStencil(gn, &#039;extract_or_measurement&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=internalStorage;whiteSpace=wrap;html=1;dx=15;dy=15;rounded=1;arcSize=8;strokeWidth=2;&#039;, w * 0.7, h * 0.7, &#039;&#039;, &#039;Internal Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;internal_storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;loop_limit;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Loop Limit&#039;, null, null, this.getTagsForStencil(gn, &#039;loop_limit&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;html=1;strokeWidth=2;shape=manualInput;whiteSpace=wrap;rounded=1;size=26;arcSize=11;&#039;, w, h * 0.6, &#039;&#039;, &#039;Manual Input&#039;, null, null, this.getTagsForStencil(gn, &#039;manual_input&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;size=0.23;arcSize=10;flipV=1;labelPosition=center;align=center;&#039;, w, h * 0.6, &#039;&#039;, &#039;Manual Operation&#039;, null, null, this.getTagsForStencil(gn, &#039;manual_operation&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;merge_or_storage;whiteSpace=wrap;&#039;, w * 0.95, h * 0.6, &#039;&#039;, &#039;Merge or Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;merge_or_storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;multi-document;whiteSpace=wrap;&#039;, w * 0.88, h * 0.6, &#039;&#039;, &#039;Multi-Document&#039;, null, null, this.getTagsForStencil(gn, &#039;multi-document&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;offPageConnector;rounded=0;size=0.5;&#039;, w * 0.6, h * 0.6, &#039;&#039;, &#039;Off-Page Reference&#039;, null, null, this.getTagsForStencil(gn, &#039;off-page_reference&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;on-page_reference;&#039;, w * 0.6, h * 0.6, &#039;&#039;, &#039;On-Page Reference&#039;, null, null, this.getTagsForStencil(gn, &#039;on-page_reference&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;summing_function;&#039;, w * 0.7, h * 0.7, &#039;&#039;, &#039;Or&#039;, null, null, this.getTagsForStencil(gn, &#039;summing_function&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=tape;whiteSpace=wrap;html=1;strokeWidth=2;size=0.19&#039;, w, h * 0.65, &#039;&#039;, &#039;Tape&#039;, null, null, this.getTagsForStencil(gn, &#039;tape&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;parallel_mode;pointerEvents=1&#039;, w * 0.95, h * 0.4, &#039;&#039;, &#039;Parallel Mode&#039;, null, null, this.getTagsForStencil(gn, &#039;parallel_mode&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;process;whiteSpace=wrap;rounded=1;size=0.14;arcSize=6;&#039;, w, h * 0.6, &#039;&#039;, &#039;Predefined Process&#039;, null, null, this.getTagsForStencil(gn, &#039;predefined_process&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s3 + &#039;hexagon;perimeter=hexagonPerimeter2;arcSize=6;size=0.27;&#039;, w, h * 0.6, &#039;&#039;, &#039;Preparation&#039;, null, null, this.getTagsForStencil(gn, &#039;preparation&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;&#039;, w, h, &#039;&#039;, &#039;Process&#039;, null, null, this.getTagsForStencil(gn, &#039;process&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;sequential_data;whiteSpace=wrap;&#039;, w, h, &#039;&#039;, &#039;Sequential Data&#039;, null, null, this.getTagsForStencil(gn, &#039;sequential_data&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;sort;&#039;, w, h, &#039;&#039;, &#039;Sort&#039;, null, null, this.getTagsForStencil(gn, &#039;sort&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;start_1;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Start&#039;, null, null, this.getTagsForStencil(gn, &#039;start_1&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;start_2;whiteSpace=wrap;&#039;, w, h, &#039;&#039;, &#039;Start&#039;, null, null, this.getTagsForStencil(gn, &#039;start_2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;stored_data;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Stored Data&#039;, null, null, this.getTagsForStencil(gn, &#039;stored_data&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;or;&#039;, w * 0.7, h * 0.7, &#039;&#039;, &#039;Summing Junction&#039;, null, null, this.getTagsForStencil(gn, &#039;or&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terminator;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Terminator&#039;, null, null, this.getTagsForStencil(gn, &#039;terminator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;html=1;strokeWidth=2;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;notch=0;&#039;, w, h * 0.7, &#039;&#039;, &#039;Transfer&#039;, null, null, this.getTagsForStencil(gn, &#039;transfer&#039;, dt).join(&#039; &#039;))
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+};
+		
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

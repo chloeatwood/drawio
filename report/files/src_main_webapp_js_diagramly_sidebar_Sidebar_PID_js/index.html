@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-PID.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-PID.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">59.42</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">659</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">34.09</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">26.37</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds P&amp;ID shapes
+	Sidebar.prototype.addPidPalette = function(pids, dir)
+	{
+		this.setCurrentSearchEntryLibrary(&#039;pid&#039;, &#039;pidInstruments&#039;);
+		this.addPidInstrumentsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;pid&#039;, &#039;pidMisc&#039;);
+		this.addPidMiscPalette();
+		this.setCurrentSearchEntryLibrary(&#039;pid&#039;, &#039;pidValves&#039;);
+		this.addPidValvesPalette();
+		this.setCurrentSearchEntryLibrary(&#039;pid&#039;, &#039;pidCompressors&#039;);
+		this.addPidCompressorsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;pid&#039;, &#039;pidEngines&#039;);
+		this.addPidEnginesPalette();
+		this.setCurrentSearchEntryLibrary(&#039;pid&#039;, &#039;pidFilters&#039;);
+		this.addPidFiltersPalette();
+		this.setCurrentSearchEntryLibrary(&#039;pid&#039;, &#039;pidFlow Sensors&#039;);
+		this.addPidFlowSensorsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;pid&#039;, &#039;pidPiping&#039;);
+		this.addPidPipingPalette();
+		this.setCurrentSearchEntryLibrary(&#039;pid&#039;, &#039;pidCrushers Grinding&#039;);
+		this.addPidCrushersGrindingPalette();
+		this.setCurrentSearchEntryLibrary(&#039;pid&#039;, &#039;pidFittings&#039;);
+		this.addPidFittingsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;pid&#039;, &#039;pidFittings&#039;);
+		this.addPidSeparatorsPalette();
+			
+		var pidLibs = [&#039;Instruments&#039;, &#039;Misc&#039;, &#039;Valves&#039;, &#039;Compressors&#039;, &#039;Engines&#039;, &#039;Filters&#039;, &#039;Flow Sensors&#039;, &#039;Piping&#039;, &#039;Crushers Grinding&#039;, &#039;Fittings&#039;, &#039;Separators&#039;];
+		
+		for (var i = 0; i &lt; pids.length; i++)
+		{
+			if (mxUtils.indexOf(pidLibs, pids[i]) &lt; 0)
+			{
+				this.setCurrentSearchEntryLibrary(&#039;pid&#039;, &#039;pid&#039; + pids[i]);
+				this.addStencilPalette(&#039;pid&#039; + pids[i], &#039;Proc. Eng. / &#039; + pids[i],
+					dir + &#039;/pid/&#039; + pids[i].toLowerCase().replace(&#039; &#039;, &#039;_&#039;) + &#039;.xml&#039;,
+					&#039;;html=1;pointerEvents=1;align=center;&#039; + mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;dashed=0;&#039;,	
+					null, null, null, null, null, &#039;pid&#039;);
+			}
+		}
+		
+		this.setCurrentSearchEntryLibrary();
+	}
+	
+	Sidebar.prototype.addPidInstrumentsPalette = function()
+	{
+		var s = &#039;html=1;outlineConnect=0;align=center;dashed=0;aspect=fixed;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid2&quot;;
+		var s2 = &#039;html=1;outlineConnect=0;align=center;dashed=0;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid2&quot;;
+		var gn = &#039;mxgraph.pid2inst&#039;;
+		var dt = &#039;pid process instrumentation engineering instrument engineering &#039;;
+
+		this.addPaletteFunctions(&#039;pidInstruments&#039;, &#039;Proc. Eng. / Instruments&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;inst.discInst;mounting=room&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Discrete Instrument (control room)&#039;, null, null, this.getTagsForStencil(gn, &#039;discInst&#039;, dt + &#039;discrete control room&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.discInst;mounting=field&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Discrete Instrument (field)&#039;, null, null, this.getTagsForStencil(gn, &#039;discInst&#039;, dt + &#039;discrete field&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.discInst;mounting=inaccessible&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Discrete Instrument (inaccessible)&#039;, null, null, this.getTagsForStencil(gn, &#039;discInst&#039;, dt + &#039;discrete inaccessible&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.discInst;mounting=local&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Discrete Instrument (local panel)&#039;, null, null, this.getTagsForStencil(gn, &#039;discInst&#039;, dt + &#039;discrete local panel&#039;).join(&#039; &#039;)),
+
+			this.createVertexTemplateEntry(s + &#039;inst.sharedCont;mounting=room&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Shared Control/Display in DCS (control room)&#039;, null, null, this.getTagsForStencil(gn, &#039;sharedCont&#039;, dt + &#039;shared control display room&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.sharedCont;mounting=field&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Shared Control/Display in DCS (field)&#039;, null, null, this.getTagsForStencil(gn, &#039;sharedCont&#039;, dt + &#039;shared control display dcs field&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.sharedCont;mounting=inaccessible&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Shared Control/Display in DCS (inaccessible)&#039;, null, null, this.getTagsForStencil(gn, &#039;sharedCont&#039;, dt + &#039;shared control display dcs inaccessible&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.sharedCont;mounting=local&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Shared Control/Display in DCS (local panel)&#039;, null, null, this.getTagsForStencil(gn, &#039;sharedCont&#039;, dt + &#039;shared control display dcs local panel&#039;).join(&#039; &#039;)),
+
+			this.createVertexTemplateEntry(s + &#039;inst.compFunc;mounting=room&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Computer Function (control room)&#039;, null, null, this.getTagsForStencil(gn, &#039;compFunc&#039;, dt + &#039;computer function control room&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.compFunc;mounting=field&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Computer Function (field)&#039;, null, null, this.getTagsForStencil(gn, &#039;compFunc&#039;, dt + &#039;computer function field&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.compFunc;mounting=inaccessible&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Computer Function (inaccessible)&#039;, null, null, this.getTagsForStencil(gn, &#039;compFunc&#039;, dt + &#039;computer function inaccessible&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.compFunc;mounting=local&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Computer Function (local panel)&#039;, null, null, this.getTagsForStencil(gn, &#039;compFunc&#039;, dt + &#039;computer function local panel&#039;).join(&#039; &#039;)),
+
+			this.createVertexTemplateEntry(s + &#039;inst.progLogCont;mounting=room&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Programmable Logic Control (control room)&#039;, null, null, this.getTagsForStencil(gn, &#039;progLogCont&#039;, dt + &#039;programmable logic control plc room&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.progLogCont;mounting=field&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Programmable Logic Control (field)&#039;, null, null, this.getTagsForStencil(gn, &#039;progLogCont&#039;, dt + &#039;programmable logic control plc field&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.progLogCont;mounting=inaccessible&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Programmable Logic Control (inaccessible)&#039;, null, null, this.getTagsForStencil(gn, &#039;progLogCont&#039;, dt + &#039;programmable logic control plc inaccessible&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.progLogCont;mounting=local&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:width;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Programmable Logic Control (local panel)&#039;, null, null, this.getTagsForStencil(gn, &#039;progLogCont&#039;, dt + &#039;programmable logic control plc local panel&#039;).join(&#039; &#039;)),
+
+			this.createVertexTemplateEntry(s + &#039;inst.logic;mounting=room&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Logic (control room)&#039;, null, null, this.getTagsForStencil(gn, &#039;logic&#039;, dt + &#039;control room&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.logic;mounting=field&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Logic (field)&#039;, null, null, this.getTagsForStencil(gn, &#039;logic&#039;, dt + &#039;field&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.logic;mounting=inaccessible&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Logic (inaccessible)&#039;, null, null, this.getTagsForStencil(gn, &#039;logic&#039;, dt + &#039;inaccessible&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inst.logic;mounting=local&#039;,
+					50, 50, &#039;&lt;table cellpadding=&quot;4&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&#039; +
+		    		&#039;&lt;tr&gt;&lt;td&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;##&lt;/td&gt;&lt;/table&gt; &#039;, &#039;Logic (local panel)&#039;, null, null, this.getTagsForStencil(gn, &#039;logic&#039;, dt + &#039;local panel&#039;).join(&#039; &#039;)),
+
+			this.createVertexTemplateEntry(s2 + &#039;inst.indicator;mounting=room;overflow=fill;indType=inst&#039;, 50, 100,  
+					&#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&lt;tr&gt;&lt;td align=&quot;center&quot; height=&quot;25&quot;&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;center&quot; height=&quot;25&quot;&gt;##&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;center&quot; valign=&quot;bottom&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;, 
+					&#039;Indicator (Instrument)&#039;, null, null, this.getTagsForStencil(gn, &#039;indicator&#039;, dt + &#039;indicator&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;inst.indicator;mounting=room;overflow=fill;indType=ctrl&#039;, 50, 100,  
+					&#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&lt;tr&gt;&lt;td align=&quot;center&quot; height=&quot;25&quot;&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;center&quot; height=&quot;25&quot;&gt;##&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;center&quot; valign=&quot;bottom&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;, 
+					&#039;Indicator (Control)&#039;, null, null, this.getTagsForStencil(gn, &#039;indicator&#039;, dt + &#039;indicator control&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;inst.indicator;mounting=room;overflow=fill;indType=func&#039;, 50, 100,  
+					&#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&lt;tr&gt;&lt;td align=&quot;center&quot; height=&quot;25&quot;&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;center&quot; height=&quot;25&quot;&gt;##&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;center&quot; valign=&quot;bottom&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;, 
+					&#039;Indicator (Function)&#039;, null, null, this.getTagsForStencil(gn, &#039;indicator&#039;, dt + &#039;indicator function&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;inst.indicator;mounting=room;overflow=fill;indType=plc&#039;, 50, 100,  
+					&#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;font-size:1em;width:100%;height:100%;&quot;&gt;&lt;tr&gt;&lt;td align=&quot;center&quot; height=&quot;25&quot;&gt;TI&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;center&quot; height=&quot;25&quot;&gt;##&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align=&quot;center&quot; valign=&quot;bottom&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#039;, 
+					&#039;Indicator (PLC)&#039;, null, null, this.getTagsForStencil(gn, &#039;indicator&#039;, dt + &#039;indicator plc programmable logic control&#039;).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addPidValvesPalette = function()
+	{
+		var s = &#039;dashed=0;outlineConnect=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid2&quot;;
+		var sv = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;align=center;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;pointerEvents=1;dashed=0;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid2valves.valve;valveType=&quot;;
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;align=center;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;pointerEvents=1;dashed=0;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid2valves.&quot;;
+		var gn = &#039;mxgraph.pid2valves&#039;;
+		var dt = &#039;pid process instrumentation engineering &#039;;
+
+		this.addPaletteFunctions(&#039;pidValves&#039;, &#039;Proc. Eng. / Valves&#039;, false,
+		[
+			this.createVertexTemplateEntry(sv + &#039;gate&#039;, 100, 60, &#039;&#039;, &#039;Gate Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;defState=closed&#039;, 100, 60, &#039;&#039;, &#039;Normally Closed Gate Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;normally closed nc gate&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;ball&#039;, 100, 60, &#039;&#039;, &#039;Ball Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;ball&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;ball;defState=closed&#039;, 100, 60, &#039;&#039;, &#039;Normally Closed Ball Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;normally closed nc ball&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;globe&#039;, 100, 60, &#039;&#039;, &#039;Globe Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;globe&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;butterfly&#039;, 100, 60, &#039;&#039;, &#039;Butterfly Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;butterfly&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;check;&#039;, 100, 60, &#039;&#039;, &#039;Check Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;check&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;plug&#039;, 100, 60, &#039;&#039;, &#039;Plug Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;plug&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;needle&#039;, 100, 60, &#039;&#039;, &#039;Needle Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;needle&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;selfDrain&#039;, 100, 60, &#039;&#039;, &#039;Self Draining Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;self draining&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=man&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Manual)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate manual&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=diaph&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Diaphragm)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate diaphragm&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=balDiaph&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Balanced Diaphragm)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate balanced diaphragm&#039;).join(&#039; &#039;)),
+			
+			this.addEntry(dt + &#039;valve gate powered&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 100, 100), sv + &#039;gate;actuator=powered&#039;);
+				bg1.vertex = true;
+				var item1 = new mxCell(&#039;&#039;, new mxGeometry(32.5, 0, 35, 35), &#039;part=1;strokeColor=none;fillColor=none;fontStyle=1;fontSize=14;&#039;);
+				item1.vertex = true;
+				bg1.insert(item1);
+			    
+			   	return sb.createVertexTemplateFromCells([bg1], 100, 100, &#039;Gate Valve (Powered)&#039;);
+			}),
+
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=digital&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Digital)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate digital&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=elHyd&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Electro-Hydraulic)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate electro hydraulic&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=key&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Key)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate key&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=motor&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Motor)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate motor&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=pilot&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Pilot)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate pilot&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=solenoid&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Solenoid)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate solenoid&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=solenoidManRes&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Solenoid With Manual Reset)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate solenoid manual reset&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=spring&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Spring)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate spring&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=weight&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Weight)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate weight&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=singActing&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Single Acting Cylinder)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate single acting cylinder&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=dblActing&#039;, 100, 100, &#039;&#039;, &#039;Gate Valve (Double Acting Cylinder)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;gate double acting cylinder&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;gate;actuator=angBlow&#039;, 100, 100, &#039;&#039;, &#039;Angle Blowdown Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;angle blowdown&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;blockBleedValve;actuator=none&#039;, 100, 130, &#039;&#039;, &#039;Integrated Block and Bleed Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;blockBleedValve&#039;, dt + &#039;integrated block bleed&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;blockBleedValve;actuator=man&#039;, 100, 170, &#039;&#039;, &#039;Integrated Block and Bleed Valve (Manual)&#039;, null, null, this.getTagsForStencil(gn, &#039;blockBleedValve&#039;, dt + &#039;integrated block bleed manual&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;angle;actuator=none&#039;, 100, 80, &#039;&#039;, &#039;Angle Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;angle&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;angle;actuator=man&#039;, 100, 120, &#039;&#039;, &#039;Angle Valve (Manual)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;angle manual&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;angleGlobe;actuator=none&#039;, 100, 80, &#039;&#039;, &#039;Angle Globe Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;angle globe&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;angleGlobe;actuator=man&#039;, 100, 120, &#039;&#039;, &#039;Angle Globe Valve (Manual)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;angle globe manual&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;threeWay;actuator=none&#039;, 100, 80, &#039;&#039;, &#039;3 Way Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;three way&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sv + &#039;threeWay;actuator=man&#039;, 100, 120, &#039;&#039;, &#039;3 Way Valve (Manual)&#039;, null, null, this.getTagsForStencil(gn, &#039;valve&#039;, dt + &#039;three way manual&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;autoRecircValve&#039;, 100, 60, &#039;&#039;, &#039;Auto Recirculation Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;blockBleedValve&#039;, dt + &#039;auto recirculation&#039;).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addPidCompressorsPalette = function()
+	{
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;outlineConnect=0;align=center;dashed=0;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.compressors.&quot;;
+		var gn = &#039;mxgraph.pid.compressors&#039;;
+		var dt = &#039;pid process instrumentation engineering &#039;;
+		
+		this.addPaletteFunctions(&#039;pidCompressors&#039;, &#039;Proc. Eng. / Compressors&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;ac_air_compressor&#039;, 100, 65, &#039;&#039;, &#039;AC Air Compressor&#039;, null, null, this.getTagsForStencil(gn, &#039;ac_air_compressor&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;centrifugal_compressor&#039;, 70, 70, &#039;&#039;, &#039;Centrifugal Compressor&#039;, null, null, this.getTagsForStencil(gn, &#039;centrifugal_compressor&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(mxConstants.STYLE_SHAPE + &#039;=mxgraph.pid.compressors.centrifugal_compressor_-_turbine_driven;dashed=0;fontSize=8;html=1;overflow=fill;&#039;, 100, 70, 
+				    &#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;width:100%;height:100%;&quot;&gt;&#039; +
+					&#039;&lt;tr style=&quot;height:25%;&quot;&gt;&#039; +
+					&#039;&lt;td&gt;&lt;/td&gt;&#039; +
+					&#039;&lt;/tr&gt;&#039; +
+					&#039;&lt;tr style=&quot;height:75%;&quot;&gt;&#039; +
+					&#039;&lt;td align=&quot;left&quot; style=&quot;padding-left:11%;width:100%&quot;&gt;T&lt;/td&gt;&#039; +
+					&#039;&lt;/tr&gt;&#039; +
+					&#039;&lt;/table&gt;&#039;,
+					&#039;Centrifugal Compressor - Turbine Driven&#039;, null, null, this.getTagsForStencil(gn, &#039;centrifugal_compressor_-_turbine_driven&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;compressor&#039;, 100, 100, &#039;&#039;, &#039;Compressor&#039;, null, null, this.getTagsForStencil(gn, &#039;compressor&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;compressor_and_silencers;pointerEvents=1&#039;, 90, 80, &#039;&#039;, &#039;Compressor and Silencers&#039;, null, null, this.getTagsForStencil(gn, &#039;compressor_and_silencers&#039;, dt + &#039;silencer&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;liquid_ring_compressor&#039;, 90, 90, &#039;&#039;, &#039;Liquid Ring Compressor&#039;, null, null, this.getTagsForStencil(gn, &#039;liquid_ring_compressor&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;reciprocating_compressor&#039;, 100, 40, &#039;&#039;, &#039;Reciprocating Compressor&#039;, null, null, this.getTagsForStencil(gn, &#039;reciprocating_compressor&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;reciprocating_compressor_2&#039;, 50, 65, &#039;&#039;, &#039;Reciprocating Compressor 2&#039;, null, null, this.getTagsForStencil(gn, &#039;reciprocating_compressor_2&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rotary_compressor&#039;, 42, 91, &#039;&#039;, &#039;Rotary Compressor&#039;, null, null, this.getTagsForStencil(gn, &#039;rotary_compressor&#039;, dt + &#039;&#039;).join(&#039; &#039;))
+		]);
+	};
+			
+	Sidebar.prototype.addPidEnginesPalette = function()
+	{
+		var s = &quot;dashed=0;outlineConnect=0;align=center;html=1;&quot; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.engines.&quot;;
+		var sb = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;align=center;dashed=0;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.engines.&quot;;
+		var gn = &#039;mxgraph.pid.engines&#039;;
+		var dt = &#039;pid process instrumentation engine motor &#039;;
+		
+		this.addPaletteFunctions(&#039;pidEngines&#039;, &#039;Proc. Eng. / Engines&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;electric_motor;fontSize=45;&#039;, 100, 100, &#039;M&#039;, &#039;Electric Motor&#039;, null, null, this.getTagsForStencil(gn, &#039;electric_motor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;electric_motor_(ac);fontSize=45;&#039;, 100, 100, &#039;M&#039;, &#039;Electric Motor (AC)&#039;, null, null, this.getTagsForStencil(gn, &#039;electric_motor_(ac)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;electric_motor_(dc);fontSize=45;&#039;, 100, 100, &#039;M&#039;, &#039;Electric Motor (DC)&#039;, null, null, this.getTagsForStencil(gn, &#039;electric_motor_(dc)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;gear;fontSize=45;&#039;, 100, 100, &#039;G&#039;, &#039;Gear&#039;, null, null, this.getTagsForStencil(gn, &#039;gear&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;generator;fontSize=45;&#039;, 100, 100, &#039;G&#039;, &#039;Generator&#039;, null, null, this.getTagsForStencil(gn, &#039;generator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;generator_(ac);fontSize=45;&#039;, 100, 100, &#039;G&#039;, &#039;Generator (AC)&#039;, null, null, this.getTagsForStencil(gn, &#039;generator_(ac)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;generator_(dc);fontSize=45;&#039;, 100, 100, &#039;G&#039;, &#039;Generator (DC)&#039;, null, null, this.getTagsForStencil(gn, &#039;generator_(dc)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;turbine&#039;, 70, 100, &#039;&#039;, &#039;Turbine&#039;, null, null, this.getTagsForStencil(gn, &#039;turbine&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+			
+	Sidebar.prototype.addPidFiltersPalette = function()
+	{
+		var s = &quot;html=1;dashed=0;outlineConnect=0;align=center;&quot; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.filters.&quot;;
+		var sb = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;align=center;dashed=0;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.filters.&quot;;
+		var gn = &#039;mxgraph.pid.filters&#039;;
+		var dt = &#039;pid process instrumentation filter &#039;;
+		
+		this.addPaletteFunctions(&#039;pidFilters&#039;, &#039;Proc. Eng. / Filters&#039;, false,
+		[
+			this.createVertexTemplateEntry(sb + &#039;filter;&#039;, 
+					50, 50, &#039;&#039;, &#039;Filter&#039;, null, null, this.getTagsForStencil(gn, &#039;filter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;gas_filter;&#039;, 
+					50, 100, &#039;&#039;, &#039;Gas Filter&#039;, null, null, this.getTagsForStencil(gn, &#039;gas_filter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;gas_filter_(bag,_candle,_cartridge);&#039;, 
+					50, 100, &#039;&#039;, &#039;Gas Filter (Bag, Candle, Cartridge)&#039;, null, null, this.getTagsForStencil(gn, &#039;gas_filter_(bag,_candle,_cartridge)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;gas_filter_(belt,_roll);&#039;, 
+					50, 100, &#039;&#039;, &#039;Gas Filter (Belt, Roll)&#039;, null, null, this.getTagsForStencil(gn, &#039;gas_filter_(belt,_roll)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;gas_filter_(fixed_bed);&#039;, 
+					50, 100, &#039;&#039;, &#039;Gas Filter (Fixed Bed)&#039;, null, null, this.getTagsForStencil(gn, &#039;gas_filter_(fixed_bed)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;gas_filter_(hepa);&#039;, 
+					50, 100, &#039;HEPA&#039;, &#039;Gas Filter (HEPA)&#039;, null, null, this.getTagsForStencil(gn, &#039;gas_filter_(hepa)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;liquid_filter;&#039;, 
+					50, 100, &#039;&#039;, &#039;Liquid Filter&#039;, null, null, this.getTagsForStencil(gn, &#039;liquid_filter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;liquid_Filter_(bag,_candle,_cartridge);&#039;, 
+					50, 100, &#039;&#039;, &#039;Liquid Filter (Bag, Candle, Cartridge)&#039;, null, null, this.getTagsForStencil(gn, &#039;liquid_Filter_(bag,_candle,_cartridge)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;liquid_filter_(belt,_roll);&#039;, 
+					50, 100, &#039;&#039;, &#039;Liquid Filter (Belt, Roll)&#039;, null, null, this.getTagsForStencil(gn, &#039;liquid_filter_(belt,_roll)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;liquid_filter_(biological);&#039;, 
+					50, 100, &#039;BIO&#039;, &#039;Liquid Filter (Biological)&#039;, null, null, this.getTagsForStencil(gn, &#039;liquid_filter_(biological)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;liquid_filter_(fixed_bed);&#039;, 
+					50, 100, &#039;&#039;, &#039;Liquid Filter (Fixed Bed)&#039;, null, null, this.getTagsForStencil(gn, &#039;liquid_filter_(fixed_bed)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;liquid_filter_(ion_exchanger);&#039;, 
+					50, 100, &#039;ION&#039;, &#039;Liquid Filter (Ion Exchanger)&#039;, null, null, this.getTagsForStencil(gn, &#039;liquid_filter_(ion_exchanger)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;liquid_filter_(rotary,_drum_or_disc);&#039;, 
+					50, 100, &#039;&#039;, &#039;Liquid Filter (Rotary, Drum or Disc)&#039;, null, null, this.getTagsForStencil(gn, &#039;liquid_filter_(rotary,_drum_or_disc)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;liquid_filter_(rotary,_drum_or_disc,_scraper);&#039;, 
+					55, 100, &#039;&#039;, &#039;Liquid Filter (Rotary, Drum or Disc, Scraper)&#039;, null, null, this.getTagsForStencil(gn, &#039;liquid_filter_(rotary,_drum_or_disc,_scraper)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;press_filter;&#039;, 
+					100, 50, &#039;&#039;, &#039;Press Filter&#039;, null, null, this.getTagsForStencil(gn, &#039;press_filter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;suction_filter;&#039;, 
+					50, 100, &#039;&#039;, &#039;Suction Filter&#039;, null, null, this.getTagsForStencil(gn, &#039;suction_filter&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+			
+	Sidebar.prototype.addPidFlowSensorsPalette = function()
+	{
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;align=center;outlineConnect=0;dashed=0;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.flow_sensors.&quot;;
+		var gn = &#039;mxgraph.pid.flow_sensors&#039;;
+		var dt = &#039;process instrumentation sensor &#039;;
+		
+		this.addPaletteFunctions(&#039;pidFlow Sensors&#039;, &#039;Proc. Eng. / Flow Sensors&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;averging_pitot_tube;&#039;, 
+					50, 50, &#039;&#039;, &#039;Averging Pitot Tube&#039;, null, null, this.getTagsForStencil(gn, &#039;averging_pitot_tube&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;coriolis;&#039;, 
+					50, 50, &#039;&#039;, &#039;Coriolis&#039;, null, null, this.getTagsForStencil(gn, &#039;coriolis&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;flow_nozzle;&#039;, 
+					50, 25, &#039;&#039;, &#039;Flow Nozzle&#039;, null, null, this.getTagsForStencil(gn, &#039;flow_nozzle&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;flume;pointerEvents=1;&#039;, 
+					50, 50, &#039;&#039;, &#039;Flume&#039;, null, null, this.getTagsForStencil(gn, &#039;flume&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(mxConstants.STYLE_SHAPE + &#039;=mxgraph.pid.flow_sensors.magnetic;dashed=0;align=center;html=1;fontSize=25;&#039;, 
+					50, 50, &#039;M&#039;, &#039;Magnetic&#039;, null, null, this.getTagsForStencil(gn, &#039;magnetic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;pitot_tube;&#039;, 
+					50, 50, &#039;&#039;, &#039;Pitot Tube&#039;, null, null, this.getTagsForStencil(gn, &#039;pitot_tube&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;positive_displacement;&#039;, 
+					50, 30, &#039;&#039;, &#039;Positive Displacement&#039;, null, null, this.getTagsForStencil(gn, &#039;positive_displacement&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rotameter;&#039;, 
+					75, 50, &#039;&#039;, &#039;Rotameter&#039;, null, null, this.getTagsForStencil(gn, &#039;rotameter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;target;&#039;, 
+					50, 50, &#039;&#039;, &#039;Target&#039;, null, null, this.getTagsForStencil(gn, &#039;target&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;turbine;&#039;, 
+					50, 50, &#039;&#039;, &#039;Turbine&#039;, null, null, this.getTagsForStencil(gn, &#039;turbine&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ultrasonic;&#039;, 
+					50, 50, &#039;&#039;, &#039;Ultrasonic&#039;, null, null, this.getTagsForStencil(gn, &#039;ultrasonic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;v-cone;&#039;, 
+					50, 50, &#039;&#039;, &#039;V-cone&#039;, null, null, this.getTagsForStencil(gn, &#039;v-cone&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;venturi;&#039;, 
+					50, 40, &#039;&#039;, &#039;Venturi&#039;, null, null, this.getTagsForStencil(gn, &#039;venturi&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;vortex;&#039;, 
+					50, 50, &#039;&#039;, &#039;Vortex&#039;, null, null, this.getTagsForStencil(gn, &#039;vortex&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;wedge;&#039;, 
+					50, 50, &#039;&#039;, &#039;Wedge&#039;, null, null, this.getTagsForStencil(gn, &#039;wedge&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;weir;&#039;, 
+					50, 50, &#039;&#039;, &#039;Weir&#039;, null, null, this.getTagsForStencil(gn, &#039;weir&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+			
+	Sidebar.prototype.addPidPipingPalette = function()
+	{
+		var s = &quot;html=1;dashed=0;outlineConnect=0;align=center;&quot; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.piping.&quot;;
+		var sb = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;align=center;dashed=0;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.piping.&quot;;
+		var gn = &#039;mxgraph.pid.piping&#039;;
+		var dt = &#039;process instrumentation piping &#039;;
+		
+		this.addPaletteFunctions(&#039;pidPiping&#039;, &#039;Proc. Eng. / Piping&#039;, false,
+		[
+			this.createVertexTemplateEntry(sb + &#039;basket_strainer;&#039;, 50, 45, &#039;&#039;, &#039;Basket Strainer&#039;, null, null, this.getTagsForStencil(gn, &#039;basket_strainer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;blank2;&#039;, 20, 60, &#039;&#039;, &#039;Blank&#039;, null, null, this.getTagsForStencil(gn, &#039;blank&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;breather;&#039;, 50, 30, &#039;&#039;, &#039;Breather&#039;, null, null, this.getTagsForStencil(gn, &#039;breather&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;cap;&#039;, 10, 20, &#039;&#039;, &#039;Cap&#039;, null, null, this.getTagsForStencil(gn, &#039;cap&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;closed_figure_8_blind2;&#039;, 20, 80, &#039;&#039;, &#039;Closed Figure 8 Blind&#039;, null, null, this.getTagsForStencil(gn, &#039;closed_figure_8_blind&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;concentric_reducer;&#039;, 20, 20, &#039;&#039;, &#039;Concentric Reducer&#039;, null, null, this.getTagsForStencil(gn, &#039;concentric_reducer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;cone_strainer;&#039;, 30, 30, &#039;&#039;, &#039;Cone Strainer&#039;, null, null, this.getTagsForStencil(gn, &#039;cone_strainer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;damper2;&#039;, 50, 20, &#039;&#039;, &#039;Damper&#039;, null, null, this.getTagsForStencil(gn, &#039;damper&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;desuper_heater;&#039;, 50, 50, &#039;DS&#039;, &#039;Desuper Heater&#039;, null, null, this.getTagsForStencil(gn, &#039;desuper_heater&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;detonation_arrestor;&#039;, 50, 20, &#039;D&#039;, &#039;Detonation Arrestor&#039;, null, null, this.getTagsForStencil(gn, &#039;detonation_arrestor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;diverter_valve;pointerEvents=1;&#039;, 50, 35, &#039;&#039;, &#039;Diverter Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;diverter_valve&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;double_flange;pointerEvents=1;&#039;, 5, 20, &#039;&#039;, &#039;Double Flange&#039;, null, null, this.getTagsForStencil(gn, &#039;double_flange&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;duplex_strainer;&#039;, 50, 40, &#039;&#039;, &#039;Duplex Strainer&#039;, null, null, this.getTagsForStencil(gn, &#039;duplex_strainer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;eccentric_reducer;&#039;, 20, 15, &#039;&#039;, &#039;Eccentric Reducer&#039;, null, null, this.getTagsForStencil(gn, &#039;eccentric_reducer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;excess_flow_valve2;&#039;, 50, 25, &#039;&#039;, &#039;Excess Flow Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;excess_flow_valve&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;exhaust_head;&#039;, 50, 40, &#039;&#039;, &#039;Exhaust Head&#039;, null, null, this.getTagsForStencil(gn, &#039;exhaust_head&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;expansion_joint;&#039;, 50, 20, &#039;&#039;, &#039;Expansion Joint&#039;, null, null, this.getTagsForStencil(gn, &#039;expansion_joint&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;flame_arrestor;&#039;, 50, 20, &#039;F&#039;, &#039;Flame Arrestor&#039;, null, null, this.getTagsForStencil(gn, &#039;flame_arrestor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;flange;pointerEvents=1;&#039;, 5, 20, &#039;&#039;, &#039;Flange&#039;, null, null, this.getTagsForStencil(gn, &#039;flange&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;flange_in;pointerEvents=1;&#039;, 10, 20, &#039;&#039;, &#039;Flange In&#039;, null, null, this.getTagsForStencil(gn, &#039;flange_in&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;flexible_hose;pointerEvents=1;&#039;, 50, 25, &#039;&#039;, &#039;Flexible Hose&#039;, null, null, this.getTagsForStencil(gn, &#039;flexible_hose&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;hose_connection;pointerEvents=1;&#039;, 20, 20, &#039;&#039;, &#039;Hose Connection&#039;, null, null, this.getTagsForStencil(gn, &#039;hose_connection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;in-line_mixer;&#039;, 50, 10, &#039;&#039;, &#039;In-Line Mixer&#039;, null, null, this.getTagsForStencil(gn, &#039;in-line_mixer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;in-line_silencer;&#039;, 50, 20, &#039;S&#039;, &#039;In-Line Silencer&#039;, null, null, this.getTagsForStencil(gn, &#039;in-line_silencer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;open_figure_8_blind2;&#039;, 20, 80, &#039;&#039;, &#039;Open Figure 8 Blind&#039;, null, null, this.getTagsForStencil(gn, &#039;open_figure_8_blind&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;orifice_(quick_change);&#039;, 10, 50, &#039;&#039;, &#039;Orifice (Quick Change)&#039;, null, null, this.getTagsForStencil(gn, &#039;orifice_(quick_change)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;plug;&#039;, 10, 10, &#039;&#039;, &#039;Plug&#039;, null, null, this.getTagsForStencil(gn, &#039;plug&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;pulsation_dampener;&#039;, 50, 150, &#039;&#039;, &#039;Pulsation Dampener&#039;, null, null, this.getTagsForStencil(gn, &#039;pulsation_dampener&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(mxConstants.STYLE_VERTICAL_ALIGN + &#039;=bottom;pointerEvents=1;dashed=0;&#039; + mxConstants.STYLE_SHAPE + &#039;=mxgraph.pid.piping.removable_spool;html=1;overflow=fill;&#039;, 50, 30, 
+					&#039;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;width:100%;height:100%;&quot;&gt;&#039; +
+					&#039;&lt;tr&gt;&#039; +
+					&#039;&lt;td valign=&quot;bottom&quot; align=&quot;center&quot;&gt;RS&lt;/td&gt;&#039; +
+					&#039;&lt;/tr&gt;&#039; +
+					&#039;&lt;/table&gt;&#039;,
+					&#039;Removable Spool&#039;, null, null, this.getTagsForStencil(gn, &#039;removable_spool&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;rotary_valve;pointerEvents=1;&#039;, 50, 20, &#039;&#039;, &#039;Rotary Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;rotary_valve&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;spacer;&#039;, 20, 60, &#039;&#039;, &#039;Spacer&#039;, null, null, this.getTagsForStencil(gn, &#039;spacer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;steam_trap;&#039;, 50, 50, &#039;T&#039;, &#039;Steam Trap&#039;, null, null, this.getTagsForStencil(gn, &#039;steam_trap&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;t-type_strainer;&#039;, 20, 35, &#039;&#039;, &#039;T-Type Strainer&#039;, null, null, this.getTagsForStencil(gn, &#039;t-type_strainer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;temporary_strainer;&#039;, 30, 30, &#039;&#039;, &#039;Temporary Strainer&#039;, null, null, this.getTagsForStencil(gn, &#039;temporary_strainer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;vent_silencer;&#039;, 20, 80, &#039;S&#039;, &#039;Vent Silencer&#039;, null, null, this.getTagsForStencil(gn, &#039;vent_silencer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;welded_connection2;&#039;, 50, 20, &#039;&#039;, &#039;Welded Connection&#039;, null, null, this.getTagsForStencil(gn, &#039;welded_connection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;y-type_strainer;pointerEvents=1;&#039;, 50, 35, &#039;&#039;, &#039;Y-Type Strainer&#039;, null, null, this.getTagsForStencil(gn, &#039;y-type_strainer&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+			
+	Sidebar.prototype.addPidCrushersGrindingPalette = function()
+	{
+		var s = &quot;html=1;dashed=0;outlineConnect=0;align=center;&quot; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.crushers_grinding.&quot;;
+		var sb = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;align=center;dashed=0;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.crushers_grinding.&quot;;
+		var gn = &#039;mxgraph.pid.crushers_grinding&#039;;
+		var dt = &#039;process instrumentation crushers grinding &#039;;
+		
+		this.addPaletteFunctions(&#039;pidCrushers Grinding&#039;, &#039;Proc. Eng. / Crushers Grinding&#039;, false,
+		[
+			this.createVertexTemplateEntry(sb + &#039;crusher;&#039;, 100, 60, &#039;&#039;, &#039;Crusher&#039;, null, null, this.getTagsForStencil(gn, &#039;crusher&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;crusher_(cone);&#039;, 100, 60, &#039;&#039;, &#039;Crusher (Cone)&#039;, null, null, this.getTagsForStencil(gn, &#039;crusher cone&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;crusher_(hammer);&#039;, 100, 60, &#039;&#039;, &#039;Crusher (Hammer)&#039;, null, null, this.getTagsForStencil(gn, &#039;crusher hammer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;crusher_(impact);&#039;, 100, 60, &#039;&#039;, &#039;Crusher (Impact)&#039;, null, null, this.getTagsForStencil(gn, &#039;crusher impact&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;crusher_(jaw);&#039;, 100, 60, &#039;&#039;, &#039;Crusher (Jaw)&#039;, null, null, this.getTagsForStencil(gn, &#039;crusher jaw&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;crusher_(roller);&#039;, 100, 60, &#039;&#039;, &#039;Crusher (Roller)&#039;, null, null, this.getTagsForStencil(gn, &#039;crusher roller&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;crushing,_grinding_machine;&#039;, 100, 60, &#039;&#039;, &#039;Crushing, Grinding Machine&#039;, null, null, this.getTagsForStencil(gn, &#039;crushing grinding machine&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;mill,_pulverizer;&#039;, 100, 60, &#039;&#039;, &#039;Mill, Pulverizer&#039;, null, null, this.getTagsForStencil(gn, &#039;mill pulverizer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;mill,_pulverizer_(hammer);&#039;, 100, 60, &#039;&#039;, &#039;Mill, Pulverizer (Hammer)&#039;, null, null, this.getTagsForStencil(gn, &#039;mill pulverizer hammer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;mill,_pulverizer_(impact);&#039;, 100, 60, &#039;&#039;, &#039;Mill, Pulverizer (Impact)&#039;, null, null, this.getTagsForStencil(gn, &#039;mill pulverizer impact&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;mill_(roller);&#039;, 100, 60, &#039;&#039;, &#039;Mill (Roller)&#039;, null, null, this.getTagsForStencil(gn, &#039;mill roller&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;mill_(vibration)2;&#039;, 100, 60, &#039;&#039;, &#039;Mill (Vibration)&#039;, null, null, this.getTagsForStencil(gn, &#039;mill vibration&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+			
+	Sidebar.prototype.addPidFittingsPalette = function()
+	{
+		var s = &quot;html=1;dashed=0;outlineConnect=0;align=center;&quot; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.fittings.&quot;;
+		var sb = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;align=center;dashed=0;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.fittings.&quot;;
+		var gn = &#039;mxgraph.pid.fittings&#039;;
+		var dt = &#039;process instrumentation fittings &#039;;
+		
+		this.addPaletteFunctions(&#039;pidFittings&#039;, &#039;Proc. Eng. / Fittings&#039;, false,
+		[
+			this.createVertexTemplateEntry(sb + &#039;blind_disc2;&#039;, 40, 140, &#039;&#039;, &#039;Blind Disc&#039;, null, null, this.getTagsForStencil(gn, &#039;blind disc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;breakthrough2;&#039;, 38, 100, &#039;&#039;, &#039;Breakthrough&#039;, null, null, this.getTagsForStencil(gn, &#039;breakthrough&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;clamped_flange_coupling;&#039;, 50, 100, &#039;&#039;, &#039;Clamped Flange Coupling&#039;, null, null, this.getTagsForStencil(gn, &#039;clamped flange coupling&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;compensator;&#039;, 40, 80, &#039;&#039;, &#039;Compensator&#039;, null, null, this.getTagsForStencil(gn, &#039;compensator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;coupling;&#039;, 50, 100, &#039;&#039;, &#039;Coupling&#039;, null, null, this.getTagsForStencil(gn, &#039;coupling&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;flame_arrestor;&#039;, 100, 100, &#039;&#039;, &#039;Flame Arrestor&#039;, null, null, this.getTagsForStencil(gn, &#039;flame arrestor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;flame_arrestor_(detonation-proof);&#039;, 100, 100, &#039;&#039;, &#039;Flame Arrestor (Detonation-Proof)&#039;, null, null, this.getTagsForStencil(gn, &#039;flame arrestor detonation proof&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;flame_arrestor_(explosion-proof);&#039;, 100, 100, &#039;&#039;, &#039;Flame Arrestor (Explosion-Proof)&#039;, null, null, this.getTagsForStencil(gn, &#039;flame arrestor explosion proof)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;flame_arrestor_(fire-resistant);&#039;, 100, 100, &#039;&#039;, &#039;Flame Arrestor (Fire-Resistant)&#039;, null, null, this.getTagsForStencil(gn, &#039;flame arrestor fire resistant)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;flame_arrestor_(fire-resistant,_detonation-proof);&#039;, 100, 100, &#039;&#039;, &#039;Flame Arrestor (Fire-Resistant, Detonation-Proof)&#039;, null, null, this.getTagsForStencil(gn, &#039;flame arrestor fire resistant detonation proof)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;flanged_connection;&#039;, 20, 50, &#039;&#039;, &#039;Flanged Connection&#039;, null, null, this.getTagsForStencil(gn, &#039;flanged connection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;flanged_dummy_cover;&#039;, 85, 50, &#039;&#039;, &#039;Flanged Dummy Cover&#039;, null, null, this.getTagsForStencil(gn, &#039;flanged dummy cover&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;funnel;&#039;, 80, 140, &#039;&#039;, &#039;Funnel&#039;, null, null, this.getTagsForStencil(gn, &#039;funnel&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;hose;&#039;, 180, 30, &#039;&#039;, &#039;Hose&#039;, null, null, this.getTagsForStencil(gn, &#039;hose&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;injector;&#039;, 80, 40, &#039;&#039;, &#039;Injector&#039;, null, null, this.getTagsForStencil(gn, &#039;injector&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;interchangeable_disc_(blind_disc)2;&#039;, 40, 140, &#039;&#039;, &#039;Interchangeable Disc (Blind Disc)&#039;, null, null, this.getTagsForStencil(gn, &#039;interchangeable disc (blind disc)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;interchangeable_disc_(open_disc_in_function)2;&#039;, 40, 140, &#039;&#039;, &#039;Interchangeable Disc (Open Disc In Function)&#039;, null, null, this.getTagsForStencil(gn, &#039;interchangeable disc (open disc in function)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;open_disc;&#039;, 40, 140, &#039;&#039;, &#039;Open Disc&#039;, null, null, this.getTagsForStencil(gn, &#039;open disc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;orifice_plate2;&#039;, 40, 140, &#039;&#039;, &#039;Orifice Plate&#039;, null, null, this.getTagsForStencil(gn, &#039;orifice plate&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;reducer;&#039;, 70, 50, &#039;&#039;, &#039;Reducer&#039;, null, null, this.getTagsForStencil(gn, &#039;reducer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;rupture_disc;&#039;, 50, 100, &#039;&#039;, &#039;Rupture Disc&#039;, null, null, this.getTagsForStencil(gn, &#039;rupture disc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;self-operating_release_valve2;&#039;, 105, 105, &#039;&#039;, &#039;Self-Operating Release Valve&#039;, null, null, this.getTagsForStencil(gn, &#039;self operating release valve&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;silencer;&#039;, 140, 100, &#039;&#039;, &#039;Silencer&#039;, null, null, this.getTagsForStencil(gn, &#039;silencer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;single_flange;&#039;, 5, 50, &#039;&#039;, &#039;Single Flange&#039;, null, null, this.getTagsForStencil(gn, &#039;single flange&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;strainer;&#039;, 40, 80, &#039;&#039;, &#039;Strainer&#039;, null, null, this.getTagsForStencil(gn, &#039;strainer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;strainer_(cone);&#039;, 40, 80, &#039;&#039;, &#039;Strainer (Cone)&#039;, null, null, this.getTagsForStencil(gn, &#039;strainer (cone)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;vent;&#039;, 80, 140, &#039;&#039;, &#039;Vent&#039;, null, null, this.getTagsForStencil(gn, &#039;vent&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;viewing_glass;&#039;, 100, 50, &#039;&#039;, &#039;Viewing Glass&#039;, null, null, this.getTagsForStencil(gn, &#039;viewing glass&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;viewing_glass_(lighting);&#039;, 100, 100, &#039;&#039;, &#039;Viewing Glass (Lighting)&#039;, null, null, this.getTagsForStencil(gn, &#039;viewing glass (lighting)&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+			
+	Sidebar.prototype.addPidSeparatorsPalette = function()
+	{
+		var s = &quot;html=1;dashed=0;outlineConnect=0;align=center;&quot; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.separators.&quot;;
+		var sb = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;align=center;dashed=0;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.separators.&quot;;
+		var gn = &#039;mxgraph.pid.fittings&#039;;
+		var dt = &#039;process instrumentation separators separator &#039;;
+		
+		this.addPaletteFunctions(&#039;pidSeparators&#039;, &#039;Proc. Eng. / Separators&#039;, false,
+		[
+			this.createVertexTemplateEntry(sb + &#039;gravity_separator,_settling_chamber2;&#039;, 80, 120, &#039;&#039;, &#039;Gravity Separator, Settling Chamber&#039;, null, null, this.getTagsForStencil(gn, &#039;gravity settling chamber&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;impact_separator;&#039;, 80, 120, &#039;&#039;, &#039;Impact Separator&#039;, null, null, this.getTagsForStencil(gn, &#039;impact&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;separator,_sifter2;&#039;, 80, 120, &#039;&#039;, &#039;Separator, Sifter&#039;, null, null, this.getTagsForStencil(gn, &#039;sifter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;separator_(cyclone)2;&#039;, 80, 120, &#039;&#039;, &#039;Separator (Cyclone)&#039;, null, null, this.getTagsForStencil(gn, &#039;cyclone&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;separator_(electromagnetic);&#039;, 80, 120, &#039;&#039;, &#039;Separator (Electromagnetic)&#039;, null, null, this.getTagsForStencil(gn, &#039;electromagnetic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;separator_(electrostatic_precipitator);&#039;, 80, 120, &#039;&#039;, &#039;Separator (Electrostatic Precipitator)&#039;, null, null, this.getTagsForStencil(gn, &#039;electrostatic precipitator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;separator_(electrostatic_precipitator,_wet);&#039;, 80, 120, &#039;&#039;, &#039;Separator (Electrostatic Precipitator, Wet)&#039;, null, null, this.getTagsForStencil(gn, &#039;electrostatic precipitator wet)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;separator_(permanent_magnet)2;&#039;, 80, 120, &#039;&#039;, &#039;Separator (Permanent Magnet)&#039;, null, null, this.getTagsForStencil(gn, &#039;permanent magnet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;separator_(venturi_scrubber);&#039;, 80, 120, &#039;&#039;, &#039;Separator (Venturi Scrubber)&#039;, null, null, this.getTagsForStencil(gn, &#039;venturi scrubber&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;separator_(wet_scrubber)2;&#039;, 80, 120, &#039;&#039;, &#039;Separator (Wet Scrubber)&#039;, null, null, this.getTagsForStencil(gn, &#039;wet scrubber&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;solidifier_(closed);&#039;, 80, 120, &#039;&#039;, &#039;Solidifier (Closed)&#039;, null, null, this.getTagsForStencil(gn, &#039;solidifier closed&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;solidifier_(open);&#039;, 80, 120, &#039;&#039;, &#039;Solidifier (Open)&#039;, null, null, this.getTagsForStencil(gn, &#039;solidifier open&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sb + &#039;spray_scrubber;&#039;, 80, 120, &#039;&#039;, &#039;Spray Scrubber&#039;, null, null, this.getTagsForStencil(gn, &#039;spray scrubber&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+			
+	Sidebar.prototype.addPidMiscPalette = function()
+	{
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;outlineConnect=0;align=center;dashed=0;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid2&quot;;
+		var s2 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;outlineConnect=0;align=center;dashed=0;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid.misc.&quot;;
+		var s3 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;outlineConnect=0;align=center;dashed=0;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.pid2misc.&quot;;
+		var gn = &#039;mxgraph.pid.misc&#039;;
+		var dt = &#039;process instrumentation &#039;;
+		
+		this.addPaletteFunctions(&#039;pidMisc&#039;, &#039;Proc. Eng. / Misc&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;misc.fan;fanType=common&#039;, 
+					50, 50, &#039;&#039;, &#039;Fan&#039;, null, null, this.getTagsForStencil(gn, &#039;fan&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;misc.column;columnType=common&#039;, 
+					50, 120, &#039;&#039;, &#039;Column&#039;, null, null, this.getTagsForStencil(gn, &#039;column&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;misc.column;columnType=tray&#039;, 
+					50, 120, &#039;&#039;, &#039;Column (Tray)&#039;, null, null, this.getTagsForStencil(gn, &#039;column&#039;, dt + &#039;tray&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;misc.column;columnType=fixed&#039;, 
+					50, 180, &#039;&#039;, &#039;Column (Fixed Bed)&#039;, null, null, this.getTagsForStencil(gn, &#039;column&#039;, dt + &#039;fixed bed&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;misc.column;columnType=fluid&#039;, 
+					50, 120, &#039;&#039;, &#039;Column (Fluidized Bed)&#039;, null, null, this.getTagsForStencil(gn, &#039;column&#039;, dt + &#039;fluidized bed&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;misc.column;columnType=baffle&#039;, 
+					50, 120, &#039;&#039;, &#039;Column (Staggered Baffle Trays)&#039;, null, null, this.getTagsForStencil(gn, &#039;column&#039;, dt + &#039;staggered baffle tray&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;misc.column;columnType=bubble&#039;, 
+					50, 120, &#039;&#039;, &#039;Column (Bubble Cap Trays)&#039;, null, null, this.getTagsForStencil(gn, &#039;column&#039;, dt + &#039;bubble cap tray&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;misc.column;columnType=valve&#039;, 
+					50, 120, &#039;&#039;, &#039;Column (Valve Trays)&#039;, null, null, this.getTagsForStencil(gn, &#039;column&#039;, dt + &#039;valve tray&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;misc.column;columnType=nozzle&#039;, 
+					50, 180, &#039;&#039;, &#039;Column (Fixed Bed, Spray Nozzle)&#039;, null, null, this.getTagsForStencil(gn, &#039;column&#039;, dt + &#039;fixed bed spray nozzle&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;misc.conveyor&#039;, 
+					200, 50, &#039;&#039;, &#039;Conveyor&#039;, null, null, this.getTagsForStencil(gn, &#039;conveyor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;aerator_with_sparger;&#039;, 
+					35, 100, &#039;&#039;, &#039;Aerator With Sparger&#039;, null, null, this.getTagsForStencil(gn, &#039;aerator_with_sparger&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;air_cooler;&#039;, 
+					70, 20, &#039;&#039;, &#039;Air Cooler&#039;, null, null, this.getTagsForStencil(gn, &#039;air_cooler&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;air_filter;&#039;, 
+					40, 65, &#039;&#039;, &#039;Air Filter&#039;, null, null, this.getTagsForStencil(gn, &#039;air_filter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;air_separator;&#039;, 
+					65.5, 106, &#039;&#039;, &#039;Air Separator&#039;, null, null, this.getTagsForStencil(gn, &#039;air_separator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;back_draft_damper2;&#039;, 
+					62, 32, &#039;&#039;, &#039;Back Draft Damper&#039;, null, null, this.getTagsForStencil(gn, &#039;back_draft_damper&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;bag_filling_machine2;&#039;, 
+					80, 100, &#039;&#039;, &#039;Bag Filling Machine&#039;, null, null, this.getTagsForStencil(gn, &#039;bag_filling_machine&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;belt_skimmer;&#039;, 
+					70, 98, &#039;&#039;, &#039;Belt Skimmer&#039;, null, null, this.getTagsForStencil(gn, &#039;belt_skimmer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;bin;&#039;, 
+					100, 65, &#039;&#039;, &#039;Bin&#039;, null, null, this.getTagsForStencil(gn, &#039;bin&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;boiler_(dome);&#039;, 
+					100, 120, &#039;&#039;, &#039;Boiler (Dome)&#039;, null, null, this.getTagsForStencil(gn, &#039;boiler_(dome)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;boiler_(dome,_hot_liquid);&#039;, 
+					100, 120, &#039;&#039;, &#039;Boiler (Dome, Hot Liquid)&#039;, null, null, this.getTagsForStencil(gn, &#039;boiler_(dome,_hot_liquid)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;box_truck;&#039;, 
+					120, 80, &#039;&#039;, &#039;Box Truck&#039;, null, null, this.getTagsForStencil(gn, &#039;box_truck&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;bucket_elevator;&#039;, 
+					65, 200, &#039;&#039;, &#039;Bucket Elevator&#039;, null, null, this.getTagsForStencil(gn, &#039;bucket_elevator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;chiller;&#039;, 
+					155, 115, &#039;&#039;, &#039;Chiller&#039;, null, null, this.getTagsForStencil(gn, &#039;chiller&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;combustion_chamber;&#039;, 
+					130, 100, &#039;&#039;, &#039;Combustion Chamber&#039;, null, null, this.getTagsForStencil(gn, &#039;combustion_chamber&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;conveyor2;&#039;, 
+					200, 60, &#039;&#039;, &#039;Conveyor&#039;, null, null, this.getTagsForStencil(gn, &#039;conveyor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;conveyor_(belt);&#039;, 
+					200, 50, &#039;&#039;, &#039;Conveyor (Belt)&#039;, null, null, this.getTagsForStencil(gn, &#039;conveyor_(belt)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;conveyor_(belt,_closed);&#039;, 
+					240, 80, &#039;&#039;, &#039;Conveyor (Belt, Closed)&#039;, null, null, this.getTagsForStencil(gn, &#039;conveyor_(belt,_closed)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;conveyor_(belt,_closed,_reversible)2;&#039;, 
+					240, 80, &#039;&#039;, &#039;Conveyor (Belt, Closed, Reversible)&#039;, null, null, this.getTagsForStencil(gn, &#039;conveyor_(belt,_closed,_reversible)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;conveyor_(chain,_closed);&#039;, 
+					240, 80, &#039;&#039;, &#039;Conveyor (Chain, Closed)&#039;, null, null, this.getTagsForStencil(gn, &#039;conveyor_(chain,_closed)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;conveyor_(screw,_closed);&#039;, 
+					220, 80, &#039;&#039;, &#039;Conveyor (Screw, Closed)&#039;, null, null, this.getTagsForStencil(gn, &#039;conveyor_(screw,_closed)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;conveyor_(vibrating,_closed)2;&#039;, 
+					240, 80, &#039;&#039;, &#039;Conveyor (Vibrating, Closed)&#039;, null, null, this.getTagsForStencil(gn, &#039;conveyor_(vibrating,_closed)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cooler;&#039;, 
+					85, 90, &#039;&#039;, &#039;Cooler&#039;, null, null, this.getTagsForStencil(gn, &#039;cooler&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cooling_tower&#039;, 
+					100, 120, &#039;&#039;, &#039;Cooling Tower&#039;, null, null, this.getTagsForStencil(gn, &#039;cooling_tower&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cooling_tower_(dry,_forced_draught);&#039;, 
+					100, 120, &#039;&#039;, &#039;Cooling Tower (Dry, Forced Draught)&#039;, null, null, this.getTagsForStencil(gn, &#039;cooling_tower_(dry,_forced_draught)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cooling_tower_(dry,_induced_draught);&#039;, 
+					100, 120, &#039;&#039;, &#039;Cooling Tower (Dry, Induced Draught)&#039;, null, null, this.getTagsForStencil(gn, &#039;cooling_tower_(dry,_induced_draught)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cooling_tower_(dry,_natural_draught);&#039;, 
+					100, 120, &#039;&#039;, &#039;Cooling Tower (Dry, Natural Draught)&#039;, null, null, this.getTagsForStencil(gn, &#039;cooling_tower_(dry,_natural_draught)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cooling_tower_(wet,_forced_draught);&#039;, 
+					100, 120, &#039;&#039;, &#039;Cooling Tower (Wet, Forced Draught)&#039;, null, null, this.getTagsForStencil(gn, &#039;cooling_tower_(wet,_forced_draught)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cooling_tower_(wet,_induced_draught);&#039;, 
+					100, 120, &#039;&#039;, &#039;Cooling Tower (Wet, Induced Draught)&#039;, null, null, this.getTagsForStencil(gn, &#039;cooling_tower_(wet,_induced_draught)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cooling_tower_(wet,_natural_draught);&#039;, 
+					100, 120, &#039;&#039;, &#039;Cooling Tower (Wet, Natural Draught)&#039;, null, null, this.getTagsForStencil(gn, &#039;cooling_tower_(wet,_natural_draught)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cooling_tower_(wet-dry,_natural_draught);&#039;, 
+					100, 120, &#039;&#039;, &#039;Cooling Tower (Wet-Dry, Natural Draught)&#039;, null, null, this.getTagsForStencil(gn, &#039;cooling_tower_(wet-dry,_natural_draught)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;covered_gas_vent;pointerEvents=1;&#039;, 
+					80, 100, &#039;&#039;, &#039;Covered Gas Vent&#039;, null, null, this.getTagsForStencil(gn, &#039;covered_gas_vent&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;crane;&#039;, 
+					100, 100, &#039;&#039;, &#039;Crane&#039;, null, null, this.getTagsForStencil(gn, &#039;crane&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;curved_gas_vent;pointerEvents=1;&#039;, 
+					30, 70, &#039;&#039;, &#039;Curved Gas Vent&#039;, null, null, this.getTagsForStencil(gn, &#039;curved_gas_vent&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cyclone;&#039;, 
+					100, 80, &#039;&#039;, &#039;Cyclone&#039;, null, null, this.getTagsForStencil(gn, &#039;cyclone&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;dryer;&#039;, 
+					80, 100, &#039;&#039;, &#039;Dryer&#039;, null, null, this.getTagsForStencil(gn, &#039;dryer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;elevator_(bucket);&#039;, 
+					160, 250, &#039;&#039;, &#039;Elevator (Bucket)&#039;, null, null, this.getTagsForStencil(gn, &#039;elevator_(bucket)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;elevator_(bucket,_z-form);&#039;, 
+					430, 250, &#039;&#039;, &#039;Elevator (Bucket, Z-Form)&#039;, null, null, this.getTagsForStencil(gn, &#039;elevator_(bucket,_z-form)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;fan;&#039;, 
+					100, 100, &#039;&#039;, &#039;Fan&#039;, null, null, this.getTagsForStencil(gn, &#039;fan&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;fan_2;&#039;, 
+					58, 8, &#039;&#039;, &#039;Fan 2&#039;, null, null, this.getTagsForStencil(gn, &#039;fan_2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;filter;&#039;, 
+					100, 100, &#039;&#039;, &#039;Filter&#039;, null, null, this.getTagsForStencil(gn, &#039;filter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;filter_2;&#039;, 
+					100, 100, &#039;&#039;, &#039;Filter 2&#039;, null, null, this.getTagsForStencil(gn, &#039;filter_2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;firing_system,_burner;&#039;, 
+					100, 100, &#039;&#039;, &#039;Firing System, Burner&#039;, null, null, this.getTagsForStencil(gn, &#039;firing_system,_burner&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;flame_arrestor;&#039;, 
+					100, 40, &#039;&#039;, &#039;Flame Arrestor&#039;, null, null, this.getTagsForStencil(gn, &#039;flame_arrestor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;flexible_pipe;pointerEvents=1;&#039;, 
+					60, 16, &#039;&#039;, &#039;Flexible Pipe&#039;, null, null, this.getTagsForStencil(gn, &#039;flexible_pipe&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;forced_flow_air_cooler;&#039;, 
+					70, 30, &#039;&#039;, &#039;Forced Flow Air Cooler&#039;, null, null, this.getTagsForStencil(gn, &#039;forced_flow_air_cooler&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;forklift_(manual);&#039;, 
+					140, 100, &#039;&#039;, &#039;Forklift (Manual)&#039;, null, null, this.getTagsForStencil(gn, &#039;forklift_(manual)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;forklift_(truck);&#039;, 
+					140, 100, &#039;&#039;, &#039;Forklift (Truck)&#039;, null, null, this.getTagsForStencil(gn, &#039;forklift_(truck)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;funnel;pointerEvents=1;&#039;, 
+					40, 80, &#039;&#039;, &#039;Funnel&#039;, null, null, this.getTagsForStencil(gn, &#039;funnel&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;gas_flare;&#039;, 
+					60, 100, &#039;&#039;, &#039;Gas Flare&#039;, null, null, this.getTagsForStencil(gn, &#039;gas_flare&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;induced_flow_air_cooler;&#039;, 
+					93, 30, &#039;&#039;, &#039;Induced Flow Air Cooler&#039;, null, null, this.getTagsForStencil(gn, &#039;induced_flow_air_cooler&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;industrial_truck;pointerEvents=1;&#039;, 
+					120, 20, &#039;&#039;, &#039;Industrial Truck&#039;, null, null, this.getTagsForStencil(gn, &#039;industrial_truck&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;lift;&#039;, 
+					100, 100, &#039;&#039;, &#039;Lift&#039;, null, null, this.getTagsForStencil(gn, &#039;lift&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;loading_arm;pointerEvents=1;&#039;, 
+					120, 80, &#039;&#039;, &#039;Loading Arm&#039;, null, null, this.getTagsForStencil(gn, &#039;loading_arm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;mixer;&#039;, 
+					80, 100, &#039;&#039;, &#039;Mixer&#039;, null, null, this.getTagsForStencil(gn, &#039;mixer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;palletizer2;&#039;, 
+					80, 100, &#039;&#039;, &#039;Palletizer&#039;, null, null, this.getTagsForStencil(gn, &#039;palletizer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;protective_palette_covering;&#039;, 
+					80, 100, &#039;&#039;, &#039;Protective Palette Covering&#039;, null, null, this.getTagsForStencil(gn, &#039;protective_palette_covering&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;roller_conveyor;&#039;, 
+					160, 20, &#039;&#039;, &#039;Roller Conveyor&#039;, null, null, this.getTagsForStencil(gn, &#039;roller_conveyor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rolling_bin;&#039;, 
+					100, 65, &#039;&#039;, &#039;Rolling Bin&#039;, null, null, this.getTagsForStencil(gn, &#039;rolling_bin&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rotary_screen;&#039;, 
+					100, 65, &#039;&#039;, &#039;Rotary Screen&#039;, null, null, this.getTagsForStencil(gn, &#039;rotary_screen&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;screening_device,_sieve,_strainer;&#039;, 
+					80, 120, &#039;&#039;, &#039;Screening Device, Sieve, Strainer&#039;, null, null, this.getTagsForStencil(gn, &#039;screening_device,_sieve,_strainer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;screening_device,_sieve,_strainer_(basket_reel);&#039;, 
+					80, 180, &#039;&#039;, &#039;Screening Device, Sieve, Strainer (Basket Reel)&#039;, null, null, this.getTagsForStencil(gn, &#039;screening_device,_sieve,_strainer_(basket_reel)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;screening_device,_sieve,_strainer_(coarse_and_fine_screens);&#039;, 
+					80, 120, &#039;&#039;, &#039;Screening Device, Sieve, Strainer (Coarse and Fine Screens)&#039;, null, null, this.getTagsForStencil(gn, &#039;screening_device,_sieve,_strainer_(coarse_and_fine_screens)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;screening_device,_sieve,_strainer_(coarse_rake);&#039;, 
+					80, 120, &#039;&#039;, &#039;Screening Device, Sieve, Strainer (Coarse Rake)&#039;, null, null, this.getTagsForStencil(gn, &#039;screening_device,_sieve,_strainer_(coarse_rake)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;screening_device,_sieve,_strainer_(fine_rake);&#039;, 
+					80, 120, &#039;&#039;, &#039;Screening Device, Sieve, Strainer (Fine Rake)&#039;, null, null, this.getTagsForStencil(gn, &#039;screening_device,_sieve,_strainer_(fine_rake)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;screening_device,_sieve,_strainer_(rotating_drum)&#039;, 
+					80, 120, &#039;&#039;, &#039;Screening Device, Sieve, Strainer (Rotating Drum)&#039;, null, null, this.getTagsForStencil(gn, &#039;screening_device,_sieve,_strainer_(rotating_drum)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;screening_device,_sieve,_strainer_(vibrating)2;&#039;, 
+					80, 120, &#039;&#039;, &#039;Screening Device, Sieve, Strainer (Vibrating)&#039;, null, null, this.getTagsForStencil(gn, &#039;screening_device,_sieve,_strainer_(vibrating)&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;ship&#039;, 
+					105, 60, &#039;&#039;, &#039;Ship&#039;, null, null, this.getTagsForStencil(gn, &#039;ship&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;silencer;&#039;, 
+					100, 30, &#039;&#039;, &#039;Silencer&#039;, null, null, this.getTagsForStencil(gn, &#039;silencer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;spraying_device;pointerEvents=1;&#039;, 
+					60, 20, &#039;&#039;, &#039;Spraying Device&#039;, null, null, this.getTagsForStencil(gn, &#039;spraying_device&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;spray_cooler;&#039;, 
+					100, 120, &#039;&#039;, &#039;Spray Cooler&#039;, null, null, this.getTagsForStencil(gn, &#039;spray_cooler&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;stack,_chimney;&#039;, 
+					60, 100, &#039;&#039;, &#039;Stack, Chimney&#039;, null, null, this.getTagsForStencil(gn, &#039;stack,_chimney&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;steam_trap2;&#039;, 
+					53, 53, &#039;&#039;, &#039;Steam Trap&#039;, null, null, this.getTagsForStencil(gn, &#039;steam_trap&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;tank_car,_tank_wagon;&#039;, 
+					127, 80, &#039;&#039;, &#039;Tank Car, Tank Wagon&#039;, null, null, this.getTagsForStencil(gn, &#039;tank_car,_tank_wagon&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;viewing_glass;&#039;, 
+					80, 50, &#039;&#039;, &#039;Viewing Glass&#039;, null, null, this.getTagsForStencil(gn, &#039;viewing_glass&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -1,0 +1,5593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\Menus.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\Menus.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">65.54</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">5476</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">163.51</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">80.33</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2006-2020, JGraph Holdings Ltd
+ * Copyright (c) 2006-2020, draw.io AG
+ */
+(function()
+{
+	// Adds scrollbars for menus that exceed the page height
+	var mxPopupMenuShowMenu = mxPopupMenu.prototype.showMenu;
+	mxPopupMenu.prototype.showMenu = function()
+	{
+		this.div.style.overflowY = &#039;auto&#039;;
+		this.div.style.overflowX = &#039;hidden&#039;;
+		var h0 = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+		this.div.style.maxHeight = (h0 - (EditorUi.isElectronApp? 50 : 10)) + &#039;px&#039;; //In Electron and without titlebar, the top item is not selectable
+
+		mxPopupMenuShowMenu.apply(this, arguments);
+	};
+	
+	Menus.prototype.createHelpLink = function(href)
+	{
+		return this.editorUi.createHelpIcon(href);
+	};
+
+	Menus.prototype.addLinkToItem = function(item, href)
+	{
+		if (item != null)
+		{
+			item.firstChild.nextSibling.appendChild(this.createHelpLink(href));
+		}
+	};
+
+	/**
+	 * Removes the given font from the list of custom fonts.
+	 */
+	Menus.prototype.removeCustomFont = function(name, url)
+	{
+		for (var i = 0; i &lt; this.customFonts.length; i++)
+		{
+			if (this.customFonts[i].name == name &amp;&amp;
+				this.customFonts[i].url == url)
+			{
+				this.customFonts.splice(i, 1);
+				this.editorUi.fireEvent(
+					new mxEventObject(&#039;customFontsChanged&#039;,
+					&#039;customFonts&#039;, this.customFonts));
+				
+				break;
+			}
+		}
+	};
+
+	/**
+	 * Returns true if the given font is in the list of custom fonts.
+	 */
+	Menus.prototype.containsFont = function(name, url)
+	{
+		for (var i = 0; i &lt; this.customFonts.length; i++)
+		{
+			if (this.customFonts[i].name == name &amp;&amp;
+				this.customFonts[i].url == url)
+			{
+				return true;
+			}
+		}
+
+		for (var i = 0; i &lt; this.defaultFonts.length; i++)
+		{
+			var value = this.defaultFonts[i];
+			
+			if ((typeof value !== &#039;string&#039; &amp;&amp;
+				value.fontFamily == name &amp;&amp;
+				value.fontUrl == url) ||
+				(typeof value === &#039;string&#039; &amp;&amp;
+				value == name &amp;&amp; url == null))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	};
+
+	/**
+	 * Adds the given font to the list of custom fonts.
+	 */
+	Menus.prototype.addCustomFont = function(name, url)
+	{
+		if (name != null &amp;&amp; !this.containsFont(name, url))
+		{
+			this.customFonts.push({name: name, url: url});
+			this.editorUi.fireEvent(
+				new mxEventObject(&#039;customFontsChanged&#039;,
+				&#039;customFonts&#039;, this.customFonts));
+		}
+	};
+
+	var menusInit = Menus.prototype.init;
+	Menus.prototype.init = function()
+	{
+		menusInit.apply(this, arguments);
+		var editorUi = this.editorUi;
+		var graph = editorUi.editor.graph;
+		var isGraphEnabled = mxUtils.bind(graph, graph.isEnabled);
+		
+		if (urlParams[&#039;noFileMenu&#039;] == &#039;1&#039;)
+		{
+			this.defaultMenuItems = this.defaultMenuItems.filter(function(m)
+			{
+				return m != &#039;file&#039;;
+			});
+		}
+
+		editorUi.actions.addAction(&#039;new...&#039;, function()
+		{
+			var compact = editorUi.isOffline();
+			
+			var dlg = new NewDialog(editorUi, compact, !(editorUi.mode == App.MODE_DEVICE &amp;&amp; &#039;chooseFileSystemEntries&#039; in window));
+
+			editorUi.showDialog(dlg.container, (compact) ? 350 : 620, (compact) ? 70 : 460, true, true, function(cancel)
+			{
+				if (editorUi.sidebar != null)
+				{
+					editorUi.sidebar.hideTooltip();
+				}
+				
+				if (cancel &amp;&amp; editorUi.getCurrentFile() == null)
+				{
+					editorUi.showSplash();
+				}
+			});
+			
+			dlg.init();
+		});
+		
+		if (Editor.enableChatGpt &amp;&amp;
+			editorUi.isExternalDataComms() &amp;&amp;
+			editorUi.getServiceName() == &#039;draw.io&#039; &amp;&amp;
+			typeof mxMermaidToDrawio !== &#039;undefined&#039; &amp;&amp;
+			window.isMermaidEnabled)
+		{
+			editorUi.actions.put(&#039;generate&#039;, new Action(&#039;generate&#039; + &#039;...&#039;, function()
+			{
+				editorUi.openTemplateDialog(&#039;&#039;);
+			})).isEnabled = isGraphEnabled;
+		}
+
+		editorUi.actions.put(&#039;insertTemplate&#039;, new Action(&#039;template&#039; + &#039;...&#039;, function()
+		{
+			editorUi.openTemplateDialog();
+		})).isEnabled = isGraphEnabled;
+		
+		var shareCursorAction = editorUi.actions.addAction(&#039;shareCursor&#039;, function()
+		{
+			editorUi.setShareCursorPosition(!editorUi.isShareCursorPosition());;
+		});
+		
+		shareCursorAction.setToggleAction(true);
+		shareCursorAction.setSelectedCallback(function() { return editorUi.isShareCursorPosition(); });
+		
+		var showRemoteCursorsAction = editorUi.actions.addAction(&#039;showRemoteCursors&#039;, function()
+		{
+			editorUi.setShowRemoteCursors(!editorUi.isShowRemoteCursors());;
+		});
+		
+		showRemoteCursorsAction.setToggleAction(true);
+		showRemoteCursorsAction.setSelectedCallback(function() { return editorUi.isShowRemoteCursors(); });
+		
+		var pointAction = editorUi.actions.addAction(&#039;points&#039;, function()
+		{
+			editorUi.editor.graph.view.setUnit(mxConstants.POINTS);
+		});
+		
+		pointAction.setToggleAction(true);
+		pointAction.setSelectedCallback(function() { return editorUi.editor.graph.view.unit == mxConstants.POINTS; });
+		
+		var inchAction = editorUi.actions.addAction(&#039;inches&#039;, function()
+		{
+			editorUi.editor.graph.view.setUnit(mxConstants.INCHES);
+		});
+		
+		inchAction.setToggleAction(true);
+		inchAction.setSelectedCallback(function() { return editorUi.editor.graph.view.unit == mxConstants.INCHES; });
+		
+		var mmAction = editorUi.actions.addAction(&#039;millimeters&#039;, function()
+		{
+			editorUi.editor.graph.view.setUnit(mxConstants.MILLIMETERS);
+		});
+		
+		mmAction.setToggleAction(true);
+		mmAction.setSelectedCallback(function() { return editorUi.editor.graph.view.unit == mxConstants.MILLIMETERS; });
+
+		var meterAction = editorUi.actions.addAction(&#039;meters&#039;, function()
+		{
+			editorUi.editor.graph.view.setUnit(mxConstants.METERS);
+		});
+		
+		meterAction.setToggleAction(true);
+		meterAction.setSelectedCallback(function() { return editorUi.editor.graph.view.unit == mxConstants.METERS; });
+
+		this.put(&#039;units&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			this.addMenuItems(menu, [&#039;points&#039;, &#039;inches&#039;, &#039;millimeters&#039;, &#039;meters&#039;], parent);
+		
+			if (Editor.currentTheme == &#039;min&#039; ||
+				Editor.currentTheme == &#039;simple&#039; ||	
+				Editor.currentTheme == &#039;sketch&#039;)
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;pageScale&#039;], parent);
+			}
+		})));
+
+		var pagesAction = editorUi.actions.addAction(&#039;pageTabs&#039;, function()
+		{
+			editorUi.setTabContainerVisible(!editorUi.isTabContainerVisible(), true);
+		});
+		
+		pagesAction.setToggleAction(true);
+		pagesAction.setSelectedCallback(function() { return editorUi.isTabContainerVisible(); });
+		
+		var rulerAction = editorUi.actions.addAction(&#039;ruler&#039;, function()
+		{
+			editorUi.setRulerVisible(!editorUi.isRulerVisible());
+		});
+
+		rulerAction.setEnabled(Editor.canvasSupported &amp;&amp; document.documentMode != 9);
+		rulerAction.setToggleAction(true);
+		rulerAction.setSelectedCallback(function() { return editorUi.isRulerVisible(); });
+		
+        var fullscreenAction = editorUi.actions.addAction(&#039;fullscreen&#039;, function()
+		{
+			if (urlParams[&#039;embedInline&#039;] == &#039;1&#039;)
+			{
+				editorUi.setInlineFullscreen(!Editor.inlineFullscreen);
+			}
+			else
+			{
+				var node = (mxUtils.isAncestorNode(document.body, editorUi.container)) ?
+					editorUi.container : editorUi.editor.graph.container;
+			
+				if (node != null)
+				{
+					if (document.fullscreenElement == null)
+					{
+						document.body.requestFullscreen();
+						node.classList.add(&#039;geFullscreen&#039;);
+					}
+					else
+					{
+						document.exitFullscreen();
+						node.classList.remove(&#039;geFullscreen&#039;);
+					}
+				}
+			}
+		});
+
+		fullscreenAction.visible = urlParams[&#039;embedInline&#039;] == &#039;1&#039; ||
+			(window == window.top &amp;&amp; document.fullscreenEnabled &amp;&amp;
+			document.body.requestFullscreen != null);
+		fullscreenAction.setToggleAction(true);
+		
+		fullscreenAction.setSelectedCallback(function()
+		{
+			return urlParams[&#039;embedInline&#039;] == &#039;1&#039; ? 
+				Editor.inlineFullscreen :
+				document.fullscreenElement != null;
+		});
+
+        var lightModeAction = editorUi.actions.put(&#039;lightMode&#039;, new Action(&#039;light&#039;, function(e)
+        {
+			editorUi.setAndPersistDarkMode(false);
+        }));
+
+		lightModeAction.setToggleAction(true);
+		lightModeAction.setSelectedCallback(function()
+		{
+			return !editorUi.isAutoDarkMode(true) &amp;&amp; !Editor.isDarkMode();
+		});
+		
+        var darkModeAction = editorUi.actions.put(&#039;darkMode&#039;, new Action(&#039;dark&#039;, function(e)
+        {
+			editorUi.setAndPersistDarkMode(true);
+        }));
+
+		darkModeAction.setToggleAction(true);
+		darkModeAction.setSelectedCallback(function()
+		{
+			return !editorUi.isAutoDarkMode(true) &amp;&amp; Editor.isDarkMode();
+		});
+		
+        var autoModeAction = editorUi.actions.put(&#039;autoMode&#039;, new Action(&#039;automatic&#039;, function(e)
+        {
+			editorUi.setAndPersistDarkMode(&#039;auto&#039;);
+        }));
+
+		autoModeAction.setToggleAction(true);
+		autoModeAction.setSelectedCallback(function()
+		{
+			return editorUi.isAutoDarkMode(true);
+		});
+		
+		editorUi.actions.addAction(&#039;properties...&#039;, function()
+		{
+			editorUi.getPublicUrl(editorUi.getCurrentFile(), function(url)
+			{
+				var dlg = new FilePropertiesDialog(editorUi, url);
+				editorUi.showDialog(dlg.container, 340, 200, true, true);
+				dlg.init();
+			});
+		}).isEnabled = isGraphEnabled;
+	
+		if (window.mxFreehand)
+		{
+			var freehandAction = editorUi.actions.put(&#039;insertFreehand&#039;, new Action(&#039;freehand&#039; + &#039;...&#039;, function()
+			{
+				if (graph.isEnabled())
+				{
+					if (editorUi.freehandWindow == null)
+					{
+						editorUi.freehandWindow = new FreehandWindow(
+							editorUi, document.body.offsetWidth - 420,
+							102, 180, 126, true);
+					}
+					
+					if (graph.freehand.isDrawing())
+					{
+						graph.freehand.stopDrawing();
+					}
+					else
+					{
+						graph.freehand.startDrawing();
+					}
+					
+					editorUi.freehandWindow.window.setVisible(graph.freehand.isDrawing());
+				}
+			}, null, null, &#039;X&#039;));
+			
+			freehandAction.isEnabled = function()
+			{
+				return isGraphEnabled();
+			};
+
+			freehandAction.setToggleAction(true);
+
+			freehandAction.setSelectedCallback(function()
+			{
+				return editorUi.freehandWindow != null &amp;&amp; editorUi.freehandWindow.window.isVisible();
+			});
+		}
+		
+		editorUi.actions.put(&#039;exportXml&#039;, new Action(&#039;formatXml&#039; + &#039;...&#039;, function()
+		{
+			var div = document.createElement(&#039;div&#039;);
+			div.style.whiteSpace = &#039;nowrap&#039;;
+			var noPages = editorUi.pages == null || editorUi.pages.length &lt;= 1;
+			
+			var hd = document.createElement(&#039;h3&#039;);
+			mxUtils.write(hd, mxResources.get(&#039;formatXml&#039;));
+			hd.style.cssText = &#039;width:100%;text-align:center;margin-top:0px;margin-bottom:4px&#039;;
+			div.appendChild(hd);
+			
+			var selection = editorUi.addCheckbox(div, mxResources.get(&#039;selectionOnly&#039;),
+				false, graph.isSelectionEmpty());
+			var compressed = editorUi.addCheckbox(div, mxResources.get(&#039;compressed&#039;), Editor.defaultCompressed);
+			var pages = editorUi.addCheckbox(div, mxResources.get(&#039;allPages&#039;), !noPages, noPages);
+			pages.style.marginBottom = &#039;16px&#039;;
+			
+			mxEvent.addListener(selection, &#039;change&#039;, function()
+			{
+				if (selection.checked)
+				{
+					pages.setAttribute(&#039;disabled&#039;, &#039;disabled&#039;);
+				}
+				else
+				{
+					pages.removeAttribute(&#039;disabled&#039;);
+				}
+			});
+			
+			var dlg = new CustomDialog(editorUi, div, mxUtils.bind(this, function()
+			{
+				editorUi.downloadFile(&#039;xml&#039;, !compressed.checked, null,
+					!selection.checked, noPages || !pages.checked);
+			}), null, mxResources.get(&#039;export&#039;));
+			
+			editorUi.showDialog(dlg.container, 300, 200, true, true);
+		}));
+		
+		if (Editor.enableExportUrl)
+		{
+			editorUi.actions.put(&#039;exportUrl&#039;, new Action(&#039;url&#039; + &#039;...&#039;, function()
+			{
+				editorUi.showPublishLinkDialog(mxResources.get(&#039;url&#039;), null, null, null, null, null, null, null,
+					function(linkTarget, linkColor, currentPage, lightbox, editLink, layers, width, height,
+						tags, link, transparent, darkMode, allPages)
+					{
+						var params = [];
+
+						if (lightbox &amp;&amp; tags)
+						{
+							params.push(&#039;tags=%7B%7D&#039;);
+						}
+
+						var dlg = new EmbedDialog(editorUi, editorUi.createLink(linkTarget, linkColor,
+							allPages, lightbox, editLink, layers, null, true, params, null,
+							currentPage, null, darkMode));
+						editorUi.showDialog(dlg.container, 450, 270, true, true);
+						dlg.init();
+					}, null, true, true);
+			}));
+		}
+		
+		editorUi.actions.put(&#039;exportHtml&#039;, new Action(&#039;formatHtmlEmbedded&#039; + &#039;...&#039;, function()
+		{
+			editorUi.getPublicUrl(editorUi.getCurrentFile(), function(url)
+			{
+				editorUi.showHtmlDialog(mxResources.get(&#039;export&#039;), null, url, function(publicUrl, zoomEnabled,
+					initialZoom, linkTarget, linkColor, fit, allPages, layers, tags, lightbox, editLink, theme)
+				{
+					editorUi.createHtml(publicUrl, zoomEnabled, initialZoom, linkTarget, linkColor, fit, allPages,
+						layers, tags, lightbox, editLink, mxUtils.bind(this, function(html, scriptTag)
+						{
+							var basename = editorUi.getBaseFilename(allPages);
+							var result = &#039;&lt;!--[if IE]&gt;&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=5,IE=9&quot; &gt;&lt;![endif]--&gt;\n&#039; +
+								&#039;&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n&lt;head&gt;\n&lt;title&gt;&#039; + mxUtils.htmlEntities(basename) + &#039;&lt;/title&gt;\n&#039; +
+								&#039;&lt;meta charset=&quot;utf-8&quot;/&gt;\n&lt;/head&gt;\n&lt;body&gt;&#039; + html + &#039;\n&#039; + scriptTag + &#039;\n&lt;/body&gt;\n&lt;/html&gt;&#039;;
+							editorUi.saveData(basename + ((basename.substring(basename.lenth - 7) ==
+								&#039;.drawio&#039;) ? &#039;&#039; : &#039;.drawio&#039;) + &#039;.html&#039;, &#039;html&#039;, result, &#039;text/html&#039;);
+						}), theme);
+				});
+			});
+		}));
+		
+		editorUi.actions.put(&#039;exportPdf&#039;, new Action(&#039;formatPdf&#039; + &#039;...&#039;, function()
+		{
+			editorUi.showPrintDialog(mxResources.get(&#039;formatPdf&#039;),
+				(!EditorUi.isElectronApp &amp;&amp; (editorUi.isOffline() || editorUi.printPdfExport)) ?
+					null : mxUtils.bind(this, function(preview, args)
+					{
+						var pageCount = (editorUi.pages != null) ? editorUi.pages.length : 1;
+						var noPages = editorUi.pages == null || editorUi.pages.length &lt;= 1;
+						var idx = editorUi.getPageIndex(editorUi.currentPage);
+						var currentPage = (idx != null) ? idx + 1 : 1;
+						var pageRange = (!args.allPages &amp;&amp; (args.pagesFrom != currentPage || args.pagesTo != currentPage)) ?
+							{from: Math.max(0, Math.min(pageCount - 1, args.pagesFrom - 1)),
+								to: Math.max(0, Math.min(pageCount - 1, args.pagesTo - 1))} : null;
+						
+						editorUi.downloadFile(&#039;pdf&#039;, null, null, !args.selection, noPages ||
+							(!args.allPages &amp;&amp; args.pagesFrom == currentPage &amp;&amp; args.pagesTo == currentPage), !args.crop,
+							args.transparent, args.scale, null, args.grid, args.includeCopy, pageRange, args.border,
+							args.fit, args.sheetsAcross, args.sheetsDown, args.shadows);					
+					}), mxResources.get(&#039;export&#039;));
+		}));
+
+		editorUi.actions.addAction(&#039;open...&#039;, function()
+		{
+			editorUi.pickFile();
+		});
+		
+		editorUi.actions.addAction(&#039;close&#039;, function()
+		{
+			var currentFile = editorUi.getCurrentFile();
+			
+			function fn()
+			{
+				if (currentFile != null)
+				{
+					currentFile.removeDraft();
+				}
+				
+				editorUi.fileLoaded(new LocalFile(editorUi, editorUi.emptyDiagramXml));
+			};
+			
+			if (currentFile != null &amp;&amp; currentFile.isModified())
+			{
+				editorUi.confirm(mxResources.get(&#039;allChangesLost&#039;), null, fn,
+					mxResources.get(&#039;cancel&#039;), mxResources.get(&#039;discardChanges&#039;));
+			}
+			else
+			{
+				fn();
+			}
+		});
+		
+		editorUi.actions.addAction(&#039;editShape...&#039;, mxUtils.bind(this, function()
+		{
+			if (graph.getSelectionCount() == 1)
+			{
+				var cell = graph.getSelectionCell();
+				var state = graph.view.getState(cell);
+				
+				if (state != null &amp;&amp; state.shape != null &amp;&amp; state.shape.stencil != null)
+				{
+			    	var dlg = new EditShapeDialog(editorUi, cell, mxResources.get(&#039;editShape&#039;) + &#039;:&#039;, 630, 400);
+					editorUi.showDialog(dlg.container, 640, 480, true, false);
+					dlg.init();
+				}
+			}
+		}));
+		
+		editorUi.actions.addAction(&#039;revisionHistory...&#039;, function()
+		{
+			if (!editorUi.isRevisionHistorySupported())
+			{
+				editorUi.showError(mxResources.get(&#039;error&#039;), mxResources.get(&#039;notAvailable&#039;), mxResources.get(&#039;ok&#039;));
+			}
+			else if (editorUi.spinner.spin(document.body, mxResources.get(&#039;loading&#039;)))
+			{
+				editorUi.getRevisions(mxUtils.bind(this, function(revs, restoreFn)
+				{
+					editorUi.spinner.stop();
+					var dlg = new RevisionDialog(editorUi, revs, restoreFn);
+					editorUi.showDialog(dlg.container, 640, 480, true, true);
+					dlg.init();
+				}), mxUtils.bind(this, function(err)
+				{
+					editorUi.handleError((err != null) ? err : mxResources.get(&#039;notAvailable&#039;));
+				}));
+			}
+		});
+		
+		editorUi.actions.addAction(&#039;createRevision&#039;, function()
+		{
+			editorUi.actions.get(&#039;save&#039;).funct();
+		}, null, null, Editor.ctrlKey + &#039;+S&#039;);
+		
+		var action = editorUi.actions.addAction(&#039;synchronize&#039;, function()
+		{
+			editorUi.synchronizeCurrentFile(DrawioFile.SYNC == &#039;none&#039;);
+		}, null, null, Editor.altKey + &#039;+&#039; + Editor.shiftKey + &#039;+S&#039;);
+		
+		// Changes the label if synchronization is disabled
+		if (DrawioFile.SYNC == &#039;none&#039;)
+		{
+			action.label = mxResources.get(&#039;refresh&#039;);
+		}
+		
+		editorUi.actions.addAction(&#039;upload...&#039;, function()
+		{
+			var file = editorUi.getCurrentFile();
+			
+			if (file != null)
+			{
+				// Data is pulled from global variable after tab loads
+				// LATER: Change to use message passing to deal with potential cross-domain
+				window.drawdata = editorUi.getFileData();
+				var filename = (file.getTitle() != null) ? file.getTitle() : editorUi.defaultFilename;
+				editorUi.openLink(window.location.protocol + &#039;//&#039; + window.location.host + &#039;/?create=drawdata&amp;&#039; +
+						((editorUi.mode == App.MODE_DROPBOX) ? &#039;mode=dropbox&amp;&#039; : &#039;&#039;) +
+						&#039;title=&#039; + encodeURIComponent(filename), null, true);
+			}
+		}, null, null, null, navigator.onLine &amp;&amp; urlParams[&#039;stealth&#039;] != &#039;1&#039; &amp;&amp; urlParams[&#039;lockdown&#039;] != &#039;1&#039;);
+
+		if (typeof(MathJax) !== &#039;undefined&#039;)
+		{
+			var action = editorUi.actions.addAction(&#039;mathematicalTypesetting&#039;, function()
+			{
+				var change = new ChangePageSetup(editorUi);
+				change.ignoreColor = true;
+				change.ignoreImage = true;
+				change.mathEnabled = !editorUi.isMathEnabled();
+				
+				graph.model.execute(change);
+			});
+			
+			action.setToggleAction(true);
+			action.setSelectedCallback(function() { return editorUi.isMathEnabled(); });
+			action.isEnabled = isGraphEnabled;
+		}
+
+		// Dynamic title is implemented below
+		var defaultAdaptiveColors = editorUi.actions.put(&#039;defaultAdaptiveColors&#039;, new Action(&#039;defaultAdaptiveColors&#039;,
+			function()
+		{
+			var change = new ChangePageSetup(editorUi);
+			change.ignoreColor = true;
+			change.ignoreImage = true;
+			change.adaptiveColors = &#039;default&#039;;
+			
+			graph.model.execute(change);
+		}));
+
+		defaultAdaptiveColors.getTitle = function()
+		{
+			return mxResources.get(&#039;default&#039;) + &#039; (&#039; + mxResources.get(Graph.getDefaultAdaptiveColorsKey()) + &#039;)&#039;;
+		};
+
+		defaultAdaptiveColors.setToggleAction(true);
+		defaultAdaptiveColors.setSelectedCallback(function() { return graph.adaptiveColors == null; });
+
+		var automaticAdaptiveColors = editorUi.actions.put(&#039;automaticAdaptiveColors&#039;, new Action(&#039;automatic&#039;, function()
+		{
+			var change = new ChangePageSetup(editorUi);
+			change.ignoreColor = true;
+			change.ignoreImage = true;
+			change.adaptiveColors = &#039;auto&#039;;
+			
+			graph.model.execute(change);
+		}));
+
+		automaticAdaptiveColors.setToggleAction(true);
+		automaticAdaptiveColors.setSelectedCallback(function() { return graph.adaptiveColors == &#039;auto&#039;; });
+
+		var simpleAdaptiveColors = editorUi.actions.put(&#039;simpleAdaptiveColors&#039;, new Action(&#039;simple&#039;, function()
+		{
+			var change = new ChangePageSetup(editorUi);
+			change.ignoreColor = true;
+			change.ignoreImage = true;
+			change.adaptiveColors = &#039;simple&#039;;
+			
+			graph.model.execute(change);
+		}));
+
+		simpleAdaptiveColors.setToggleAction(true);
+		simpleAdaptiveColors.setSelectedCallback(function() { return graph.adaptiveColors == &#039;simple&#039;; });
+
+		var noAdaptiveColors = editorUi.actions.put(&#039;noAdaptiveColors&#039;, new Action(&#039;none&#039;, function()
+		{
+			var change = new ChangePageSetup(editorUi);
+			change.ignoreColor = true;
+			change.ignoreImage = true;
+			change.adaptiveColors = &#039;none&#039;;
+			
+			graph.model.execute(change);
+		}));
+
+		noAdaptiveColors.setToggleAction(true);
+		noAdaptiveColors.setSelectedCallback(function() { return graph.adaptiveColors == &#039;none&#039;; });
+
+		this.put(&#039;adaptiveColors&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			this.addMenuItems(menu, [&#039;defaultAdaptiveColors&#039;, &#039;-&#039;,
+				&#039;automaticAdaptiveColors&#039;, &#039;simpleAdaptiveColors&#039;,
+				&#039;noAdaptiveColors&#039;], parent);
+		})));
+
+		if (isLocalStorage)
+		{
+			var action = editorUi.actions.addAction(&#039;showStartScreen&#039;, function()
+			{
+				mxSettings.setShowStartScreen(!mxSettings.getShowStartScreen());
+				urlParams[&#039;splash&#039;] = (mxSettings.getShowStartScreen()) ? &#039;1&#039; : &#039;0&#039;;
+				mxSettings.save();
+			});
+			
+			action.setToggleAction(true);
+			action.setSelectedCallback(function() { return mxSettings.getShowStartScreen(); });
+		}
+
+		var autosaveAction = editorUi.actions.addAction(&#039;autosave&#039;, function()
+		{
+			editorUi.editor.setAutosave(!editorUi.editor.autosave);
+		});
+		
+		autosaveAction.setToggleAction(true);
+		autosaveAction.setSelectedCallback(function()
+		{
+			return autosaveAction.isEnabled() &amp;&amp; editorUi.editor.autosave;
+		});
+		
+		editorUi.actions.addAction(&#039;editGeometry...&#039;, function()
+		{
+			var cells = graph.getSelectionCells();
+			var vertices = [];
+			
+			for (var i = 0; i &lt; cells.length; i++)
+			{
+				if (graph.getModel().isVertex(cells[i]))
+				{
+					vertices.push(cells[i]);
+				}
+			}
+			
+			if (vertices.length &gt; 0)
+			{
+				var dlg = new EditGeometryDialog(editorUi, vertices);
+				editorUi.showDialog(dlg.container, 200, 270, true, true);
+				dlg.init();
+			}
+		}, null, null, Editor.ctrlKey + &#039;+&#039; + Editor.shiftKey + &#039;+M&#039;);
+		
+		editorUi.actions.addAction(&#039;copyStyle&#039;, function()
+		{
+			if (graph.isEnabled() &amp;&amp; graph.getSelectionCount() == 1)
+			{
+				var cell = graph.getSelectionCell();
+				var style = graph.getCellStyle(cell, false);
+				editorUi.copiedStyle = {};
+				var values = [];
+				var keys = [];
+
+				for (var key in style)
+				{
+					values.push(style[key]);
+					keys.push(key);
+				}
+				
+				graph.copyCellStyles([cell], keys, values,
+					editorUi.copiedStyle, editorUi.copiedStyle,
+					null, null, null, true);
+			}
+		}, null, null,  Editor.altKey + &#039;+C&#039;);
+
+		editorUi.actions.addAction(&#039;pasteStyle&#039;, function()
+		{
+			if (graph.isEnabled() &amp;&amp; !graph.isSelectionEmpty() &amp;&amp; editorUi.copiedStyle != null)
+			{
+				graph.pasteCellStyles(graph.includeDescendants(graph.getSelectionCells()),
+					editorUi.copiedStyle, editorUi.copiedStyle, true);
+			}
+		}, null, null,  Editor.altKey + &#039;+V&#039;);
+		
+		editorUi.actions.put(&#039;exportSvg&#039;, new Action(&#039;formatSvg&#039; + &#039;...&#039;, function()
+		{
+			editorUi.showExportDialog(mxResources.get(&#039;formatSvg&#039;), true, mxResources.get(&#039;export&#039;),
+				&#039;https://www.drawio.com/doc/faq/export-diagram&#039;,
+				mxUtils.bind(this, function(scale, transparentBackground, ignoreSelection,
+					addShadow, editable, embedImages, border, cropImage, currentPage,
+					linkTarget, grid, theme, exportType, embedFonts)
+				{
+					var val = parseInt(scale);
+					editorUi.lastExportSvgEditable = editable;
+					
+					if (!isNaN(val) &amp;&amp; val &gt; 0)
+					{
+						editorUi.exportSvg(val / 100, transparentBackground, ignoreSelection,
+							addShadow, editable, embedImages, border, !cropImage, currentPage,
+							linkTarget, theme, exportType, embedFonts);
+					}
+				}), true, editorUi.lastExportSvgEditable, &#039;svg&#039;, true);
+		}));
+
+		function exportImage(format, defaultEditable, done)
+		{
+			if (editorUi.editor.isExportToCanvas())
+			{
+				editorUi.showExportDialog(mxResources.get(&#039;image&#039;), false, mxResources.get(&#039;export&#039;),
+					&#039;https://www.drawio.com/doc/faq/export-diagram&#039;,
+					mxUtils.bind(this, function(scale, transparentBackground, ignoreSelection, addShadow, editable,
+						embedImages, border, cropImage, currentPage, dummy, grid, theme, exportType)
+					{
+						var val = parseInt(scale);
+
+						if (!isNaN(val) &amp;&amp; val &gt; 0)
+						{
+							editorUi.exportImage(val / 100, transparentBackground &amp;&amp; format == &#039;png&#039;,
+								ignoreSelection, addShadow, editable &amp;&amp; format == &#039;png&#039;, border,
+								!cropImage, currentPage, format, grid, null, theme, exportType);
+
+							if (done != null)
+							{
+								done(scale, transparentBackground, ignoreSelection, addShadow,
+									editable, embedImages, border, cropImage, currentPage,
+									dummy, grid, theme, exportType);
+							}
+						}
+					}), true, defaultEditable, format, true);
+			}
+			else if (!editorUi.isOffline() &amp;&amp; (!mxClient.IS_IOS || !navigator.standalone))
+			{
+				editorUi.showRemoteExportDialog(mxResources.get(&#039;export&#039;), null, mxUtils.bind(this,
+					function(ignoreSelection, editable, transparent, scale, border)
+				{
+					editorUi.downloadFile((editable &amp;&amp; format == &#039;png&#039;) ? &#039;xmlpng&#039; : format,
+						null, null, ignoreSelection, null, null, transparent, scale, border);
+				}), false, true);
+			}
+		};
+		
+		editorUi.actions.put(&#039;exportPng&#039;, new Action(&#039;formatPng&#039; + &#039;...&#039;, function()
+		{
+			exportImage(&#039;png&#039;, editorUi.lastExportPngEditable, function(scale,
+				transparentBackground, ignoreSelection, addShadow, editable)
+			{
+				editorUi.lastExportPngEditable = editable;
+			});
+		}));
+		
+		editorUi.actions.put(&#039;exportJpg&#039;, new Action(&#039;formatJpg&#039; + &#039;...&#039;, function()
+		{
+			exportImage(&#039;jpeg&#039;);
+		}));
+		
+		editorUi.actions.put(&#039;exportWebp&#039;, new Action(&#039;formatWebp&#039; + &#039;...&#039;, function()
+		{
+			exportImage(&#039;webp&#039;);
+		}));
+
+		action = editorUi.actions.addAction(&#039;copyAsImage&#039;, mxUtils.bind(this, function()
+		{
+			var cells = mxUtils.sortCells(graph.model.getTopmostCells(graph.getSelectionCells()));
+			var xml = mxUtils.getXml((cells.length == 0) ? editorUi.editor.getGraphXml() : graph.encodeCells(cells));
+			editorUi.copyImage(cells, xml);
+		}), null, null, Editor.ctrlKey + &#039;+&#039; + Editor.altKey + &#039;+X&#039;);
+
+		action.visible = Editor.enableNativeClipboard &amp;&amp; editorUi.editor.isExportToCanvas();
+
+		action = editorUi.actions.addAction(&#039;copyAsSvg&#039;, mxUtils.bind(this, function()
+		{
+			var cells = mxUtils.sortCells(graph.model.getTopmostCells(graph.getSelectionCells()));
+			var xml = mxUtils.getXml((cells.length == 0) ? editorUi.editor.getGraphXml() : graph.encodeCells(cells));
+			editorUi.copySvg(cells, xml);
+		}), null, null, Editor.ctrlKey + &#039;+&#039; + Editor.altKey + &#039;+&#039; + Editor.shiftKey + &#039;+X&#039;);
+
+		action.visible = Editor.enableNativeClipboard &amp;&amp; editorUi.editor.isExportToCanvas();
+
+		action = editorUi.actions.put(&#039;shadowVisible&#039;, new Action(&#039;shadow&#039;, function()
+		{
+			graph.setShadowVisible(!graph.shadowVisible);
+		}));
+		action.setToggleAction(true);
+		action.setSelectedCallback(function() { return graph.shadowVisible; });
+
+		editorUi.actions.put(&#039;about&#039;, new Action(&#039;v&#039; + EditorUi.VERSION, function(arg1, evt)
+		{
+			if (editorUi.isOwnGDriveDomain() &amp;&amp; mxEvent.isShiftDown(evt))
+			{
+				if (urlParams[&#039;test&#039;] == &#039;1&#039;)
+				{
+					EditorUi.debug(&#039;Debug output disabled&#039;);
+					urlParams[&#039;test&#039;] = &#039;0&#039;;
+				}
+				else
+				{
+					urlParams[&#039;test&#039;] = &#039;1&#039;;
+					EditorUi.debug(&#039;Debug output enabled&#039;);
+				}
+			}
+		}));
+		
+		editorUi.actions.addAction(&#039;support...&#039;, function()
+		{
+			if (EditorUi.isElectronApp)
+			{
+				editorUi.openLink(&#039;https://github.com/jgraph/drawio-desktop/wiki/Getting-Support&#039;);
+			}
+			else
+			{
+				editorUi.openLink(&#039;https://github.com/jgraph/drawio/wiki/Getting-Support&#039;);
+			}
+		});
+
+		editorUi.actions.addAction(&#039;downloadDesktop...&#039;, function()
+		{
+			editorUi.openLink(&#039;https://get.diagrams.net/&#039;);
+		});
+
+		editorUi.actions.addAction(&#039;exportOptionsDisabled...&#039;, function()
+		{
+			editorUi.handleError({message: mxResources.get(&#039;exportOptionsDisabledDetails&#039;)},
+				mxResources.get(&#039;exportOptionsDisabled&#039;));
+		});
+
+		editorUi.actions.addAction(&#039;keyboardShortcuts...&#039;, function()
+		{
+			if (!mxClient.IS_CHROMEAPP &amp;&amp;
+				!EditorUi.isElectronApp &amp;&amp;
+				!navigator.standalone)
+			{
+				editorUi.openLink(&#039;shortcuts.svg&#039;);
+			}
+			else
+			{
+				editorUi.openLink(&#039;https://app.diagrams.net/shortcuts.svg&#039;);
+			}
+		});
+		
+		editorUi.actions.addAction(&#039;quickStart...&#039;, function()
+		{
+			if (&#039;ac.draw.io&#039; === window.location.hostname)
+			{
+				editorUi.openLink(&#039;https://www.youtube.com/watch?v=s5BG0705MHU&#039;);
+			}
+			else
+			{
+				editorUi.openLink(&#039;https://www.youtube.com/watch?v=Z0D96ZikMkc&#039;);
+			}
+		});
+		
+		action = editorUi.actions.addAction(&#039;tags&#039;, mxUtils.bind(this, function()
+		{
+			if (this.tagsWindow == null)
+			{
+				this.tagsWindow = new TagsWindow(editorUi, document.body.offsetWidth - 400, 60, 212, 200);
+				this.tagsWindow.window.addListener(&#039;show&#039;, mxUtils.bind(this, function()
+				{
+					editorUi.fireEvent(new mxEventObject(&#039;tags&#039;));
+				}));
+				this.tagsWindow.window.addListener(&#039;hide&#039;, function()
+				{
+					editorUi.fireEvent(new mxEventObject(&#039;tags&#039;));
+				});
+				this.tagsWindow.window.setVisible(true);
+				editorUi.fireEvent(new mxEventObject(&#039;tags&#039;));
+			}
+			else
+			{
+				this.tagsWindow.window.setVisible(!this.tagsWindow.window.isVisible());
+			}
+		}), null, null, Editor.ctrlKey + &#039;+K&#039;);
+		action.setToggleAction(true);
+		action.setSelectedCallback(mxUtils.bind(this, function() { return this.tagsWindow != null &amp;&amp; this.tagsWindow.window.isVisible(); }));
+
+		if (Editor.gptApiKey != null &amp;&amp; Editor.gptModel != null &amp;&amp; Editor.gptUrl != null &amp;&amp;
+			!editorUi.isOffline() &amp;&amp; !EditorUi.isElectronApp)
+		{
+			action = editorUi.actions.addAction(&#039;chatWindowTitle&#039;, mxUtils.bind(this, function()
+			{
+				if (this.chatWindow == null)
+				{
+					this.chatWindow = new ChatWindow(editorUi, 220, document.body.offsetHeight - 380, 250, 320);
+					this.chatWindow.window.addListener(&#039;show&#039;, mxUtils.bind(this, function()
+					{
+						editorUi.fireEvent(new mxEventObject(&#039;chat&#039;));
+					}));
+					this.chatWindow.window.addListener(&#039;hide&#039;, function()
+					{
+						editorUi.fireEvent(new mxEventObject(&#039;chat&#039;));
+					});
+					this.chatWindow.window.setVisible(true);
+					editorUi.fireEvent(new mxEventObject(&#039;chat&#039;));
+				}
+				else
+				{
+					this.chatWindow.window.setVisible(!this.chatWindow.window.isVisible());
+				}
+			}));
+			action.setToggleAction(true);
+			action.setSelectedCallback(mxUtils.bind(this, function() { return this.chatWindow != null &amp;&amp; this.chatWindow.window.isVisible(); }));
+		}
+
+		action = editorUi.actions.addAction(&#039;findReplace&#039;, mxUtils.bind(this, function(arg1, evt)
+		{
+			editorUi.showSearchWindow(graph.isEnabled() &amp;&amp; (evt == null || !mxEvent.isShiftDown(evt)));
+		}), null, null, Editor.ctrlKey + &#039;+F&#039;);
+		
+		var exportVsdxAction = new Action(&#039;exportVsdx&#039;, function()
+		{
+			var noPages = editorUi.pages == null || editorUi.pages.length &lt;= 1;
+			
+			if (noPages)
+			{
+				editorUi.exportVisio();
+			}
+			else
+			{
+				var div = document.createElement(&#039;div&#039;);
+				div.style.whiteSpace = &#039;nowrap&#039;;
+
+				var hd = document.createElement(&#039;h3&#039;);
+				mxUtils.write(hd, mxResources.get(&#039;formatVsdx&#039;));
+				hd.style.cssText = &#039;width:100%;text-align:center;margin-top:0px;margin-bottom:4px&#039;;
+				div.appendChild(hd);
+				
+				var pages = editorUi.addCheckbox(div, mxResources.get(&#039;allPages&#039;), !noPages, noPages);
+				pages.style.marginBottom = &#039;16px&#039;;
+				
+				var dlg = new CustomDialog(editorUi, div, mxUtils.bind(this, function()
+				{
+					editorUi.exportVisio(!pages.checked);
+				}), null, mxResources.get(&#039;export&#039;));
+				
+				editorUi.showDialog(dlg.container, 300, 130, true, true);
+			}
+		});
+
+		exportVsdxAction.getTitle = function()
+		{
+			return mxResources.get(&#039;formatVsdx&#039;) + &#039; (beta)...&#039;;
+		};
+
+		editorUi.actions.put(&#039;exportVsdx&#039;, exportVsdxAction);
+
+		if (isLocalStorage &amp;&amp; localStorage != null &amp;&amp; urlParams[&#039;embed&#039;] != &#039;1&#039;)
+		{
+			editorUi.actions.addAction(&#039;configuration...&#039;, function()
+			{
+				// Moves show start screen option to configuration dialog in sketch
+				var splashCb = document.createElement(&#039;input&#039;);
+				splashCb.setAttribute(&#039;type&#039;, &#039;checkbox&#039;);
+				splashCb.style.marginRight = &#039;8px&#039;;
+				splashCb.checked = mxSettings.getShowStartScreen();
+				splashCb.defaultChecked = splashCb.checked;
+
+				if (Editor.isSettingsEnabled() &amp;&amp; (Editor.currentTheme == &#039;sketch&#039; ||
+					Editor.currentTheme == &#039;simple&#039; || Editor.currentTheme == &#039;min&#039;))
+				{
+					var showSplash = document.createElement(&#039;span&#039;);
+					showSplash.style.display = &#039;flex&#039;;
+					showSplash.style.alignItems = &#039;center&#039;;
+					showSplash.style.cssFloat = &#039;right&#039;;
+					showSplash.style.cursor = &#039;pointer&#039;;
+					showSplash.style.userSelect = &#039;none&#039;;
+					showSplash.style.marginTop = &#039;-3px&#039;;
+					showSplash.appendChild(splashCb);
+					mxUtils.write(showSplash, mxResources.get(&#039;showStartScreen&#039;));
+
+					mxEvent.addListener(showSplash, &#039;click&#039;, function(evt)
+					{
+						if (mxEvent.getSource(evt) != splashCb)
+						{	
+							splashCb.checked = !splashCb.checked;
+						}
+					});
+
+					header = showSplash;
+				}
+				
+				var buttons = [[mxResources.get(&#039;reset&#039;), function()
+				{
+					editorUi.confirm(mxResources.get(&#039;areYouSure&#039;), function()
+					{
+						try
+						{
+							localStorage.removeItem(Editor.configurationKey);
+							editorUi.hideDialog();
+							editorUi.alert(mxResources.get(&#039;restartForChangeRequired&#039;));
+						}
+						catch (e)
+						{
+							editorUi.handleError(e);
+						}
+					});
+				}]];
+				
+				if (!editorUi.isOfflineApp() &amp;&amp; isLocalStorage &amp;&amp; editorUi.mode != App.MODE_ATLAS)
+				{
+					var pluginsAction = editorUi.actions.get(&#039;plugins&#039;);
+
+					if (pluginsAction != null &amp;&amp; (Editor.currentTheme == &#039;sketch&#039; ||
+						Editor.currentTheme == &#039;simple&#039; || Editor.currentTheme == &#039;min&#039;))
+					{
+						// TODO: Show change message only when plugins have changed
+						buttons.push([mxResources.get(&#039;plugins&#039;), pluginsAction.funct]);
+					}
+				}
+				
+				if (!EditorUi.isElectronApp)
+				{
+					buttons.push([mxResources.get(&#039;link&#039;), function(evt, input)
+					{
+						if (input.value.length &gt; 0)
+						{
+							try
+							{
+								var obj = JSON.parse(input.value);
+								var url = window.location.protocol + &#039;//&#039; + window.location.host +
+									&#039;/&#039; + editorUi.getSearch() + &#039;#_CONFIG_&#039; +
+									Graph.compress(JSON.stringify(obj));
+								var dlg = new EmbedDialog(editorUi, url);
+								editorUi.showDialog(dlg.container, 450, 240, true);
+								dlg.init();
+							}
+							catch (e)
+							{
+								editorUi.handleError(e);	
+							}
+						}
+						else
+						{
+							editorUi.handleError({message: mxResources.get(&#039;invalidInput&#039;)});
+						}
+					}])
+				}
+
+				if (editorUi.getServiceName() != &#039;atlassian&#039; &amp;&amp; urlParams[&#039;embed&#039;] != &#039;1&#039;)
+				{
+					buttons.push([mxResources.get(&#039;preferences&#039;), function()
+					{
+						editorUi.showLocalStorageDialog(mxResources.get(&#039;preferences&#039;) + &#039;:&#039;, Editor.settingsKey,
+							[[mxResources.get(&#039;reset&#039;), function()
+							{
+								editorUi.confirm(mxResources.get(&#039;areYouSure&#039;), function()
+								{
+									try
+									{
+										localStorage.removeItem(Editor.settingsKey);
+										localStorage.removeItem(&#039;.drawio-config&#039;);
+										editorUi.hideDialog();
+										editorUi.alert(mxResources.get(&#039;restartForChangeRequired&#039;));
+									}
+									catch (e)
+									{
+										editorUi.handleError(e);
+									}
+								});
+							}]]);
+					}]);
+				}
+				
+				editorUi.showLocalStorageDialog(mxResources.get(&#039;configuration&#039;) + &#039;:&#039;, Editor.configurationKey,
+					buttons, splashCb.parentNode, &#039;https://www.drawio.com/doc/faq/configure-diagram-editor&#039;,
+					function()
+					{
+						if (splashCb.parentNode != null)
+						{
+							mxSettings.setShowStartScreen(splashCb.checked);
+							mxSettings.save();
+						}
+					});
+			});
+		}
+		
+		// Adds language menu to options only if localStorage is available for
+		// storing the choice. We do not want to use cookies for older browsers.
+		// Note that the URL param lang=XX is available for setting the language
+		// in older browsers. URL param has precedence over the saved setting.
+		if (mxClient.IS_CHROMEAPP || isLocalStorage)
+		{
+			this.put(&#039;language&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+			{
+				var currentLanguage = mxLanguage;
+
+				if (urlParams[&#039;lang&#039;] == null &amp;&amp; isLocalStorage)
+				{
+					currentLanguage = mxSettings.settings.language;
+				}
+				
+				var addLangItem = mxUtils.bind(this, function (id)
+				{
+					var lang = (id == &#039;&#039;) ? mxResources.get(&#039;automatic&#039;) : mxLanguageMap[id];
+					var item = null;
+					
+					if (lang != &#039;&#039;)
+					{
+						item = menu.addItem(lang, null, mxUtils.bind(this, function()
+						{
+							editorUi.setAndPersistLanguage(id);
+						}), parent);
+						
+						if (id == currentLanguage || (id == &#039;&#039; &amp;&amp; currentLanguage == null))
+						{
+							menu.addCheckmark(item, Editor.checkmarkImage);
+						}
+					}
+					
+					return item;
+				});
+				
+				addLangItem(&#039;&#039;);
+				menu.addSeparator(parent);
+
+				// LATER: Sort menu by language name
+				for(var langId in mxLanguageMap) 
+				{
+					addLangItem(langId);
+				}
+			})));
+		}
+		
+		editorUi.customLayoutConfig = [{&#039;layout&#039;: &#039;mxHierarchicalLayout&#039;,
+			&#039;config&#039;:
+			{&#039;orientation&#039;: &#039;west&#039;,
+			&#039;intraCellSpacing&#039;: 30,
+			&#039;interRankCellSpacing&#039;: 100,
+			&#039;interHierarchySpacing&#039;: 60,
+			&#039;parallelEdgeSpacing&#039;: 10}}];
+		
+		// Adds action for running layouts
+		editorUi.actions.addAction(&#039;runLayout&#039;, function()
+		{
+	    	editorUi.showCustomLayoutDialog(JSON.stringify(
+				editorUi.customLayoutConfig, null, 2));
+		});
+
+		// Adds action for removing user-defined colors
+		editorUi.actions.put(&#039;adaptiveColors&#039;, new Action(&#039;adaptiveColors&#039;, function(evt)
+		{
+			if (editorUi.adaptiveColorsWindow == null)
+			{
+				editorUi.adaptiveColorsWindow = new AdaptiveColorsWindow(
+					editorUi, document.body.offsetWidth - 520, 80, 200, 160);
+			}
+
+			editorUi.adaptiveColorsWindow.window.setVisible(true);
+		}));
+
+		// Adds fullscreen toggle to zoom menu in sketch and min
+        var viewZoomMenu = this.get(&#039;viewZoom&#039;);
+		var viewZoomMenuFunct = viewZoomMenu.funct;
+		
+		viewZoomMenu.funct = mxUtils.bind(this, function(menu, parent)
+		{
+			viewZoomMenuFunct.apply(this, arguments);
+			
+			if (Editor.currentTheme == &#039;sketch&#039; || Editor.currentTheme == &#039;min&#039;)
+			{
+				this.addMenuItems(menu, [&#039;-&#039;, &#039;outline&#039;, &#039;fullscreen&#039;], parent);
+			}
+		});
+		
+		var layoutMenu = this.get(&#039;layout&#039;);
+		var layoutMenuFunct = layoutMenu.funct;
+		
+		layoutMenu.funct = function(menu, parent)
+		{
+			layoutMenuFunct.apply(this, arguments);
+
+			menu.addItem(mxResources.get(&#039;orgChart&#039;), null, function()
+			{
+				var branchOptimizer = null, parentChildSpacingVal = 20, siblingSpacingVal = 20;
+				
+				// Invoked when orgchart code was loaded
+				var delayed = function()
+				{
+					if (typeof mxOrgChartLayout !== &#039;undefined&#039; &amp;&amp; branchOptimizer != null)
+					{
+						editorUi.tryAndHandle(mxUtils.bind(this, function()
+						{
+							var graph = editorUi.editor.graph;
+							var orgChartLayout = new mxOrgChartLayout(graph,
+								branchOptimizer, parentChildSpacingVal, siblingSpacingVal);
+							var cell = graph.getDefaultParent();
+							
+							if (graph.model.getChildCount(graph.getSelectionCell()) &gt; 1)
+							{
+								cell = graph.getSelectionCell();
+							}
+							
+							orgChartLayout.execute(cell);
+						}));
+					}
+				};
+
+				var div = document.createElement(&#039;div&#039;);
+				
+				var title = document.createElement(&#039;div&#039;);
+				title.style.marginTop = &#039;6px&#039;;
+				title.style.display = &#039;inline-block&#039;;
+				title.style.width = &#039;180px&#039;;
+				mxUtils.write(title, mxResources.get(&#039;orgChartType&#039;) + &#039;: &#039;);
+				
+				div.appendChild(title);
+				
+				var typeSelect = document.createElement(&#039;select&#039;);
+				typeSelect.style.width = &#039;160px&#039;;
+				typeSelect.style.boxSizing = &#039;border-box&#039;;
+				
+				//Types are hardcoded here since the code is not loaded yet
+				var typesArr = [mxResources.get(&#039;linear&#039;),
+					mxResources.get(&#039;hanger2&#039;),
+					mxResources.get(&#039;hanger4&#039;),
+					mxResources.get(&#039;fishbone1&#039;),
+					mxResources.get(&#039;fishbone2&#039;),
+					mxResources.get(&#039;1ColumnLeft&#039;),
+					mxResources.get(&#039;1ColumnRight&#039;),
+					mxResources.get(&#039;smart&#039;)
+				];
+				
+				for (var i = 0; i &lt; typesArr.length; i++)
+				{
+					var option = document.createElement(&#039;option&#039;);
+					mxUtils.write(option, typesArr[i]);
+					option.value = i;
+					
+					if (i == 2)
+					{
+						option.setAttribute(&#039;selected&#039;, &#039;selected&#039;);
+					}
+					
+					typeSelect.appendChild(option);
+				}
+					
+				mxEvent.addListener(typeSelect, &#039;change&#039;, function()
+				{
+					branchOptimizer = typeSelect.value;
+				});
+				
+				div.appendChild(typeSelect);
+				
+				title = document.createElement(&#039;div&#039;);
+				title.style.marginTop = &#039;6px&#039;;
+				title.style.display = &#039;inline-block&#039;;
+				title.style.width = &#039;180px&#039;;
+				mxUtils.write(title, mxResources.get(&#039;parentChildSpacing&#039;) + &#039;: &#039;);
+				div.appendChild(title);
+				
+				var parentChildSpacing = document.createElement(&#039;input&#039;);
+				parentChildSpacing.type = &#039;number&#039;;
+				parentChildSpacing.value = parentChildSpacingVal;
+				parentChildSpacing.style.width = &#039;160px&#039;;
+				parentChildSpacing.style.boxSizing = &#039;border-box&#039;;
+				div.appendChild(parentChildSpacing);
+				
+				mxEvent.addListener(parentChildSpacing, &#039;change&#039;, function()
+				{
+					parentChildSpacingVal = parentChildSpacing.value;
+				});
+				
+				title = document.createElement(&#039;div&#039;);
+				title.style.marginTop = &#039;6px&#039;;
+				title.style.display = &#039;inline-block&#039;;
+				title.style.width = &#039;180px&#039;;
+				mxUtils.write(title, mxResources.get(&#039;siblingSpacing&#039;) + &#039;: &#039;);
+				div.appendChild(title);
+				
+				var siblingSpacing = document.createElement(&#039;input&#039;);
+				siblingSpacing.type = &#039;number&#039;;
+				siblingSpacing.value = siblingSpacingVal;
+				siblingSpacing.style.width = &#039;160px&#039;;
+				siblingSpacing.style.boxSizing = &#039;border-box&#039;;
+				div.appendChild(siblingSpacing);
+				
+				mxEvent.addListener(siblingSpacing, &#039;change&#039;, function()
+				{
+					siblingSpacingVal = siblingSpacing.value;
+				});
+
+				var customBtn = mxUtils.button(mxResources.get(&#039;custom&#039;) + &#039;...&#039;, function()
+				{
+					var value = [{layout: &#039;mxOrgChartLayout&#039;,
+						config: {
+							branchOptimizer: parseInt(typeSelect.value),
+							parentChildSpacing: parseInt(parentChildSpacing.value),
+							siblingSpacing: parseInt(siblingSpacing.value)
+						}
+					}];
+
+					editorUi.hideDialog();
+					editorUi.showCustomLayoutDialog(
+						JSON.stringify(value, null, 2));
+				});
+				
+				customBtn.className = &#039;geBtn&#039;;
+
+				var dlg = new CustomDialog(editorUi, div, function()
+				{
+					if (branchOptimizer == null)
+					{
+						branchOptimizer = 2;
+					}
+					
+					editorUi.loadOrgChartLayouts(delayed);
+				}, null, null, null, customBtn);
+
+				editorUi.showDialog(dlg.container, 355, 140, true, true);
+			}, parent, null, isGraphEnabled());
+			
+			menu.addSeparator(parent);
+			
+			menu.addItem(mxResources.get(&#039;parallels&#039;), null, mxUtils.bind(this, function()
+			{
+				editorUi.tryAndHandle(mxUtils.bind(this, function()
+				{
+					var layout = new mxParallelEdgeLayout(graph);
+					layout.checkOverlap = true;
+
+					editorUi.prompt(mxResources.get(&#039;spacing&#039;), layout.spacing, mxUtils.bind(this, function(newValue)
+					{
+						editorUi.tryAndHandle(mxUtils.bind(this, function()
+						{
+							layout.spacing = newValue;
+
+							editorUi.executeLayout(function()
+							{
+								layout.execute(graph.getDefaultParent(), (!graph.isSelectionEmpty()) ?
+									graph.getSelectionCells() : null);
+							}, false);
+						}));
+					}));
+				}));
+			}), parent);
+			
+			menu.addSeparator(parent);
+			editorUi.menus.addMenuItem(menu, &#039;runLayout&#039;, parent, null, null, mxResources.get(&#039;custom&#039;) + &#039;...&#039;);
+		};
+		
+		this.put(&#039;help&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			if (!mxClient.IS_CHROMEAPP &amp;&amp; (editorUi.isOffline() || navigator.standalone))
+			{
+				this.addMenuItems(menu, [&#039;keyboardShortcuts&#039;, &#039;-&#039;, &#039;about&#039;], parent);
+			}
+			else
+			{
+				// No translation for menu item since help is english only
+				var item = menu.addItem(mxResources.get(&#039;search&#039;) + &#039;:&#039;,
+					null, null, parent, null, null, false);
+				item.style.cursor = &#039;default&#039;;
+				
+				var input = document.createElement(&#039;input&#039;);
+				input.setAttribute(&#039;type&#039;, &#039;text&#039;);
+				input.setAttribute(&#039;size&#039;, &#039;25&#039;);
+				input.style.borderWidth = &#039;1px&#039;;
+				input.style.marginLeft = &#039;8px&#039;;
+
+				mxEvent.addListener(input, &#039;keydown&#039;, mxUtils.bind(this, function(e)
+				{
+					var term = mxUtils.trim(input.value);
+					
+					if (e.keyCode == 13 &amp;&amp; term.length &gt; 0)
+					{
+						this.editorUi.searchHelp(term);
+						input.value = &#039;&#039;;
+						
+						window.setTimeout(mxUtils.bind(this, function()
+						{
+							this.editorUi.hideCurrentMenu();
+						}), 0);
+					}
+	                else if (e.keyCode == 27)
+	                {
+	                    input.value = &#039;&#039;;
+	                }
+				}));
+				
+				item.firstChild.nextSibling.appendChild(input);
+				
+				mxEvent.addGestureListeners(input, function(evt)
+				{
+					if (document.activeElement != input)
+					{
+						input.focus();
+					}
+					
+					mxEvent.consume(evt);
+				}, function(evt)
+				{
+					mxEvent.consume(evt);
+				}, function(evt)
+				{
+					mxEvent.consume(evt);
+				});
+				
+				window.setTimeout(function()
+				{
+					input.focus();
+				}, 0);
+
+				if (EditorUi.isElectronApp)
+				{
+					editorUi.actions.addAction(&#039;website...&#039;, function()
+					{
+						editorUi.openLink(&#039;https://www.drawio.com&#039;);
+					});
+					
+					editorUi.actions.addAction(&#039;check4Updates&#039;, function()
+					{
+						editorUi.checkForUpdates();
+					});
+
+					editorUi.actions.put(&#039;desktopZoomIn&#039;, new Action(&#039;zoomIn&#039;, function()
+					{
+						editorUi.desktopZoomIn();
+					}));
+
+					editorUi.actions.put(&#039;desktopZoomOut&#039;, new Action(&#039;zoomOut&#039;, function()
+					{
+						editorUi.desktopZoomOut();
+					}));
+
+					editorUi.actions.put(&#039;desktopResetZoom&#039;, new Action(&#039;actualSize&#039;, function()
+					{
+						editorUi.desktopResetZoom();
+					}));
+
+					this.addMenuItems(menu, [&#039;-&#039;, &#039;keyboardShortcuts&#039;, &#039;quickStart&#039;,
+						&#039;website&#039;, &#039;support&#039;, &#039;-&#039;], parent);
+
+					if (urlParams[&#039;disableUpdate&#039;] != &#039;1&#039;)
+					{
+						this.addMenuItems(menu, [&#039;check4Updates&#039;, &#039;-&#039;], parent);
+					}
+
+					this.addMenuItems(menu, [&#039;desktopResetZoom&#039;, &#039;desktopZoomIn&#039;,
+						&#039;desktopZoomOut&#039;, &#039;-&#039;, &#039;openDevTools&#039;, &#039;-&#039;, &#039;about&#039;], parent);
+				}
+				else
+				{
+					this.addMenuItems(menu, [&#039;-&#039;, &#039;keyboardShortcuts&#039;,
+						&#039;quickStart&#039;, &#039;downloadDesktop&#039;, &#039;support&#039;, &#039;-&#039;,
+						&#039;about&#039;], parent);
+				}
+			}
+			
+			if (urlParams[&#039;test&#039;] == &#039;1&#039;)
+			{
+				menu.addSeparator(parent);
+				this.addSubmenu(&#039;testDevelop&#039;, menu, parent);
+			}
+		})));
+		
+		editorUi.actions.addAction(&#039;languageCode...&#039;, function()
+		{
+			var lang = Graph.diagramLanguage || &#039;&#039;;
+					
+			var dlg = new FilenameDialog(editorUi, lang, mxResources.get(&#039;ok&#039;),
+				mxUtils.bind(this, function(newLang)
+			{
+				if (newLang != null)
+				{
+					Graph.diagramLanguage = (newLang.length &gt; 0) ? newLang : null;
+					Graph.translateDiagram = true;
+					graph.refresh();
+				}
+			}), mxResources.get(&#039;languageCode&#039;), null, null,
+				&#039;https://www.drawio.com/blog/translate-diagrams&#039;);
+			editorUi.showDialog(dlg.container, 340, 80, true, true);
+			dlg.init();
+		});
+		
+		this.put(&#039;diagramLanguage&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			this.addMenuItems(menu, [&#039;languageCode&#039;, &#039;-&#039;], parent);
+
+			var item = menu.addItem(mxResources.get(&#039;disabled&#039;), null, function()
+			{
+				Graph.translateDiagram = false;
+				graph.refresh();
+			}, parent);
+
+			if (!Graph.translateDiagram)
+			{
+				menu.addCheckmark(item, Editor.checkmarkImage);
+			}
+		})));
+
+		// Only visible in test mode
+		if (urlParams[&#039;test&#039;] == &#039;1&#039;)
+		{
+			mxResources.parse(&#039;testDevelop=Develop&#039;);
+			mxResources.parse(&#039;showBoundingBox=Show bounding box&#039;);
+			mxResources.parse(&#039;createSidebarEntry=Create Sidebar Entry&#039;);
+			mxResources.parse(&#039;testCheckFile=Check File&#039;);
+			mxResources.parse(&#039;testDiff=Diff/Sync&#039;);
+			mxResources.parse(&#039;testChecksum=Checksum&#039;);
+			mxResources.parse(&#039;testCheckPages=Check Pages&#039;);
+			mxResources.parse(&#039;testFixPages=Fix Pages&#039;);
+			mxResources.parse(&#039;testInspect=Inspect&#039;);
+			mxResources.parse(&#039;testShowConsole=Show Console&#039;);
+			mxResources.parse(&#039;testXmlImageExport=XML Image Export&#039;);
+			mxResources.parse(&#039;testOptimize=Remove Inline Images&#039;);
+			mxResources.parse(&#039;testPerformance=Performance&#039;);
+
+			editorUi.actions.addAction(&#039;createSidebarEntry&#039;, mxUtils.bind(this, function()
+			{
+				if (!graph.isSelectionEmpty())
+				{
+					var cells = graph.cloneCells(graph.getSelectionCells());
+					var bbox = graph.getBoundingBoxFromGeometry(cells, true);
+					cells = graph.moveCells(cells, -bbox.x, -bbox.y);
+					
+					editorUi.showTextDialog(&#039;Create Sidebar Entry&#039;, &#039;this.addDataEntry(\&#039;tag1 tag2\&#039;, &#039; +
+						bbox.width + &#039;, &#039; + bbox.height + &#039;, \&#039;The Title\&#039;, \&#039;&#039; +
+						Graph.compress(mxUtils.getXml(graph.encodeCells(cells))) + &#039;\&#039;),&#039;);
+				}
+			}));
+	
+			editorUi.actions.addAction(&#039;showBoundingBox&#039;, mxUtils.bind(this, function()
+			{
+				var b = (graph.isSelectionEmpty()) ? graph.getGraphBounds() :
+					graph.getBoundingBox(graph.getSelectionCells());
+				var tr = graph.view.translate;
+				var s = graph.view.scale;
+				graph.insertVertex(graph.getDefaultParent(), null, &#039;&#039;,
+					b.x / s - tr.x, b.y / s - tr.y, b.width / s, b.height / s,
+					&#039;fillColor=none;strokeColor=red;&#039;);
+
+				// Checking bounding boxes
+				function checkBounds(shape)
+				{
+					return shape == null || shape.boundingBox == null || (!isNaN(shape.boundingBox.x) &amp;&amp;
+						!isNaN(shape.boundingBox.y) &amp;&amp; !isNaN(shape.boundingBox.width) &amp;&amp;
+						!isNaN(shape.boundingBox.height));
+				};
+
+				var invalid = 0;
+				var count = 0;
+
+				graph.view.states.visit(function(id, state)
+				{
+					var valid = true;
+
+					if (!checkBounds(state.shape))
+					{
+						console.log(&#039;invalid shape&#039;, state.cell.id, state.shape);
+						valid = false;
+					}
+
+					if (!checkBounds(state.text))
+					{
+						console.log(&#039;invalid text&#039;, state.cell.id, state.text);
+						valid = false;
+					}
+
+					if (!valid)
+					{
+						invalid++;
+					}
+
+					count++;
+				});
+
+				console.log(&#039;states checked&#039;, count, &#039;invalid&#039;, invalid);
+			}));
+	
+			editorUi.actions.addAction(&#039;testCheckFile&#039;, mxUtils.bind(this, function()
+			{
+				var xml = (editorUi.pages != null &amp;&amp; editorUi.getCurrentFile() != null) ?
+					editorUi.getCurrentFile().getAnonymizedXmlForPages(editorUi.pages) : &#039;&#039;;
+
+		    	var dlg = new TextareaDialog(editorUi, &#039;Paste Data:&#039;, xml,
+		    		function(newValue)
+				{
+					if (newValue.length &gt; 0)
+					{
+						try
+						{
+							if (newValue.charAt(0) != &#039;&lt;&#039;)
+							{
+								newValue = Graph.decompress(newValue);
+								mxLog.debug(&#039;See console for uncompressed XML&#039;);
+								console.log(&#039;xml&#039;, newValue);
+							}
+							
+							var doc = mxUtils.parseXml(newValue);
+							var pages = editorUi.getPagesForNode(doc.documentElement, &#039;mxGraphModel&#039;);
+							
+							if (pages != null &amp;&amp; pages.length &gt; 0)
+							{
+								try
+								{
+									var checksum = editorUi.getHashValueForPages(pages);
+									mxLog.debug(&#039;Checksum: &#039;, checksum);
+								}
+								catch (e)
+								{
+									mxLog.debug(&#039;Error: &#039;, e.message);
+								}
+							}
+							else
+							{
+								mxLog.debug(&#039;No pages found for checksum&#039;);
+							}
+
+							// Checks for duplicates
+							function checkModel(node)
+							{
+								var pageId = node.parentNode.id;
+								var all = node.childNodes;
+								var allIds = {};
+								var childs = {};
+								var root = null;
+								var dups = {};
+								
+								for (var i = 0; i &lt; all.length; i++)
+								{
+									var el = all[i];
+									
+									if (el.id != null &amp;&amp; el.id.length &gt; 0)
+									{
+										if (allIds[el.id] == null)
+										{
+											allIds[el.id] = el.id;
+											var pid = el.getAttribute(&#039;parent&#039;);
+											
+											if (pid == null)
+											{
+												if (root != null)
+												{
+													mxLog.debug(pageId + &#039;: Multiple roots: &#039; + el.id);
+												}
+												else
+												{
+													root = el.id;
+												}
+											}
+											else
+											{
+												if (childs[pid] == null)
+												{
+													childs[pid] = [];
+												}
+												
+												childs[pid].push(el.id);
+											}
+										}
+										else
+										{
+											dups[el.id] = el.id;
+										}
+									}
+								}
+
+								var keys = Object.keys(dups);
+								
+								if (keys.length &gt; 0)
+								{
+									var log = pageId + &#039;: &#039; + keys.length +
+										&#039; Duplicates: &#039; + keys.join(&#039;, &#039;);
+									mxLog.debug(log + &#039; (see console)&#039;);
+								}
+								else
+								{
+									mxLog.debug(pageId + &#039;: Checked&#039;);
+								}
+								
+								// Checks tree for cycles
+								var visited = {};
+								
+								function visit(id)
+								{
+									if (visited[id] == null)
+									{
+										visited[id] = true;
+										
+										if (childs[id] != null)
+										{
+											while (childs[id].length &gt; 0)
+											{
+												var temp = childs[id].pop();
+												visit(temp);
+											}
+											
+											delete childs[id];
+										}
+									}
+									else
+									{
+										mxLog.debug(pageId + &#039;: Visited: &#039; + id);
+									}
+								};
+								
+								if (root == null)
+								{
+									mxLog.debug(pageId + &#039;: No root&#039;);
+								}
+								else
+								{
+									visit(root);
+									
+									if (Object.keys(visited).length != Object.keys(allIds).length)
+									{
+										mxLog.debug(pageId + &#039;: Invalid tree: (see console)&#039;);
+										console.log(pageId + &#039;: Invalid tree&#039;, childs);
+									}
+								}
+							};
+							
+							var roots = doc.getElementsByTagName(&#039;root&#039;);
+							
+							for (var i = 0; i &lt; roots.length; i++)
+							{
+								checkModel(roots[i]);
+							}
+							
+							mxLog.show();
+						}
+						catch (e)
+						{
+							editorUi.handleError(e);
+							
+							if (window.console != null)
+							{
+								console.error(e);
+							}
+						}
+					}
+				});
+		    	
+				editorUi.showDialog(dlg.container, 620, 460, true, true);
+				dlg.init();
+			}));
+	
+			var snapshot = null;
+			
+			editorUi.actions.addAction(&#039;testDiff&#039;, mxUtils.bind(this, function()
+			{
+				if (editorUi.pages != null)
+				{
+					var buttons = [[&#039;Snapshot&#039;, function(evt, input)
+					{
+						snapshot = editorUi.getPagesForXml(editorUi.getFileData(true));
+						dlg.textarea.value = &#039;Snapshot updated &#039; + new Date().toLocaleString() +
+							&#039; Checksum &#039; + editorUi.getHashValueForPages(snapshot);
+					}], [&#039;Diff&#039;, function(evt, input)
+					{
+						try
+						{
+							dlg.textarea.value = JSON.stringify(editorUi.diffPages(
+								snapshot, editorUi.pages), null, 2);
+						}
+						catch (e)
+						{
+							editorUi.handleError(e);
+						}
+					}]];
+					
+			    	var dlg = new TextareaDialog(editorUi, &#039;Diff/Sync:&#039;, &#039;&#039;,
+			    		function(newValue)
+					{
+						var file = editorUi.getCurrentFile();
+						
+						if (newValue.length &gt; 0 &amp;&amp; file != null)
+						{
+							try
+							{
+								var patch = JSON.parse(newValue);
+								file.patch([patch], null, true, true);
+								editorUi.hideDialog();
+							}
+							catch (e)
+							{
+								editorUi.handleError(e);
+							}
+						}
+					}, null, &#039;Close&#039;, null, null, null, true, null, &#039;Patch&#039;, null, buttons);
+			    	
+					if (snapshot == null)
+					{
+						snapshot = editorUi.getPagesForXml(editorUi.getFileData(true));
+						dlg.textarea.value = &#039;Snapshot created &#039; + new Date().toLocaleString() +
+							&#039; Checksum &#039; + editorUi.getHashValueForPages(snapshot);
+					}
+					else
+					{
+						dlg.textarea.value = JSON.stringify(editorUi.diffPages(
+							snapshot, editorUi.pages), null, 2);
+					}
+					
+					editorUi.showDialog(dlg.container, 620, 460, true, true);
+					dlg.init();
+				}
+				else
+				{
+					editorUi.alert(&#039;No pages&#039;);
+				}
+			}));
+
+			editorUi.actions.addAction(&#039;testChecksum&#039;, mxUtils.bind(this, function()
+			{
+				var file = editorUi.getCurrentFile();
+
+				if (editorUi.pages != null &amp;&amp; file != null)
+				{
+					if (editorUi.spinner.spin(document.body, mxResources.get(&#039;loading&#039;)))
+					{
+						file.getLatestVersion(function(latestFile)
+						{
+							editorUi.spinner.stop();
+
+							var localChecksum = editorUi.getHashValueForPages(editorUi.pages);
+							var localRev = file.getCurrentRevisionId();
+							var remoteChecksum = editorUi.getHashValueForPages(
+								latestFile.getShadowPages());
+							var descChecksum = latestFile.getDescriptorChecksum(
+								latestFile.getDescriptor());
+							var remoteRev = latestFile.getCurrentRevisionId();
+							
+							console.log(&#039;Local File&#039;, [file],
+								&#039;modified&#039;, file.isModified(),
+								&#039;checksum&#039;, localChecksum);
+							
+							console.log(&#039;Remote File&#039;, [latestFile],
+								&#039;rev&#039;, remoteRev == localRev,
+								&#039;desc&#039;, descChecksum == remoteChecksum,
+								&#039;checksum&#039;, remoteChecksum);
+							
+							editorUi.alert(&#039;Checksums &#039; +
+								(remoteChecksum == localChecksum ?
+								&#039;match&#039; : &#039;no not match&#039;));
+						}, function(err)
+						{
+							console.log(&#039;Error getLatestVersion&#039;, err);
+							editorUi.handleError(err);
+						});
+					}
+				}
+				else
+				{
+					console.log(&#039;Checksum: no file or pages&#039;);
+				}
+			}));
+
+			editorUi.actions.addAction(&#039;testCheckPages&#039;, mxUtils.bind(this, function()
+			{
+				var file = editorUi.getCurrentFile();
+				console.log(&#039;editorUi&#039;, editorUi, &#039;file&#039;, file);
+
+				if (file != null &amp;&amp; file.isRealtime())
+				{
+					console.log(&#039;Checksum ownPages&#039;,
+						editorUi.getHashValueForPages(
+							file.ownPages));
+					console.log(&#039;Checksum theirPages&#039;,
+						editorUi.getHashValueForPages(
+							file.theirPages));
+					console.log(&#039;diff ownPages/theirPages&#039;,
+						editorUi.diffPages(file.ownPages,
+							file.theirPages));
+
+					var shadow = file.getShadowPages();
+					
+					if (shadow != null)
+					{
+						console.log(&#039;Checksum shadowPages&#039;,
+							editorUi.getHashValueForPages(shadow));
+						console.log(&#039;diff shadowPages/ownPages&#039;,
+							editorUi.diffPages(shadow, file.ownPages));
+						console.log(&#039;diff ownPages/shadowPages&#039;,
+							editorUi.diffPages(file.ownPages, shadow));
+						console.log(&#039;diff theirPages/shadowPages&#039;,
+							editorUi.diffPages(file.theirPages, shadow));
+					}
+
+					if (file.sync != null &amp;&amp; file.sync.snapshot != null)
+					{
+						console.log(&#039;Checksum snapshot&#039;,
+							editorUi.getHashValueForPages(
+								file.sync.snapshot));
+						console.log(&#039;diff ownPages/snapshot&#039;,
+							editorUi.diffPages(file.ownPages,
+								file.sync.snapshot));
+						console.log(&#039;diff theirPages/snapshot&#039;,
+							editorUi.diffPages(file.theirPages,
+								file.sync.snapshot));
+
+						if (editorUi.pages != null)
+						{
+							console.log(&#039;diff snapshot/actualPages&#039;,
+								editorUi.diffPages(file.sync.snapshot,
+									editorUi.pages));
+						}
+					}
+
+					if (editorUi.pages != null)
+					{
+						console.log(&#039;diff ownPages/actualPages&#039;,
+							editorUi.diffPages(file.ownPages,
+								editorUi.pages));
+						console.log(&#039;diff theirPages/actualPages&#039;,
+							editorUi.diffPages(file.theirPages,
+								editorUi.pages));
+					}
+				}
+
+				if (file != null)
+				{
+					console.log(&#039;Shadow pages&#039;,
+						[editorUi.getXmlForPages(
+							file.getShadowPages())]);
+				}
+
+				if (editorUi.pages != null)
+				{
+					console.log(&#039;Checksum actualPages&#039;,
+						editorUi.getHashValueForPages(
+							editorUi.pages));
+				}
+			}));
+			
+			editorUi.actions.addAction(&#039;testFixPages&#039;, mxUtils.bind(this, function()
+			{
+				console.log(&#039;editorUi&#039;, editorUi);
+				var file = editorUi.getCurrentFile();
+
+				if (file != null &amp;&amp; file.isRealtime() &amp;&amp;
+					file.shadowPages != null)
+				{
+					console.log(&#039;patching actualPages to shadowPages&#039;,
+						file.patch([editorUi.diffPages(
+							file.shadowPages, editorUi.pages)]));
+					file.ownPages = editorUi.clonePages(editorUi.pages);
+					file.theirPages = editorUi.clonePages(editorUi.pages);
+					file.shadowPages = editorUi.clonePages(editorUi.pages);
+
+					if (file.sync != null)
+					{
+						file.sync.snapshot = editorUi.clonePages(editorUi.pages);
+					}
+				}
+			}));
+
+			editorUi.actions.addAction(&#039;testOptimize&#039;, mxUtils.bind(this, function()
+			{
+				graph.model.beginUpdate();
+				try
+				{
+					var all = graph.model.cells;
+					var imageCount = 0;
+					var images = [];
+					var cells = [];
+
+					for (var id in all)
+					{
+						var cell = all[id];
+						var style = graph.getCurrentCellStyle(cell);
+						var image = style[mxConstants.STYLE_IMAGE];
+
+						if (image != null &amp;&amp; image.substring(0, 5) == &#039;data:&#039;)
+						{
+							if (images[image] == null)
+							{
+								images[image] = (images[image] || 0) + 1;
+								imageCount++;
+							}
+
+							cells.push(cell);
+						}
+					}
+
+					graph.setCellStyles(mxConstants.STYLE_IMAGE, null, cells);
+					console.log(&#039;Removed&#039;, imageCount, &#039;image(s) from&#039;, cells.length, &#039;cell(s): &#039;, [cells, images]);
+				}
+				finally
+				{
+					graph.model.endUpdate();
+				}
+			}));
+	
+			editorUi.actions.addAction(&#039;testInspect&#039;, mxUtils.bind(this, function()
+			{
+				console.log(editorUi, graph.getModel());
+			}));
+			
+			editorUi.actions.addAction(&#039;testXmlImageExport&#039;, mxUtils.bind(this, function()
+			{
+				var scale = 1;
+				var b = 1;
+				
+				var imgExport = new mxImageExport();
+				var bounds = graph.getGraphBounds();
+				var vs = graph.view.scale;
+				
+	        	// New image export
+				var xmlDoc = mxUtils.createXmlDocument();
+				var root = xmlDoc.createElement(&#039;output&#039;);
+				xmlDoc.appendChild(root);
+				
+			    // Renders graph. Offset will be multiplied with state&#039;s scale when painting state.
+				var xmlCanvas = new mxXmlCanvas2D(root);
+				xmlCanvas.translate(Math.floor((b / scale - bounds.x) / vs),
+					Math.floor((b / scale - bounds.y) / vs));
+				xmlCanvas.scale(scale / vs);
+				
+				var stateCounter = 0;
+				
+				var canvasSave = xmlCanvas.save;
+				xmlCanvas.save = function()
+				{
+					stateCounter++;
+					canvasSave.apply(this, arguments);
+				};
+				
+				var canvasRestore = xmlCanvas.restore;
+				xmlCanvas.restore = function()
+				{
+					stateCounter--;
+					canvasRestore.apply(this, arguments);
+				};
+				
+				var exportDrawShape = imgExport.drawShape;
+				imgExport.drawShape = function(state)
+				{
+					mxLog.debug(&#039;entering shape&#039;, state, stateCounter);
+					exportDrawShape.apply(this, arguments);
+					mxLog.debug(&#039;leaving shape&#039;, state, stateCounter);
+				};
+				
+			    imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
+			    
+				// Puts request data together
+				var w = Math.ceil(bounds.width * scale / vs + 2 * b);
+				var h = Math.ceil(bounds.height * scale / vs + 2 * b);
+				
+				mxLog.show();
+				mxLog.debug(mxUtils.getXml(root));
+				mxLog.debug(&#039;stateCounter&#039;, stateCounter);
+			}));
+
+			editorUi.actions.addAction(&#039;testShowConsole&#039;, function()
+			{
+				if (!mxLog.isVisible())
+				{
+					mxLog.show();
+				}
+				else
+				{
+					mxLog.window.fit();
+				}
+				
+				mxLog.window.div.style.zIndex = mxPopupMenu.prototype.zIndex - 2;
+			});
+			
+
+			// Adds logging for performance
+			var prevRevalidate = null;
+			var prevSelectPage = null;
+			var prevDiffPages = null;
+			var prevPatchPages = null;
+			var prevClonePages = null;
+			var prevGetFileData = null;
+			var prevGetHashValueForPages = null;
+			var prevResolveCrossReferences = null;
+
+			editorUi.actions.addAction(&#039;testPerformance&#039;, mxUtils.bind(this, function()
+			{
+				if (prevRevalidate != null)
+				{
+					graph.view.revalidate = prevRevalidate;
+					prevRevalidate = null;
+				}
+				else
+				{
+					prevRevalidate = graph.view.revalidate;
+
+					graph.view.revalidate = function()
+					{
+						var t0 = Date.now();
+						var result = prevRevalidate.apply(this, arguments);
+						EditorUi.debug(&#039;[Performance] mxGraphView.revalidate&#039;,
+							[this], &#039;time&#039;, (Date.now() - t0) + &#039; ms&#039;,
+							&#039;args&#039;, arguments);
+						
+						return result;
+					};
+				}
+
+				if (prevSelectPage != null)
+				{
+					editorUi.selectPage = prevSelectPage;
+					prevSelectPage = null;
+				}
+				else
+				{
+					prevSelectPage = editorUi.selectPage;
+
+					editorUi.selectPage = function()
+					{
+						var t0 = Date.now();
+						var result = prevSelectPage.apply(this, arguments);
+						EditorUi.debug(&#039;[Performance] EditorUi.selectPage&#039;,
+							[this], &#039;time&#039;, (Date.now() - t0) + &#039; ms&#039;,
+							&#039;args&#039;, arguments);
+						
+						return result;
+					};
+				}
+
+				if (prevDiffPages != null)
+				{
+					editorUi.diffPages = prevDiffPages;
+					prevDiffPages = null;
+				}
+				else
+				{
+					prevDiffPages = editorUi.diffPages;
+
+					editorUi.diffPages = function()
+					{
+						var t0 = Date.now();
+						var result = prevDiffPages.apply(this, arguments);
+						EditorUi.debug(&#039;[Performance] EditorUi.diffPages&#039;,
+							[this], &#039;time&#039;, (Date.now() - t0) + &#039; ms&#039;,
+							&#039;args&#039;, arguments);
+						
+						return result;
+					};
+				}
+
+				if (prevPatchPages != null)
+				{
+					editorUi.patchPages = prevPatchPages;
+					prevPatchPages = null;
+				}
+				else
+				{
+					prevPatchPages = editorUi.patchPages;
+
+					editorUi.patchPages = function()
+					{
+						var t0 = Date.now();
+						var result = prevPatchPages.apply(this, arguments);
+						EditorUi.debug(&#039;[Performance] EditorUi.patchPages&#039;,
+							[this], &#039;time&#039;, (Date.now() - t0) + &#039; ms&#039;,
+							&#039;args&#039;, arguments);
+						
+						return result;
+					};
+				};
+
+				if (prevClonePages != null)
+				{
+					editorUi.clonePages = prevClonePages;
+					prevClonePages = null;
+				}
+				else
+				{
+					prevClonePages = editorUi.clonePages;
+
+					editorUi.clonePages = function()
+					{
+						var t0 = Date.now();
+						var result = prevClonePages.apply(this, arguments);
+						EditorUi.debug(&#039;[Performance] EditorUi.clonePages&#039;,
+							[this], &#039;time&#039;, (Date.now() - t0) + &#039; ms&#039;,
+							&#039;args&#039;, arguments);
+						
+						return result;
+					};
+				};
+
+				if (prevGetHashValueForPages != null)
+				{
+					editorUi.getHashValueForPages = prevGetHashValueForPages;
+					prevGetHashValueForPages = null;
+				}
+				else
+				{
+					prevGetHashValueForPages = editorUi.getHashValueForPages;
+
+					editorUi.getHashValueForPages = function()
+					{
+						var t0 = Date.now();
+						var result = prevGetHashValueForPages.apply(this, arguments);
+						EditorUi.debug(&#039;[Performance] EditorUi.getHashValueForPages&#039;,
+							[this], &#039;time&#039;, (Date.now() - t0) + &#039; ms&#039;,
+							&#039;args&#039;, arguments);
+						
+						return result;
+					};
+				}
+
+				if (prevResolveCrossReferences != null)
+				{
+					editorUi.resolveCrossReferences = prevResolveCrossReferences;
+					prevResolveCrossReferences = null;
+				}
+				else
+				{
+					prevResolveCrossReferences = editorUi.resolveCrossReferences;
+
+					editorUi.resolveCrossReferences = function()
+					{
+						var t0 = Date.now();
+						var result = prevResolveCrossReferences.apply(this, arguments);
+						EditorUi.debug(&#039;[Performance] EditorUi.resolveCrossReferences&#039;,
+							[this], &#039;time&#039;, (Date.now() - t0) + &#039; ms&#039;,
+							&#039;args&#039;, arguments);
+
+						return result;
+					};
+				}
+
+				if (prevGetFileData != null)
+				{
+					editorUi.getFileData = prevGetFileData;
+					prevGetFileData = null;
+				}
+				else
+				{
+					prevGetFileData = editorUi.getFileData;
+
+					editorUi.getFileData = function()
+					{
+						var t0 = Date.now();
+						var result = prevGetFileData.apply(this, arguments);
+						EditorUi.debug(&#039;[Performance] EditorUi.getFileData&#039;,
+							[this], &#039;time&#039;, (Date.now() - t0) + &#039; ms&#039;,
+							&#039;args&#039;, arguments);
+
+						return result;
+					};
+				}
+
+				EditorUi.debug(&#039;[Performance]&#039;, (prevRevalidate != null) ? &#039;Enabled&#039; : &#039;Disabled&#039;);
+			}));
+
+			this.put(&#039;testDevelop&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+			{
+				this.addMenuItems(menu, [&#039;createSidebarEntry&#039;, &#039;showBoundingBox&#039;, &#039;-&#039;,
+					&#039;testCheckPages&#039;, &#039;testChecksum&#039;, &#039;testFixPages&#039;, &#039;-&#039;,
+					&#039;testCheckFile&#039;, &#039;testDiff&#039;, &#039;-&#039;, &#039;testInspect&#039;, &#039;testOptimize&#039;, &#039;-&#039;,
+					&#039;testXmlImageExport&#039;, &#039;-&#039;], parent);
+
+				var item = menu.addItem(mxResources.get(&#039;testPerformance&#039;), null, function()
+				{
+					editorUi.actions.get(&#039;testPerformance&#039;).funct();
+				}, parent);
+				
+				if (prevRevalidate != null)
+				{
+					menu.addCheckmark(item, Editor.checkmarkImage);
+				}
+
+				this.addMenuItems(menu, [&#039;-&#039;, &#039;testShowConsole&#039;], parent);
+			})));
+		}
+		
+		editorUi.actions.put(&#039;shapes&#039;, new Action(&#039;moreShapes&#039; + &#039;...&#039;, function(evt)
+		{
+			if (mxClient.IS_CHROMEAPP || !editorUi.isOffline())
+			{
+				editorUi.showDialog(new MoreShapesDialog(editorUi, true).container, 640, (isLocalStorage) ?
+						((mxClient.IS_IOS) ? 480 : 460) : 440, true, true);
+			}
+			else
+			{
+				editorUi.showDialog(new MoreShapesDialog(editorUi, false).container, 360, (isLocalStorage) ?
+						((mxClient.IS_IOS) ? 300 : 280) : 260, true, true);
+			}
+		}));
+
+		editorUi.actions.put(&#039;createShape&#039;, new Action(&#039;shape&#039; + &#039;...&#039;, function(evt)
+		{
+			if (graph.isEnabled())
+			{
+				var cell = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 120), editorUi.defaultCustomShapeStyle);
+				cell.vertex = true;
+			
+		    	var dlg = new EditShapeDialog(editorUi, cell, mxResources.get(&#039;editShape&#039;) + &#039;:&#039;, 630, 400);
+				editorUi.showDialog(dlg.container, 640, 480, true, false);
+				dlg.init();
+			}
+		})).isEnabled = isGraphEnabled;
+		
+		if (!editorUi.isOffline())
+		{
+			if (urlParams[&#039;embed&#039;] != &#039;1&#039;)
+			{
+				editorUi.actions.put(&#039;embedNotion&#039;, new Action(&#039;notion&#039; + &#039;...&#039;, function()
+				{
+					var footer = document.createElement(&#039;div&#039;);
+					footer.style.position = &#039;absolute&#039;;
+					footer.style.bottom = &#039;30px&#039;;
+					footer.style.textAlign = &#039;center&#039;;
+					footer.style.width = &#039;100%&#039;;
+					footer.style.left = &#039;0px&#039;;
+					var link = document.createElement(&#039;a&#039;);
+					link.setAttribute(&#039;href&#039;, &#039;javascript:void(0);&#039;);
+					link.setAttribute(&#039;target&#039;, &#039;_blank&#039;);
+					link.style.cursor = &#039;pointer&#039;;
+					mxUtils.write(link, mxResources.get(&#039;getNotionChromeExtension&#039;));
+					footer.appendChild(link);
+					
+					mxUtils.setPrefixedStyle(link.style, &#039;transition&#039;, &#039;all 1s ease&#039;);
+					mxUtils.setOpacity(link, 0);
+
+					window.setTimeout(function()
+					{
+						mxUtils.setOpacity(link, 100);
+					}, 300);
+					
+					mxEvent.addListener(link, &#039;click&#039;, function(evt)
+					{
+						editorUi.openLink(&#039;https://chrome.google.com/webstore/detail/drawio-for-notion/plhaalebpkihaccllnkdaokdoeaokmle&#039;);
+						mxEvent.consume(evt);
+					});
+					
+					editorUi.getPublicUrl(editorUi.getCurrentFile(), function(publicUrl)
+					{
+						editorUi.showPublishLinkDialog(mxResources.get(&#039;notion&#039;), null, null, true,
+							&#039;https://www.drawio.com/blog/drawio-notion&#039;, footer, publicUrl, editorUi.getCurrentFile(),
+							function(linkTarget, linkColor, currentPage, lightbox, editLink, layers, width, height,
+								tags, link, transparent, darkMode)
+							{
+								var params = [&#039;border=0&#039;];
+
+								if (tags)
+								{
+									params.push(&#039;tags=%7B%7D&#039;);
+								}
+
+								var dlg = new EmbedDialog(editorUi, editorUi.createLink(linkTarget, linkColor,
+									true, lightbox, editLink, layers, (link == &#039;public&#039;) ? publicUrl : null,
+									null, params, null, currentPage, null, darkMode));
+								editorUi.showDialog(dlg.container, 450, 240, true, true);
+								dlg.init();
+							}, null, true);
+					});
+				}));
+
+				editorUi.actions.addAction(&#039;microsoftOffice...&#039;, function()
+				{
+					editorUi.openLink(&#039;https://office.draw.io&#039;);
+				});
+			}
+
+			editorUi.actions.put(&#039;embedHtml&#039;, new Action(&#039;html&#039; + &#039;...&#039;, function()
+			{
+				editorUi.getPublicUrl(editorUi.getCurrentFile(), function(url)
+				{
+					editorUi.showHtmlDialog(mxResources.get(&#039;create&#039;), &#039;https://www.drawio.com/doc/faq/embed-html-options&#039;,
+						url, function(publicUrl, zoomEnabled, initialZoom, linkTarget, linkColor, fit, allPages, layers, tags,
+							lightbox, editLink, theme)
+					{
+						editorUi.createHtml(publicUrl, zoomEnabled, initialZoom, linkTarget, linkColor, fit, allPages,
+							layers, tags, lightbox, editLink, mxUtils.bind(this, function(html, scriptTag)
+							{
+								// Comment is workaround for file data check in checkFileContent for Electron
+								var dlg = new EmbedDialog(editorUi, &#039;&lt;!-- &#039; + editorUi.editor.appName + &#039; diagram --&gt;\n&#039; +
+									html + &#039;\n&#039; + scriptTag + &#039;\n&#039;, null, null, function()
+								{
+									try
+									{
+										var wnd = window.open();
+										
+										if (wnd != null &amp;&amp; wnd.document != null)
+										{
+											var doc = wnd.document;
+
+											if (document.compatMode === &#039;CSS1Compat&#039;)
+											{
+												doc.writeln(&#039;&lt;!DOCTYPE html&gt;&#039;);
+											}
+											
+											doc.writeln(&#039;&lt;html&gt;&#039;);
+											doc.writeln(&#039;&lt;head&gt;&lt;title&gt;&#039; + encodeURIComponent(mxResources.get(&#039;preview&#039;)) +
+												&#039;&lt;/title&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;/head&gt;&#039;);
+											doc.writeln(&#039;&lt;body&gt;&#039;);
+											doc.writeln(html);
+											
+											var direct = mxClient.IS_IE || mxClient.IS_EDGE || document.documentMode != null;
+											
+											if (direct)
+											{
+												doc.writeln(scriptTag);
+											}
+											
+											doc.writeln(&#039;&lt;/body&gt;&#039;);
+											doc.writeln(&#039;&lt;/html&gt;&#039;);
+											doc.close();
+											
+											// Adds script tag after closing page and delay to fix timing issues
+											if (!direct)
+											{
+												var info = wnd.document.createElement(&#039;div&#039;);
+												info.marginLeft = &#039;26px&#039;;
+												info.marginTop = &#039;26px&#039;;
+												mxUtils.write(info, mxResources.get(&#039;updatingDocument&#039;));
+
+												var img = wnd.document.createElement(&#039;img&#039;);
+												img.setAttribute(&#039;src&#039;, window.location.protocol + &#039;//&#039; + window.location.hostname +
+													&#039;/&#039; + IMAGE_PATH + &#039;/spin.gif&#039;);
+												img.style.marginLeft = &#039;6px&#039;;
+												info.appendChild(img);
+												
+												wnd.document.body.insertBefore(info, wnd.document.body.firstChild);
+												
+												window.setTimeout(function()
+												{
+													var script = document.createElement(&#039;script&#039;);
+													script.type = &#039;text/javascript&#039;;
+													script.src = /&lt;script.*?src=&quot;(.*?)&quot;/.exec(scriptTag)[1];
+													doc.body.appendChild(script);
+													
+													info.parentNode.removeChild(info);
+												}, 20);
+											}
+										}
+										else
+										{
+											editorUi.handleError({message: mxResources.get(&#039;errorUpdatingPreview&#039;)});
+										}
+									}
+									catch (e)
+									{
+										editorUi.handleError(e);
+									}
+								});
+								editorUi.showDialog(dlg.container, 450, 240, true, true);
+								dlg.init();
+							}), theme);
+					});
+				});
+			}));
+			
+			editorUi.actions.put(&#039;liveImage&#039;, new Action(&#039;Live image...&#039;, function()
+			{
+				var current = editorUi.getCurrentFile();
+				
+				if (current != null)
+				{
+					editorUi.getPublicUrl(current, function(url)
+					{
+						if (url != null)
+						{
+							var dlg = new EmbedDialog(editorUi, &#039;&lt;img src=&quot;&#039; + ((current.constructor != DriveFile) ?
+								url : &#039;https://drive.google.com/uc?id=&#039; + current.getId()) + &#039;&quot;/&gt;&#039;);
+							editorUi.showDialog(dlg.container, 450, 240, true, true);
+							dlg.init();
+						}
+						else
+						{
+							editorUi.handleError({message: mxResources.get(&#039;invalidPublicUrl&#039;)});
+						}
+					});
+				}
+			}));
+			
+			editorUi.actions.put(&#039;embedImage&#039;, new Action(&#039;image&#039; + &#039;...&#039;, function()
+			{
+				editorUi.showEmbedImageDialog(function(fit, shadow, retina, lightbox, editLink, layers)
+				{
+					if (editorUi.spinner.spin(document.body, mxResources.get(&#039;loading&#039;)))
+					{
+						editorUi.createEmbedImage(fit, shadow, retina, lightbox, editLink, layers, function(result)
+						{
+							editorUi.spinner.stop();
+							var dlg = new EmbedDialog(editorUi, result);
+							editorUi.showDialog(dlg.container, 450, 240, true, true);
+							dlg.init();
+						}, function(err)
+						{
+							editorUi.spinner.stop();
+							editorUi.handleError(err);
+						});
+					}
+				}, mxResources.get(&#039;image&#039;), mxResources.get(&#039;retina&#039;), editorUi.editor.isExportToCanvas());
+			}));
+
+			editorUi.actions.put(&#039;embedSvg&#039;, new Action(&#039;formatSvg&#039; + &#039;...&#039;, function()
+			{
+				editorUi.showEmbedImageDialog(function(fit, shadow, image, lightbox, editLink, layers)
+				{
+					if (editorUi.spinner.spin(document.body, mxResources.get(&#039;loading&#039;)))
+					{
+						editorUi.createEmbedSvg(fit, shadow, image, lightbox, editLink, layers, function(result)
+						{
+							editorUi.spinner.stop();
+							
+							var dlg = new EmbedDialog(editorUi, result);
+							editorUi.showDialog(dlg.container, 450, 240, true, true);
+							dlg.init();
+						}, function(err)
+						{
+							editorUi.spinner.stop();
+							editorUi.handleError(err);
+						});
+					}
+				}, mxResources.get(&#039;formatSvg&#039;), mxResources.get(&#039;image&#039;),
+					true, &#039;https://www.drawio.com/doc/faq/embed-svg.html&#039;);
+			}));
+			
+			editorUi.actions.put(&#039;embedIframe&#039;, new Action(&#039;iframe&#039; + &#039;...&#039;, function()
+			{
+				editorUi.getPublicUrl(editorUi.getCurrentFile(), function(publicUrl)
+				{
+					var bounds = graph.getGraphBounds();
+					
+					editorUi.showPublishLinkDialog(mxResources.get(&#039;iframe&#039;), &#039;100%&#039;,
+						Math.ceil(Math.max(100, bounds.height / graph.view.scale)) + 2, null, null, null,
+						publicUrl, editorUi.getCurrentFile(), function(linkTarget, linkColor,
+							currentPage, lightbox, editLink, layers, width, height, tags, link,
+							transparent, darkMode)
+						{
+							var params = [];
+
+							if (tags)
+							{
+								params.push(&#039;tags=%7B%7D&#039;);
+							}
+							
+							var dlg = new EmbedDialog(editorUi, &#039;&lt;iframe frameborder=&quot;0&quot; style=&quot;width:&#039; + width +
+								&#039;;height:&#039; + height + &#039;;&quot; src=&quot;&#039; + editorUi.createLink(linkTarget, linkColor,
+								true, lightbox, editLink, layers, (link == &#039;public&#039;) ? publicUrl : null,
+								null, params, null, currentPage, transparent, darkMode) + &#039;&quot;&#039; + ((transparent) ?
+								&#039; allowtransparency=&quot;true&quot;&#039; : &#039;&#039;) + &#039;&gt;&lt;/iframe&gt;&#039;);
+							editorUi.showDialog(dlg.container, 450, 240, true, true);
+							dlg.init();
+						}, true, true);
+				});
+			}));
+		}
+
+		editorUi.actions.put(&#039;publishLink&#039;, new Action(&#039;link&#039; + &#039;...&#039;, function()
+		{
+			editorUi.getPublicUrl(editorUi.getCurrentFile(), function(publicUrl)
+			{
+				editorUi.showPublishLinkDialog(null, null, null, null, null, null, publicUrl, editorUi.getCurrentFile(),
+					function(linkTarget, linkColor, currentPage, lightbox, editLink, layers, width, height,
+						tags, link, transparent, darkMode)
+					{
+						var params = [];
+
+						if (lightbox &amp;&amp; tags)
+						{
+							params.push(&#039;tags=%7B%7D&#039;);
+						}
+
+						var dlg = new EmbedDialog(editorUi, editorUi.createLink(linkTarget, linkColor,
+							true, lightbox, editLink, layers, (link == &#039;public&#039;) ? publicUrl : null,
+							null, params, null, currentPage, null, darkMode));
+						editorUi.showDialog(dlg.container, 450, 240, true, true);
+						dlg.init();
+					}, null, true);
+			});
+		}, null, null, null, !editorUi.isOffline()));
+
+		// Adds plugins menu item only if localStorage is available for storing the plugins
+		if (isLocalStorage || mxClient.IS_CHROMEAPP)
+		{
+			var action = editorUi.actions.addAction(&#039;scratchpad&#039;, function()
+			{
+				editorUi.toggleScratchpad();
+			});
+			
+			action.setToggleAction(true);
+			action.setSelectedCallback(function()
+			{
+				return editorUi.scratchpad != null;
+			});
+			
+			if (urlParams[&#039;plugins&#039;] != &#039;0&#039;)
+			{
+				editorUi.actions.addAction(&#039;plugins...&#039;, function()
+				{
+					editorUi.showDialog(new PluginsDialog(editorUi).container, 380, 240, true, false);
+				});
+			}
+		}
+
+		if (window.matchMedia &amp;&amp; document.getElementById(&#039;high-contrast-stylesheet&#039;) != null)
+		{
+			var action = editorUi.actions.addAction(&#039;highContrast&#039;, function()
+			{
+				editorUi.setAndPersistHighContrast(!editorUi.isHighContrast());
+			});
+			
+			action.setToggleAction(true);
+			action.setSelectedCallback(function()
+			{
+				return editorUi.isHighContrast();
+			});
+		}
+
+		var action = editorUi.actions.addAction(&#039;search&#039;, function()
+		{
+			if (editorUi.sidebar != null)
+			{
+				var visible = editorUi.sidebar.isEntryVisible(&#039;search&#039;);
+				editorUi.sidebar.showPalette(&#039;search&#039;, !visible);
+				
+				if (Editor.isSettingsEnabled())
+				{
+					mxSettings.settings.search = !visible;
+					mxSettings.save();
+				}
+			}
+		});
+		
+		action.label = mxResources.get(&#039;searchShapes&#039;);
+		action.setToggleAction(true);
+		action.setSelectedCallback(function() { return editorUi.sidebar != null &amp;&amp;
+			editorUi.sidebar.isEntryVisible(&#039;search&#039;); });
+
+		editorUi.actions.get(&#039;clearDefaultStyle&#039;).funct = function(exit)
+		{
+			if (graph.isEnabled())
+			{
+				editorUi.clearDefaultStyle();
+
+				if (Editor.sketchMode)
+				{
+					editorUi.setSketchMode(false);
+				}
+			}
+		};
+		
+		if (urlParams[&#039;embed&#039;] == &#039;1&#039;)
+		{
+			editorUi.actions.get(&#039;saveAs&#039;).setEnabled(false);
+			
+			editorUi.actions.get(&#039;save&#039;).funct = function(exit)
+			{
+				if (graph.isEditing())
+				{
+					graph.stopEditing();
+				}
+				
+				var data = (urlParams[&#039;pages&#039;] != &#039;0&#039; || (editorUi.pages != null &amp;&amp; editorUi.pages.length &gt; 1)) ?
+					editorUi.getFileData(true) : mxUtils.getXml(editorUi.editor.getGraphXml());
+				
+				if (urlParams[&#039;proto&#039;] == &#039;json&#039;)
+				{
+					var msg = editorUi.createLoadMessage(&#039;save&#039;);
+					msg.xml = data;
+					
+					if (exit === true &amp;&amp; (urlParams[&#039;saveAndExit&#039;] == &#039;1&#039; ||
+						urlParams[&#039;publishClose&#039;] == &#039;1&#039;))
+					{
+						msg.exit = true;
+					}
+					
+					data = JSON.stringify(msg);
+				}
+				
+				var parent = window.opener || window.parent;
+				parent.postMessage(data, &#039;*&#039;);
+				
+				if (urlParams[&#039;modified&#039;] != &#039;0&#039; &amp;&amp; urlParams[&#039;keepmodified&#039;] != &#039;1&#039;)
+				{
+					editorUi.editor.modified = false;
+					editorUi.clearStatus();
+				}
+				
+				//Add support to saving files if embedded mode is running with files
+				var file = editorUi.getCurrentFile();
+				
+				if (file != null &amp;&amp; file.constructor != EmbedFile &amp;&amp;
+					(file.constructor != LocalFile || file.mode != null))
+				{
+					editorUi.saveFile();
+				}
+			};
+	
+			var saveAndExitAction = editorUi.actions.addAction(&#039;saveAndExit&#039;, function()
+			{
+				if (urlParams[&#039;toSvg&#039;] == &#039;1&#039;)
+				{
+					editorUi.sendEmbeddedSvgExport();
+				}
+				else
+				{
+					editorUi.actions.get(&#039;save&#039;).funct(true);
+				}
+			}, null, null, Editor.ctrlKey + &#039;+S&#039;);
+			
+			saveAndExitAction.label = urlParams[&#039;publishClose&#039;] == &#039;1&#039; ?
+				mxResources.get(&#039;publish&#039;) : mxResources.get(&#039;saveAndExit&#039;);
+			
+			editorUi.actions.addAction(&#039;exit&#039;, function()
+			{
+				if (urlParams[&#039;embedInline&#039;] == &#039;1&#039;)
+				{
+					editorUi.sendEmbeddedSvgExport();
+				}
+				else
+				{
+					var fn = function()
+					{
+						editorUi.editor.modified = false;
+						var msg = (urlParams[&#039;proto&#039;] == &#039;json&#039;) ? JSON.stringify({event: &#039;exit&#039;,
+							modified: editorUi.editor.modified}) : &#039;&#039;;
+						var parent = window.opener || window.parent;
+						parent.postMessage(msg, &#039;*&#039;);
+					}
+					
+					if (!editorUi.editor.modified)
+					{
+						fn();
+					}
+					else
+					{
+						editorUi.confirm(mxResources.get(&#039;allChangesLost&#039;), null, fn,
+							mxResources.get(&#039;cancel&#039;), mxResources.get(&#039;discardChanges&#039;));
+					}
+				}
+			}, null, null, (urlParams[&#039;embedInline&#039;] == &#039;1&#039;) ? &#039;Escape&#039; : null);
+		}
+		
+		this.put(&#039;exportAs&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			if (editorUi.editor.isExportToCanvas())
+			{
+				this.addMenuItems(menu, [&#039;exportPng&#039;], parent);
+				
+				if (Editor.jpgSupported)
+				{
+					this.addMenuItems(menu, [&#039;exportJpg&#039;], parent);
+				}
+
+				if (Editor.webpSupported)
+				{
+					this.addMenuItems(menu, [&#039;exportWebp&#039;], parent);
+				}
+			}
+			
+			// Disabled for standalone mode in iOS because new tab cannot be closed
+			else if (!editorUi.isOffline() &amp;&amp; (!mxClient.IS_IOS || !navigator.standalone))
+			{
+				this.addMenuItems(menu, [&#039;exportPng&#039;, &#039;exportJpg&#039;], parent);
+			}
+			
+			this.addMenuItems(menu, [&#039;exportSvg&#039;, &#039;-&#039;], parent);
+			
+			// Redirects export to PDF to print in Chrome App
+			if (editorUi.isOffline() || editorUi.printPdfExport)
+			{
+				this.addMenuItems(menu, [&#039;exportPdf&#039;], parent);
+			}
+			// Disabled for standalone mode in iOS because new tab cannot be closed
+			else if (!editorUi.isOffline() &amp;&amp; (!mxClient.IS_IOS || !navigator.standalone))
+			{
+				this.addMenuItems(menu, [&#039;exportPdf&#039;], parent);
+			}
+
+			if (editorUi.vsdxExportEnabled() &amp;&amp; !mxClient.IS_IE &amp;&amp;
+				(typeof(VsdxExport) !== &#039;undefined&#039; || !editorUi.isOffline()))
+			{
+				this.addMenuItems(menu, [&#039;exportVsdx&#039;], parent);
+			}
+
+			this.addMenuItems(menu, [&#039;-&#039;, &#039;exportHtml&#039;, &#039;exportXml&#039;, &#039;exportUrl&#039;], parent);
+
+			if (!editorUi.isOffline())
+			{
+				menu.addSeparator(parent);
+				this.addMenuItem(menu, &#039;export&#039;, parent).firstChild.nextSibling.innerHTML = mxResources.get(&#039;advanced&#039;) + &#039;...&#039;;
+			}
+
+			if (!mxClient.IS_CHROMEAPP &amp;&amp; !EditorUi.isElectronApp &amp;&amp;
+				Editor.currentTheme == &#039;min&#039; &amp;&amp; !editorUi.isOffline())
+			{
+				this.addMenuItems(menu, [&#039;publishLink&#039;], parent);
+			}
+
+			if (editorUi.mode != App.MODE_ATLAS &amp;&amp; urlParams[&#039;extAuth&#039;] != &#039;1&#039; &amp;&amp;
+				(Editor.currentTheme == &#039;simple&#039; || Editor.currentTheme == &#039;sketch&#039; ||
+				Editor.currentTheme == &#039;min&#039;) &amp;&amp; !editorUi.isOffline())
+			{
+				menu.addSeparator(parent);
+				editorUi.menus.addSubmenu(&#039;embed&#039;, menu, parent);
+			}
+		})));
+
+		this.put(&#039;importFrom&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			var doImportFile = mxUtils.bind(this, function(data, mime, filename)
+			{
+				// Gets insert location
+				var view = graph.view;
+				var bds = graph.getGraphBounds();
+				var x = graph.snap(Math.ceil(Math.max(0, bds.x / view.scale - view.translate.x) + 4 * graph.gridSize));
+				var y = graph.snap(Math.ceil(Math.max(0, (bds.y + bds.height) / view.scale - view.translate.y) + 4 * graph.gridSize));
+
+				if (data.substring(0, 11) == &#039;data:image/&#039;)
+				{
+					editorUi.loadImage(data, mxUtils.bind(this, function(img)
+	    			{
+			    		var resizeImages = true;
+			    		
+			    		var doInsert = mxUtils.bind(this, function()
+			    		{
+		    				editorUi.resizeImage(img, data, mxUtils.bind(this, function(data2, w2, h2)
+	    	    			{
+	    		    			var s = (resizeImages) ? Math.min(1, Math.min(editorUi.maxImageSize / w2, editorUi.maxImageSize / h2)) : 1;
+	
+    							editorUi.importFile(data, mime, x, y, Math.round(w2 * s), Math.round(h2 * s), filename, function(cells)
+    							{
+    								editorUi.spinner.stop();
+    								graph.setSelectionCells(cells);
+    								graph.scrollCellToVisible(graph.getSelectionCell());
+    							});
+	    	    			}), resizeImages);
+			    		});
+			    		
+			    		if (data.length &gt; editorUi.resampleThreshold)
+			    		{
+			    			editorUi.confirmImageResize(function(doResize)
+	    					{
+	    						resizeImages = doResize;
+	    						doInsert();
+	    					});
+			    		}
+			    		else
+		    			{
+			    			doInsert();
+		    			}
+	    			}), mxUtils.bind(this, function()
+	    			{
+	    				editorUi.handleError({message: mxResources.get(&#039;cannotOpenFile&#039;)});
+	    			}));
+				}
+				else
+				{
+					editorUi.importFile(data, mime, x, y, 0, 0, filename, function(cells)
+					{
+						editorUi.spinner.stop();
+						graph.setSelectionCells(cells);
+						graph.scrollCellToVisible(graph.getSelectionCell());
+					});
+				}
+			});
+			
+			var getMimeType = mxUtils.bind(this, function(filename)
+			{
+				var mime = &#039;text/xml&#039;;
+				
+				if (/\.png$/i.test(filename))
+				{
+					mime = &#039;image/png&#039;;
+				}
+				else if (/\.jpe?g$/i.test(filename))
+				{
+					mime = &#039;image/jpg&#039;;
+				}
+				else if (/\.gif$/i.test(filename))
+				{
+					mime = &#039;image/gif&#039;;
+				}
+				else if (/\.pdf$/i.test(filename))
+				{
+					mime = &#039;application/pdf&#039;;
+				}
+				
+				return mime;
+			});
+			
+			function pickFileFromService(service)
+			{
+				// Drive requires special arguments for libraries and bypassing realtime
+				service.pickFile(function(id)
+				{
+					if (editorUi.spinner.spin(document.body, mxResources.get(&#039;loading&#039;)))
+					{
+						// NOTE The third argument in getFile says denyConvert to match
+						// the existing signature in the original DriveClient which has
+						// as slightly different semantic, but works the same way.
+						service.getFile(id, function(file)
+						{
+							var mime = (file.getData().substring(0, 11) == &#039;data:image/&#039;) ? getMimeType(file.getTitle()) : &#039;text/xml&#039;;
+							
+							// Imports SVG as images
+							if (/\.svg$/i.test(file.getTitle()) &amp;&amp; !editorUi.editor.isDataSvg(file.getData()))
+							{
+								file.setData(Editor.createSvgDataUri(file.getData()));
+								mime = &#039;image/svg+xml&#039;;
+							}
+							
+							doImportFile(file.getData(), mime, file.getTitle());
+						},
+						function(resp)
+						{
+							editorUi.handleError(resp, (resp != null) ? mxResources.get(&#039;errorLoadingFile&#039;) : null);
+						}, service == editorUi.drive);
+					}
+				}, true);
+			};
+		
+			if (typeof(google) != &#039;undefined&#039; &amp;&amp; typeof(google.picker) != &#039;undefined&#039;)
+			{
+				if (editorUi.drive != null)
+				{
+					// Requires special arguments for libraries and realtime
+					menu.addItem(mxResources.get(&#039;googleDrive&#039;) + &#039;...&#039;, null, function()
+					{
+						pickFileFromService(editorUi.drive);
+					}, parent);
+				}
+				else if (editorUi.isModeEnabled(App.MODE_GOOGLE))
+				{
+					menu.addItem(mxResources.get(&#039;googleDrive&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+					{
+						// do nothing
+					}, parent, null, false);
+				}
+			}
+
+			if (editorUi.isModeReady(App.MODE_ONEDRIVE))
+			{
+				menu.addItem(mxResources.get(&#039;oneDrive&#039;) + &#039;...&#039;, null, function()
+				{
+					pickFileFromService(editorUi.oneDrive);
+				}, parent);
+			}
+			else if (editorUi.isModeEnabled(App.MODE_ONEDRIVE))
+			{
+				menu.addItem(mxResources.get(&#039;oneDrive&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+				{
+					// do nothing
+				}, parent, null, false);
+			}
+
+			if (editorUi.isModeReady(App.MODE_DROPBOX))
+			{
+				menu.addItem(mxResources.get(&#039;dropbox&#039;) + &#039;...&#039;, null, function()
+				{
+					pickFileFromService(editorUi.dropbox);
+				}, parent);
+			}
+			else if (editorUi.isModeEnabled(App.MODE_DROPBOX))
+			{
+				menu.addItem(mxResources.get(&#039;dropbox&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+				{
+					// do nothing
+				}, parent, null, false);
+			}
+			
+			menu.addSeparator(parent);
+			
+			if (editorUi.isModeReady(App.MODE_GITHUB))
+			{
+				menu.addItem(mxResources.get(&#039;github&#039;) + &#039;...&#039;, null, function()
+				{
+					pickFileFromService(editorUi.gitHub);
+				}, parent);
+			}
+			
+			if (editorUi.isModeReady(App.MODE_GITLAB))
+			{
+				menu.addItem(mxResources.get(&#039;gitlab&#039;) + &#039;...&#039;, null, function()
+				{
+					pickFileFromService(editorUi.gitLab);
+				}, parent);
+			}
+
+			if (editorUi.isModeReady(App.MODE_TRELLO))
+			{
+				menu.addItem(mxResources.get(&#039;trello&#039;) + &#039;...&#039;, null, function()
+				{
+					pickFileFromService(editorUi.trello);
+				}, parent);
+			}
+			else if (editorUi.isModeEnabled(App.MODE_TRELLO))
+			{
+				menu.addItem(mxResources.get(&#039;trello&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+				{
+					// do nothing
+				}, parent, null, false);
+			}
+			
+			menu.addSeparator(parent);
+
+			if (isLocalStorage &amp;&amp; urlParams[&#039;browser&#039;] != &#039;0&#039;)
+			{
+				menu.addItem(mxResources.get(&#039;browser&#039;) + &#039;...&#039;, null, function()
+				{
+					editorUi.importLocalFile(false);
+				}, parent);
+			}
+
+			if (urlParams[&#039;noDevice&#039;] != &#039;1&#039;)
+			{
+				menu.addItem(mxResources.get(&#039;device&#039;) + &#039;...&#039;, null, function()
+				{
+					editorUi.importLocalFile(true);
+				}, parent);
+			}
+			
+			if (!editorUi.isOffline())
+			{
+				menu.addSeparator(parent);
+				
+				menu.addItem(mxResources.get(&#039;url&#039;) + &#039;...&#039;, null, function()
+				{
+					var dlg = new FilenameDialog(editorUi, &#039;&#039;, mxResources.get(&#039;import&#039;), function(fileUrl)
+					{
+						if (fileUrl != null &amp;&amp; fileUrl.length &gt; 0 &amp;&amp; editorUi.spinner.spin(document.body, mxResources.get(&#039;loading&#039;)))
+						{
+							var mime = (/(\.png)($|\?)/i.test(fileUrl)) ? &#039;image/png&#039; : &#039;text/xml&#039;;
+							
+							// Uses proxy to avoid CORS issues
+							editorUi.editor.loadUrl(PROXY_URL + &#039;?url=&#039; + encodeURIComponent(fileUrl), function(data)
+							{
+								doImportFile(data, mime, fileUrl);
+							},
+							function ()
+							{
+								editorUi.spinner.stop();
+								editorUi.handleError(null, mxResources.get(&#039;errorLoadingFile&#039;));
+							}, mime == &#039;image/png&#039;);
+						}
+					}, mxResources.get(&#039;url&#039;));
+					editorUi.showDialog(dlg.container, 300, 80, true, true);
+					dlg.init();
+				}, parent);
+			}
+		}))).isEnabled = isGraphEnabled;
+
+		this.put(&#039;dynamicAppearance&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			var iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+			if (Editor.currentTheme == &#039;simple&#039;)
+			{
+				// Elements are hidden with the following widths:
+				// ViewZoom: &lt;750
+				// Insert edge: &lt;680
+				// Insert text: &lt;660
+				// Comments: &lt;560
+				// Insert Table: &lt;500
+				// Pages: &lt;480
+				// Insert Shapes: &lt;440
+				// Insert Freehand: &lt;390
+				// Share: &lt;360
+				// Insert: &lt;320
+
+				if (iw &lt; 750)
+				{
+					this.addSubmenu(&#039;viewZoom&#039;, menu, parent, mxResources.get(&#039;zoom&#039;));
+				}
+
+				if (iw &lt; 460 &amp;&amp; editorUi.isPageMenuVisible())
+				{
+					this.addSubmenu(&#039;pages&#039;, menu, parent);
+				}
+
+				if (iw &lt; 320)
+				{
+					this.addSubmenu(&#039;insert&#039;, menu, parent);
+				}
+
+				if (iw &lt; 360  &amp;&amp; urlParams[&#039;embed&#039;] != &#039;1&#039; &amp;&amp;
+					editorUi.getServiceName() == &#039;draw.io&#039;)
+				{
+					this.addSubmenu(&#039;share&#039;, menu, parent);
+				}
+			}
+		})));
+		
+		this.put(&#039;appearance&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			if (editorUi.isAutoDarkModeSupported())
+			{
+				var item = editorUi.menus.addMenuItem(menu, &#039;autoMode&#039;, parent);
+
+				if (item != null)
+				{
+					item.setAttribute(&#039;title&#039;, mxResources.get(&#039;automatic&#039;) +
+						&#039; (&#039; + mxResources.get(Editor.isDarkMode() ?
+							&#039;dark&#039; : &#039;light&#039;) + &#039;)&#039;);
+				}
+			}
+
+			this.addMenuItems(menu, [&#039;lightMode&#039;, &#039;darkMode&#039;, &#039;-&#039;], parent);
+			var item = editorUi.menus.addMenuItem(menu, &#039;highContrast&#039;, parent);
+
+			if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
+			{
+				editorUi.menus.addLinkToItem(item, &#039;https://github.com/jgraph/drawio/issues/4296&#039;);
+			}
+		})));
+
+		editorUi.actions.addAction(&#039;addToScratchpad&#039;, function(evt)
+		{
+			if (!graph.isSelectionEmpty() &amp;&amp; editorUi.addSelectionToScratchpad != null)
+			{
+				editorUi.addSelectionToScratchpad(evt);
+			}
+		});
+
+		editorUi.actions.addAction(&#039;accounts...&#039;, function()
+		{
+			editorUi.toggleUserPanel();
+			editorUi.userPanel.style.right = &#039;10px&#039;;
+			editorUi.userPanel.style.top = &#039;10px&#039;;
+		});
+
+		this.put(&#039;theme&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			var theme = (urlParams[&#039;sketch&#039;] == &#039;1&#039;) ? &#039;sketch&#039; : mxSettings.getUi();
+			
+			var autoItem = menu.addItem(mxResources.get(&#039;automatic&#039;), null, function()
+			{
+				editorUi.setCurrentTheme(&#039;&#039;);
+			}, parent);
+			
+			var item = menu.addItem(mxResources.get(&#039;classic&#039;), null, function()
+			{
+				editorUi.setCurrentTheme(&#039;kennedy&#039;);
+			}, parent);
+
+			var themeFound = false;
+
+			if (theme == &#039;kennedy&#039; || theme == &#039;dark&#039;)
+			{
+				menu.addCheckmark(item, Editor.checkmarkImage);
+				themeFound = true;
+			}
+
+			for (var i = 0; i &lt; Editor.themes.length; i++)
+			{
+				(mxUtils.bind(this, function(key)
+				{
+					item = menu.addItem(mxResources.get((key == &#039;min&#039;) ?
+						&#039;minimal&#039; : key), null, function()
+					{
+						editorUi.setCurrentTheme(key);
+					}, parent);
+
+					if (theme == key)
+					{
+						menu.addCheckmark(item, Editor.checkmarkImage);
+						themeFound = true;
+					}
+					
+					if (key == &#039;simple&#039;)
+					{
+						menu.addSeparator(parent);
+					}
+				})(Editor.themes[i]));
+			}
+			
+			if (!themeFound)
+			{
+				menu.addCheckmark(autoItem, Editor.checkmarkImage);
+			}
+		})));
+
+		var renameAction = this.editorUi.actions.addAction(&#039;rename...&#039;, mxUtils.bind(this, function()
+		{
+			var file = this.editorUi.getCurrentFile();
+			
+			if (file != null)
+			{
+				if (file.constructor == LocalFile &amp;&amp; file.fileHandle != null)
+				{
+					editorUi.showSaveFilePicker(mxUtils.bind(editorUi, function(fileHandle, desc)
+					{
+						file.invalidFileHandle = null;
+						file.fileHandle = fileHandle;
+						file.title = desc.name;
+						file.desc = desc;
+						editorUi.save(desc.name);
+					}), null, editorUi.createFileSystemOptions(file.getTitle()));
+				}
+				else
+				{
+					var filename = (file.getTitle() != null) ? file.getTitle() : this.editorUi.defaultFilename;
+					
+					var dlg = new FilenameDialog(this.editorUi, filename, mxResources.get(&#039;rename&#039;), mxUtils.bind(this, function(title)
+					{
+						if (title != null &amp;&amp; title.length &gt; 0 &amp;&amp; file != null &amp;&amp; title != file.getTitle() &amp;&amp;
+							this.editorUi.spinner.spin(document.body, mxResources.get(&#039;renaming&#039;)))
+						{
+							// Delete old file, save new file in dropbox if autosize is enabled
+							file.rename(title, mxUtils.bind(this, function(resp)
+							{
+								this.editorUi.spinner.stop();
+							}),
+							mxUtils.bind(this, function(resp)
+							{
+								this.editorUi.handleError(resp, (resp != null) ? mxResources.get(&#039;errorRenamingFile&#039;) : null);
+							}));
+						}
+					}), (file.constructor == DriveFile || file.constructor == StorageFile) ?
+						mxResources.get(&#039;diagramName&#039;) : null, function(name)
+					{
+						if (name != null &amp;&amp; name.length &gt; 0)
+						{
+							return true;
+						}
+						
+						editorUi.showError(mxResources.get(&#039;error&#039;), mxResources.get(&#039;invalidName&#039;), mxResources.get(&#039;ok&#039;));
+						
+						return false;
+					}, null, FilenameDialog.filenameHelpLink, null, null, editorUi.editor.fileExtensions);
+					this.editorUi.showDialog(dlg.container, 340, 100, true, true);
+					dlg.init();
+				}
+			}
+		}));
+		
+		renameAction.isEnabled = function()
+		{
+			return this.enabled &amp;&amp; isGraphEnabled.apply(this, arguments);
+		}
+		
+		renameAction.visible = urlParams[&#039;embed&#039;] != &#039;1&#039;;
+		
+		editorUi.actions.addAction(&#039;makeCopy...&#039;, mxUtils.bind(this, function()
+		{
+			var file = editorUi.getCurrentFile();
+			
+			if (file != null)
+			{
+				var title = editorUi.getCopyFilename(file);
+
+				if (file.constructor == DriveFile)
+				{
+					var dlg = new SaveDialog(editorUi, title, mxUtils.bind(this, function(input, mode, folderId)
+					{
+						editorUi.hideDialog();
+
+						file.copyFile(mxUtils.bind(this, function(resp)
+						{
+							file.move(folderId, mxUtils.bind(this, function(resp)
+							{
+								editorUi.spinner.stop();
+							}), mxUtils.bind(this, function(resp)
+							{
+								editorUi.handleError(resp);
+							}));
+						}), mxUtils.bind(this, function(resp)
+						{
+							editorUi.handleError(resp);
+						}), input.value);
+					}), null, null, null, null, null, null, [App.MODE_GOOGLE], mxResources.get(&#039;ok&#039;));
+					
+					editorUi.showDialog(dlg.container, 420, 150, true, false, mxUtils.bind(this, function()
+					{
+						editorUi.hideDialog();
+					}));
+
+					dlg.init();
+				}
+				else
+				{
+					// Creates a copy with no predefined storage
+					editorUi.editor.editAsNew(this.editorUi.getFileData(true), title);
+				}
+			}
+		}));
+
+		// Dynamic title implemented below
+		var openFolderAction = new Action(&#039;openFolder&#039;, function(evt, trigger)
+		{
+			var file = editorUi.getCurrentFile();
+
+			if (file != null)
+			{
+				editorUi.openLink(file.getFolderUrl());
+			}
+		});
+
+		openFolderAction.getTitle = function()
+		{
+			return mxResources.get(&#039;openIt&#039;, [mxResources.get(&#039;folder&#039;)]) + &#039;...&#039;;
+		};
+
+		editorUi.actions.put(&#039;openFolder&#039;, openFolderAction);
+		
+		editorUi.actions.addAction(&#039;openFile...&#039;, mxUtils.bind(this, function()
+		{
+			var file = editorUi.getCurrentFile();
+
+			if (file != null)
+			{
+				editorUi.openLink(file.getFileUrl());
+			}
+		}));
+		
+		editorUi.actions.addAction(&#039;moveToFolder...&#039;, mxUtils.bind(this, function()
+		{
+			var file = editorUi.getCurrentFile();
+			
+			if (file.getMode() == App.MODE_GOOGLE || file.getMode() == App.MODE_ONEDRIVE)
+			{
+				var dlg = new SaveDialog(editorUi, &#039;&#039;, mxUtils.bind(this, function(input, mode, folderId)
+				{
+					editorUi.hideDialog();
+
+					if (editorUi.spinner.spin(document.body, mxResources.get(&#039;moving&#039;)))
+	            	{
+	            	    file.move(folderId, mxUtils.bind(this, function(resp)
+	            		{
+	            	    	editorUi.spinner.stop();
+	        			}), mxUtils.bind(this, function(resp)
+	        			{
+	        				editorUi.handleError(resp);
+	        			}));
+	            	}
+				}), null, null, null, null, null, file.getMode());
+
+				editorUi.showDialog(dlg.container, 420, 70, true, false, mxUtils.bind(this, function()
+				{
+					editorUi.hideDialog();
+				}));
+				
+				dlg.init();
+			}
+		}));
+		
+		this.put(&#039;publish&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			this.addMenuItems(menu, [&#039;publishLink&#039;, &#039;presentationMode&#039;], parent);
+		})));
+
+		if (!EditorUi.isElectronApp &amp;&amp; editorUi.isOwnGDriveDomain() &amp;&amp;
+			editorUi.getServiceName() == &#039;draw.io&#039; &amp;&amp; !navigator.standalone)
+		{
+			editorUi.actions.put(&#039;presentationMode&#039;, new Action(&#039;presentationMode&#039; + &#039;...&#039;, function()
+			{
+				var title = (editorUi.getCurrentFile() != null) ?
+					editorUi.getCurrentFile().getTitle() : null;
+				editorUi.editor.editAsNew(editorUi.getFileData(true), title, true,
+					(editorUi.currentPage != null) ? editorUi.currentPage.getId() : null);
+			}));
+		}
+		
+		this.editorUi.actions.addAction(&#039;share...&#039;, mxUtils.bind(this, function()
+		{
+			try
+			{
+				var file = editorUi.getCurrentFile();
+				
+				if (file != null)
+				{
+					file.share();
+				}
+			}
+			catch (e)
+			{
+				editorUi.handleError(e);
+			}
+		})).isEnabled = isGraphEnabled;
+
+		this.put(&#039;embed&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			var file = editorUi.getCurrentFile();
+			
+			if (file != null &amp;&amp; (file.getMode() == App.MODE_GOOGLE ||
+				file.getMode() == App.MODE_GITHUB) &amp;&amp; /(\.png)$/i.test(file.getTitle()))
+			{
+				this.addMenuItems(menu, [&#039;liveImage&#039;, &#039;-&#039;], parent);
+			}
+			
+			this.addMenuItems(menu, [&#039;embedImage&#039;, &#039;embedSvg&#039;, &#039;-&#039;, &#039;embedHtml&#039;], parent);
+			
+			if (!navigator.standalone &amp;&amp; !editorUi.isOffline())
+			{
+				this.addMenuItems(menu, [&#039;embedIframe&#039;], parent);
+			}
+			
+			this.addMenuItems(menu, [&#039;-&#039;, &#039;microsoftOffice&#039;, &#039;-&#039;, &#039;embedNotion&#039;], parent);
+		})));
+
+		var addInsertAction = function(method)
+		{
+			var title = mxResources.get(method) + &#039;...&#039;;
+			
+			editorUi.actions.put(method, new Action(title, function(evt)
+			{
+				if (method == &#039;fromText&#039; || method == &#039;formatSql&#039; ||
+					method == &#039;plantUml&#039; || method == &#039;mermaid&#039;)
+				{
+					var dlg = new ParseDialog(editorUi, title, method);
+					editorUi.showDialog(dlg.container, 640, 420, true,
+						false, null, null, null, new mxRectangle(0, 0, 440, 280));
+					dlg.init();
+				}
+				else
+				{
+					var dlg = new CreateGraphDialog(editorUi, title, method);
+
+					editorUi.showDialog(dlg.container, 620, 420, true, false, function(cancel, isEsc)
+					{
+						if (isEsc)
+						{
+							editorUi.confirm(mxResources.get(&#039;areYouSure&#039;), function()
+							{
+								editorUi.hideDialog();
+							});
+
+							return false;
+						}
+						else if (dlg.graph != null)
+						{
+							if (dlg.graph.container.parentNode != null)
+							{
+								dlg.graph.container.parentNode.
+									removeChild(dlg.graph.container);
+							}
+
+							dlg.graph.destroy();
+							dlg.graph = null;
+						}
+					});
+
+					// Executed after dialog is added to dom
+					dlg.init();
+				}
+			})).isEnabled = isGraphEnabled;
+		};
+
+		addInsertAction(&#039;mermaid&#039;);
+		addInsertAction(&#039;horizontalFlow&#039;);
+		addInsertAction(&#039;verticalFlow&#039;);
+		addInsertAction(&#039;horizontalTree&#039;);
+		addInsertAction(&#039;verticalTree&#039;);
+		addInsertAction(&#039;radialTree&#039;);
+		addInsertAction(&#039;organic&#039;);
+		addInsertAction(&#039;circle&#039;);
+		addInsertAction(&#039;fromText&#039;);
+		addInsertAction(&#039;formatSql&#039;);
+
+		// Shows PlantUML if customized or enabled and online
+		if (window.PLANT_URL != &#039;https://plant-aws.diagrams.net&#039; ||
+			(EditorUi.enablePlantUml &amp;&amp; !editorUi.isOffline()))
+		{
+			addInsertAction(&#039;plantUml&#039;);
+		}
+		
+		var insertCell = function(cell)
+		{
+    		graph.getModel().beginUpdate();
+    		try
+    	    {
+    			cell = graph.addCell(cell);
+    	    	graph.fireEvent(new mxEventObject(&#039;cellsInserted&#039;, &#039;cells&#039;, [cell]));
+
+				if (graph.model.isVertex(cell) &amp;&amp; graph.isAutoSizeCell(cell))
+				{
+					graph.updateCellSize(cell);
+				}
+    	    }
+    		finally
+    		{
+    			graph.getModel().endUpdate();
+    		}
+		
+    		graph.scrollCellToVisible(cell);
+    		graph.setSelectionCell(cell);
+    		graph.container.focus();
+
+    		if (graph.editAfterInsert)
+    		{
+    	        graph.startEditing(cell);
+    		}
+    		
+    		// Async call is workaroun for touch events resetting hover icons
+    		window.setTimeout(function()
+    		{
+	    		if (editorUi.hoverIcons != null)
+				{
+					editorUi.hoverIcons.update(graph.view.getState(cell));
+				}
+    		}, 0);
+    		
+	    	return cell;
+		};
+		
+		var insertVertex = function(value, w, h, style, pt)
+		{
+			var cell = new mxCell(value, new mxGeometry(0, 0, w, h), style);
+			cell.vertex = true;
+
+			if (pt == null)
+			{
+				pt = graph.getCenterInsertPoint(graph.getBoundingBoxFromGeometry([cell], true));
+			}
+
+			cell.geometry.x = pt.x;
+    	    cell.geometry.y = pt.y;
+
+			return insertCell(cell);
+		};
+		
+		var insertEdge  = function(value, length, style, pt)
+		{
+			if (pt == null)
+			{
+				pt = graph.getCenterInsertPoint(graph.getBoundingBoxFromGeometry([cell], true));
+			}
+
+			var cell = new mxCell(&#039;&#039;, new mxGeometry(0, 0, length, 0), style);
+			cell.geometry.setTerminalPoint(pt, true);
+			cell.geometry.setTerminalPoint(new mxPoint(pt.x + cell.geometry.width, pt.y), false);
+			cell.geometry.points = [];
+			cell.geometry.relative = true;
+			cell.edge = true;
+
+			return insertCell(cell);
+		};
+		
+		editorUi.actions.put(&#039;insertText&#039;, new Action(&#039;text&#039;, function(evt)
+		{
+			if (graph.isEnabled() &amp;&amp; !graph.isCellLocked(graph.getDefaultParent()))
+			{
+    			graph.startEditingAtCell(insertVertex(&#039;Text&#039;, 60, 30, graph.appendFontSize(
+					Editor.defaultTextStyle, graph.vertexFontSize), (evt != null &amp;&amp;
+					!mxEvent.isControlDown(evt) &amp;&amp; !mxEvent.isMetaDown(evt) &amp;&amp;
+					graph.isMouseInsertPoint()) ? graph.getInsertPoint() : null));
+			}
+		}, null, null, &#039;A&#039;)).isEnabled = isGraphEnabled;
+		
+		editorUi.actions.put(&#039;insertRectangle&#039;, new Action(&#039;rectangle&#039;, function(evt)
+		{
+			if (graph.isEnabled() &amp;&amp; !graph.isCellLocked(graph.getDefaultParent()))
+			{
+    	    	insertVertex(&#039;&#039;, 120, 60, &#039;whiteSpace=wrap;html=1;&#039;, (evt != null &amp;&amp;
+					!mxEvent.isControlDown(evt) &amp;&amp; !mxEvent.isMetaDown(evt) &amp;&amp;
+					graph.isMouseInsertPoint()) ? graph.getInsertPoint() : null);
+			}
+		}, null, null, &#039;D&#039;)).isEnabled = isGraphEnabled;
+		
+		editorUi.actions.put(&#039;insertNote&#039;, new Action(&#039;note&#039;, function(evt)
+		{
+			if (graph.isEnabled() &amp;&amp; !graph.isCellLocked(graph.getDefaultParent()))
+			{
+    	    	insertVertex(&#039;&#039;, 140, 160, &#039;shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;&#039; +
+					&#039;fontColor=#000000;darkOpacity=0.05;fillColor=#FFF9B2;strokeColor=none;fillStyle=solid;&#039; +
+					&#039;direction=west;gradientDirection=north;gradientColor=#FFF2A1;shadow=1;size=20;pointerEvents=1;&#039;,
+					(evt != null &amp;&amp; !mxEvent.isControlDown(evt) &amp;&amp; !mxEvent.isMetaDown(evt) &amp;&amp;
+					graph.isMouseInsertPoint()) ? graph.getInsertPoint() : null);
+			}
+		}, null, null, &#039;S&#039;)).isEnabled = isGraphEnabled;
+
+		editorUi.actions.put(&#039;insertEllipse&#039;, new Action(&#039;ellipse&#039;, function(evt)
+		{
+			if (graph.isEnabled() &amp;&amp; !graph.isCellLocked(graph.getDefaultParent()))
+			{
+    	    	insertVertex(&#039;&#039;, 80, 80, &#039;ellipse;whiteSpace=wrap;html=1;&#039;, (evt != null &amp;&amp;
+					!mxEvent.isControlDown(evt) &amp;&amp; !mxEvent.isMetaDown(evt) &amp;&amp;
+					graph.isMouseInsertPoint()) ? graph.getInsertPoint() : null);
+			}
+		}, null, null, &#039;F&#039;)).isEnabled = isGraphEnabled;
+		
+		editorUi.actions.put(&#039;insertRhombus&#039;, new Action(&#039;rhombus&#039;, function(evt)
+		{
+			if (graph.isEnabled() &amp;&amp; !graph.isCellLocked(graph.getDefaultParent()))
+			{
+    	    	insertVertex(&#039;&#039;, 80, 80, &#039;rhombus;whiteSpace=wrap;html=1;&#039;, (evt != null &amp;&amp;
+					!mxEvent.isControlDown(evt) &amp;&amp; !mxEvent.isMetaDown(evt) &amp;&amp;
+					graph.isMouseInsertPoint()) ? graph.getInsertPoint() : null);
+			}
+		}, null, null, &#039;R&#039;)).isEnabled = isGraphEnabled;
+
+		editorUi.actions.put(&#039;insertEdge&#039;, new Action(&#039;line&#039;, function(evt)
+		{
+			if (graph.isEnabled() &amp;&amp; !graph.isCellLocked(graph.getDefaultParent()))
+			{
+    	    	insertEdge(&#039;&#039;, graph.defaultEdgeLength, &#039;edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;&#039;,
+					(evt != null &amp;&amp; !mxEvent.isControlDown(evt) &amp;&amp; !mxEvent.isMetaDown(evt) &amp;&amp;
+					graph.isMouseInsertPoint()) ? graph.getInsertPoint() : null);
+			}
+		}, null, null, &#039;C&#039;)).isEnabled = isGraphEnabled;
+
+		var toggleShapes = editorUi.actions.put(&#039;toggleShapes&#039;, new Action(&#039;shapes&#039;, function()
+        {
+			if (editorUi.sidebarWindow != null)
+			{
+				editorUi.sidebarWindow.window.setVisible(
+					!editorUi.sidebarWindow.window.isVisible());
+			}
+			else
+			{
+				editorUi.toggleShapesPanel(!editorUi.isShapesPanelVisible());
+			}
+        }, null, null, Editor.ctrlKey + &#039;+&#039; + Editor.shiftKey + &#039;+K&#039;));
+
+		toggleShapes.setToggleAction(true);
+		toggleShapes.setSelectedCallback(mxUtils.bind(this, function()
+		{
+			return (editorUi.sidebarWindow != null &amp;&amp; editorUi.sidebarWindow.window.isVisible()) ||
+				(editorUi.sidebarWindow == null &amp;&amp; editorUi.hsplitPosition &gt; 0);
+		}));
+		
+		this.put(&#039;insert&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			if (Editor.currentTheme == &#039;sketch&#039;)
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;toggleShapes&#039;], parent);
+				editorUi.menus.addSubmenu(&#039;table&#039;, menu, parent);
+				menu.addSeparator(parent);
+				editorUi.menus.addMenuItems(menu, [&#039;insertImage&#039;, &#039;insertLink&#039;, &#039;-&#039;], parent);
+
+				if (editorUi.insertTemplateEnabled &amp;&amp; !editorUi.isOffline())
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;insertTemplate&#039;], parent);
+				}
+				
+				editorUi.menus.addMenuItems(menu, [&#039;generate&#039;], parent);
+
+				if (window.isMermaidEnabled)
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;mermaid&#039;], parent);
+				}
+
+				menu.addSeparator(parent);
+				editorUi.menus.addSubmenu(&#039;insertAdvanced&#039;, menu, parent, mxResources.get(&#039;advanced&#039;));
+				editorUi.menus.addSubmenu(&#039;layout&#039;, menu, parent);
+			}
+			else
+			{
+				this.addMenuItems(menu, [&#039;insertRectangle&#039;, &#039;insertEllipse&#039;, &#039;insertRhombus&#039;,
+					&#039;-&#039;, &#039;insertEdge&#039;, &#039;insertNote&#039;, &#039;-&#039;, &#039;insertText&#039;, &#039;insertLink&#039;,
+					&#039;-&#039;, &#039;createShape&#039;, &#039;insertFreehand&#039;, &#039;-&#039;, &#039;insertImage&#039;], parent);
+				
+				if (window.isMermaidEnabled)
+				{
+					this.addMenuItems(menu, [&#039;mermaid&#039;], parent);
+				}
+
+				if (editorUi.insertTemplateEnabled &amp;&amp; !editorUi.isOffline())
+				{
+					this.addMenuItems(menu, [&#039;-&#039;, &#039;insertTemplate&#039;], parent);
+				}
+				
+				editorUi.menus.addMenuItems(menu, [&#039;generate&#039;, &#039;-&#039;], parent);
+
+				if (uiTheme == &#039;min&#039; || Editor.currentTheme == &#039;simple&#039;)
+				{
+					this.addSubmenu(&#039;layout&#039;, menu, parent);
+					this.addSubmenu(&#039;insertLayout&#039;, menu, parent, mxResources.get(&#039;insert&#039;));
+					menu.addSeparator(parent);
+					this.addSubmenu(&#039;table&#039;, menu, parent);
+				}
+				else
+				{
+					this.addSubmenu(&#039;insertLayout&#039;, menu, parent, mxResources.get(&#039;layout&#039;));
+				}
+
+				this.addSubmenu(&#039;insertAdvanced&#039;, menu, parent, mxResources.get(&#039;advanced&#039;));
+			}
+		})));
+
+        this.put(&#039;table&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			editorUi.menus.addInsertTableCellItem(menu, parent);
+		})));
+
+		this.put(&#039;insertLayout&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			this.addMenuItems(menu, [&#039;horizontalFlow&#039;, &#039;verticalFlow&#039;, &#039;-&#039;,
+				&#039;horizontalTree&#039;, &#039;verticalTree&#039;, &#039;radialTree&#039;, &#039;-&#039;,
+				&#039;organic&#039;, &#039;circle&#039;], parent);
+		})));
+
+		editorUi.actions.put(&#039;csv&#039;, new Action(mxResources.get(&#039;csv&#039;) + &#039;...&#039;, function()
+		{
+			graph.popupMenuHandler.hideMenu();
+			editorUi.showImportCsvDialog();
+		})).isEnabled = isGraphEnabled;
+
+        this.put(&#039;insertAdvanced&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+        {
+			this.addMenuItems(menu, [&#039;fromText&#039;, &#039;plantUml&#039;, &#039;formatSql&#039;, &#039;csv&#039;], parent);
+			
+			if (Editor.currentTheme == &#039;simple&#039; || Editor.currentTheme == &#039;min&#039;)
+			{
+				this.addMenuItems(menu, [&#039;-&#039;, &#039;createShape&#039;, &#039;editDiagram&#039;], parent);
+			}
+        })));
+        
+		this.put(&#039;openRecent&#039;, new Menu(function(menu, parent)
+		{
+			var recent = editorUi.getRecent();
+
+			if (recent != null)
+			{
+				for (var i = 0; i &lt; recent.length; i++)
+				{
+					(function(entry)
+					{
+						var modeKey = entry.mode;
+						
+						// Google and oneDrive use different keys
+						if (modeKey == App.MODE_GOOGLE)
+						{
+							modeKey = &#039;googleDrive&#039;;
+						}
+						else if (modeKey == App.MODE_ONEDRIVE)
+						{
+							modeKey = &#039;oneDrive&#039;;
+						}
+						
+						menu.addItem(entry.title + &#039; (&#039; + mxResources.get(modeKey) + &#039;)&#039;, null, function()
+						{
+							editorUi.loadFile(entry.id);
+						}, parent);
+					})(recent[i]);
+				}
+
+				menu.addSeparator(parent);
+			}
+
+			menu.addItem(mxResources.get(&#039;reset&#039;), null, function()
+			{
+				editorUi.resetRecent();
+			}, parent);
+		}));
+		
+		this.put(&#039;openFrom&#039;, new Menu(function(menu, parent)
+		{
+			if (editorUi.drive != null)
+			{
+				menu.addItem(mxResources.get(&#039;googleDrive&#039;) + &#039;...&#039;, null, function()
+				{
+					editorUi.pickFile(App.MODE_GOOGLE);
+				}, parent);
+			}
+			else if (editorUi.isModeEnabled(App.MODE_GOOGLE))
+			{
+				menu.addItem(mxResources.get(&#039;googleDrive&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+				{
+					// do nothing
+				}, parent, null, false);
+			}
+			
+			if (editorUi.isModeReady(App.MODE_ONEDRIVE))
+			{
+				menu.addItem(mxResources.get(&#039;oneDrive&#039;) + &#039;...&#039;, null, function()
+				{
+					editorUi.pickFile(App.MODE_ONEDRIVE);
+				}, parent);
+			}
+			else if (editorUi.isModeEnabled(App.MODE_ONEDRIVE))
+			{
+				menu.addItem(mxResources.get(&#039;oneDrive&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+				{
+					// do nothing
+				}, parent, null, false);
+			}
+
+			if (editorUi.isModeReady(App.MODE_DROPBOX))
+			{
+				menu.addItem(mxResources.get(&#039;dropbox&#039;) + &#039;...&#039;, null, function()
+				{
+					editorUi.pickFile(App.MODE_DROPBOX);
+				}, parent);
+			}
+			else if (editorUi.isModeEnabled(App.MODE_DROPBOX))
+			{
+				menu.addItem(mxResources.get(&#039;dropbox&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+				{
+					// do nothing
+				}, parent, null, false);
+			}
+
+			menu.addSeparator(parent);
+			
+			if (editorUi.isModeReady(App.MODE_GITHUB))
+			{
+				menu.addItem(mxResources.get(&#039;github&#039;) + &#039;...&#039;, null, function()
+				{
+					editorUi.pickFile(App.MODE_GITHUB);
+				}, parent);
+			}
+			
+			if (editorUi.isModeReady(App.MODE_GITLAB))
+			{
+				menu.addItem(mxResources.get(&#039;gitlab&#039;) + &#039;...&#039;, null, function()
+				{
+					editorUi.pickFile(App.MODE_GITLAB);
+				}, parent);
+			}
+
+			if (editorUi.isModeReady(App.MODE_TRELLO))
+			{
+				menu.addItem(mxResources.get(&#039;trello&#039;) + &#039;...&#039;, null, function()
+				{
+					editorUi.pickFile(App.MODE_TRELLO);
+				}, parent);
+			}
+			else if (editorUi.isModeEnabled(App.MODE_TRELLO))
+			{
+				menu.addItem(mxResources.get(&#039;trello&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+				{
+					// do nothing
+				}, parent, null, false);
+			}
+			
+			menu.addSeparator(parent);
+
+			if (isLocalStorage &amp;&amp; urlParams[&#039;browser&#039;] != &#039;0&#039;)
+			{
+				menu.addItem(mxResources.get(&#039;browser&#039;) + &#039;...&#039;, null, function()
+				{
+					editorUi.pickFile(App.MODE_BROWSER);
+				}, parent);
+			}
+			
+			//if (!mxClient.IS_IOS)
+			if (urlParams[&#039;noDevice&#039;] != &#039;1&#039;)
+			{
+				menu.addItem(mxResources.get(&#039;device&#039;) + &#039;...&#039;, null, function()
+				{
+					editorUi.pickFile(App.MODE_DEVICE);
+				}, parent);
+			}
+
+			if (!editorUi.isOffline())
+			{
+				menu.addSeparator(parent);
+				
+				menu.addItem(mxResources.get(&#039;url&#039;) + &#039;...&#039;, null, function()
+				{
+					var dlg = new FilenameDialog(editorUi, &#039;&#039;, mxResources.get(&#039;open&#039;), function(fileUrl)
+					{
+						if (fileUrl != null &amp;&amp; fileUrl.length &gt; 0)
+						{
+							if (editorUi.getCurrentFile() == null)
+							{
+								window.location.hash = &#039;#U&#039; + encodeURIComponent(fileUrl);
+							}
+							else
+							{
+								window.geOpenWindow(((mxClient.IS_CHROMEAPP) ?
+									&#039;https://app.diagrams.net/&#039; : &#039;https://&#039; + location.host + &#039;/&#039;) +
+									window.location.search + &#039;#U&#039; + encodeURIComponent(fileUrl));
+							}
+						}
+					}, mxResources.get(&#039;url&#039;));
+					editorUi.showDialog(dlg.container, 300, 80, true, true);
+					dlg.init();
+				}, parent);
+			}
+		}));
+		
+		if (Editor.enableCustomLibraries)
+		{
+			this.put(&#039;newLibrary&#039;, new Menu(function(menu, parent)
+			{
+				if (typeof(google) != &#039;undefined&#039; &amp;&amp; typeof(google.picker) != &#039;undefined&#039;)
+				{
+					if (editorUi.drive != null)
+					{
+						menu.addItem(mxResources.get(&#039;googleDrive&#039;) + &#039;...&#039;, null, function()
+						{
+							editorUi.showLibraryDialog(null, null, null, null, App.MODE_GOOGLE);
+						}, parent);
+					}
+					else if (editorUi.isModeEnabled(App.MODE_GOOGLE))
+					{
+						menu.addItem(mxResources.get(&#039;googleDrive&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+						{
+							// do nothing
+						}, parent, null, false);
+					}
+				}
+
+				if (editorUi.isModeReady(App.MODE_ONEDRIVE))
+				{
+					menu.addItem(mxResources.get(&#039;oneDrive&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.showLibraryDialog(null, null, null, null, App.MODE_ONEDRIVE);
+					}, parent);
+				}
+				else if (editorUi.isModeEnabled(App.MODE_ONEDRIVE))
+				{
+					menu.addItem(mxResources.get(&#039;oneDrive&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+					{
+						// do nothing
+					}, parent, null, false);
+				}
+
+				if (editorUi.isModeReady(App.MODE_DROPBOX))
+				{
+					menu.addItem(mxResources.get(&#039;dropbox&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.showLibraryDialog(null, null, null, null, App.MODE_DROPBOX);
+					}, parent);
+				}
+				else if (editorUi.isModeEnabled(App.MODE_DROPBOX))
+				{
+					menu.addItem(mxResources.get(&#039;dropbox&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+					{
+						// do nothing
+					}, parent, null, false);
+				}
+				
+				menu.addSeparator(parent);
+				
+				if (editorUi.isModeReady(App.MODE_GITHUB))
+				{
+					menu.addItem(mxResources.get(&#039;github&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.showLibraryDialog(null, null, null, null, App.MODE_GITHUB);
+					}, parent);
+				}
+				
+				if (editorUi.isModeReady(App.MODE_GITLAB))
+				{
+					menu.addItem(mxResources.get(&#039;gitlab&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.showLibraryDialog(null, null, null, null, App.MODE_GITLAB);
+					}, parent);
+				}
+
+				if (editorUi.isModeReady(App.MODE_TRELLO))
+				{
+					menu.addItem(mxResources.get(&#039;trello&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.showLibraryDialog(null, null, null, null, App.MODE_TRELLO);
+					}, parent);
+				}
+				else if (editorUi.isModeEnabled(App.MODE_TRELLO))
+				{
+					menu.addItem(mxResources.get(&#039;trello&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+					{
+						// do nothing
+					}, parent, null, false);
+				}
+				
+				menu.addSeparator(parent);
+	
+				if (isLocalStorage &amp;&amp; urlParams[&#039;browser&#039;] != &#039;0&#039;)
+				{
+					menu.addItem(mxResources.get(&#039;browser&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.showLibraryDialog(null, null, null, null, App.MODE_BROWSER);
+					}, parent);
+				}
+				
+				//if (!mxClient.IS_IOS)
+				if (urlParams[&#039;noDevice&#039;] != &#039;1&#039;)
+				{
+					menu.addItem(mxResources.get(&#039;device&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.showLibraryDialog(null, null, null, null, App.MODE_DEVICE);
+					}, parent);
+				}
+
+				if (urlParams[&#039;confLib&#039;] == &#039;1&#039;)
+				{
+					menu.addItem(mxResources.get(&#039;confluenceCloud&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.showLibraryDialog(null, null, null, null, &#039;CONF_LIB&#039;);
+					}, parent);
+				}
+			}));
+	
+			this.put(&#039;openLibraryFrom&#039;, new Menu(function(menu, parent)
+			{
+				if (typeof(google) != &#039;undefined&#039; &amp;&amp; typeof(google.picker) != &#039;undefined&#039;)
+				{
+					if (editorUi.drive != null)
+					{
+						menu.addItem(mxResources.get(&#039;googleDrive&#039;) + &#039;...&#039;, null, function()
+						{
+							editorUi.pickLibrary(App.MODE_GOOGLE);
+						}, parent);
+					}
+					else if (editorUi.isModeEnabled(App.MODE_GOOGLE))
+					{
+						menu.addItem(mxResources.get(&#039;googleDrive&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+						{
+							// do nothing
+						}, parent, null, false);
+					}
+				}
+
+				if (editorUi.isModeReady(App.MODE_ONEDRIVE))
+				{
+					menu.addItem(mxResources.get(&#039;oneDrive&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.pickLibrary(App.MODE_ONEDRIVE);
+					}, parent);
+				}
+				else if (editorUi.isModeEnabled(App.MODE_ONEDRIVE))
+				{
+					menu.addItem(mxResources.get(&#039;oneDrive&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+					{
+						// do nothing
+					}, parent, null, false);
+				}
+
+				if (editorUi.isModeReady(App.MODE_DROPBOX))
+				{
+					menu.addItem(mxResources.get(&#039;dropbox&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.pickLibrary(App.MODE_DROPBOX);
+					}, parent);
+				}
+				else if (editorUi.isModeEnabled(App.MODE_DROPBOX))
+				{
+					menu.addItem(mxResources.get(&#039;dropbox&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+					{
+						// do nothing
+					}, parent, null, false);
+				}
+				
+				menu.addSeparator(parent);
+				
+				if (editorUi.isModeReady(App.MODE_GITHUB))
+				{
+					menu.addItem(mxResources.get(&#039;github&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.pickLibrary(App.MODE_GITHUB);
+					}, parent);
+				}
+				
+				if (editorUi.isModeReady(App.MODE_GITLAB))
+				{
+					menu.addItem(mxResources.get(&#039;gitlab&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.pickLibrary(App.MODE_GITLAB);
+					}, parent);
+				}
+
+				if (editorUi.isModeReady(App.MODE_TRELLO))
+				{
+					menu.addItem(mxResources.get(&#039;trello&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.pickLibrary(App.MODE_TRELLO);
+					}, parent);
+				}
+				else if (editorUi.isModeEnabled(App.MODE_TRELLO))
+				{
+					menu.addItem(mxResources.get(&#039;trello&#039;) + &#039; (&#039; + mxResources.get(&#039;loading&#039;) + &#039;...)&#039;, null, function()
+					{
+						// do nothing
+					}, parent, null, false);
+				}
+				
+				menu.addSeparator(parent);
+	
+				if (isLocalStorage &amp;&amp; urlParams[&#039;browser&#039;] != &#039;0&#039;)
+				{
+					menu.addItem(mxResources.get(&#039;browser&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.pickLibrary(App.MODE_BROWSER);
+					}, parent);
+				}
+				
+				//if (!mxClient.IS_IOS)
+				if (urlParams[&#039;noDevice&#039;] != &#039;1&#039;)
+				{
+					menu.addItem(mxResources.get(&#039;device&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.pickLibrary(App.MODE_DEVICE);
+					}, parent);
+				}
+	
+				if (!editorUi.isOffline())
+				{
+					menu.addSeparator(parent);
+					
+					menu.addItem(mxResources.get(&#039;url&#039;) + &#039;...&#039;, null, function()
+					{
+						var dlg = new FilenameDialog(editorUi, &#039;&#039;, mxResources.get(&#039;open&#039;), function(fileUrl)
+						{
+							if (fileUrl != null &amp;&amp; fileUrl.length &gt; 0 &amp;&amp; editorUi.spinner.spin(document.body, mxResources.get(&#039;loading&#039;)))
+							{
+								var realUrl = fileUrl;
+								
+								if (!editorUi.editor.isCorsEnabledForUrl(fileUrl))
+								{
+									realUrl = PROXY_URL + &#039;?url=&#039; + encodeURIComponent(fileUrl);
+								}
+								
+								// Uses proxy to avoid CORS issues
+								mxUtils.get(realUrl, function(req)
+								{
+									if (req.getStatus() &gt;= 200 &amp;&amp; req.getStatus() &lt;= 299)
+									{
+										editorUi.spinner.stop();
+										
+										try
+										{
+											editorUi.loadLibrary(new UrlLibrary(
+												editorUi, req.getText(), fileUrl));
+											editorUi.showSidebar();
+										}
+										catch (e)
+										{
+											editorUi.handleError(e, mxResources.get(&#039;errorLoadingFile&#039;));
+										}
+									}
+									else
+									{
+										editorUi.spinner.stop();
+										editorUi.handleError(null, mxResources.get(&#039;errorLoadingFile&#039;));
+									}
+								}, function()
+								{
+									editorUi.spinner.stop();
+									editorUi.handleError(null, mxResources.get(&#039;errorLoadingFile&#039;));
+								});
+							}
+						}, mxResources.get(&#039;url&#039;));
+						editorUi.showDialog(dlg.container, 300, 80, true, true);
+						dlg.init();
+					}, parent);
+				}
+				
+				if (urlParams[&#039;confLib&#039;] == &#039;1&#039;)
+				{
+					menu.addSeparator(parent);
+					
+					menu.addItem(mxResources.get(&#039;confluenceCloud&#039;) + &#039;...&#039;, null, function()
+					{
+						editorUi.showRemotelyStoredLibrary(mxResources.get(&#039;libraries&#039;));
+					}, parent);
+				}
+			}));
+		}
+
+		// Overrides edit menu to add find, copyAsImage editGeometry
+		this.put(&#039;edit&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			this.addMenuItems(menu, [&#039;undo&#039;, &#039;redo&#039;, &#039;-&#039;, &#039;cut&#039;, &#039;copy&#039;, &#039;copyAsImage&#039;, &#039;copyAsSvg&#039;, &#039;paste&#039;,
+				&#039;delete&#039;, &#039;-&#039;, &#039;duplicate&#039;, &#039;-&#039;, &#039;findReplace&#039;, &#039;-&#039;, &#039;editData&#039;, &#039;editTooltip&#039;, &#039;-&#039;,
+				&#039;editStyle&#039;,  &#039;editGeometry&#039;, &#039;-&#039;, &#039;edit&#039;, &#039;-&#039;, &#039;editLink&#039;, &#039;openLink&#039;, &#039;-&#039;,
+                &#039;selectVertices&#039;, &#039;selectEdges&#039;, &#039;selectAll&#039;, &#039;selectNone&#039;, &#039;-&#039;, &#039;lockUnlock&#039;]);
+		})));
+
+		var action = editorUi.actions.addAction(&#039;comments&#039;, mxUtils.bind(this, function()
+		{
+			if (this.commentsWindow == null)
+			{
+				// LATER: Check outline window for initial placement
+				this.commentsWindow = new CommentsWindow(editorUi, document.body.offsetWidth - 380, 120, 300, 350);
+				//TODO Are these events needed?
+				this.commentsWindow.window.addListener(&#039;show&#039;, function()
+				{
+					editorUi.fireEvent(new mxEventObject(&#039;comments&#039;));
+				});
+				this.commentsWindow.window.addListener(&#039;hide&#039;, function()
+				{
+					editorUi.fireEvent(new mxEventObject(&#039;comments&#039;));
+				});
+				this.commentsWindow.window.setVisible(true);
+				editorUi.fireEvent(new mxEventObject(&#039;comments&#039;));
+			}
+			else
+			{
+				var isVisible = !this.commentsWindow.window.isVisible();
+				this.commentsWindow.window.setVisible(isVisible);
+				
+				this.commentsWindow.refreshCommentsTime();
+
+				if (isVisible &amp;&amp; this.commentsWindow.hasError) 
+				{
+					this.commentsWindow.refreshComments();
+				}				
+			}
+		}));
+		action.setToggleAction(true);
+		action.setSelectedCallback(mxUtils.bind(this, function() { return this.commentsWindow != null &amp;&amp; this.commentsWindow.window.isVisible(); }));
+
+		// Destroys comments window to force update or disable if not supported
+		editorUi.editor.addListener(&#039;fileLoaded&#039;, mxUtils.bind(this, function()
+		{
+			if (this.commentsWindow != null)
+			{
+				this.commentsWindow.destroy();
+				this.commentsWindow = null;
+			}
+		}));
+		
+		// Extends toolbar dropdown
+		var viewPanelsMenu = this.get(&#039;viewPanels&#039;);
+		
+		viewPanelsMenu.funct = function(menu, parent)
+		{
+			var file = editorUi.getCurrentFile();
+			editorUi.menus.addMenuItems(menu, [&#039;toggleShapes&#039;, &#039;format&#039;, &#039;ruler&#039;, &#039;-&#039;,
+				&#039;findReplace&#039;, &#039;layers&#039;, &#039;tags&#039;, &#039;chatWindowTitle&#039;, &#039;outline&#039;, &#039;-&#039;], parent);
+
+			if (editorUi.commentsSupported())
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;comments&#039;], parent);
+			}
+			
+			if (file != null &amp;&amp; file.isRealtimeEnabled() &amp;&amp; file.isRealtimeSupported())
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;showRemoteCursors&#039;, &#039;shareCursor&#039;], parent);
+			}
+
+			editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;fullscreen&#039;], parent);
+		};
+
+		// Overrides view menu to add search and scratchpad
+		this.put(&#039;view&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			if (Editor.currentTheme == &#039;simple&#039;)
+			{
+				var file = editorUi.getCurrentFile();
+				editorUi.menus.addMenuItems(menu, [&#039;toggleShapes&#039;, &#039;format&#039;], parent);
+	
+				if (editorUi.isPageMenuVisible())
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;pageTabs&#039;], parent);
+				}
+
+				editorUi.menus.addMenuItems(menu, [&#039;ruler&#039;, &#039;-&#039;, &#039;search&#039;], parent);
+
+				if (isLocalStorage || mxClient.IS_CHROMEAPP)
+				{
+					var item = editorUi.menus.addMenuItem(menu, &#039;scratchpad&#039;, parent);
+					
+					if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
+					{
+						editorUi.menus.addLinkToItem(item, &#039;https://www.drawio.com/doc/faq/scratchpad&#039;);
+					}
+				}
+				
+				editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;findReplace&#039;,
+					&#039;layers&#039;, &#039;tags&#039;, &#039;chatWindowTitle&#039;, &#039;outline&#039;, &#039;-&#039;], parent);
+				
+				if (editorUi.commentsSupported())
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;comments&#039;], parent);
+				}
+				
+				if (file != null &amp;&amp; file.isRealtimeEnabled() &amp;&amp; file.isRealtimeSupported())
+				{
+					this.addMenuItems(menu, [&#039;showRemoteCursors&#039;], parent);
+				}
+
+				this.addMenuItems(menu, [&#039;-&#039;, &#039;fullscreen&#039;], parent);
+			}
+			else
+			{
+				this.addMenuItems(menu, ([&#039;format&#039;, &#039;outline&#039;, &#039;layers&#039;, &#039;tags&#039;, &#039;chatWindowTitle&#039;]).
+					concat((editorUi.commentsSupported()) ?
+					[&#039;comments&#039;, &#039;-&#039;] : [&#039;-&#039;]));
+				
+				this.addMenuItems(menu, [&#039;-&#039;, &#039;search&#039;], parent);
+				
+				if (isLocalStorage || mxClient.IS_CHROMEAPP)
+				{
+					var item = this.addMenuItem(menu, &#039;scratchpad&#039;, parent);
+					
+					if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
+					{
+						this.addLinkToItem(item, &#039;https://www.drawio.com/doc/faq/scratchpad&#039;);
+					}
+				}
+				
+				this.addMenuItems(menu, [&#039;toggleShapes&#039;, &#039;-&#039;, &#039;pageView&#039;, &#039;pageScale&#039;]);
+				this.addSubmenu(&#039;units&#039;, menu, parent);
+				menu.addSeparator(parent);
+
+				if (editorUi.isPageMenuVisible())
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;pageTabs&#039;], parent);
+				}
+
+				this.addMenuItems(menu, [&#039;ruler&#039;, &#039;-&#039;, &#039;tooltips&#039;, &#039;animations&#039;,
+					&#039;-&#039;, &#039;grid&#039;, &#039;guides&#039;, &#039;-&#039;, &#039;connectionArrows&#039;, &#039;connectionPoints&#039;, &#039;-&#039;,
+					&#039;resetView&#039;, &#039;zoomIn&#039;, &#039;zoomOut&#039;], parent);
+
+				if (urlParams[&#039;sketch&#039;] != &#039;1&#039;)
+				{
+					this.addMenuItems(menu, [&#039;-&#039;, &#039;fullscreen&#039;], parent);
+				}
+			}
+		})));
+
+		// Edit cell menu
+		this.put(&#039;editCell&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			// Last entry edits cell label
+			this.addMenuItems(menu, [&#039;editLink&#039;, &#039;editShape&#039;, &#039;editImage&#039;, &#039;crop&#039;, &#039;-&#039;,
+				&#039;editData&#039;, &#039;copyData&#039;, &#039;pasteData&#039;, &#039;-&#039;, &#039;editConnectionPoints&#039;,
+				&#039;editGeometry&#039;, &#039;-&#039;, &#039;editTooltip&#039;, &#039;editStyle&#039;, &#039;-&#039;, &#039;edit&#039;], parent);
+		})));
+				
+		// Current page menu
+		this.put(&#039;currentPage&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			var page = editorUi.currentPage;
+
+			if (page != null)
+			{
+				menu.addItem(mxResources.get(&#039;rename&#039;) + &#039;...&#039;, null, mxUtils.bind(this, function()
+				{
+					editorUi.renamePage(page, page.getName());
+				}), parent);
+				
+				menu.addItem(mxResources.get(&#039;delete&#039;), null, mxUtils.bind(this, function()
+				{
+					editorUi.removePage(page);
+				}), parent);
+				
+				if (editorUi.pages.length &gt; 1)
+				{
+					editorUi.menus.addSubmenu(&#039;movePage&#039;, menu, parent, mxResources.get(&#039;move&#039;));
+					menu.addSeparator(parent);
+				}
+
+				menu.addSeparator(parent);
+
+				menu.addItem(mxResources.get(&#039;duplicate&#039;), null, mxUtils.bind(this, function()
+				{
+					editorUi.duplicatePage(page, mxResources.get(&#039;copyOf&#039;, [page.getName()]));
+				}), parent);
+				
+				if (urlParams[&#039;embed&#039;] != 1)
+				{
+					if (!mxClient.IS_CHROMEAPP &amp;&amp; !EditorUi.isElectronApp &amp;&amp; editorUi.getServiceName() == &#039;draw.io&#039;)
+					{
+						menu.addItem(mxResources.get(&#039;openInNewWindow&#039;), null, mxUtils.bind(this, function()
+						{
+							editorUi.editor.editAsNew(editorUi.getFileData(true, null, null, null, true, true));
+						}), parent);
+					}
+				}
+			}
+		})));
+
+		// Pages menu
+		this.put(&#039;pages&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			var page = editorUi.currentPage;
+
+			if (!editorUi.editor.graph.isLightboxView())
+			{
+				menu.addItem(mxResources.get(&#039;insertPage&#039;), null, mxUtils.bind(this, function()
+				{
+					try
+					{
+						editorUi.insertPage();
+					}
+					catch (e)
+					{
+						editorUi.handleError(e);
+					}
+				}), parent, null, editorUi.editor.graph.isEnabled());
+				
+				menu.addSeparator(parent);
+			}
+			
+			if (editorUi.pages != null)
+			{
+				for (var i = 0; i &lt; editorUi.pages.length; i++)
+				{
+					(mxUtils.bind(this, function(index)
+					{
+						var item = null;
+
+						if (editorUi.pages[index] == page &amp;&amp; !editorUi.editor.graph.isLightboxView() &amp;&amp;
+							editorUi.editor.graph.isEnabled())
+						{
+							item = editorUi.menus.addSubmenu(&#039;currentPage&#039;, menu, parent,
+								editorUi.getShortPageName(page));
+						}
+						else
+						{
+							item = menu.addItem(editorUi.getShortPageName(editorUi.pages[index]),
+								null, mxUtils.bind(this, function()
+							{
+								editorUi.selectPage(editorUi.pages[index]);
+							}), parent);
+						}
+
+						var id = editorUi.pages[index].getId();
+						item.setAttribute(&#039;title&#039;, editorUi.pages[index].getName() +
+							&#039; (&#039; + (index + 1) + &#039;/&#039; + editorUi.pages.length + &#039;)&#039; +
+							((id != null) ? &#039; [&#039; + id + &#039;]&#039; : &#039;&#039;));
+						
+						// Adds checkmark to current page
+						if (editorUi.pages[index] == page)
+						{
+							menu.addCheckmark(item, Editor.checkmarkImage);
+						}
+					}))(i);
+				}
+			}
+		})));
+		
+		if (EditorUi.isElectronApp)
+		{
+			var enableSpellCheck = urlParams[&#039;enableSpellCheck&#039;] == &#039;1&#039;;
+
+			var spellCheckAction = editorUi.actions.addAction(&#039;spellCheck&#039;, function()
+			{
+				editorUi.toggleSpellCheck();
+				enableSpellCheck = !enableSpellCheck;
+				editorUi.alert(mxResources.get(&#039;restartForChangeRequired&#039;));
+			});
+			
+			spellCheckAction.setToggleAction(true);
+			spellCheckAction.setSelectedCallback(function() { return enableSpellCheck; });
+
+			var enableStoreBkp = urlParams[&#039;enableStoreBkp&#039;] == &#039;1&#039;;
+
+			var storeBkpAction = editorUi.actions.addAction(&#039;autoBkp&#039;, function()
+			{
+				editorUi.toggleStoreBkp();
+				enableStoreBkp = !enableStoreBkp;
+			});
+			
+			storeBkpAction.setToggleAction(true);
+			storeBkpAction.setSelectedCallback(function() { return enableStoreBkp; });
+
+			var enableGoogleFonts = urlParams[&#039;isGoogleFontsEnabled&#039;] == &#039;1&#039;;
+			
+			var googleFontsAction = editorUi.actions.addAction(&#039;googleFonts&#039;, function()
+			{
+				editorUi.toggleGoogleFonts();
+				enableGoogleFonts = !enableGoogleFonts;
+				editorUi.alert(mxResources.get(&#039;restartForChangeRequired&#039;));
+			});
+
+			googleFontsAction.setToggleAction(true);
+			googleFontsAction.setSelectedCallback(function() { return enableGoogleFonts; });
+
+			editorUi.actions.addAction(&#039;openDevTools&#039;, function()
+			{
+				editorUi.openDevTools();
+			});
+
+			editorUi.actions.addAction(&#039;drafts...&#039;, function()
+			{
+				var dlg = new FilenameDialog(editorUi, (EditorUi.draftSaveDelay / 1000) + &#039;&#039;,
+					mxResources.get(&#039;apply&#039;), mxUtils.bind(this, function(newValue)
+				{
+					var val = parseInt(newValue);
+					
+					if (val &gt;= 0)
+					{
+						EditorUi.draftSaveDelay = val * 1000;
+						EditorUi.enableDrafts = val &gt; 0;  //Disable if zero
+						mxSettings.setDraftSaveDelay(val);
+						mxSettings.save();		
+					}
+				}), mxResources.get(&#039;draftSaveInt&#039;));
+				editorUi.showDialog(dlg.container, 320, 80, true, true);
+				dlg.init();
+			});
+		}
+		
+		var langMenu = this.get(&#039;language&#039;);
+
+		this.put(&#039;extras&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			// Compatiblity code for live UI switch and static UI
+			if (Editor.currentTheme == &#039;simple&#039; ||
+				Editor.currentTheme == &#039;sketch&#039; ||
+				Editor.currentTheme == &#039;min&#039;)
+			{
+				if (langMenu != null &amp;&amp; (urlParams[&#039;embed&#039;] != &#039;1&#039; || urlParams[&#039;lang&#039;] == null))
+				{
+					editorUi.menus.addSubmenu(&#039;language&#039;, menu, parent);
+				}
+				
+				if ((urlParams[&#039;embed&#039;] != &#039;1&#039; || urlParams[&#039;atlas&#039;] == &#039;1&#039;) &amp;&amp;
+					urlParams[&#039;extAuth&#039;] != &#039;1&#039; &amp;&amp; urlParams[&#039;embedInline&#039;] != &#039;1&#039;)
+				{
+					editorUi.menus.addSubmenu(&#039;appearance&#039;, menu, parent);
+				}
+
+				if (urlParams[&#039;embed&#039;] != &#039;1&#039; &amp;&amp; urlParams[&#039;extAuth&#039;] != &#039;1&#039; &amp;&amp;
+					editorUi.mode != App.MODE_ATLAS)
+				{
+					editorUi.menus.addSubmenu(&#039;theme&#039;, menu, parent);
+				}
+				
+				menu.addSeparator(parent);
+
+				editorUi.menus.addSubmenu(&#039;units&#039;, menu, parent);
+				editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;copyConnect&#039;,
+					&#039;collapseExpand&#039;, &#039;-&#039;, &#039;tooltips&#039;, &#039;animations&#039;, &#039;-&#039;], parent);
+
+				var file = editorUi.getCurrentFile();
+
+				if (Editor.currentTheme != &#039;simple&#039;)
+				{
+					if (file != null &amp;&amp; file.isRealtimeEnabled() &amp;&amp; file.isRealtimeSupported())
+					{
+						this.addMenuItems(menu, [&#039;showRemoteCursors&#039;], parent);
+					}
+					
+					editorUi.menus.addMenuItems(menu, [&#039;ruler&#039;, &#039;-&#039;], parent);
+				}
+
+				if (EditorUi.isElectronApp)
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;googleFonts&#039;, &#039;spellCheck&#039;, &#039;autoBkp&#039;, &#039;drafts&#039;, &#039;-&#039;], parent);
+				}
+
+				this.addSubmenu(&#039;diagramLanguage&#039;, menu, parent);
+				menu.addSeparator(parent);
+				
+				if (editorUi.mode != App.MODE_ATLAS) 
+				{
+					editorUi.menus.addMenuItem(menu, &#039;configuration&#039;, parent);
+				}
+				
+				// Adds trailing separator in case new plugin entries are added
+				menu.addSeparator(parent);
+			}
+			else
+			{
+				if (urlParams[&#039;embed&#039;] != &#039;1&#039; || urlParams[&#039;lang&#039;] == null)
+				{
+					this.addSubmenu(&#039;language&#039;, menu, parent);
+				}
+				
+				if (urlParams[&#039;embed&#039;] != &#039;1&#039; || urlParams[&#039;atlas&#039;] == &#039;1&#039;)
+				{
+					editorUi.menus.addSubmenu(&#039;appearance&#039;, menu, parent);
+				}
+
+				if (urlParams[&#039;embed&#039;] != &#039;1&#039; &amp;&amp; urlParams[&#039;extAuth&#039;] != &#039;1&#039; &amp;&amp;
+					editorUi.mode != App.MODE_ATLAS)
+				{
+					this.addSubmenu(&#039;theme&#039;, menu, parent);
+				}
+
+				if (EditorUi.isElectronApp)
+				{
+					this.addMenuItems(menu, [&#039;-&#039;, &#039;googleFonts&#039;, &#039;spellCheck&#039;, &#039;autoBkp&#039;, &#039;drafts&#039;, &#039;-&#039;], parent);
+				}
+	
+				menu.addSeparator(parent);
+				var item = this.addSubmenu(&#039;adaptiveColors&#039;, menu, parent);
+
+				if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
+				{
+					editorUi.menus.addLinkToItem(item, &#039;https://github.com/jgraph/drawio/discussions/4713&#039;);
+				}
+				
+				if (typeof(MathJax) !== &#039;undefined&#039;)
+				{
+					var item = this.addMenuItem(menu, &#039;mathematicalTypesetting&#039;, parent);
+					
+					if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
+					{
+						this.addLinkToItem(item, &#039;https://www.drawio.com/doc/faq/math-typesetting&#039;);
+					}
+				}
+				
+				if (urlParams[&#039;embed&#039;] != &#039;1&#039;)
+				{
+					var file = editorUi.getCurrentFile();
+
+					if (file != null &amp;&amp; file.isRealtimeEnabled() &amp;&amp; file.isRealtimeSupported())
+					{
+						this.addMenuItems(menu, [&#039;-&#039;, &#039;showRemoteCursors&#039;, &#039;shareCursor&#039;], parent);
+					}
+
+					menu.addSeparator(parent);
+					
+					if (isLocalStorage || mxClient.IS_CHROMEAPP)
+					{
+						this.addMenuItems(menu, [&#039;showStartScreen&#039;], parent);
+					}
+
+					this.addMenuItems(menu, [&#039;autosave&#039;], parent);
+				}
+
+				this.addMenuItems(menu, [&#039;-&#039;, &#039;copyConnect&#039;, &#039;collapseExpand&#039;, &#039;-&#039;], parent);
+				this.addSubmenu(&#039;diagramLanguage&#039;, menu, parent);
+				this.addMenuItems(menu, [&#039;editDiagram&#039;, &#039;-&#039;], parent);
+
+				if (!editorUi.isOfflineApp() &amp;&amp; isLocalStorage)
+				{
+					this.addMenuItem(menu, &#039;plugins&#039;, parent);
+				}
+	
+				this.addMenuItems(menu, [&#039;configuration&#039;], parent);
+			}
+		})));
+
+		this.put(&#039;movePage&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			var currentPage = editorUi.currentPage;
+			var current = editorUi.getPageIndex(currentPage);
+
+			if (editorUi.pages != null)
+			{
+				for (var i = 0; i &lt; editorUi.pages.length; i++)
+				{
+					if (i != current)
+					{
+						(function(index)
+						{
+							menu.addItem(editorUi.getShortPageName(editorUi.pages[index]), null, function()
+							{
+								editorUi.movePage(current, index);
+								editorUi.scrollToPage(currentPage, true);
+							}, parent);
+						})(i);
+					}
+				}
+			}
+		})));
+
+		this.put(&#039;share&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			if (!editorUi.isStandaloneApp())
+			{
+				var err = (editorUi.isOffline(true)) ?
+					mxResources.get(&#039;offline&#039;) :
+					editorUi.getNetworkStatus();
+
+				if (err != null)
+				{
+					menu.addItem(err, null, null, parent, null, false);
+					menu.addSeparator(parent);
+				}
+
+				editorUi.menus.addMenuItems(menu, [&#039;share&#039;], parent);
+			}
+
+			this.addMenuItem(menu, &#039;publishLink&#039;, parent, null,
+				null, mxResources.get(&#039;publish&#039;) + &#039;...&#039;);
+
+			if (!EditorUi.isElectronApp &amp;&amp; editorUi.isOwnGDriveDomain() &amp;&amp;
+				editorUi.getServiceName() == &#039;draw.io&#039; &amp;&amp; !navigator.standalone)
+			{
+				this.addMenuItem(menu, &#039;presentationMode&#039;, parent);
+			}
+
+			if (editorUi.getMainUser() != null)
+			{
+				this.addMenuItems(menu, [&#039;accounts&#039;], parent);
+			}
+		})));
+
+		this.put(&#039;diagram&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			var file = editorUi.getCurrentFile();
+
+			if (Editor.currentTheme != &#039;simple&#039;)
+			{
+				editorUi.menus.addSubmenu(&#039;extras&#039;, menu, parent, mxResources.get(&#039;settings&#039;));
+				menu.addSeparator(parent);
+			}
+
+			// Compatiblity code for live UI switch and static UI
+			var sketchTheme = Editor.currentTheme == &#039;simple&#039; ||
+				Editor.currentTheme == &#039;sketch&#039;;
+			
+			if (mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;new&#039;, &#039;open&#039;], parent);
+				editorUi.menus.addSubmenu(&#039;openRecent&#039;, menu, parent);
+				editorUi.menus.addMenuItems(menu,
+					[&#039;-&#039;, &#039;synchronize&#039;, &#039;properties&#039;, &#039;-&#039;,
+					&#039;save&#039;, &#039;saveAs&#039;, &#039;-&#039;], parent);
+			}
+			else if (editorUi.mode == App.MODE_ATLAS)
+			{
+				if (urlParams[&#039;noSaveBtn&#039;] != &#039;1&#039; &amp;&amp;
+					urlParams[&#039;embedInline&#039;] != &#039;1&#039;)
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;save&#039;], parent);
+				}
+				
+				if (urlParams[&#039;saveAndExit&#039;] == &#039;1&#039; || 
+					(urlParams[&#039;noSaveBtn&#039;] == &#039;1&#039; &amp;&amp;
+					urlParams[&#039;saveAndExit&#039;] != &#039;0&#039;) || editorUi.mode == App.MODE_ATLAS)
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;saveAndExit&#039;], parent);
+					
+					if (file != null &amp;&amp; file.isRevisionHistorySupported())
+					{
+						editorUi.menus.addMenuItems(menu, [&#039;revisionHistory&#039;], parent);
+					}
+				}
+				
+				menu.addSeparator(parent);
+			}
+			else if (editorUi.mode == App.MODE_ATLAS)
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;save&#039;, &#039;synchronize&#039;, &#039;-&#039;], parent);
+			}
+			else if (urlParams[&#039;noFileMenu&#039;] != &#039;1&#039;)
+			{
+				editorUi.menus.addSubmenu(&#039;file&#039;, menu, parent);
+				menu.addSeparator(parent);
+
+				if (Editor.currentTheme == &#039;min&#039;)
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;toggleShapes&#039;, &#039;format&#039;,
+						&#039;layers&#039;, &#039;tags&#039;, &#039;chatWindowTitle&#039;, &#039;-&#039;,
+						&#039;findReplace&#039;], parent);
+			
+					if (editorUi.commentsSupported())
+					{
+						editorUi.menus.addMenuItems(menu, [&#039;comments&#039;], parent);
+					}
+					
+					menu.addSeparator(parent);
+				}
+			}
+			
+			editorUi.menus.addSubmenu(&#039;exportAs&#039;, menu, parent);
+			
+			if (mxClient.IS_CHROMEAPP || EditorUi.isElectronApp || editorUi.getServiceName() == &#039;atlassian&#039;)
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;import&#039;], parent);
+			}
+			else if (urlParams[&#039;noFileMenu&#039;] != &#039;1&#039;)
+			{
+				editorUi.menus.addSubmenu(&#039;importFrom&#039;, menu, parent);
+			}
+	
+			if (Editor.currentTheme != &#039;simple&#039; &amp;&amp; Editor.currentTheme != &#039;min&#039;)
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;-&#039;,  &#039;findReplace&#039;], parent);
+		
+				if (editorUi.commentsSupported())
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;comments&#039;, &#039;-&#039;], parent);
+				}
+
+				editorUi.menus.addMenuItems(menu, [&#039;toggleShapes&#039;, &#039;format&#039;,
+					&#039;layers&#039;, &#039;tags&#039;, &#039;chatWindowTitle&#039;, &#039;-&#039;], parent);	
+				editorUi.menus.addMenuItems(menu, [&#039;pageSetup&#039;], parent);
+			}
+			else if (Editor.currentTheme != &#039;min&#039;)
+			{
+				this.addMenuItems(menu, [&#039;-&#039;], parent);
+				this.addSubmenu(&#039;newLibrary&#039;, menu, parent);
+				this.addSubmenu(&#039;openLibraryFrom&#039;, menu, parent);
+			}
+	
+			menu.addSeparator(parent);
+
+			// Cannot use print in standalone mode on iOS as we cannot open new windows
+			if (urlParams[&#039;noFileMenu&#039;] != &#039;1&#039; &amp;&amp; (!mxClient.IS_IOS || !navigator.standalone))
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;print&#039;], parent);
+			}
+	
+			if (!sketchTheme &amp;&amp; Editor.currentTheme != &#039;min&#039;)
+			{
+				if (file != null &amp;&amp; editorUi.fileNode != null &amp;&amp; urlParams[&#039;embedInline&#039;] != &#039;1&#039;)
+				{
+					var filename = (file.getTitle() != null) ?
+						file.getTitle() : editorUi.defaultFilename;
+					
+					if (!/(\.html)$/i.test(filename))
+					{
+						this.addMenuItems(menu, [&#039;-&#039;, &#039;properties&#039;]);
+					}
+				}
+			}
+	
+			menu.addSeparator(parent);
+			
+			if (Editor.currentTheme == &#039;simple&#039;)
+			{
+				editorUi.menus.addSubmenu(&#039;extras&#039;, menu, parent, mxResources.get(&#039;settings&#039;));
+				menu.addSeparator(parent);
+			}
+
+			editorUi.menus.addSubmenu(&#039;help&#039;, menu, parent);
+			menu.addSeparator(parent);
+
+			if (urlParams[&#039;embed&#039;] == &#039;1&#039;)
+			{
+				if (urlParams[&#039;noSaveBtn&#039;] != &#039;1&#039; &amp;&amp;
+					urlParams[&#039;embedInline&#039;] != &#039;1&#039;)
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;save&#039;], parent);
+				}
+				
+				if (urlParams[&#039;saveAndExit&#039;] == &#039;1&#039; || 
+					(urlParams[&#039;noSaveBtn&#039;] == &#039;1&#039; &amp;&amp;
+					urlParams[&#039;saveAndExit&#039;] != &#039;0&#039;))
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;saveAndExit&#039;], parent);
+					
+					if (file != null &amp;&amp; file.isRevisionHistorySupported())
+					{
+						editorUi.menus.addMenuItems(menu, [&#039;revisionHistory&#039;], parent);
+					}
+				}
+			}
+
+			if (urlParams[&#039;embed&#039;] == &#039;1&#039; || editorUi.mode == App.MODE_ATLAS)
+			{
+				if (urlParams[&#039;noExitBtn&#039;] != &#039;1&#039; || editorUi.mode == App.MODE_ATLAS)
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;exit&#039;], parent);
+				}
+			}
+			
+			if (urlParams[&#039;embed&#039;] != &#039;1&#039; &amp;&amp; file != null &amp;&amp; typeof AtlasFile == &#039;undefined&#039;) // Exclude Atlasian plugin
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;close&#039;], parent);
+			}
+		})));
+
+		this.put(&#039;save&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			var file = editorUi.getCurrentFile();
+			
+			if (file != null &amp;&amp; (file.constructor == DriveFile || file.constructor == OneDriveFile))
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;save&#039;, &#039;makeCopy&#039;, &#039;-&#039;, &#039;rename&#039;, &#039;moveToFolder&#039;], parent);
+			}
+			else
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;save&#039;, &#039;saveAs&#039;, &#039;-&#039;, &#039;rename&#039;], parent);
+				this.addMenuItems(menu, [(editorUi.isOfflineApp()) ? &#039;upload&#039; : &#039;makeCopy&#039;], parent);
+			}
+			
+			editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;autosave&#039;], parent);
+	
+			if (file != null &amp;&amp; file.isRevisionHistorySupported())
+			{
+				editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;revisionHistory&#039;], parent);
+			}
+		})));
+
+		this.put(&#039;file&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			// Compatiblity code for live UI switch and static UI
+			var minTheme = Editor.currentTheme == &#039;simple&#039; ||
+				Editor.currentTheme == &#039;sketch&#039; ||
+				Editor.currentTheme == &#039;min&#039;;
+
+			if (urlParams[&#039;embed&#039;] == &#039;1&#039;)
+			{
+				this.addSubmenu(&#039;importFrom&#039;, menu, parent);
+				this.addSubmenu(&#039;exportAs&#039;, menu, parent);
+				this.addSubmenu(&#039;embed&#039;, menu, parent);
+
+				if (urlParams[&#039;libraries&#039;] == &#039;1&#039;)
+				{
+					this.addMenuItems(menu, [&#039;-&#039;], parent);
+					this.addSubmenu(&#039;newLibrary&#039;, menu, parent);
+					this.addSubmenu(&#039;openLibraryFrom&#039;, menu, parent);
+				}
+				
+				if (editorUi.isRevisionHistorySupported())
+				{
+					this.addMenuItems(menu, [&#039;-&#039;, &#039;revisionHistory&#039;], parent);
+				}
+				
+				this.addMenuItems(menu, [&#039;-&#039;, &#039;pageSetup&#039;, &#039;print&#039;, &#039;-&#039;, &#039;rename&#039;], parent);
+				
+				if (urlParams[&#039;embedInline&#039;] != &#039;1&#039;)
+				{
+					if (urlParams[&#039;noSaveBtn&#039;] == &#039;1&#039;)
+					{
+						if (urlParams[&#039;saveAndExit&#039;] != &#039;0&#039;)
+						{
+							this.addMenuItems(menu, [&#039;saveAndExit&#039;], parent);
+						}
+					}
+					else
+					{
+						this.addMenuItems(menu, [&#039;save&#039;], parent);
+						
+						if (urlParams[&#039;saveAndExit&#039;] == &#039;1&#039;)
+						{
+							this.addMenuItems(menu, [&#039;saveAndExit&#039;], parent);
+						}
+					}
+				}
+				
+				if (urlParams[&#039;noExitBtn&#039;] != &#039;1&#039;)
+				{
+					this.addMenuItems(menu, [&#039;exit&#039;], parent);
+				}
+			}
+			else if (minTheme)
+			{
+				var file = editorUi.getCurrentFile();
+				editorUi.menus.addMenuItems(menu, [&#039;new&#039;], parent);
+				editorUi.menus.addSubmenu(&#039;openFrom&#039;, menu, parent);
+
+				if (isLocalStorage)
+				{
+					this.addSubmenu(&#039;openRecent&#039;, menu, parent);
+				}
+				
+				menu.addSeparator(parent);
+				editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;save&#039;], parent);
+
+				if (file == null || file.constructor != DriveFile)
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;saveAs&#039;], parent);
+				}
+
+				if (!mxClient.IS_CHROMEAPP &amp;&amp; !EditorUi.isElectronApp &amp;&amp;
+					file != null &amp;&amp; (file.constructor != LocalFile ||
+					file.fileHandle != null))
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;synchronize&#039;], parent);
+				}
+
+				menu.addSeparator(parent);
+
+				if (file != null)
+				{
+					if (Editor.currentTheme != &#039;simple&#039; &amp;&amp;
+						(file.constructor == DriveFile ||
+						file.constructor == GitHubFile ||
+						file.constructor == OneDriveFile))
+					{
+						editorUi.menus.addMenuItems(menu, [&#039;share&#039;], parent);
+					}
+
+					if ((Editor.currentTheme == &#039;sketch&#039; || Editor.currentTheme == &#039;min&#039;) &amp;&amp;
+						!mxClient.IS_CHROMEAPP &amp;&amp; !EditorUi.isElectronApp)
+					{
+						this.addMenuItem(menu, &#039;publishLink&#039;, parent, null, null,
+							mxResources.get(&#039;publish&#039;) + &#039;...&#039;);
+					}
+
+					if ((Editor.currentTheme == &#039;sketch&#039; || Editor.currentTheme == &#039;min&#039;) &amp;&amp;
+						!EditorUi.isElectronApp &amp;&amp; editorUi.isOwnGDriveDomain() &amp;&amp;
+						editorUi.getServiceName() == &#039;draw.io&#039; &amp;&amp; !navigator.standalone)
+					{
+						this.addMenuItem(menu, &#039;presentationMode&#039;, parent);
+					}
+				}
+
+				menu.addSeparator(parent);
+
+				if (file != null &amp;&amp; file.isRenamable())
+				{
+					this.addMenuItems(menu, [&#039;rename&#039;], parent);
+				}
+				
+				if (editorUi.isOfflineApp())
+				{
+					this.addMenuItems(menu, [&#039;upload&#039;], parent);
+				}
+				else
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;makeCopy&#039;], parent);
+
+					if (file != null)
+					{
+						if (file.constructor == OneDriveFile ||
+							file.constructor == DriveFile)
+						{
+							editorUi.menus.addMenuItems(menu, [&#039;moveToFolder&#039;], parent);
+						}
+
+						menu.addSeparator(parent);
+
+						if (file.getFolderUrl() != null)
+						{
+							editorUi.menus.addMenuItems(menu, [&#039;openFolder&#039;], parent);
+						}
+
+						if (file.getFileUrl() != null)
+						{
+							editorUi.menus.addMenuItems(menu, [&#039;openFile&#039;], parent);
+						}
+					}
+				}
+				
+				menu.addSeparator(parent);
+
+				if (file != null &amp;&amp; file.isRevisionHistorySupported())
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;revisionHistory&#039;], parent);
+				}
+
+				if (file != null &amp;&amp; editorUi.fileNode != null &amp;&amp; urlParams[&#039;embedInline&#039;] != &#039;1&#039;)
+				{
+					var filename = (file.getTitle() != null) ?
+						file.getTitle() : editorUi.defaultFilename;
+					
+					if ((file.constructor == DriveFile &amp;&amp; file.sync != null &amp;&amp;
+						file.sync.isConnected()) || !/(\.html)$/i.test(filename))
+					{
+						this.addMenuItems(menu, [&#039;properties&#039;], parent);
+					}
+				}
+					
+				if (Editor.currentTheme == &#039;simple&#039;)
+				{
+					editorUi.menus.addMenuItems(menu, [&#039;-&#039;, &#039;autosave&#039;], parent);
+				}
+			}
+			else
+			{
+				var file = this.editorUi.getCurrentFile();
+				
+				if (file != null &amp;&amp; file.constructor == DriveFile)
+				{
+					if (file.isRestricted())
+					{
+						this.addMenuItems(menu, [&#039;exportOptionsDisabled&#039;], parent);
+					}
+					
+					this.addMenuItems(menu, [&#039;save&#039;, &#039;-&#039;, &#039;share&#039;], parent);
+					
+					var item = this.addMenuItem(menu, &#039;synchronize&#039;, parent);
+					
+					if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
+					{
+						this.addLinkToItem(item, &#039;https://www.drawio.com/doc/faq/synchronize&#039;);
+					}
+					
+					menu.addSeparator(parent);
+				}
+				else
+				{
+					this.addMenuItems(menu, [&#039;new&#039;], parent);
+				}
+				
+				this.addSubmenu(&#039;openFrom&#039;, menu, parent);
+
+				if (isLocalStorage)
+				{
+					this.addSubmenu(&#039;openRecent&#039;, menu, parent);
+				}
+				
+				if (file != null &amp;&amp; file.constructor == DriveFile)
+				{
+					this.addMenuItems(menu, [&#039;new&#039;, &#039;-&#039;, &#039;rename&#039;, &#039;makeCopy&#039;,
+						&#039;openFolder&#039;, &#039;moveToFolder&#039;], parent);
+				}
+				else
+				{
+					if (!mxClient.IS_CHROMEAPP &amp;&amp; !EditorUi.isElectronApp &amp;&amp;
+						file != null &amp;&amp; (file.constructor != LocalFile ||
+						file.fileHandle != null))
+					{	
+						menu.addSeparator(parent);
+						var item = this.addMenuItem(menu, &#039;synchronize&#039;, parent);
+						
+						if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
+						{
+							this.addLinkToItem(item, &#039;https://www.drawio.com/doc/faq/synchronize&#039;);
+						}
+					}
+					
+					this.addMenuItems(menu, [&#039;-&#039;, &#039;save&#039;, &#039;saveAs&#039;, &#039;-&#039;], parent);
+					
+					if (!mxClient.IS_CHROMEAPP &amp;&amp; !EditorUi.isElectronApp &amp;&amp;
+						editorUi.getServiceName() == &#039;draw.io&#039; &amp;&amp;
+						!editorUi.isOfflineApp() &amp;&amp; file != null)
+					{
+						this.addMenuItems(menu, [&#039;share&#039;, &#039;-&#039;], parent);
+					}
+					
+					if (file != null &amp;&amp; file.isRenamable())
+					{
+						this.addMenuItems(menu, [&#039;rename&#039;], parent);
+					}
+					
+					if (editorUi.isOfflineApp())
+					{
+						this.addMenuItems(menu, [&#039;upload&#039;], parent);
+					}
+					else
+					{
+						this.addMenuItems(menu, [&#039;makeCopy&#039;], parent);
+
+						if (file != null)
+						{
+							if (file.constructor == OneDriveFile)
+							{
+								this.addMenuItems(menu, [&#039;moveToFolder&#039;], parent);
+							}
+
+							if (file.getFolderUrl() != null)
+							{
+								editorUi.menus.addMenuItems(menu, [&#039;openFolder&#039;], parent);
+							}
+						}
+					}
+				}
+				
+				menu.addSeparator(parent);
+				this.addSubmenu(&#039;importFrom&#039;, menu, parent);
+				this.addSubmenu(&#039;exportAs&#039;, menu, parent);
+
+				if (!editorUi.isOffline())
+				{
+					menu.addSeparator(parent);
+					this.addSubmenu(&#039;embed&#039;, menu, parent);
+					this.addSubmenu(&#039;publish&#039;, menu, parent);
+				}
+				
+				menu.addSeparator(parent);
+				this.addSubmenu(&#039;newLibrary&#039;, menu, parent);
+				this.addSubmenu(&#039;openLibraryFrom&#039;, menu, parent);
+				
+				if (editorUi.isRevisionHistorySupported())
+				{
+					this.addMenuItems(menu, [&#039;-&#039;, &#039;revisionHistory&#039;], parent);
+				}
+				
+				if (file != null &amp;&amp; editorUi.fileNode != null &amp;&amp; urlParams[&#039;embedInline&#039;] != &#039;1&#039;)
+				{
+					var filename = (file.getTitle() != null) ?
+						file.getTitle() : editorUi.defaultFilename;
+					
+					if ((file.constructor == DriveFile &amp;&amp; file.sync != null &amp;&amp;
+						file.sync.isConnected()) || !/(\.html)$/i.test(filename))
+					{
+						this.addMenuItems(menu, [&#039;-&#039;, &#039;properties&#039;]);
+					}
+				}
+				
+				this.addMenuItems(menu, [&#039;-&#039;, &#039;pageSetup&#039;], parent);
+				
+				// Cannot use print in standalone mode on iOS as we cannot open new windows
+				if (!mxClient.IS_IOS || !navigator.standalone)
+				{
+					this.addMenuItems(menu, [&#039;print&#039;], parent);
+				}
+
+				this.addMenuItems(menu, [&#039;-&#039;, &#039;close&#039;]);
+			}
+		})));
+		
+		//Replace the default font family menu
+		this.put(&#039;fontFamily&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			var addItem = mxUtils.bind(this, function(fontName, fontUrl, deletable, fontLabel, tooltip)
+			{
+				var graph = editorUi.editor.graph;
+
+				var tr = this.styleChange(menu, (fontLabel != null) ? fontLabel : fontName,
+					[mxConstants.STYLE_FONTFAMILY, &#039;fontSource&#039;, &#039;FType&#039;],
+					[fontName, (fontUrl != null) ? encodeURIComponent(fontUrl) : null, null],
+					null, parent, function()
+				{
+					graph.setFont(fontName, fontUrl);
+					editorUi.fireEvent(new mxEventObject(&#039;styleChanged&#039;,
+						&#039;keys&#039;, [mxConstants.STYLE_FONTFAMILY, &#039;fontSource&#039;, &#039;FType&#039;],
+						&#039;values&#039;, [fontName, (fontUrl != null) ? encodeURIComponent(fontUrl) : null, null],
+						&#039;cells&#039;, [graph.cellEditor.getEditingCell()]));
+				}, function()
+				{
+					graph.updateLabelElements(graph.getSelectionCells(), function(elt)
+					{
+						elt.removeAttribute(&#039;face&#039;);
+						elt.style.fontFamily = null;
+						
+						if (elt.nodeName == &#039;PRE&#039;)
+						{
+							graph.replaceElement(elt, &#039;div&#039;);
+						}
+					});
+				});
+				
+				if (deletable)
+				{
+					var img = document.createElement(&#039;img&#039;);
+					img.className = &#039;geAdaptiveAsset&#039;;
+					img.setAttribute(&#039;src&#039;, Editor.crossImage);
+					img.setAttribute(&#039;title&#039;, mxResources.get(&#039;delete&#039;));
+					img.setAttribute(&#039;valign&#039;, &#039;absmiddle&#039;);
+					img.setAttribute(&#039;border&#039;, &#039;0&#039;);
+					img.style.position = &#039;relative&#039;;
+					img.style.top = &#039;2px&#039;;
+					img.style.width = &#039;14px&#039;;
+					img.style.cursor = &#039;default&#039;;
+					img.style.margin = &#039;0 3px&#039;;
+					tr.firstChild.nextSibling.nextSibling.appendChild(img);
+					
+					mxEvent.addListener(img, (mxClient.IS_POINTER) ? &#039;pointerup&#039; : &#039;mouseup&#039;, mxUtils.bind(this, function(evt)
+					{
+						this.removeCustomFont(fontName, fontUrl);
+						this.editorUi.hideCurrentMenu();
+						mxEvent.consume(evt);
+					}));
+				}
+				
+				Graph.addFont(fontName, fontUrl);
+				tr.firstChild.nextSibling.style.fontFamily = fontName;
+				
+				var tooltip = (fontLabel != null) ? fontLabel : fontName;
+						
+				if (fontUrl != null)
+				{
+					tooltip += &#039; (&#039; + fontUrl + &#039;)&#039;;
+				}
+
+				tr.setAttribute(&#039;title&#039;, tooltip);
+			});
+			
+			var reserved = {};
+
+			for (var i = 0; i &lt; this.defaultFonts.length; i++)
+			{
+				var value = this.defaultFonts[i];
+				
+				if (typeof value === &#039;string&#039;)
+				{
+					addItem(value);
+				}
+				else if (value.fontFamily != null &amp;&amp; value.fontUrl != null)
+				{
+					reserved[encodeURIComponent(value.fontFamily) + &#039;@&#039; +
+						encodeURIComponent(value.fontUrl)] = true;
+					addItem(value.fontFamily, value.fontUrl);
+				}
+			}
+
+			menu.addSeparator(parent);
+		
+			// Special entries in the font menu are composed of custom fonts
+			// from the local storage and actual used fonts in the file
+			var duplicates = {};
+			var fontNames = {};
+			var entries = [];
+			
+			function addEntry(entry)
+			{
+				var key = encodeURIComponent(entry.name) +
+					((entry.url == null) ? &#039;&#039; :
+					&#039;@&#039; + encodeURIComponent(entry.url));
+					
+				if (!reserved[key])
+				{
+					var label = entry.name;
+					var counter = 0;
+					
+					while (fontNames[label.toLowerCase()] != null)
+					{
+						label = entry.name + &#039; (&#039; + (++counter) + &#039;)&#039;;
+					}
+					
+					if (duplicates[key] == null)
+					{
+						entries.push({name: entry.name, url: entry.url,
+							label: label, title: entry.url});
+						fontNames[label.toLowerCase()] = entry;
+						duplicates[key] = entry;
+					}
+				}
+			};
+			
+			// Adds custom user-defined fonts from local storage
+			for (var i = 0; i &lt; this.customFonts.length; i++)
+			{
+				addEntry(this.customFonts[i]);
+			}
+			
+			// Sorts by label
+			entries.sort(function(a, b)
+			{
+				if (a.label &lt; b.label)
+				{
+					return -1;
+				}
+				else if (a.label &gt; b.label)
+				{
+					return 1;
+				}
+				else
+				{
+					return 0;
+				}
+			});
+			
+			if (entries.length &gt; 0)
+			{
+				for (var i = 0; i &lt; entries.length; i++)
+				{
+					addItem(entries[i].name, entries[i].url,
+						true, entries[i].label);
+				}
+
+				menu.addSeparator(parent);
+			}
+			
+			menu.addItem(mxResources.get(&#039;reset&#039;), null, mxUtils.bind(this, function()
+			{
+				this.customFonts = [];
+				editorUi.fireEvent(new mxEventObject(&#039;customFontsChanged&#039;));
+			}), parent);
+			
+			menu.addSeparator(parent);
+			
+			menu.addItem(mxResources.get(&#039;custom&#039;) + &#039;...&#039;, null, mxUtils.bind(this, function()
+			{
+				var graph = this.editorUi.editor.graph;
+				var curFontName = graph.getStylesheet().getDefaultVertexStyle()
+					[mxConstants.STYLE_FONTFAMILY];
+				var curType = &#039;s&#039;;
+				var curUrl = null;
+				
+				// Handles in-place editing custom fonts via font family lookup
+				if (graph.isEditing())
+				{
+					var node = graph.getSelectedEditingElement();
+
+					if (node != null)
+					{
+						var css = mxUtils.getCurrentStyle(node);
+
+						if (css != null)
+						{
+							curFontName = mxUtils.getCssFontFamily(css.fontFamily);
+
+							// Finds the URL for the current font by finding the nearest parent element
+							// with a data-font-src attribute or the fontSource attribute from the cell
+							var state = graph.getView().getState(graph.cellEditor.getEditingCell());
+							var curUrl = (state != null) ? state.style[&#039;fontSource&#039;] : null;
+			    			
+			    			if (curUrl != null)
+			    			{
+				    			curUrl = decodeURIComponent(curUrl);
+							}
+
+							var temp = node;
+
+							while (temp != null &amp;&amp; temp != graph.cellEditor.textarea)
+							{
+								if (temp.nodeType == mxConstants.NODETYPE_ELEMENT)
+								{
+									if (temp.getAttribute(&#039;data-font-src&#039;) != null)
+									{
+										curUrl = temp.getAttribute(&#039;data-font-src&#039;);
+										break;
+									}
+									else if (temp.getAttribute(&#039;face&#039;) == curFontName)
+									{
+										// Means that a system font is used for the element
+										curUrl = null;
+										break;
+									}
+								}
+
+								temp = temp.parentNode;
+							}
+							
+							if (curUrl != null)
+							{
+								if (Graph.isGoogleFontUrl(curUrl))
+								{
+									curUrl = null;
+									curType = &#039;g&#039;;
+								}
+								else
+								{
+									curType = &#039;w&#039;;
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+			    	var state = graph.getView().getState(graph.getSelectionCell());
+			    	
+			    	if (state != null)
+			    	{
+			    		curFontName = state.style[mxConstants.STYLE_FONTFAMILY] || curFontName;
+						var temp = state.style[&#039;fontSource&#039;];
+						
+						if (temp != null)
+						{
+							temp = decodeURIComponent(temp);
+							
+							if (Graph.isGoogleFontUrl(temp))
+							{
+								curType = &#039;g&#039;;
+							}
+							else
+							{
+								curType = &#039;w&#039;;
+								curUrl = temp;
+							}
+						}
+			    	}
+				}
+		    	
+    			if (curUrl != null &amp;&amp; curUrl.substring(0, PROXY_URL.length) == PROXY_URL)
+				{
+    				curUrl = decodeURIComponent(curUrl.substr((PROXY_URL + &#039;?url=&#039;).length));
+				}
+		    	
+		    	// Saves the current selection state
+		    	var selState = null;
+		    	
+		    	if (document.activeElement == graph.cellEditor.textarea)
+				{
+					selState = graph.cellEditor.saveSelection();
+				}
+				
+				var dlg = new FontDialog(this.editorUi, curFontName, curUrl, curType, mxUtils.bind(this, function(fontName, fontUrl, type)
+				{
+					// Restores the selection state
+					if (selState != null)
+					{
+						graph.cellEditor.restoreSelection(selState);
+						selState = null;
+					}
+					
+					if (fontName != null &amp;&amp; fontName.length &gt; 0)
+					{
+						this.addCustomFont(fontName, fontUrl);
+
+						if (graph.isEditing())
+						{
+							graph.setFont(fontName, fontUrl);
+						}
+						else
+						{
+							graph.getModel().beginUpdate();
+							
+							try
+							{
+								graph.stopEditing(false);
+								graph.setCellStyles(mxConstants.STYLE_FONTFAMILY, fontName);
+								graph.setCellStyles(&#039;fontSource&#039;, (fontUrl != null) ?
+									encodeURIComponent(fontUrl) : null);
+								graph.setCellStyles(&#039;FType&#039;, null);
+							}
+							finally
+							{
+								graph.getModel().endUpdate();
+							}
+						}
+					}
+				}));
+				this.editorUi.showDialog(dlg.container, 380, 
+					130 + (Editor.enableWebFonts ? 70 : 0) + (urlParams[&#039;isGoogleFontsEnabled&#039;] != &#039;0&#039;? 50 : 0), true, true);
+				dlg.init();
+			}), parent, null, true);
+		})));
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

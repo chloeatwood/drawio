@@ -1,0 +1,2143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\Pages.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\Pages.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">62.41</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">2026</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">144.40</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">22.03</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2006-2016, JGraph Holdings Ltd
+ * Copyright (c) 2006-2016, draw.io AG
+ */
+/**
+ * Constructs a new point for the optional x and y coordinates. If no
+ * coordinates are given, then the default values for &lt;x&gt; and &lt;y&gt; are used.
+ * @constructor
+ * @class Implements a basic 2D point. Known subclassers = {@link mxRectangle}.
+ * @param {number} x X-coordinate of the point.
+ * @param {number} y Y-coordinate of the point.
+ */
+/**
+ * Global types
+ */
+function DiagramPage(node, id)
+{
+	this.node = node;
+
+	if (id != null)
+	{
+		this.node.setAttribute(&#039;id&#039;, id);
+	}
+	else if (this.getId() == null)
+	{
+		this.node.setAttribute(&#039;id&#039;, Editor.guid());
+	}
+};
+
+/**
+ * Holds the diagram node for the page.
+ */
+DiagramPage.prototype.node = null;
+
+/**
+ * Holds the root cell for the page.
+ */
+DiagramPage.prototype.root = null;
+
+/**
+ * Holds the view state for the page.
+ */
+DiagramPage.prototype.viewState = null;
+
+/**
+ * Specifies if the diagram in the page was been modified
+ * and the cached XML data needs to be updated.
+ */
+DiagramPage.prototype.diagramModified = false;
+
+/**
+ * 
+ */
+DiagramPage.prototype.getId = function()
+{
+	return this.node.getAttribute(&#039;id&#039;);
+};
+
+/**
+ * 
+ */
+DiagramPage.prototype.getName = function()
+{
+	return this.node.getAttribute(&#039;name&#039;);
+};
+
+/**
+ * 
+ */
+DiagramPage.prototype.setName = function(value)
+{
+	if (value == null)
+	{
+		this.node.removeAttribute(&#039;name&#039;);
+	}
+	else
+	{
+		this.node.setAttribute(&#039;name&#039;, value);
+	}
+};
+
+/**
+ * Sets the diagram modified flag.
+ */
+DiagramPage.prototype.setDiagramModified = function(value)
+{
+	this.diagramModified = value;
+};
+
+/**
+ * Returns the diagram modified flag.
+ */
+DiagramPage.prototype.isDiagramModified = function()
+{
+	return this.diagramModified;
+};
+
+/**
+ * Change types
+ */
+function RenamePage(ui, page, name)
+{
+	this.ui = ui;
+	this.page = page;
+	this.name = name;
+	this.previous = name;
+}
+
+/**
+ * Implementation of the undoable page rename.
+ */
+RenamePage.prototype.execute = function()
+{
+	var tmp = this.page.getName();
+	this.page.setName(this.previous);
+	this.name = this.previous;
+	this.previous = tmp;
+	
+	// Required to update page name in placeholders
+	this.ui.editor.graph.updatePlaceholders();
+	this.ui.editor.fireEvent(new mxEventObject(&#039;pageRenamed&#039;));
+};
+
+/**
+ * Undoable change of page title.
+ */
+function MovePage(ui, oldIndex, newIndex)
+{
+	this.ui = ui;
+	this.oldIndex = oldIndex;
+	this.newIndex = newIndex;
+}
+
+/**
+ * Implementation of the undoable page rename.
+ */
+MovePage.prototype.execute = function()
+{
+	this.ui.pages.splice(this.newIndex, 0, this.ui.pages.splice(this.oldIndex, 1)[0]);
+	var tmp = this.oldIndex;
+	this.oldIndex = this.newIndex;
+	this.newIndex = tmp;
+	
+	// Required to update page numbers in placeholders
+	this.ui.editor.graph.updatePlaceholders();
+	this.ui.editor.fireEvent(new mxEventObject(&#039;pageMoved&#039;));
+};
+
+/**
+ * Class: mxCurrentRootChange
+ *
+ * Action to change the current root in a view.
+ *
+ * Constructor: mxCurrentRootChange
+ *
+ * Constructs a change of the current root in the given view.
+ */
+function SelectPage(ui, page, viewState)
+{
+	this.ui = ui;
+	this.page = page;
+	this.previousPage = page;
+	
+	if (page != null)
+	{
+		this.ui.updatePageRoot(page);
+		
+		if (viewState != null)
+		{
+			page.viewState = viewState;
+		}
+	}
+};
+
+/**
+ * Executes selection of a new page.
+ */
+SelectPage.prototype.execute = function()
+{
+	var prevIndex = mxUtils.indexOf(this.ui.pages, this.previousPage);
+	
+	if (this.page != null &amp;&amp; prevIndex &gt;= 0)
+	{
+		var page = this.ui.currentPage;
+		var editor = this.ui.editor;
+		var graph = editor.graph;
+		
+		if (page.isDiagramModified())
+		{
+			page.setDiagramModified(false);
+
+			// Updates cached diagram data
+			EditorUi.removeChildNodes(page.node);
+			page.node.appendChild(editor.getGraphXml(true));
+		}
+
+		page.viewState = graph.getViewState();
+		page.root = graph.model.root;
+		
+		if (page.model != null)
+		{
+			// Updates internal structures of offpage model
+			page.model.rootChanged(page.root);
+		}
+		
+		// Removes the previous cells and clears selection
+		graph.view.clear(page.root, true);
+		graph.clearSelection();
+			
+		// Switches the current page
+		this.ui.currentPage = this.previousPage;
+		this.previousPage = page;
+		page = this.ui.currentPage;
+	
+		// Switches the root cell and sets the view state
+		graph.model.prefix = Editor.guid() + &#039;-&#039;;
+		graph.model.rootChanged(page.root);
+		graph.setViewState(page.viewState);
+
+		// Handles grid state in chromeless mode which is stored in Editor instance
+		graph.gridEnabled = graph.gridEnabled &amp;&amp; (!this.ui.editor.isChromelessView() ||
+			urlParams[&#039;grid&#039;] == &#039;1&#039;);
+		
+		// Fires events
+		editor.graph.fireEvent(new mxEventObject(mxEvent.ROOT));
+		editor.fireEvent(new mxEventObject(&#039;pageSelected&#039;, &#039;change&#039;, this));
+	}
+};
+
+/**
+ * 
+ */
+function ChangePage(ui, page, select, index, noSelect)
+{
+	SelectPage.call(this, ui, select);
+	this.relatedPage = page;
+	this.index = index;
+	this.previousIndex = null;
+	this.noSelect = noSelect;
+};
+
+mxUtils.extend(ChangePage, SelectPage);
+
+/**
+ * Function: execute
+ *
+ * Changes the current root of the view.
+ */
+ChangePage.prototype.execute = function()
+{
+	// Fires event to setting view state from realtime
+	this.ui.editor.fireEvent(new mxEventObject(&#039;beforePageChange&#039;, &#039;change&#039;, this));
+	this.previousIndex = this.index;
+	
+	if (this.index == null)
+	{
+		var tmp = mxUtils.indexOf(this.ui.pages, this.relatedPage);
+		this.ui.pages.splice(tmp, 1);
+		this.index = tmp;
+	}
+	else
+	{
+		this.ui.pages.splice(this.index, 0, this.relatedPage);
+		this.index = null;
+	}
+	
+	if (!this.noSelect)
+	{
+		SelectPage.prototype.execute.apply(this, arguments);
+	}
+};
+
+/**
+ * 
+ */
+function ReplaceDiagram(ui, data)
+{
+	this.ui = ui;
+	this.data = data;
+};
+
+/**
+ * Function: execute
+ *
+ * Changes the current root of the view.
+ */
+ReplaceDiagram.prototype.execute = function()
+{
+	var graph = this.ui.editor.graph;
+	var data = this.ui.editor.getGraphXml();
+
+	this.ui.editor.readGraphState(this.data);
+	this.ui.editor.updateGraphComponents();
+	
+	var dec = new mxCodec(this.data.ownerDocument);
+	var model = new mxGraphModel();
+	dec.decode(this.data, model);
+	
+	this.data = data;
+
+	if (this.ui.currentPage)
+	{
+		this.ui.currentPage.viewState = graph.getViewState();
+		this.ui.currentPage.root = model.root;
+
+		if (this.ui.currentPage.model != null)
+		{
+			// Updates internal structures of offpage model
+			this.ui.currentPage.model.rootChanged(this.ui.currentPage.model.root);
+		}
+	}
+
+	graph.view.clear(graph.model.root, true);
+	graph.model.rootChanged(model.root);
+	graph.fireEvent(new mxEventObject(mxEvent.ROOT));
+};
+
+/**
+ * Specifies if the tab container is visible. Default is true.
+ */
+EditorUi.prototype.tabContainerVisible = true;
+
+/**
+ * Returns the index of the selected page.
+ */
+EditorUi.prototype.setTabContainerVisible = function(visible, remember)
+{
+	if (Editor.isSettingsEnabled() &amp;&amp; remember)
+	{
+		mxSettings.settings.pages = visible;
+		mxSettings.save();
+	}
+	
+	this.tabContainerVisible = visible;
+	this.updateTabContainer();
+};
+
+/**
+ * Returns the index of the selected page.
+ */
+EditorUi.prototype.isTabContainerVisible = function()
+{
+	return this.tabContainerVisible;
+};
+
+/**
+ * Returns the index of the selected page.
+ */
+EditorUi.prototype.getSelectedPageIndex = function()
+{
+	return this.getPageIndex(this.currentPage);
+};
+
+/**
+ * Returns the index of the given page.
+ */
+ EditorUi.prototype.getPageIndex = function(page)
+ {
+	 var result = null;
+	 
+	 if (this.pages != null &amp;&amp; page != null)
+	 {
+		 for (var i = 0; i &lt; this.pages.length; i++)
+		 {
+			 if (this.pages[i] == page)
+			 {
+				 result = i;
+				 
+				 break;
+			 }
+		 }
+	 }
+	 
+	 return result;
+ };
+ 
+/**
+ * Returns the page with the given ID from the optional array of pages.
+ */
+EditorUi.prototype.getPageById = function(id, pages)
+{
+	pages = (pages != null) ? pages : this.pages;
+
+	if (pages != null)
+	{
+		for (var i = 0; i &lt; pages.length; i++)
+		{
+			if (pages[i].getId() == id)
+			{
+				return pages[i];
+			}
+		}
+	}
+
+	return null;
+};
+
+/**
+ * Returns the background image for the given page link.
+ */
+EditorUi.prototype.createImageForPageLink = function(src, sourcePage, sourceGraph, addFonts)
+{
+	var comma = src.indexOf(&#039;,&#039;);
+	var result = null;
+		
+	if (comma &gt; 0)
+	{
+		var page = this.getPageById(src.substring(comma + 1));
+
+		if (page != null &amp;&amp; page != sourcePage)
+		{
+			result = this.getImageForPage(page, sourcePage, sourceGraph, addFonts);
+			result.originalSrc = src;
+		}
+	}
+
+	if (result == null)
+	{
+		result = {originalSrc: src};
+	}
+
+	return result;
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.pageSelected = function()
+{
+	var graph = this.editor.graph;
+	var page = this.currentPage;
+
+	if (page != null)
+	{
+		graph.tooltipHandler.hide();
+
+		if (page.viewState == null ||
+			page.viewState.scrollTop == null ||
+			page.viewState.scrollLeft == null)
+		{
+			// Selects unlocked layer if page was never shown
+			graph.selectUnlockedLayer();
+			this.resetScrollbars();
+
+			if (graph.isLightboxView())
+			{
+				this.lightboxFit();
+			}
+
+			if (this.chromelessResize != null)
+			{
+				graph.container.scrollleft = 0;
+				graph.container.scrollTop = 0;
+				this.chromelessResize();
+			}
+		}
+		else
+		{
+			// Restores scrollbar positions
+			graph.setScrollbarPositions(page.viewState,
+				graph.view.translate.x, graph.view.translate.y);
+		}
+		
+		this.updateTabContainer();
+		this.scrollToPage();
+	}
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.getImageForPage = function(page, sourcePage, sourceGraph, addFonts)
+{
+	sourceGraph = (sourceGraph != null) ? sourceGraph : this.editor.graph;
+	var graphGetGlobalVariable = sourceGraph.getGlobalVariable;
+	var graph = this.createTemporaryGraph(sourceGraph.getStylesheet());
+	var index = this.getPageIndex((sourcePage != null) ?
+		sourcePage : this.currentPage);
+
+	graph.getGlobalVariable = function(name)
+	{
+		if (name == &#039;pagenumber&#039;)
+		{
+			return index + 1;
+		}
+		else if (name == &#039;page&#039; &amp;&amp; sourcePage != null)
+		{
+			return sourcePage.getName();
+		}
+		else
+		{
+			return graphGetGlobalVariable.apply(this, arguments);
+		}
+	};
+
+	document.body.appendChild(graph.container);
+	
+	this.updatePageRoot(page);
+	graph.setAdaptiveColors(page.viewState.adaptiveColors);
+	graph.model.setRoot(page.root);
+
+	var temp = Graph.foreignObjectWarningText;
+	Graph.foreignObjectWarningText = &#039;&#039;;
+	var svgRoot = graph.getSvg(null, null, null, null, null, null, null,
+		null, null, null, addFonts, null, null, null, true, true);
+	
+	var bounds = graph.getGraphBounds();
+	document.body.removeChild(graph.container);
+	Graph.foreignObjectWarningText = temp;
+
+	return new mxImage(Editor.createSvgDataUri(mxUtils.getXml(svgRoot)),
+		bounds.width, bounds.height, bounds.x, bounds.y);
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.initPages = function()
+{
+	if (!this.editor.graph.standalone)
+	{
+		this.actions.addAction(&#039;previousPage&#039;, mxUtils.bind(this, function()
+		{
+			this.selectNextPage(false);
+		}));
+		
+		this.actions.addAction(&#039;nextPage&#039;, mxUtils.bind(this, function()
+		{
+			this.selectNextPage(true);
+		}));
+
+		if (this.isPagesEnabled())
+		{
+			this.keyHandler.bindAction(33, true, &#039;previousPage&#039;, true); // Ctrl+Shift+PageUp
+			this.keyHandler.bindAction(34, true, &#039;nextPage&#039;, true); // Ctrl+Shift+PageDown
+		}
+			
+		// Updates the tabs after loading the diagram
+		var graph = this.editor.graph;
+		var graphViewValidateBackground = graph.view.validateBackground; 
+		
+		graph.view.validateBackground = mxUtils.bind(this, function()
+		{
+			graphViewValidateBackground.apply(graph.view, arguments);
+			
+			// Uses SVG subtree to support custom fonts and images
+			if (graph.view.backgroundImage != null)
+			{
+				EditorUi.embedSvgImages(graph.view.backgroundImage.node);
+			}
+		});
+
+		// Adds a graph model listener to update the view and diagram modified flag
+		this.editor.graph.model.addListener(mxEvent.CHANGE, mxUtils.bind(this, function(sender, evt)
+		{
+			var edit = evt.getProperty(&#039;edit&#039;);
+			var changes = edit.changes;
+			
+			for (var i = 0; i &lt; changes.length; i++)
+			{
+				if (changes[i] instanceof RenamePage ||
+					changes[i] instanceof ChangePage ||
+					changes[i] instanceof mxRootChange)
+				{
+					this.updateTabContainer();
+					break;	
+				}
+			}
+
+			if (this.currentPage != null &amp;&amp; !(changes.length == 1 &amp;&amp;
+				changes[0] instanceof SelectPage))
+			{
+				this.currentPage.setDiagramModified(true);
+			}
+		}));
+		
+		// Invokes pageSelected to reset/restore view state
+		var graphSizeDidChange = graph.sizeDidChange;
+		var lastPage = null;
+		var ui = this;
+
+		graph.sizeDidChange = function()
+		{
+			var result = graphSizeDidChange.apply(this, arguments);
+
+			if (ui.currentPage != null &amp;&amp;
+				lastPage != ui.currentPage)
+			{
+				lastPage = ui.currentPage;
+				ui.pageSelected();
+			}
+
+			return result;
+		};
+
+		// Selects new default parent if root changes
+		graph.addListener(mxEvent.ROOT, mxUtils.bind(this, function()
+		{
+			graph.checkDefaultParent();
+		}));
+		
+		var pagesChanged = mxUtils.bind(this, function()
+		{
+			this.updateDocumentTitle();
+			this.updateTabContainer();
+		});
+
+		this.addListener(&#039;currentThemeChanged&#039;, pagesChanged);
+		this.editor.addListener(&#039;pagesPatched&#039;, pagesChanged);
+		this.editor.addListener(&#039;pageRenamed&#039;, pagesChanged);
+		this.editor.addListener(&#039;pageMoved&#039;, pagesChanged);
+		this.editor.addListener(&#039;fileLoaded&#039;, pagesChanged);
+
+		this.editor.addListener(&#039;pageSelected&#039;, mxUtils.bind(this, function(sender, evt)
+		{
+			this.scrollToPage();
+			this.updateHashObject();
+			this.updateTabContainer();
+			this.updateDocumentTitle();
+		}));
+
+		this.editor.addListener(&#039;pageMoved&#039;, mxUtils.bind(this, function(sender, evt)
+		{
+			this.scrollToPage();
+			this.updateHashObject();
+		}));
+
+		mxEvent.addListener(window, &#039;resize&#039;, mxUtils.bind(this, function()
+		{
+			this.checkTabScrollerOverflow();
+		}));
+
+		this.addListener(&#039;languageChanged&#039;, mxUtils.bind(this, function()
+		{
+			this.updateTabContainer();
+		}));
+	}
+};
+
+/**
+ * Adds the listener for automatically saving the diagram for local changes.
+ */
+EditorUi.prototype.scrollToPage = function(page, force)
+{
+	var index = (page != null) ? this.getPageIndex(page) :
+		this.getSelectedPageIndex();
+	var scrollPage = (page != null) ?
+		page : this.currentPage;
+	
+	if (index != null &amp;&amp; this.tabScroller != null &amp;&amp;
+		this.tabScroller.children.length &gt; index &amp;&amp;
+		this.tabScroller.children[index] != null &amp;&amp;
+		(scrollPage != this.lastScrollPage || force))
+	{
+		this.tabScroller.children[index].scrollIntoView(
+			{block: &#039;nearest&#039;, inline: (page != null) ?
+			&#039;nearest&#039; : &#039;center&#039;});
+		this.tabScroller.children[index].className =
+			&#039;geTab gePageTab geActivePage&#039;;
+		this.lastScrollPage = scrollPage;
+	}
+};
+
+/**
+ * Adds the listener for automatically saving the diagram for local changes.
+ */
+EditorUi.prototype.restoreViewState = function(page, viewState, selection)
+{
+	var newPage = (page != null) ? this.getPageById(page.getId()) : null;
+	var graph = this.editor.graph;
+	
+	if (newPage != null &amp;&amp; this.currentPage != null &amp;&amp; this.pages != null)
+	{
+		if (newPage != this.currentPage)
+		{
+			this.selectPage(newPage, true, viewState);
+		}
+		else
+		{
+			// TODO: Pass viewState to setGraphXml
+			graph.setViewState(viewState);
+			this.editor.updateGraphComponents();
+			graph.view.revalidate();
+			graph.sizeDidChange();
+		}
+
+		graph.container.scrollLeft = graph.view.translate.x * graph.view.scale + viewState.scrollLeft;
+		graph.container.scrollTop = graph.view.translate.y * graph.view.scale + viewState.scrollTop;
+		graph.restoreSelection(selection);
+	}
+};
+
+/**
+ * Overrides setDefaultParent
+ */
+Graph.prototype.createViewState = function(node)
+{
+	var pv = node.getAttribute(&#039;page&#039;);
+	var ps = parseFloat(node.getAttribute(&#039;pageScale&#039;));
+	var pw = parseFloat(node.getAttribute(&#039;pageWidth&#039;));
+	var ph = parseFloat(node.getAttribute(&#039;pageHeight&#039;));
+	var bg = node.getAttribute(&#039;background&#039;);
+	var bgImg = this.parseBackgroundImage(node.getAttribute(&#039;backgroundImage&#039;));
+	var extFonts = node.getAttribute(&#039;extFonts&#039;);
+	
+	if (extFonts)
+	{
+		try
+		{
+			extFonts = extFonts.split(&#039;|&#039;).map(function(ef)
+			{
+				var parts = ef.split(&#039;^&#039;);
+				return {name: parts[0], url: parts[1]};
+			});
+		}
+		catch(e)
+		{
+			console.log(&#039;ExtFonts format error: &#039; + e.message);
+		}
+	}
+
+	return {
+		gridEnabled: node.getAttribute(&#039;grid&#039;) != &#039;0&#039;,
+		//gridColor: node.getAttribute(&#039;gridColor&#039;) || mxSettings.getGridColor(Editor.isDarkMode()),
+		gridSize: parseFloat(node.getAttribute(&#039;gridSize&#039;)) || mxGraph.prototype.gridSize,
+		guidesEnabled: node.getAttribute(&#039;guides&#039;) != &#039;0&#039;,
+		foldingEnabled: node.getAttribute(&#039;fold&#039;) != &#039;0&#039;,
+		shadowVisible: node.getAttribute(&#039;shadow&#039;) == &#039;1&#039;,
+		pageVisible: (this.isLightboxView()) ? false : ((pv != null) ? (pv != &#039;0&#039;) : this.defaultPageVisible),
+		background: (bg != null &amp;&amp; bg.length &gt; 0) ? bg : null,
+		backgroundImage: bgImg,
+		pageScale: (!isNaN(ps)) ? ps : mxGraph.prototype.pageScale,
+		pageFormat: (!isNaN(pw) &amp;&amp; !isNaN(ph)) ? new mxRectangle(0, 0, pw, ph) :
+			((typeof mxSettings === &#039;undefined&#039; || this.defaultPageFormat != null) ?
+				mxGraph.prototype.pageFormat : mxSettings.getPageFormat()),
+		tooltips: node.getAttribute(&#039;tooltips&#039;) != &#039;0&#039;,
+		connect: node.getAttribute(&#039;connect&#039;) != &#039;0&#039;,
+		arrows: node.getAttribute(&#039;arrows&#039;) != &#039;0&#039;,
+		mathEnabled: node.getAttribute(&#039;math&#039;) == &#039;1&#039;,
+		adaptiveColors: node.getAttribute(&#039;adaptiveColors&#039;),
+		selectionCells: null,
+		defaultParent: null,
+		scrollbars: this.defaultScrollbars,
+		scale: 1,
+		hiddenTags: [],
+		extFonts: extFonts || []
+	};
+};
+
+/**
+ * Writes the graph properties from the realtime model to the given mxGraphModel node.
+ */
+Graph.prototype.saveViewState = function(vs, node, ignoreTransient, resolveReferences, sourcePage)
+{
+	if (!ignoreTransient)
+	{
+		node.setAttribute(&#039;grid&#039;, ((vs == null) ? this.defaultGridEnabled : vs.gridEnabled) ? &#039;1&#039; : &#039;0&#039;);
+		node.setAttribute(&#039;page&#039;, ((vs == null) ? this.defaultPageVisible : vs.pageVisible) ? &#039;1&#039; : &#039;0&#039;);
+		node.setAttribute(&#039;gridSize&#039;, (vs != null) ? vs.gridSize : mxGraph.prototype.gridSize);
+		node.setAttribute(&#039;guides&#039;, (vs == null || vs.guidesEnabled) ? &#039;1&#039; : &#039;0&#039;);
+		node.setAttribute(&#039;tooltips&#039;, (vs == null || vs.tooltips) ? &#039;1&#039; : &#039;0&#039;);
+		node.setAttribute(&#039;connect&#039;, (vs == null || vs.connect) ? &#039;1&#039; : &#039;0&#039;);
+		node.setAttribute(&#039;arrows&#039;, (vs == null || vs.arrows) ? &#039;1&#039; : &#039;0&#039;);
+		
+		// Ignores fold to avoid checksum errors for lightbox mode
+		node.setAttribute(&#039;fold&#039;, (vs == null || vs.foldingEnabled) ? &#039;1&#039; : &#039;0&#039;);
+	}
+
+	node.setAttribute(&#039;pageScale&#039;, (vs != null &amp;&amp; vs.pageScale != null) ?
+		vs.pageScale : mxGraph.prototype.pageScale);
+	
+	var pf = (vs != null) ? vs.pageFormat : (typeof mxSettings === &#039;undefined&#039; ||
+		this.defaultPageFormat != null) ? mxGraph.prototype.pageFormat :
+			mxSettings.getPageFormat();
+	
+	if (pf != null)
+	{
+		node.setAttribute(&#039;pageWidth&#039;, pf.width);
+		node.setAttribute(&#039;pageHeight&#039;, pf.height);
+	}
+
+	if (vs != null)
+	{
+		if (vs.background != null)
+		{
+			node.setAttribute(&#039;background&#039;, vs.background);
+		}
+
+		var bgImg = this.getBackgroundImageObject(vs.backgroundImage,
+			resolveReferences, sourcePage);
+
+		if (bgImg != null)
+		{
+			node.setAttribute(&#039;backgroundImage&#039;, JSON.stringify(bgImg));
+		}
+	}
+
+	node.setAttribute(&#039;math&#039;, ((vs == null) ? this.defaultMathEnabled : vs.mathEnabled) ? &#039;1&#039; : &#039;0&#039;);
+	node.setAttribute(&#039;shadow&#039;, (vs != null &amp;&amp; vs.shadowVisible) ? &#039;1&#039; : &#039;0&#039;);
+
+	if (vs == null || vs.adaptiveColors == null)
+	{
+		node.removeAttribute(&#039;adaptiveColors&#039;);
+	}
+	else
+	{
+		node.setAttribute(&#039;adaptiveColors&#039;, vs.adaptiveColors);
+	}
+	
+	if (vs != null &amp;&amp; vs.extFonts != null &amp;&amp; vs.extFonts.length &gt; 0)
+	{
+		node.setAttribute(&#039;extFonts&#039;, vs.extFonts.map(function(ef)
+		{
+			return ef.name + &#039;^&#039; + ef.url;
+		}).join(&#039;|&#039;));
+	}
+};
+
+/**
+ * Overrides setDefaultParent
+ */
+Graph.prototype.getViewState = function()
+{
+	return {
+		defaultParent: this.defaultParent,
+		currentRoot: this.view.currentRoot,
+		gridEnabled: this.gridEnabled,
+		gridSize: this.gridSize,
+		guidesEnabled: this.graphHandler.guidesEnabled,
+		foldingEnabled: this.foldingEnabled,
+		shadowVisible: this.shadowVisible,
+		scrollbars: this.scrollbars,
+		pageVisible: this.pageVisible,
+		background: this.background,
+		backgroundImage: this.backgroundImage,
+		pageScale: this.pageScale,
+		pageFormat: this.pageFormat,
+		tooltips: this.tooltipHandler.isEnabled(),
+		connect: this.connectionHandler.isEnabled(),
+		arrows: this.connectionArrowsEnabled,
+		scale: this.view.scale,
+		scrollLeft: this.container.scrollLeft - this.view.translate.x * this.view.scale,
+		scrollTop: this.container.scrollTop - this.view.translate.y * this.view.scale,
+		translate: this.view.translate.clone(),
+		lastPasteXml: this.lastPasteXml,
+		pasteCounter: this.pasteCounter,
+		mathEnabled: this.mathEnabled,
+		adaptiveColors: this.adaptiveColors,
+		hiddenTags: this.hiddenTags,
+		extFonts: this.extFonts
+	};
+};
+
+/**
+ * Overrides setDefaultParent
+ */
+Graph.prototype.setViewState = function(state, removeOldExtFonts)
+{
+	if (state != null)
+	{
+		this.lastPasteXml = state.lastPasteXml;
+		this.pasteCounter = state.pasteCounter || 0;
+		this.mathEnabled = state.mathEnabled;
+		this.adaptiveColors = state.adaptiveColors;
+		this.gridEnabled = state.gridEnabled;
+		this.gridSize = state.gridSize;
+		this.graphHandler.guidesEnabled = state.guidesEnabled;
+		this.foldingEnabled = state.foldingEnabled;
+		this.setShadowVisible(state.shadowVisible, false);
+		this.scrollbars = state.scrollbars;
+		this.pageVisible = !this.isViewer() &amp;&amp; state.pageVisible;
+		this.background = state.background;
+		this.pageScale = state.pageScale;
+		this.pageFormat = state.pageFormat;
+		this.view.currentRoot = state.currentRoot;
+		this.defaultParent = state.defaultParent;
+		this.connectionArrowsEnabled = state.arrows;
+		this.setTooltips(state.tooltips);
+		this.setConnectable(state.connect);
+		this.setBackgroundImage(state.backgroundImage);
+		this.hiddenTags = state.hiddenTags;
+
+		var oldExtFonts = this.extFonts;
+		this.extFonts = state.extFonts || [];
+
+		// Removing old fonts is important for real-time synchronization
+		// But, for page change, it results in undesirable font flicker
+		if (removeOldExtFonts &amp;&amp; oldExtFonts != null)
+		{
+			for (var i = 0; i &lt; oldExtFonts.length; i++)
+			{
+				var fontElem = document.getElementById(&#039;extFont_&#039; + oldExtFonts[i].name);
+				
+				if (fontElem != null)
+				{
+					fontElem.parentNode.removeChild(fontElem);
+				}
+			}
+		}
+		
+		for (var i = 0; i &lt; this.extFonts.length; i++)
+		{
+			this.addExtFont(this.extFonts[i].name, this.extFonts[i].url, true);
+		}
+		
+		if (state.scale != null)
+		{
+			this.view.scale = state.scale;
+		}
+		else
+		{
+			this.view.scale = 1;
+		}
+		
+		// Checks if current root or default parent have been removed
+		if (this.view.currentRoot != null &amp;&amp;
+			!this.model.contains(this.view.currentRoot))
+		{
+			this.view.currentRoot = null;
+		}
+		
+		if (this.defaultParent != null &amp;&amp;
+			!this.model.contains(this.defaultParent))
+		{
+			this.setDefaultParent(null);
+			this.selectUnlockedLayer();
+		}
+		
+		if (state.translate != null)
+		{
+			this.view.translate = state.translate;
+		}
+	}
+	else
+	{
+		this.view.currentRoot = null;
+		this.view.scale = 1;
+		this.gridEnabled = this.defaultGridEnabled;
+		this.gridSize = mxGraph.prototype.gridSize;
+		this.pageScale = mxGraph.prototype.pageScale;
+		this.pageFormat = (typeof mxSettings === &#039;undefined&#039; || this.defaultPageFormat != null) ?
+			mxGraph.prototype.pageFormat : mxSettings.getPageFormat();
+		this.pageVisible = this.defaultPageVisible;
+		this.background = null;
+		this.backgroundImage = null;
+		this.scrollbars = this.defaultScrollbars;
+		this.graphHandler.guidesEnabled = true;
+		this.foldingEnabled = true;
+		this.setShadowVisible(false, false);
+		this.defaultParent = null;
+		this.setTooltips(true);
+		this.setConnectable(true);
+		this.lastPasteXml = null;
+		this.pasteCounter = 0;
+		this.mathEnabled = this.defaultMathEnabled;
+		this.adaptiveColors = null;
+		this.connectionArrowsEnabled = true;
+		this.hiddenTags = [];
+		this.extFonts = [];
+	}
+
+	// Handles adaptive colors
+	this.setAdaptiveColors(this.adaptiveColors);
+	
+	// Implicit settings
+	this.pageBreaksVisible = this.pageVisible; 
+	this.preferPageSize = this.pageVisible;
+	this.fireEvent(new mxEventObject(&#039;viewStateChanged&#039;, &#039;state&#039;, state));
+};
+
+/**
+ * Sets the scrollbar positions from the given view state.
+ */
+Graph.prototype.setScrollbarPositions = function(state, dx, dy)
+{
+	if (state != null &amp;&amp;
+		state.scrollLeft != null &amp;&amp;
+		state.scrollTop != null)
+	{
+		this.container.scrollLeft = dx *
+			this.view.scale + state.scrollLeft;
+		this.container.scrollTop = dy *
+			this.view.scale + state.scrollTop;
+	}
+};
+
+/**
+ * Executes selection of a new page.
+ */
+Graph.prototype.addExtFont = function(fontName, fontUrl, dontRemember)
+{
+	// KNOWN: Font not added when pasting cells with custom fonts
+	if (fontName &amp;&amp; fontUrl)
+	{
+		var fontId = &#039;extFont_&#039; + fontName;
+
+		if (document.getElementById(fontId) == null)
+		{
+			if (fontUrl.indexOf(Editor.GOOGLE_FONTS) == 0)
+			{
+				mxClient.link(&#039;stylesheet&#039;, fontUrl, null, fontId);
+			}
+			else
+			{
+				var head = document.getElementsByTagName(&#039;head&#039;)[0];
+				
+				// KNOWN: Should load fonts synchronously
+				var style = document.createElement(&#039;style&#039;);
+				
+				style.appendChild(document.createTextNode(&#039;@font-face {\n&#039; +
+					&#039;\tfont-family: &quot;&#039;+ fontName +&#039;&quot;;\n&#039; + 
+					&#039;\tsrc: url(&quot;&#039;+ fontUrl +&#039;&quot;);\n}&#039;));
+				
+				style.setAttribute(&#039;id&#039;, fontId);
+				var head = document.getElementsByTagName(&#039;head&#039;)[0];
+		   		head.appendChild(style);
+			}
+		}
+		
+		if (!dontRemember)
+		{
+			if (this.extFonts == null) 
+			{
+				this.extFonts = [];
+			}
+			
+			var extFonts = this.extFonts, notFound = true;
+			
+			for (var i = 0; i &lt; extFonts.length; i++)
+			{
+				if (extFonts[i].name == fontName)
+				{
+					notFound = false;
+					break;
+				}
+			}
+			
+			if (notFound)
+			{
+				this.extFonts.push({name: fontName, url: fontUrl});
+			}
+		}
+	}
+};
+
+/**
+ * Executes selection of a new page.
+ */
+EditorUi.prototype.updatePageRoot = function(page, checked)
+{
+	if (page.root == null)
+	{
+		var node = this.editor.extractGraphModel(page.node, null, checked);
+		var cause = Editor.extractParserError(node);
+		
+		if (cause)
+		{
+			throw new Error(cause);
+		}
+		else if (node != null)
+		{
+			page.graphModelNode = node;
+			
+			// Converts model XML into page object with root cell
+			page.viewState = this.editor.graph.createViewState(node);
+			var codec = new mxCodec(node.ownerDocument);
+			page.root = codec.decode(node).root;
+		}
+		else
+		{
+			// Initializes page object with new empty root
+			page.root = this.editor.graph.model.createRoot();
+
+			// Sets default cell IDs
+			page.root.setId(&#039;0&#039;);
+			page.root.children[0].setId(&#039;1&#039;);
+
+			// Marks the page as needing an update
+			page.needsUpdate = true;
+		}
+	}
+	else if (page.viewState == null)
+	{
+		if (page.graphModelNode == null)
+		{
+			var node = this.editor.extractGraphModel(page.node);
+			var cause = Editor.extractParserError(node);
+			
+			if (cause)
+			{
+				throw new Error(cause);
+			}
+			else if (node != null)
+			{
+				page.graphModelNode = node;
+			}
+		}
+		
+		if (page.graphModelNode != null)
+		{
+			page.viewState = this.editor.graph.createViewState(page.graphModelNode);	
+		}
+	}
+
+	// Ensures the root has a default layer
+	if (page.root.children == null || page.root.children.length == 0)
+	{
+		var layer = new mxCell();
+		layer.setId(&#039;1&#039;);
+		page.root.insert(layer);
+
+		// Marks the page as needing an update
+		page.needsUpdate = true;
+	}
+	
+	return page;
+};
+
+/**
+ * Returns the current page and XML for the given page.
+ */
+EditorUi.prototype.getDiagramSnapshot = function()
+{
+	return {node: this.editor.getGraphXml(), page: this.currentPage};
+};
+
+/**
+ * 
+ */
+EditorUi.prototype.updateDiagramData = function(snapshot, node)
+{
+	if (this.getPageIndex(snapshot.page) == null)
+	{
+		this.insertPage(null, null, node);
+	}
+	else
+	{
+		var dec = new mxCodec(snapshot.node.ownerDocument);
+		var oldModel = new mxGraphModel();
+		dec.decode(snapshot.node, oldModel);
+
+		dec = new mxCodec(node.ownerDocument);
+		var newModel = new mxGraphModel();
+		dec.decode(node, newModel);
+
+		this.selectPage(snapshot.page);
+		var patch = this.diffCells(oldModel.root, newModel.root);
+		this.patchPage(snapshot.page, patch, null, true);
+	}
+};
+
+/**
+ * Adds keyboard shortcuts for page handling.
+ */
+EditorUi.prototype.replaceDiagramData = function(data)
+{
+	this.editor.graph.model.execute(new ReplaceDiagram(
+		this, mxUtils.parseXml(data).documentElement));
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.selectPage = function(page, quiet, viewState)
+{
+	try
+	{
+		if (page != this.currentPage)
+		{
+			var graph = this.editor.graph;
+
+			if (graph.isEditing())
+			{
+				graph.stopEditing(false);
+			}
+			
+			quiet = (quiet != null) ? quiet : false;
+			graph.isMouseDown = false;
+			graph.reset();
+			
+			var edit = graph.model.createUndoableEdit();
+			
+			// Special flag to bypass autosave for this edit
+			edit.ignoreEdit = true;
+
+			var change = new SelectPage(this, page, viewState);
+			change.execute();
+			edit.add(change);
+			edit.notify();
+			
+			if (!quiet)
+			{
+				graph.model.fireEvent(new mxEventObject(
+					mxEvent.UNDO, &#039;edit&#039;, edit));
+			}
+		}
+	}
+	catch (e)
+	{
+		this.handleError(e);
+	}
+};
+
+/**
+ * 
+ */
+EditorUi.prototype.selectNextPage = function(forward)
+{
+	var next = this.currentPage;
+	
+	if (next != null &amp;&amp; this.pages != null)
+	{
+		var tmp = mxUtils.indexOf(this.pages, next);
+		
+		if (forward)
+		{
+			this.selectPage(this.pages[mxUtils.mod(tmp + 1, this.pages.length)]);
+		}
+		else if (!forward)
+		{
+			this.selectPage(this.pages[mxUtils.mod(tmp - 1, this.pages.length)]);
+		}
+	}
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.insertPage = function(page, index, node)
+{
+	if (this.editor.graph.isEnabled())
+	{
+		if (this.editor.graph.isEditing())
+		{
+			this.editor.graph.stopEditing(false);
+		}
+		
+		page = (page != null) ? page : this.createPage(
+			null, this.createPageId(), node);
+		index = (index != null) ? index : this.pages.length;
+		
+		// Uses model to fire event and trigger autosave
+		var change = new ChangePage(this, page, page, index);
+		this.editor.graph.model.execute(change);
+	}
+	
+	return page;
+};
+
+/**
+ * Returns a unique page ID.
+ */
+EditorUi.prototype.createPageId = function()
+{
+	var id = null;
+	
+	do
+	{
+		id = Editor.guid();
+	} while (this.getPageById(id) != null)
+	
+	return id;
+};
+
+/**
+ * Returns a new DiagramPage instance.
+ */
+EditorUi.prototype.createPage = function(name, id, node)
+{
+	var doc = (this.fileNode != null) ? this.fileNode.ownerDocument : document;
+	var page = new DiagramPage(doc.createElement(&#039;diagram&#039;), id);
+	page.setName((name != null) ? name : this.createPageName());
+	this.initDiagramNode(page, node);
+	
+	return page;
+};
+
+/**
+ * Returns a page name.
+ */
+EditorUi.prototype.createPageName = function()
+{
+	// Creates a lookup with names
+	var existing = {};
+	
+	for (var i = 0; i &lt; this.pages.length; i++)
+	{
+		var tmp = this.pages[i].getName();
+		
+		if (tmp != null &amp;&amp; tmp.length &gt; 0)
+		{
+			existing[tmp] = tmp;
+		}
+	}
+
+	// Avoids existing names
+	var nr = this.pages.length;
+	var name = null;
+	
+	do
+	{
+		name = mxResources.get(&#039;pageWithNumber&#039;, [++nr]);
+	}
+	while (existing[name] != null);
+	
+	return name;
+};
+
+/**
+ * Removes the given page.
+ */
+EditorUi.prototype.removePage = function(page)
+{
+	try
+	{
+		var graph = this.editor.graph;
+		var tmp = mxUtils.indexOf(this.pages, page);
+		
+		if (graph.isEnabled() &amp;&amp; tmp &gt;= 0)
+		{
+			if (this.editor.graph.isEditing())
+			{
+				this.editor.graph.stopEditing(false);
+			}
+			
+			graph.model.beginUpdate();
+			try
+			{
+				var next = this.currentPage;
+				
+				if (next == page &amp;&amp; this.pages.length &gt; 1)
+				{
+					if (tmp == this.pages.length - 1)
+					{
+						tmp--;
+					}
+					else
+					{
+						tmp++;
+					}
+					
+					next = this.pages[tmp];
+				}
+				else if (this.pages.length &lt;= 1)
+				{
+					// Removes label with incorrect page number to force
+					// default page name which is OK for a single page
+					next = this.insertPage();
+					graph.model.execute(new RenamePage(this, next,
+						mxResources.get(&#039;pageWithNumber&#039;, [1])));
+				}
+				
+				// Uses model to fire event to trigger autosave
+				graph.model.execute(new ChangePage(this, page, next));
+			}
+			finally
+			{
+				graph.model.endUpdate();
+			}
+		}
+	}
+	catch (e)
+	{
+		this.handleError(e);
+	}
+	
+	return page;
+};
+
+/**
+ * Duplicates the given page.
+ */
+EditorUi.prototype.duplicatePage = function(page, name)
+{
+	var newPage = null;
+	
+	try
+	{
+		var graph = this.editor.graph;
+		
+		if (graph.isEnabled())
+		{
+			if (graph.isEditing())
+			{
+				graph.stopEditing();
+			}
+			
+			// Clones the current page and takes a snapshot of the graph model and view state
+			var node = page.node.cloneNode(false);
+			node.removeAttribute(&#039;id&#039;);
+
+			var cloneMap = new Object();
+			var lookup = graph.createCellLookup([graph.model.root]);
+
+			var newPage = new DiagramPage(node);
+			newPage.root = graph.cloneCell(graph.model.root,
+				null, cloneMap);
+			
+			// Updates cell IDs
+			var model = new mxGraphModel();
+			model.prefix = Editor.guid() + &#039;-&#039;;
+			model.setRoot(newPage.root);
+
+			// Updates custom links
+			graph.updateCustomLinks(graph.createCellMapping(
+				cloneMap, lookup), [newPage.root]);
+			
+			// Initializes diagram node
+			newPage.viewState = (page == this.currentPage) ?
+				graph.getViewState() : page.viewState;
+			this.initDiagramNode(newPage);
+			
+			// Resets zoom and scrollbar positions
+			newPage.viewState.scale = 1;
+			delete newPage.viewState.scrollLeft;
+			delete newPage.viewState.scrollTop;
+			delete newPage.viewState.currentRoot
+			delete newPage.viewState.defaultParent;
+			newPage.setName(name);
+			
+			// Inserts new page after duplicated page
+			newPage = this.insertPage(newPage,
+				mxUtils.indexOf(this.pages,
+					page) + 1);
+		}
+	}
+	catch (e)
+	{
+		this.handleError(e);
+	}
+	
+	return newPage;
+};
+
+/**
+ * Duplicates the given page.
+ */
+EditorUi.prototype.initDiagramNode = function(page, node)
+{
+	if (node == null)
+	{
+		var enc = new mxCodec(mxUtils.createXmlDocument());
+		node = enc.encode(new mxGraphModel(page.root));
+	}
+
+	this.editor.graph.saveViewState(page.viewState, node);
+	EditorUi.removeChildNodes(page.node);
+	page.node.appendChild(node);
+};
+
+/**
+ * Duplicates the given page.
+ */
+EditorUi.prototype.clonePages = function(pages)
+{
+	var errors = [];
+	var result = [];
+	
+	for (var i = 0; i &lt; pages.length; i++)
+	{
+		try
+		{
+			result.push(this.clonePage(pages[i]));
+		}
+		catch (e)
+		{
+			errors.push(mxResources.get(&#039;pageWithNumber&#039;,
+				[i + 1]) + &#039;: &#039; + e.toString());
+		}
+	}
+
+	if (errors.length &gt; 0)
+	{
+		var error = new Error(errors.join(&#039;\n&#039;));
+
+		// Provides error handling with XML of valid pages for fallback
+		try
+		{
+			if (result.length &gt; 0)
+			{
+				error.fallbackFileData = this.getXmlForPages(result);
+			}
+		}
+		catch (e)
+		{
+			// ignore
+		}
+
+		throw error;
+	}
+	
+	return result;
+};
+
+/**
+ * Duplicates the given page.
+ */
+EditorUi.prototype.clonePage = function(page)
+{
+	this.updatePageRoot(page);
+
+	var result = new DiagramPage(page.node.cloneNode(true));
+	var viewState = (page == this.currentPage) ?
+		this.editor.graph.getViewState() :
+		page.viewState;
+	result.viewState = mxUtils.clone(viewState,
+		EditorUi.transientViewStateProperties)
+	result.root = this.editor.graph.model.cloneCell(
+		page.root, null, true);
+	result.diagramModified = page.diagramModified;
+	
+	return result;
+};
+
+/**
+ * Renames the given page using a dialog.
+ */
+EditorUi.prototype.renamePage = function(page)
+{
+	var graph = this.editor.graph;
+
+	if (graph.isEnabled())
+	{
+		var dlg = new FilenameDialog(this, page.getName(), mxResources.get(&#039;rename&#039;),
+			mxUtils.bind(this, function(name)
+		{
+			if (name != null &amp;&amp; name.length &gt; 0)
+			{
+				this.editor.graph.model.execute(new RenamePage(this, page, name));
+			}
+		}), mxResources.get(&#039;rename&#039;));
+		this.showDialog(dlg.container, 300, 80, true, true);
+		dlg.init();
+	}
+	
+	return page;
+}
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.movePage = function(oldIndex, newIndex)
+{
+	this.editor.graph.model.execute(new MovePage(this, oldIndex, newIndex));
+}
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.createTabContainer = function()
+{
+	var div = document.createElement(&#039;div&#039;);
+	div.className = &#039;geTabContainer geTabItem&#039;;
+	
+	return div;
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.updateTabContainer = function()
+{
+	if (this.tabContainer != null &amp;&amp; !this.isTabContainerVisible())
+	{
+		this.tabContainer.style.display = &#039;none&#039;;
+	}
+	else if (this.tabContainer != null &amp;&amp; this.pages != null)
+	{
+		this.tabContainer.style.display = &#039;&#039;;
+		var graph = this.editor.graph;
+		var wrapper = document.createElement(&#039;div&#039;);
+		wrapper.className = &#039;geTabScroller&#039;;
+		var startIndex = null;
+
+		for (var i = 0; i &lt; this.pages.length; i++)
+		{
+			// Install drag and drop for page reorder
+			(mxUtils.bind(this, function(index, tab)
+			{
+				tab.className = &#039;geTab gePageTab&#039;;
+
+				if (this.pages[index] == this.currentPage)
+				{
+					tab.classList.add(&#039;geActivePage&#039;);
+				}
+				
+				tab.setAttribute(&#039;draggable&#039;, &#039;true&#039;);
+				
+				mxEvent.addListener(tab, &#039;dragstart&#039;, mxUtils.bind(this, function(evt)
+				{
+					if (graph.isEnabled())
+					{
+						// Workaround for no DnD on DIV in FF
+						if (mxClient.IS_FF)
+						{
+							// LATER: Check what triggers a parse as XML on this in FF after drop
+							evt.dataTransfer.setData(&#039;Text&#039;, &#039;&lt;diagram/&gt;&#039;);
+						}
+						
+						startIndex = index;
+					}
+					else
+					{
+						// Blocks event
+						mxEvent.consume(evt);
+					}
+				}));
+				
+				mxEvent.addListener(tab, &#039;dragend&#039;, mxUtils.bind(this, function(evt)
+				{
+					startIndex = null;
+					evt.stopPropagation();
+					evt.preventDefault();
+				}));
+				
+				mxEvent.addListener(tab, &#039;dragover&#039;, mxUtils.bind(this, function(evt)
+				{
+					if (startIndex != null)
+					{
+						evt.dataTransfer.dropEffect = &#039;move&#039;;
+					}
+					
+					evt.stopPropagation();
+					evt.preventDefault();
+				}));
+				
+				mxEvent.addListener(tab, &#039;drop&#039;, mxUtils.bind(this, function(evt)
+				{
+					if (startIndex != null &amp;&amp; index != startIndex)
+					{
+						// LATER: Shift+drag for merge, ctrl+drag for clone 
+						this.movePage(startIndex, index);
+					}
+
+					evt.stopPropagation();
+					evt.preventDefault();
+				}));
+				
+				wrapper.appendChild(tab);
+			}))(i, this.createTabForPage(this.pages[i], i + 1));
+		}
+
+		var sl = (this.tabScroller != null) ? this.tabScroller.scrollLeft : 0;
+		this.tabContainer.innerText = &#039;&#039;;
+
+		// Not chromeless and not read-only file
+		if (this.isPageInsertTabVisible())
+		{
+			this.tabContainer.appendChild(this.createPageInsertTab());
+		}
+	
+		if (Editor.currentTheme != &#039;simple&#039;)
+		{
+			this.pageMenuTab = this.createPageMenuTab();
+			this.tabContainer.appendChild(this.pageMenuTab);
+		}
+		
+		this.tabContainer.appendChild(wrapper);
+		
+		this.leftScrollTab = this.createLeftScrollTab();
+		this.tabContainer.appendChild(this.leftScrollTab);
+
+		this.rightScrollTab = this.createRightScrollTab();
+		this.tabContainer.appendChild(this.rightScrollTab);
+
+		this.tabScroller = wrapper;
+		this.tabScroller.scrollLeft = sl;
+		this.checkTabScrollerOverflow();
+
+		mxEvent.addListener(this.tabScroller, &#039;scroll&#039;, mxUtils.bind(this, function(evt)
+		{
+			this.checkTabScrollerOverflow();
+		}));
+	}
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.checkTabScrollerOverflow = function()
+{
+	if (this.tabScroller != null &amp;&amp; this.tabContainer != null &amp;&amp;
+		this.tabContainer.children.length &gt; 2)
+	{
+		var overflow = this.tabScroller.scrollWidth &gt; this.tabScroller.offsetWidth;
+
+		if (!overflow)
+		{
+			this.leftScrollTab.style.display = &#039;none&#039;;
+			this.rightScrollTab.style.display = &#039;none&#039;;
+		}
+		else
+		{
+			this.leftScrollTab.style.display = &#039;&#039;;
+			this.rightScrollTab.style.display = &#039;&#039;;
+
+			if (this.tabScroller.scrollLeft == 0)
+			{
+				this.leftScrollTab.classList.add(&#039;mxDisabled&#039;);
+			}
+			else
+			{
+				this.leftScrollTab.classList.remove(&#039;mxDisabled&#039;);
+			}
+
+			if (Math.ceil(this.tabScroller.scrollLeft) + this.tabScroller.offsetWidth &gt;=
+				this.tabScroller.scrollWidth)
+			{
+				this.rightScrollTab.classList.add(&#039;mxDisabled&#039;);
+			}
+			else
+			{
+				this.rightScrollTab.classList.remove(&#039;mxDisabled&#039;);
+			}
+		}
+	}
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.isPageInsertTabVisible = function()
+{
+	return urlParams[&#039;embed&#039;] == 1 || (this.getCurrentFile() != null &amp;&amp;
+		this.getCurrentFile().isEditable());
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.createTab = function()
+{
+	var tab = document.createElement(&#039;div&#039;);
+	tab.className = &#039;geTab&#039;;
+
+	return tab;
+};
+
+/**
+ * Returns a shortened page name.
+ */
+EditorUi.prototype.getShortPageName = function(page)
+{
+	var short = null;
+	
+	if (page != null)
+	{
+		short = page.getName();
+
+		if (short != null &amp;&amp; short.length &gt; 36)
+		{
+			short = short.substring(0, 34) + &#039;...&#039;;
+		}
+	}
+
+	return short;
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.createControlTab = function(title, image, fn)
+{
+	var tab = this.createTab();
+	tab.className = &#039;geTab geControlTab&#039;;
+	if (title != null)
+	{
+		tab.setAttribute(&#039;title&#039;, title);
+	}
+
+	var inner = document.createElement(&#039;div&#039;);
+	inner.className = &#039;geButton&#039;;
+	inner.style.backgroundImage = &#039;url(&#039; + image + &#039;)&#039;;
+
+	tab.appendChild(inner);
+	mxEvent.addListener(tab, &#039;click&#039;, fn);
+
+	return tab;
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.createPageInsertTab = function()
+{
+	return this.createControlTab(mxResources.get(&#039;insertPage&#039;),
+		Editor.plusImage, mxUtils.bind(this, function(evt)
+		{
+			try
+			{
+				this.insertPage();
+			}
+			catch (e)
+			{
+				this.handleError(e);
+			}
+
+			mxEvent.consume(evt);
+		}));
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.createLeftScrollTab = function()
+{
+	return this.createControlTab(null, Editor.chevronLeftImage, mxUtils.bind(this, function(evt)
+		{
+			var dx = Math.max(60, this.tabScroller.clientWidth / 2);
+
+			if (this.tabScroller.scrollBy != null)
+			{
+				this.tabScroller.scrollBy({left: -dx, top: 0, behavior: &#039;smooth&#039;});
+			}
+			else
+			{
+				this.tabScroller.scrollLeft -= dx;
+			}
+
+			mxEvent.consume(evt);
+		}));
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.createRightScrollTab = function()
+{
+	return this.createControlTab(null, Editor.chevronRightImage, mxUtils.bind(this, function(evt)
+		{
+			var dx = Math.max(60, this.tabScroller.clientWidth / 2);
+
+			if (this.tabScroller.scrollBy != null)
+			{
+				this.tabScroller.scrollBy({left: dx, top: 0, behavior: &#039;smooth&#039;});
+			}
+			else
+			{
+				this.tabScroller.scrollLeft += dx;
+			}
+
+			mxEvent.consume(evt);
+		}));
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.createPageMenuTab = function()
+{
+	return this.createControlTab(mxResources.get(&#039;pages&#039;),
+		Editor.menuImage, mxUtils.bind(this, function(evt)
+	{
+		this.editor.graph.popupMenuHandler.hideMenu();
+
+		var menu = new mxPopupMenu(mxUtils.bind(this, function(menu, parent)
+		{
+			this.menus.get(&#039;pages&#039;).funct(menu, parent);
+		}));
+		
+		menu.smartSeparators = true;
+		menu.showDisabled = true;
+		menu.autoExpand = true;
+		
+		// Disables autoexpand and destroys menu when hidden
+		menu.hideMenu = mxUtils.bind(this, function()
+		{
+			mxPopupMenu.prototype.hideMenu.apply(menu, arguments);
+			menu.destroy();
+		});
+	
+		var x = mxEvent.getClientX(evt);
+		var y = mxEvent.getClientY(evt);
+		menu.popup(x, y, null, evt);
+		
+		// Allows hiding by clicking on document
+		this.setCurrentMenu(menu);
+
+		mxEvent.consume(evt);
+	}));
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.createTabForPage = function(page, pageNumber)
+{
+	var tab = this.createTab();
+	var name = page.getName() || mxResources.get(&#039;untitled&#039;);
+	var id = page.getId();
+	tab.setAttribute(&#039;title&#039;, name + ((id != null) ?
+		&#039; (&#039; + id + &#039;)&#039; : &#039;&#039;) + &#039; [&#039; + pageNumber + &#039;]&#039;);
+	
+	var label = document.createElement(&#039;span&#039;);
+	label.style.maxWidth = &#039;160px&#039;;
+	label.style.textOverflow = &#039;ellipsis&#039;;
+	label.style.overflow = &#039;hidden&#039;;
+	mxUtils.write(label, name);
+	tab.appendChild(label);
+	this.addTabListeners(page, tab);
+
+	return tab;
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+EditorUi.prototype.addTabListeners = function(page, tab)
+{
+	mxEvent.disableContextMenu(tab);
+	var graph = this.editor.graph;
+
+	mxEvent.addListener(tab, &#039;dblclick&#039;, mxUtils.bind(this, function(evt)
+	{
+		this.renamePage(page)
+		mxEvent.consume(evt);
+	}));
+	
+	var elt = document.createElement(&#039;div&#039;);
+	elt.style.backgroundImage = &#039;url(&#039; + Editor.thinExpandImage + &#039;)&#039;;
+	elt.className = &#039;geButton&#039;;
+	tab.appendChild(elt);
+
+	var menuWasVisible = false;
+	var pageWasActive = false;
+
+	var onMouseDown = mxUtils.bind(this, function(evt)
+	{
+		// Do not consume event here to allow for drag and drop of tabs
+		menuWasVisible = this.currentMenu != null;
+		pageWasActive = page == this.currentPage;
+		this.scrollToPage(page);
+		
+		if (!graph.isMouseDown &amp;&amp; !pageWasActive)
+		{
+			this.selectPage(page);
+		}
+	});
+
+	var onMouseUp = mxUtils.bind(this, function(evt)
+	{
+		if (!graph.isMouseDown &amp;&amp; ((pageWasActive &amp;&amp;
+			(mxEvent.isTouchEvent(evt) ||
+				mxEvent.getSource(evt) == elt)) ||
+			mxEvent.isPopupTrigger(evt)))
+		{
+			graph.popupMenuHandler.hideMenu();
+			this.hideCurrentMenu();
+
+			if (!mxEvent.isTouchEvent(evt) || !menuWasVisible)
+			{
+				var menu = new mxPopupMenu(this.createPageMenu(page));
+				menu.smartSeparators = true;
+				menu.showDisabled = true;
+				menu.autoExpand = true;
+				
+				// Disables autoexpand and destroys menu when hidden
+				menu.hideMenu = mxUtils.bind(this, function()
+				{
+					mxPopupMenu.prototype.hideMenu.apply(menu, arguments);
+					this.resetCurrentMenu();
+					menu.destroy();
+				});
+		
+				var x = mxEvent.getClientX(evt);
+				var y = mxEvent.getClientY(evt);
+				menu.popup(x, y, null, evt);
+				this.setCurrentMenu(menu, tab);
+			}
+		}
+
+		mxEvent.consume(evt);
+	});
+
+	mxEvent.addGestureListeners(elt, onMouseDown, null, onMouseUp);
+	mxEvent.addGestureListeners(tab, onMouseDown, null, onMouseUp);
+};
+
+/**
+ * Returns true if the given string contains an mxfile.
+ */
+EditorUi.prototype.createPageMenu = function(page, label)
+{
+	return mxUtils.bind(this, function(menu, parent)
+	{
+		if (urlParams[&#039;embed&#039;] != 1)
+		{
+			if (!mxClient.IS_CHROMEAPP &amp;&amp; !EditorUi.isElectronApp &amp;&amp;
+				this.getServiceName() == &#039;draw.io&#039; &amp;&amp; !navigator.standalone)
+			{
+				menu.addItem(mxResources.get(&#039;openInNewWindow&#039;), null, mxUtils.bind(this, function()
+				{
+					this.editor.editAsNew(this.getFileData(true, null, null, null, true, true));
+				}), parent);
+			}
+		}
+
+		if (this.editor.graph.isEnabled())
+		{
+			menu.addItem(mxResources.get(&#039;duplicate&#039;), null, mxUtils.bind(this, function()
+			{
+				this.duplicatePage(page, mxResources.get(&#039;copyOf&#039;, [page.getName()]));
+			}), parent);
+
+			menu.addSeparator(parent);
+			
+			if (this.currentPage == page &amp;&amp; this.pages.length &gt; 1)
+			{
+				this.menus.addSubmenu(&#039;movePage&#039;, menu, parent, mxResources.get(&#039;move&#039;));
+			}
+
+			menu.addItem(mxResources.get(&#039;delete&#039;), null, mxUtils.bind(this, function()
+			{
+				this.removePage(page);
+			}), parent);
+			
+			menu.addItem(mxResources.get(&#039;rename&#039;) + &#039;...&#039;, null, mxUtils.bind(this, function()
+			{
+				this.renamePage(page, label);
+			}), parent);
+		}
+	});
+};</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

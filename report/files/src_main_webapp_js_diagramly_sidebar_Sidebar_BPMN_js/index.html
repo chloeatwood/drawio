@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-BPMN.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-BPMN.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">58.87</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">1540</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">52.62</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">28.92</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds BPMN 2.0 shapes
+	Sidebar.prototype.addBpmn2Palette = function()
+	{
+		var gn = &#039;mxgraph.bpmn2&#039;;
+		var r = 400;
+		var sb = this;
+		
+		this.setCurrentSearchEntryLibrary(&#039;bpmn2&#039;, &#039;bpmn2General&#039;);
+		this.addBPMN2GeneralPalette(gn, r, sb);
+		this.setCurrentSearchEntryLibrary(&#039;bpmn2&#039;, &#039;bpmn2Tasks&#039;);
+		this.addBPMN2TasksPalette(gn, r, sb);
+		this.setCurrentSearchEntryLibrary(&#039;bpmn2&#039;, &#039;bpmn2Choreographies&#039;);
+		this.addBPMN2ChoreographiesPalette(gn, r, sb);
+		this.setCurrentSearchEntryLibrary(&#039;bpmn2&#039;, &#039;bpmn2Events&#039;);
+		this.addBPMN2EventsPalette(gn, r, sb);
+		this.setCurrentSearchEntryLibrary(&#039;bpmn2&#039;, &#039;bpmn2Gateways&#039;);
+		this.addBPMN2GatewaysPalette(gn, r, sb);
+		this.setCurrentSearchEntryLibrary();
+	};
+
+	Sidebar.prototype.addBPMN2GeneralPalette = function(gn, r, sb)
+	{
+		var dt = &#039;bpmn business process model notation &#039;;
+		var w = 50;
+		var h = 50;
+		var ew = 160;
+		var eh = 0;
+		var s1 = &#039;shape=mxgraph.bpmn.data2;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;size=15;html=1;&#039;;
+		var s2 = &#039;swimlane;html=1;startSize=20;fontStyle=0;collapsible=0;&#039;;
+		var s3 = &#039;shape=mxgraph.bpmn.conversation2;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;aspect=fixed;bpmnConversationType=&#039;;
+		var s4 = &#039;edgeStyle=elbowEdgeStyle;fontSize=12;html=1;endArrow=blockThin;endFill=1;&#039;;
+		var s5 = &#039;edgeStyle=elbowEdgeStyle;fontSize=12;html=1;endFill=0;startFill=0;endSize=6;startSize=6;dashed=1;dashPattern=1 4;endArrow=&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s1, 40, 60, &#039;&#039;, &#039;Data Object&#039;, null, null, dt + &#039;data object&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;bpmnTransferType=none;isCollection=1;&#039;, 40, 60, &#039;&#039;, &#039;Data Object Collection&#039;, null, null, dt + &#039;data object collection&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;bpmnTransferType=input;&#039;, 40, 60, &#039;&#039;, &#039;Data Input&#039;, null, null, dt + &#039;data input&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;bpmnTransferType=input;isCollection=1;&#039;, 40, 60, &#039;&#039;, &#039;Data Input Collection&#039;, null, null, dt + &#039;data input collection&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;bpmnTransferType=output;&#039;, 40, 60, &#039;&#039;, &#039;Data Output&#039;, null, null, dt + &#039;data output&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;bpmnTransferType=output;isCollection=1;&#039;, 40, 60, &#039;&#039;, &#039;Data Output Collection&#039;, null, null, dt + &#039;data output collection&#039;),
+			this.createVertexTemplateEntry(&#039;shape=datastore;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;&#039;, 100, 100, &#039;&#039;, &#039;Data Store&#039;, null, null, dt + &#039;data store&#039;),
+			this.createVertexTemplateEntry(&#039;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];rounded=1;dashed=1;dashPattern=5 2 1 2;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=middle;fontSize=8;html=1;whiteSpace=wrap;&#039;, 140, 80, &#039;&#039;, &#039;Data Object&#039;, null, null, dt + &#039;data object&#039;),
+			this.createVertexTemplateEntry(&#039;text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;&#039;, 80, 30, &#039;Text&#039;, &#039;Text Annotation&#039;, null, null, dt + &#039;text annotation label&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;horizontal=0;swimlaneLine=0;fillColor=none;whiteSpace=wrap;&#039;, 440, 100, &#039;&#039;, &#039;Horizontal Lane&#039;, null, null, dt + &#039;horizontal lane&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;horizontal=1;swimlaneLine=0;fillColor=none;whiteSpace=wrap;&#039;, 440, 100, &#039;&#039;, &#039;Vertical Lane&#039;, null, null, dt + &#039;vertical lane&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;horizontal=0;swimlaneLine=1;swimlaneFillColor=#ffffff;strokeWidth=2;whiteSpace=wrap;&#039;, 440, 100, &#039;&#039;, &#039;Horizontal Lane&#039;, null, null, dt + &#039;horizontal lane&#039;),
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.swimlane;html=1;startSize=20;horizontal=0;swimlaneLine=1;collapsible=0;fontStyle=0;swimlaneFillColor=#ffffff;strokeWidth=2;isCollection=1;whiteSpace=wrap;&#039;, 440, 100, &#039;&#039;, &#039;Horizontal Lane&#039;, null, null, dt + &#039;horizontal lane&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;horizontal=1;swimlaneLine=1;strokeWidth=2;swimlaneFillColor=#ffffff;whiteSpace=wrap;&#039;, 220, 100, &#039;&#039;, &#039;Vertical Lane&#039;, null, null, dt + &#039;vertical lane&#039;),
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.swimlane;html=1;startSize=20;horizontal=1;swimlaneLine=1;collapsible=0;fontStyle=0;strokeWidth=2;swimlaneFillColor=#ffffff;isCollection=1;whiteSpace=wrap;&#039;, 220, 100, &#039;&#039;, &#039;Vertical Lane&#039;, null, null, dt + &#039;vertical lane&#039;),
+			
+			this.createVertexTemplateEntry(s3 + &#039;conv;&#039;, 70, 60, &#039;&#039;, &#039;Conversation&#039;, null, null, dt + &#039;conversation&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;conv;isLoopSub=1;&#039;, 70, 60, &#039;&#039;, &#039;Sub-Conversation&#039;, null, null, dt + &#039;sub conversation&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;call;&#039;, 70, 60, &#039;&#039;, &#039;Call Conversation&#039;, null, null, dt + &#039;call conversation&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;call;isLoopSub=1;&#039;, 70, 60, &#039;&#039;, &#039;Call Sub-Conversation&#039;, null, null, dt + &#039;call sub conversation&#039;),
+
+			this.createVertexTemplateEntry(&#039;html=1;shape=mxgraph.flowchart.annotation_2;align=left;labelPosition=right;&#039;, 50, 100, &#039;&#039;, &#039;Annotation&#039;, null, null, this.getTagsForStencil(&#039;bpmn&#039;, &#039;annotation_1&#039;, &#039;bpmn business process model &#039;).join(&#039; &#039;)),
+	 		this.addDataEntry(&#039;crossfunctional cross-functional cross functional flowchart swimlane table&#039;, 400, 400, &#039;Cross-Functional Flowchart&#039;,
+				&#039;7Zldb5swFIZ/DZeb+EjS7nIhTXexSVO2P+DCabDq+CD75Ku/fnZskipAi6JmUxkSkezDscHnfWK9MkGSrnb3ipXFD8xBBMldkKQKkVxrtUtBiCAOeR4ksyCOQ/ML4nnL3ehwNyyZAkldBsRuwIaJNbiIebjWn+ZrmRFHyWzyXOA2K5gil6xpL3yyLlhpm8QebGiaFVzk39ke11RFq95Uk5nhF3+2+aPQJqMQrNT8MHRmIwqytdJ8AwvQLtFGYVcymfvOI8pqkmhS9f0L+dVvQBHsWgtyCPlq3AOugNTepGx5ToXLGIWuaGEBfFnQWZBpF1gex57qaxq+xM3lTmrl/poRKhOKXq/tArdmsQUq/mwWbFRx1dBbvhJMwjdg+VloivnehwhL3xLwSFUeKXyCFIV5fDLjsgDFrUwPSISrShC/ftvOFZa/mVoCvZTiWHrT50JU80mUlocSuaRDvcZTc5kKpuHncTA260tNPzr1zWXTFaUozasxfpALmKYt6Ovh04mYuJmYfQWGG/EWQFH8DgCNagD9LJiGZoA8CZ05ORe0DZEMpYTM/+fdyLr0/1CvpFmvXateR2k66+VnX9gyyKWAS+ZjgkBJRkaCtcx1DYPjq3ciY9xKRjyQ0Y2MaNJPNCataCQDGt3QiG/7icZNqyFp2DUGQ/IhDEnTNnY9R3JbI+j995T63tEGyxt7yt+V6eZ/9CFfBh4u46Gv7iMKByIuI6KvpiOKakRUrqPBkA6u40O4jiZYr+c6ovrB5bCpVAVuOeHst++I6merAxHdiOit86iflg5IdEOiJ9bDdE/f0lz6y09tfwA=&#039;),
+			this.addDataEntry(&#039;container swimlane pool horizontal&#039;, 480, 380, &#039;Horizontal Pool 1&#039;,
+				&#039;zZTPboMwDMafJvf8YdPOpVsvrVSJJ4jAaqIFgkI6oE8/Q0KrdmXjsE09RLI/f7aT3yFEpGW3cbJWO1uAIeKViNRZ60NUdikYQzjVBRFrwjnFQ/jbTJWNVVpLB5Vf0sBDw4c0RwjK3loTxMb3JopNq0sjK8xWypd4yzXDMFfaFFvZ2+Owq/Eyf5+ylYNGn2A/XYTdSDvZoUqHedbpk628nKbiHOczdGLOrx3ZsCL2tUp7yGqZD74WAaIWHwPOQzcLZJQijQ3YErzr0dLqwqvgSF4CNKpAH1RsE5MomyAczr0XvhhExPdxiy+4twNVTtlC5N/AiVwWMeD3GfSxGl/6ExLGfwFJMoeEPxISlvwnk6c5JuKRmPDnP2SC6eUXHGtXn+Qn&#039;),
+			this.addDataEntry(&#039;container swimlane pool horizontal&#039;, 480, 360, &#039;Horizontal Pool 2&#039;,
+				&#039;zZRNboMwEIVP472xadR1SJtNIkXiBBaMYqsGI+MEyOk7YCcRCVQs2ioLpJk37/nnEzLhSdFurajk3uSgCf8gPLHGOF8VbQJaE0ZVTviGMEbxI+xzZhoNU1oJC6VbEmA+cBb6BF45GKO9WLtOB7FuVKFFid1augJPuYmwzKTS+U505tTvVTuRfV27tYVaXeBwPUj0IO1Fiyrt1zNWXUzphA4CrmNdik7s2diR9lsEWyOVg7QSWe9rECBq4TJgHbSzQAYp0NiCKcDZDi2Nyp30jvjdQ6MS1FGGGF8FUdReON6yd75YBMTTuPkT7l1PldFoIfIf4AQuixiwaQYhEP6ZEZLVBJKI/QKSeA4Je0Uk3cPN/wXR2xwi/sKIWPyHiLC9v5HDbPSEfgM=&#039;),
+			this.createVertexTemplateEntry(&#039;swimlane;startSize=20;horizontal=0;html=1;whiteSpace=wrap;&#039;, 320, 120, &#039;Lane&#039;, &#039;Horizontal Swimlane&#039;, null, null, &#039;swimlane lane pool&#039;),
+			this.addDataEntry(&#039;container swimlane pool horizontal&#039;, 360, 480, &#039;Vertical Pool 1&#039;,
+				&#039;xZTBboMwDIafJvfgsGrn0q2XVqrUJ4jAaqKFBoW0wJ5+hqTr1oLEYRoHpPhzLPx/hzCRle3WyUrtbYGGiTcmMmetD6eyzdAYBlwXTGwYAKePwftENxm6vJIOz37OAISBqzQXDORgrQmw9p2JsG50aeSZqrXyJW25SeiYK22Knezspf9X7WX+cavWDmv9iYfbIskD2suWKCdKY84fqUE19KBR2uOxknlPGjJDLG6JzmM7mXRAMeYWbYnedXSl0YVX4YZYBRtcoT6pOJa+RijrAE7fs3dxdIjuxj2KJ4+7XhfwZKbLJw2zIsN45C52Y7AfBhIYM7D6AwPplAFYwkD7EHcJIy9TRsSCRiD9PyNU3l+yoffrofsC&#039;),
+			this.addDataEntry(&#039;container swimlane pool vertical&#039;, 380, 480, &#039;Vertical Pool 2&#039;,
+				&#039;xZTfboMgFIefhnv+uGbXtVtv2qSJT0D0pJChGKRT+/Q7Cs5trYk3XS9MON/hJ/CFQERadnsna3W0BRgi3ohInbU+jMouBWMIp7ogYkc4p/gR/r7QZWOX1tJB5dcEeAh8SnOBQE7WmgAb35sIm1aXRlZYbZUvcZc7hsNcaVMcZG8vw1qNl/nHVG0dNPoKp2kj7A86yg4pRYox5zNsYM0HoKzTV1t5aeKMGWTDEvFvrdIeslrmQ7BFgcjiYcB56BaFjCja2IMtwbsep7S68CrMEK9BGlWgzyrGkgnKJoDzd3b2i4Oo+L5ucaP7MFjllK1UfmNr1ZH5/SPHQLwiPw0w/igDyZIB/kQDLPlPBS9LCsQzL8HmgQqwnJ+0sffrxfsC&#039;),
+			this.createVertexTemplateEntry(&#039;swimlane;startSize=20;whiteSpace=wrap;html=1;&#039;, 120, 320, &#039;Lane&#039;, &#039;Vertical Swimlane&#039;, null, null, &#039;swimlane lane pool&#039;),
+			this.createVertexTemplateEntry(&#039;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];rounded=1;arcSize=10;dashed=1;fillColor=none;gradientColor=none;dashPattern=8 3 1 3;strokeWidth=2;whiteSpace=wrap;html=1;&#039;,
+				200, 200, &#039;&#039;, &#039;Group&#039;, null, null, this.getTagsForStencil(&#039;bpmn&#039;, &#039;group&#039;, &#039;bpmn business process model &#039;).join(&#039; &#039;)),
+				
+			this.createEdgeTemplateEntry(s5 + &#039;none;startArrow=none;&#039;, ew, eh, &#039;&#039;, &#039;Association&#039;, null, dt + &#039;association&#039;),
+			this.createEdgeTemplateEntry(s5 + &#039;openThin;startArrow=none;&#039;, ew, eh, &#039;&#039;, &#039;Directional / Directed Data Association&#039;, null, dt + &#039;directed data directional association&#039;),
+			this.createEdgeTemplateEntry(s5 + &#039;openThin;startArrow=openThin;&#039;, ew, eh, &#039;&#039;, &#039;Bi-Directional Association&#039;, null, dt + &#039;bi directional bidirectional association&#039;),
+			this.createEdgeTemplateEntry(s5 + &#039;none;startArrow=none;&#039;, ew, eh, &#039;&#039;, &#039;Data Association&#039;, null, dt + &#039;data association&#039;),
+			this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;fontSize=12;html=1;shape=link;&#039;, ew, eh, &#039;&#039;, &#039;Conversation Link&#039;, null, dt + &#039;conversation link&#039;),
+
+			this.createEdgeTemplateEntry(s4 + &#039;&#039;, ew, eh, &#039;&#039;, &#039;Sequence Flow&#039;, null, dt + &#039;sequence flow&#039;),
+			this.createEdgeTemplateEntry(s4 + &#039;startArrow=diamondThin;startFill=0;endSize=6;startSize=10;&#039;, ew, eh, &#039;&#039;, &#039;Conditional Sequence Flow&#039;, null, dt + &#039;conditional sequence flow&#039;),
+			this.createEdgeTemplateEntry(s4 + &#039;startArrow=dash;startFill=0;endSize=6;startSize=6;&#039;, ew, eh, &#039;&#039;, &#039;Default Sequence Flow&#039;, null, dt + &#039;default sequence flow&#039;),
+			this.createEdgeTemplateEntry(&#039;dashed=1;dashPattern=8 4;endArrow=blockThin;endFill=1;startArrow=oval;startFill=0;endSize=6;startSize=4;html=1;&#039;, ew, eh, &#039;&#039;, &#039;Message Flow&#039;, null, dt + &#039;message flow&#039;),
+			
+			this.addEntry(&#039;edge shape symbol message mail email initiating message flow with decorator&#039;, mxUtils.bind(this, function()
+			{
+				var edge = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;endArrow=blockThin;html=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;dashed=1;dashPattern=8 4;endFill=0;startArrow=oval;startFill=0;endSize=6;startSize=4;&#039;);
+				edge.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+				edge.geometry.setTerminalPoint(new mxPoint(ew, eh), false);
+				edge.geometry.relative = true;
+				edge.edge = true;
+				
+		    	var cell = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 24, 16), &#039;shape=message;html=1;outlineConnect=0;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;spacingRight=5;labelBackgroundColor=#ffffff;&#039;);
+		    	cell.geometry.relative = true;
+		    	cell.vertex = true;
+		    	cell.geometry.offset = new mxPoint(8, -8);
+		    	edge.insert(cell);
+
+				return this.createEdgeTemplateFromCells([edge], ew, eh, &#039;Initiating Message Flow with Decorator&#039;);
+			})),
+					
+			this.addEntry(&#039;edge shape symbol message mail email non initiating message flow with decorator&#039;, mxUtils.bind(this, function()
+			{
+				var edge = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;endArrow=blockThin;html=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;dashed=1;dashPattern=8 4;endFill=0;startArrow=oval;startFill=0;endSize=6;startSize=4;&#039;);
+				edge.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+				edge.geometry.setTerminalPoint(new mxPoint(ew, eh), false);
+				edge.geometry.relative = true;
+				edge.edge = true;
+				
+		    	var cell = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 24, 16), &#039;shape=message;html=1;outlineConnect=0;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;spacingRight=5;labelBackgroundColor=#ffffff;fillColor=#C0C0C0;&#039;);
+		    	cell.geometry.relative = true;
+		    	cell.vertex = true;
+		    	cell.geometry.offset = new mxPoint(8, -8);
+		    	edge.insert(cell);
+
+				return this.createEdgeTemplateFromCells([edge], ew, eh, &#039;Non-Initiating Message Flow with Decorator&#039;);
+			}))
+		];
+			
+		this.addPalette(&#039;bpmn2General&#039;, &#039;BPMN 2.0 \ General&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addBPMN2TasksPalette = function(gn, r, sb)
+	{
+		var dt = &#039;bpmn business process model notation task &#039;;
+		var pts = &#039;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];&#039;;
+		var s1 = pts + &#039;shape=mxgraph.bpmn.task2;whiteSpace=wrap;rectStyle=rounded;size=10;html=1;container=1;expand=0;collapsible=0;taskMarker=abstract;&#039;;
+		var s2 = pts + &#039;shape=mxgraph.bpmn.task2;whiteSpace=wrap;rectStyle=rounded;size=10;html=1;container=1;expand=0;collapsible=0;taskMarker=&#039;;
+		var s3 = pts + &#039;shape=mxgraph.bpmn.task2;whiteSpace=wrap;rectStyle=rounded;size=10;html=1;container=1;expand=0;collapsible=0;taskMarker=abstract;bpmnShapeType=subprocess;isLoopSub=1;outline=&#039;;
+		var s4 = pts + &#039;shape=mxgraph.bpmn.task2;whiteSpace=wrap;rectStyle=rounded;size=10;html=1;container=1;expand=0;collapsible=0;bpmnShapeType=call;&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s1 + &#039;&#039;, 120, 80, &#039;&#039;, &#039;Generic Task&#039;, null, null, dt + &#039;generic&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isLoopStandard=1;&#039;, 120, 80, &#039;&#039;, &#039;Standard Loop&#039;, null, null, dt + &#039;standard loop&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isLoopStandard=1;isLoopSub=1;&#039;, 120, 80, &#039;&#039;, &#039;Standard Loop&#039;, null, null, dt + &#039;standard loop&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isLoopMultiParallel=1;&#039;, 120, 80, &#039;&#039;, &#039;Multi-Instance, Parallel&#039;, null, null, dt + &#039;multi instance parallel&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isLoopSub=1;isLoopMultiParallel=1;&#039;, 120, 80, &#039;&#039;, &#039;Multi-Instance, Parallel&#039;, null, null, dt + &#039;multi instance parallel&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isLoopMultiSeq=1;&#039;, 120, 80, &#039;&#039;, &#039;Multi-Instance, Sequential&#039;, null, null, dt + &#039;multi instance sequential&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isLoopSub=1;isLoopMultiSeq=1;&#039;, 120, 80, &#039;&#039;, &#039;Multi-Instance, Sequential&#039;, null, null, dt + &#039;multi instance sequential&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isLoopComp=1;&#039;, 120, 80, &#039;&#039;, &#039;Compensation&#039;, null, null, dt + &#039;compensation&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isLoopSub=1;isLoopComp=1;&#039;, 120, 80, &#039;&#039;, &#039;Compensation&#039;, null, null, dt + &#039;compensation&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isLoopComp=1;isLoopStandard=1;&#039;, 120, 80, &#039;&#039;, &#039;Loop and Compensation&#039;, null, null, dt + &#039;loop compensation&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isLoopComp=1;isLoopStandard=1;isLoopSub=1;&#039;, 120, 80, &#039;&#039;, &#039;Loop and Compensation&#039;, null, null, dt + &#039;loop compensation&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isAdHoc=1;isLoopSub=1;&#039;, 120, 80, &#039;&#039;, &#039;Ad Hoc, Collapsed&#039;, null, null, dt + &#039;ad hoc collapsed&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isAdHoc=1;&#039;, 120, 80, &#039;&#039;, &#039;Ad Hoc, Expanded&#039;, null, null, dt + &#039;ad hoc expanded&#039;),
+			
+			this.createVertexTemplateEntry(s2 + &#039;service;&#039;, 120, 80, &#039;&#039;, &#039;Service&#039;, null, null, dt + &#039;service&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;send;&#039;, 120, 80, &#039;&#039;, &#039;Send&#039;, null, null, dt + &#039;send&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;receive;&#039;, 120, 80, &#039;&#039;, &#039;Receive&#039;, null, null, dt + &#039;receive&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;user;&#039;, 120, 80, &#039;&#039;, &#039;User&#039;, null, null, dt + &#039;user&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;manual;&#039;, 120, 80, &#039;&#039;, &#039;Manual&#039;, null, null, dt + &#039;manual&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;businessRule;&#039;, 120, 80, &#039;&#039;, &#039;Business Rule&#039;, null, null, dt + &#039;business rule&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;script;&#039;, 120, 80, &#039;&#039;, &#039;Script&#039;, null, null, dt + &#039;script&#039;),
+			this.createVertexTemplateEntry(s1 + &#039;isLoopSub=1;&#039;, 120, 80, &#039;&#039;, &#039;Sub-Process, Collapsed&#039;, null, null, dt + &#039;sub process subprocess collapsed&#039;),
+						
+			this.createVertexTemplateEntry(s2 + &#039;abstract;bpmnShapeType=transaction;isLoopSub=1;&#039;, 120, 80, &#039;&#039;, &#039;Transaction, Collapsed&#039;, null, null, dt + &#039;transaction collapsed&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;abstract;bpmnShapeType=transaction;&#039;, 120, 80, &#039;&#039;, &#039;Transaction, Expanded&#039;, null, null, dt + &#039;transaction expanded&#039;),
+			
+			this.createVertexTemplateEntry(s3 + &#039;eventNonint;symbol=message;&#039;, 120, 80, &#039;&#039;, &#039;Message-Event Sub-Process, Non-interrupting, Collapsed&#039;, null, null, dt + &#039;non interrupting message event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventInt;symbol=message;&#039;, 120, 80, &#039;&#039;, &#039;Message-Event Sub-Process, Interrupting, Collapsed&#039;, null, null, dt + &#039;interrupting message event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventNonint;symbol=timer;&#039;, 120, 80, &#039;&#039;, &#039;Timer-Event Sub-Process, Non-interrupting, Collapsed&#039;, null, null, dt + &#039;non interrupting timer event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventInt;symbol=timer;&#039;, 120, 80, &#039;&#039;, &#039;Timer-Event Sub-Process, Interrupting, Collapsed&#039;, null, null, dt + &#039;interrupting timer event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventNonint;symbol=conditional;&#039;, 120, 80, &#039;&#039;, &#039;Conditional-Event Sub-Process, Non-interrupting, Collapsed&#039;, null, null, dt + &#039;non interrupting conditional event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventInt;symbol=conditional;&#039;, 120, 80, &#039;&#039;, &#039;Conditional-Event Sub-Process, Interrupting, Collapsed&#039;, null, null, dt + &#039;interrupting conditional event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventNonint;symbol=signal;&#039;, 120, 80, &#039;&#039;, &#039;Signal-Event Sub-Process, Non-interrupting, Collapsed&#039;, null, null, dt + &#039;non interrupting signal event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventInt;symbol=signal;&#039;, 120, 80, &#039;&#039;, &#039;Signal-Event Sub-Process, Interrupting, Collapsed&#039;, null, null, dt + &#039;interrupting signal event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventNonint;symbol=multiple;&#039;, 120, 80, &#039;&#039;, &#039;Multiple-Event Sub-Process, Non-interrupting, Collapsed&#039;, null, null, dt + &#039;non interrupting multiple event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventInt;symbol=multiple;&#039;, 120, 80, &#039;&#039;, &#039;Multiple-Event Sub-Process, Interrupting, Collapsed&#039;, null, null, dt + &#039;interrupting multiple event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventNonint;symbol=parallelMultiple;&#039;, 120, 80, &#039;&#039;, &#039;Parallel Multiple Event Sub-Process, Non-interrupting, Collapsed&#039;, null, null, dt + &#039;non interrupting parallel multiple event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventInt;symbol=parallelMultiple;&#039;, 120, 80, &#039;&#039;, &#039;Parallel Multiple Event Sub-Process, Interrupting , Collapsed&#039;, null, null, dt + &#039;interrupting parallel multiple event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventNonint;symbol=escalation;&#039;, 120, 80, &#039;&#039;, &#039;Escalation-Event Sub-Process, Non-interrupting, Collapsed&#039;, null, null, dt + &#039;non interrupting escalation event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventInt;symbol=escalation;&#039;, 120, 80, &#039;&#039;, &#039;Escalation-Event Sub-Process, Interrupting, Collapsed&#039;, null, null, dt + &#039;interrupting escalation event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventInt;symbol=error;&#039;, 120, 80, &#039;&#039;, &#039;Error-Event Sub-Process, Interrupting, Collapsed&#039;, null, null, dt + &#039;interrupting error event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(s3 + &#039;eventInt;symbol=compensation;&#039;, 120, 80, &#039;&#039;, &#039;Compensation-Event Sub-Process, Interrupting, Collapsed&#039;, null, null, dt + &#039;interrupting compensation event sub process collapsed&#039;),
+			this.createVertexTemplateEntry(&#039;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];shape=mxgraph.bpmn.task2;arcSize=10;taskMarker=abstract;outline=none;symbol=general;bpmnShapeType=subprocess;isLoopSub=0;verticalAlign=top;align=left;spacingLeft=5;html=1;whiteSpace=wrap;&#039;, 180, 100, &#039;&#039;, &#039;Event Sub-Process, Expanded&#039;, null, null, dt + &#039;event sub process expanded&#039;),
+
+			this.createVertexTemplateEntry(s4, 120, 80, &#039;&#039;, &#039;Call Activity&#039;, null, null, dt + &#039;call activity&#039;),
+			this.createVertexTemplateEntry(s4 + &#039;taskMarker=user;&#039;, 120, 80, &#039;&#039;, &#039;User Call Activity&#039;, null, null, dt + &#039;user call activity&#039;),
+			this.createVertexTemplateEntry(s4 + &#039;taskMarker=manual;&#039;, 120, 80, &#039;&#039;, &#039;Manual Call Activity&#039;, null, null, dt + &#039;manual call activity&#039;),
+			this.createVertexTemplateEntry(s4 + &#039;taskMarker=businessRule;&#039;, 120, 80, &#039;&#039;, &#039;Business Rule Call Activity&#039;, null, null, dt + &#039;business rule call activity&#039;),
+			this.createVertexTemplateEntry(s4 + &#039;taskMarker=script;&#039;, 120, 80, &#039;&#039;, &#039;Script Call Activity&#039;, null, null, dt + &#039;script call activity&#039;),
+			this.createVertexTemplateEntry(s4 + &#039;isLoopSub=1;&#039;, 120, 80, &#039;&#039;, &#039;Call Activity, Collapsed&#039;, null, null, dt + &#039;call activity collapsed&#039;),
+			this.createVertexTemplateEntry(s4 + &#039;verticalAlign=top;align=left;spacingLeft=5;&#039;, 180, 100, &#039;&#039;, &#039;Call Activity, Expanded&#039;, null, null, dt + &#039;call activity expanded&#039;)
+		];
+			
+		this.addPalette(&#039;bpmn2Tasks&#039;, &#039;BPMN 2.0 \ Tasks&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addBPMN2ChoreographiesPalette = function(gn, r, sb)
+	{
+		var dt = &#039;bpmn business process model notation choreography &#039;;
+		
+		var fns =
+		[
+			this.addEntry(dt + &#039;choreography task&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Choreography Task&#039;);
+			}),
+
+			this.addEntry(dt + &#039;choreography task loop&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopStandard=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Choreography Task, Loop&#039;);
+			}),
+
+			this.addEntry(dt + &#039;choreography task sequential multi instance&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopMultiSeq=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Choreography Task, Sequential Multi Instance&#039;);
+			}),
+
+			this.addEntry(dt + &#039;choreography task parallel multi instance&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopMultiParallel=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Choreography Task, Parallel Multi Instance&#039;);
+			}),
+
+			this.addEntry(dt + &#039;sub choreography collapsed&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopSub=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Sub-Choreography, Collapsed&#039;);
+			}),
+
+			this.addEntry(dt + &#039;sub choreography loop collapsed&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopSub=1;isLoopStandard=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Sub-Choreography, Loop, Collapsed&#039;);
+			}),
+
+			this.addEntry(dt + &#039;sub choreography sequential multi instance collapsed&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopSub=1;isLoopMultiSeq=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Sub-Choreography, Sequential Multi Instance, Collapsed&#039;);
+			}),
+
+			this.addEntry(dt + &#039;sub choreography parallel multi instance collapsed&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopSub=1;isLoopMultiParallel=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Sub-Choreography, Parallel Multi Instance, Collapsed&#039;);
+			}),
+
+			this.addEntry(dt + &#039;sub choreography expanded&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 400, 200), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 400, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 400, 160), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;verticalAlign=top;align=left;spacingLeft=5;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 400, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Sub-Choreography, Expanded&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling global task&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+//				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;&#039;);
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;bzzzzt&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling global task&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling Global&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling global task loop&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopStandard=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling Global, Loop&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling global task sequential multi instance&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopMultiSeq=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling Global, Sequential Multi Instance&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling global task parallel multi instance&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopMultiParallel=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling Global, Parallel Multi Instance&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopSub=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling a Choreography&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling loop&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopSub=1;isLoopStandard=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling a Choreography, Loop&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling sequential multi instance&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopSub=1;isLoopMultiSeq=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling a Choreography, Sequential Multi Instance&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling parallel multi instance&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopSub=1;isLoopMultiParallel=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling a Choreography, Parallel Multi Instance&#039;);
+			}),
+			
+			this.addEntry(dt + &#039;choreography task&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Choreography Task&#039;);
+			}),
+
+			this.addEntry(dt + &#039;choreography task loop&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopStandard=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Choreography Task, Loop&#039;);
+			}),
+
+			this.addEntry(dt + &#039;choreography task sequential multi instance&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopMultiSeq=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Choreography Task, Sequential Multi Instance&#039;);
+			}),
+
+			this.addEntry(dt + &#039;choreography task parallel multi instance&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopMultiParallel=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Choreography Task, Parallel Multi Instance&#039;);
+			}),
+
+			this.addEntry(dt + &#039;sub choreography collapsed&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopSub=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Sub-Choreography, Collapsed&#039;);
+			}),
+
+			this.addEntry(dt + &#039;sub choreography loop collapsed&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopSub=1;isLoopStandard=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Sub-Choreography, Loop, Collapsed&#039;);
+			}),
+
+			this.addEntry(dt + &#039;sub choreography sequential multi instance collapsed&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopSub=1;isLoopMultiSeq=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Sub-Choreography, Sequential Multi Instance, Collapsed&#039;);
+			}),
+
+			this.addEntry(dt + &#039;sub choreography parallel multi instance collapsed&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;taskMarker=abstract;part=1;isLoopSub=1;isLoopMultiParallel=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Sub-Choreography, Parallel Multi Instance, Collapsed&#039;);
+			}),
+
+			this.addEntry(dt + &#039;sub choreography expanded&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 400, 200), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 400, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 400, 160), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;verticalAlign=top;align=left;spacingLeft=5;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 400, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Sub-Choreography, Expanded&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling global task&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling Global&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling global task loop&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopStandard=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling Global, Loop&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling global task sequential multi instance&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopMultiSeq=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling Global, Sequential Multi Instance&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling global task parallel multi instance&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopMultiParallel=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling Global, Parallel Multi Instance&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopSub=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling a Choreography&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling loop&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopSub=1;isLoopStandard=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling a Choreography, Loop&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling sequential multi instance&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopSub=1;isLoopMultiSeq=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling a Choreography, Sequential Multi Instance&#039;);
+			}),
+
+			this.addEntry(dt + &#039;call choreography activity calling parallel multi instance&#039;, function()
+		   	{
+			    var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 120, 100), 
+				&#039;rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;absoluteArcSize=1;arcSize=20;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;strokeWidth=8;&#039;);
+		    	bg.vertex = true;
+		    	
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;part=1;&#039;);
+			    cell1.vertex = true;
+		    	bg.insert(cell1);
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 60), 
+			    		&#039;shape=mxgraph.bpmn.task2;arcSize=0;part=1;taskMarker=abstract;isLoopSub=1;isLoopMultiParallel=1;connectable=0;whiteSpace=wrap;html=1;&#039;);
+			    cell2.vertex = true;
+		    	bg.insert(cell2);
+
+			    var cell3 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 1, 20, 20), 
+			    		&#039;whiteSpace=wrap;connectable=0;html=1;shape=mxgraph.basic.rect;size=10;rectStyle=rounded;topRightStyle=square;topLeftStyle=square;part=1;&#039;);
+			    cell3.vertex = true;
+			    cell3.geometry.relative = false;
+		    	bg.insert(cell3);
+
+			   	return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, &#039;Call Choreography calling a Choreography, Parallel Multi Instance&#039;);
+			}),
+
+			this.createVertexTemplateEntry(&#039;whiteSpace=wrap;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;html=1;&#039;, 120, 20, &#039;&#039;, &#039;Participant, Initiating, Top&#039;, null, null, dt + &#039;initiating participant top&#039;),
+
+			this.addEntry(dt + &#039;initiating participant top with decorator&#039;, function()
+		   	{
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 60, 120, 20), 
+			    		&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;whiteSpace=wrap;html=1;&#039;);
+			    cell1.vertex = true;
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(40, 0, 40, 30), 
+			    		&#039;shape=message;html=1;&#039;);
+			    cell2.vertex = true;
+			    
+			   	var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;html=1;elbow=horizontal;endArrow=none;labelBackgroundColor=none;endSize=12;endFill=0;dashed=1;dashPattern=1 2;exitX=0.5;exitY=0;rounded=0;&#039;);
+		    	edge1.geometry.relative = true;
+			   	edge1.edge = true;
+			   	cell1.insertEdge(edge1, true);
+			   	cell2.insertEdge(edge1, false);
+
+			   	return sb.createVertexTemplateFromCells([cell1, cell2, edge1], 120, 80, &#039;Participant, Initiating, Top with Decorator&#039;);
+			}),
+			
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=square;whiteSpace=wrap;html=1;&#039;, 120, 20, &#039;&#039;, &#039;Additional Participant, Initiating&#039;, null, null, dt + &#039;initiating additional participant&#039;),
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;isLoopSub=0;topLeftStyle=square;topRightStyle=square;whiteSpace=wrap;html=1;&#039;, 120, 20, &#039;&#039;, &#039;Participant, Initiating, Bottom&#039;, null, null, dt + &#039;initiating participant bottom&#039;),
+
+			this.addEntry(dt + &#039;initiating participant bottom with decorator&#039;, function()
+		   	{
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;isLoopSub=0;topLeftStyle=square;topRightStyle=square;whiteSpace=wrap;html=1;&#039;);
+			    cell1.vertex = true;
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(40, 50, 40, 30), 
+			    		&#039;shape=message;html=1;&#039;);
+			    cell2.vertex = true;
+			    
+			   	var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;html=1;elbow=horizontal;endArrow=none;labelBackgroundColor=none;endSize=12;endFill=0;dashed=1;dashPattern=1 2;exitX=0.5;exitY=1;rounded=0;&#039;);
+		    	edge1.geometry.relative = true;
+			   	edge1.edge = true;
+			   	cell1.insertEdge(edge1, true);
+			   	cell2.insertEdge(edge1, false);
+
+			   	return sb.createVertexTemplateFromCells([cell1, cell2, edge1], 120, 80, &#039;Participant, Initiating, Bottom with Decorator&#039;);
+			}),
+			
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;verticalAlign=top;isLoopMultiParallel=1;whiteSpace=wrap;html=1;&#039;, 120, 40, &#039;&#039;, &#039;Participant, Initiating, Multi-Instance, Top&#039;, null, null, dt + &#039;initiating participant bottom&#039;),
+
+			this.addEntry(dt + &#039;initiating participant multi instance top with decorator&#039;, function()
+		   	{
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 60, 120, 40), 
+			    		&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;verticalAlign=top;isLoopMultiParallel=1;whiteSpace=wrap;html=1;&#039;);
+			    cell1.vertex = true;
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(40, 0, 40, 30), 
+			    		&#039;shape=message;html=1;&#039;);
+			    cell2.vertex = true;
+			    
+			   	var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;html=1;elbow=horizontal;endArrow=none;labelBackgroundColor=none;endSize=12;endFill=0;dashed=1;dashPattern=1 2;exitX=0.5;exitY=0;rounded=0;&#039;);
+		    	edge1.geometry.relative = true;
+			   	edge1.edge = true;
+			   	cell1.insertEdge(edge1, true);
+			   	cell2.insertEdge(edge1, false);
+
+			   	return sb.createVertexTemplateFromCells([cell1, cell2, edge1], 120, 100, &#039;Participant, Initiating, Multi-Instance Top with Decorator&#039;);
+			}),
+			
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=square;verticalAlign=top;isLoopMultiParallel=1;whiteSpace=wrap;html=1;&#039;, 120, 40, &#039;&#039;, &#039;Additional Participant, Initiating, Multi-Instance, Bottom&#039;, null, null, dt + &#039;initiating additional participant multi instance bottom&#039;),
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;verticalAlign=top;isLoopMultiParallel=1;topLeftStyle=square;topRightStyle=square;whiteSpace=wrap;html=1;&#039;, 120, 40, &#039;&#039;, &#039;Participant, Initiating, Multi-Instance, Bottom&#039;, null, null, dt + &#039;initiating participant multi instance bottom&#039;),
+
+			this.addEntry(dt + &#039;initiating participant multi instance bottom with decorator&#039;, function()
+		   	{
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 40), 
+			    		&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;topLeftStyle=square;topRightStyle=square;verticalAlign=top;isLoopMultiParallel=1;whiteSpace=wrap;html=1;&#039;);
+			    cell1.vertex = true;
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(40, 70, 40, 30), 
+			    		&#039;shape=message;html=1;&#039;);
+			    cell2.vertex = true;
+			    
+			   	var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;html=1;elbow=horizontal;endArrow=none;labelBackgroundColor=none;endSize=12;endFill=0;dashed=1;dashPattern=1 2;exitX=0.5;exitY=1;rounded=0;&#039;);
+		    	edge1.geometry.relative = true;
+			   	edge1.edge = true;
+			   	cell1.insertEdge(edge1, true);
+			   	cell2.insertEdge(edge1, false);
+
+			   	return sb.createVertexTemplateFromCells([cell1, cell2, edge1], 120, 100, &#039;Participant, Initiating, Multi-Instance, Bottom with Decorator&#039;);
+			}),
+			
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;whiteSpace=wrap;html=1;&#039;, 120, 20, &#039;&#039;, &#039;Participant, Non-Initiating, Top&#039;, null, null, dt + &#039;non initiating participant top&#039;),
+			
+			this.addEntry(dt + &#039;non initiating participant top with decorator&#039;, function()
+		   	{
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 60, 120, 20), 
+			    		&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;fillColor=#C0C0C0;whiteSpace=wrap;html=1;&#039;);
+			    cell1.vertex = true;
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(40, 0, 40, 30), 
+			    		&#039;shape=message;fillColor=#C0C0C0;html=1;&#039;);
+			    cell2.vertex = true;
+			    
+			   	var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;html=1;elbow=horizontal;endArrow=none;labelBackgroundColor=none;endSize=12;endFill=0;dashed=1;dashPattern=1 2;exitX=0.5;exitY=0;rounded=0;&#039;);
+		    	edge1.geometry.relative = true;
+			   	edge1.edge = true;
+			   	cell1.insertEdge(edge1, true);
+			   	cell2.insertEdge(edge1, false);
+
+			   	return sb.createVertexTemplateFromCells([cell1, cell2, edge1], 120, 80, &#039;Participant, Non-Initiating, Top with Decorator&#039;);
+			}),
+			
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=square;fillColor=#C0C0C0;whiteSpace=wrap;html=1;&#039;, 120, 20, &#039;&#039;, &#039;Additional Participant, Non-Initiating&#039;, null, null, dt + &#039;non initiating additional participant&#039;),
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;isLoopSub=0;topLeftStyle=square;topRightStyle=square;fillColor=#C0C0C0;whiteSpace=wrap;html=1;&#039;, 120, 20, &#039;&#039;, &#039;Participant, Non-Initiating, Bottom&#039;, null, null, dt + &#039;non initiating participant bottom&#039;),
+			
+			this.addEntry(dt + &#039;non initiating participant bottom with decorator&#039;, function()
+		   	{
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 20), 
+			    		&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;isLoopSub=0;topLeftStyle=square;topRightStyle=square;fillColor=#C0C0C0;whiteSpace=wrap;html=1;&#039;);
+			    cell1.vertex = true;
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(40, 50, 40, 30), 
+			    		&#039;shape=message;fillColor=#C0C0C0;html=1;&#039;);
+			    cell2.vertex = true;
+			    
+			   	var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;html=1;elbow=horizontal;endArrow=none;labelBackgroundColor=none;endSize=12;endFill=0;dashed=1;dashPattern=1 2;exitX=0.5;exitY=1;rounded=0;&#039;);
+		    	edge1.geometry.relative = true;
+			   	edge1.edge = true;
+			   	cell1.insertEdge(edge1, true);
+			   	cell2.insertEdge(edge1, false);
+
+			   	return sb.createVertexTemplateFromCells([cell1, cell2, edge1], 120, 80, &#039;Participant, Non-Initiating, Bottom with Decorator&#039;);
+			}),
+			
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;verticalAlign=top;isLoopMultiParallel=1;fillColor=#C0C0C0;whiteSpace=wrap;html=1;&#039;, 120, 40, &#039;&#039;, &#039;Participant, Non-Initiating, Multi-Instance, Top&#039;, null, null, dt + &#039;initiating participant bottom&#039;),
+			
+			this.addEntry(dt + &#039;non initiating participant multi instance top with decorator&#039;, function()
+		   	{
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 60, 120, 40), 
+			    		&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;bottomRightStyle=square;bottomLeftStyle=square;verticalAlign=top;isLoopMultiParallel=1;fillColor=#C0C0C0;whiteSpace=wrap;html=1;&#039;);
+			    cell1.vertex = true;
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(40, 0, 40, 30), 
+			    		&#039;shape=message;fillColor=#C0C0C0;html=1;&#039;);
+			    cell2.vertex = true;
+			    
+			   	var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;html=1;elbow=horizontal;endArrow=none;labelBackgroundColor=none;endSize=12;endFill=0;dashed=1;dashPattern=1 2;exitX=0.5;exitY=0;rounded=0;&#039;);
+		    	edge1.geometry.relative = true;
+			   	edge1.edge = true;
+			   	cell1.insertEdge(edge1, true);
+			   	cell2.insertEdge(edge1, false);
+
+			   	return sb.createVertexTemplateFromCells([cell1, cell2, edge1], 120, 100, &#039;Participant, Non-Initiating, Multi-Instance, Top with Decorator&#039;);
+			}),
+			
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=square;verticalAlign=top;isLoopMultiParallel=1;fillColor=#C0C0C0;whiteSpace=wrap;html=1;&#039;, 120, 40, &#039;&#039;, &#039;Additional Participant, Non-Initiating, Multi-Instance, Bottom&#039;, null, null, dt + &#039;non initiating additional participant multi instance bottom&#039;),
+			this.createVertexTemplateEntry(&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;verticalAlign=top;isLoopMultiParallel=1;topLeftStyle=square;topRightStyle=square;fillColor=#C0C0C0;whiteSpace=wrap;html=1;&#039;, 120, 40, &#039;&#039;, &#039;Participant, Non-Initiating, Multi-Instance, Bottom&#039;, null, null, dt + &#039;non initiating participant multi instance bottom&#039;),
+
+			this.addEntry(dt + &#039;non initiating participant multi instance bottom with decorator&#039;, function()
+		   	{
+			    var cell1 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(0, 0, 120, 40), 
+			    		&#039;shape=mxgraph.bpmn.task2;part=1;taskMarker=abstract;rectStyle=rounded;topLeftStyle=square;topRightStyle=square;verticalAlign=top;isLoopMultiParallel=1;fillColor=#C0C0C0;whiteSpace=wrap;html=1;&#039;);
+			    cell1.vertex = true;
+
+			    var cell2 = new mxCell(&#039;&#039;, 
+			    		new mxGeometry(40, 70, 40, 30), 
+			    		&#039;shape=message;fillColor=#C0C0C0;html=1;&#039;);
+			    cell2.vertex = true;
+			    
+			   	var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;html=1;elbow=horizontal;endArrow=none;labelBackgroundColor=none;endSize=12;endFill=0;dashed=1;dashPattern=1 2;exitX=0.5;exitY=1;rounded=0;&#039;);
+		    	edge1.geometry.relative = true;
+			   	edge1.edge = true;
+			   	cell1.insertEdge(edge1, true);
+			   	cell2.insertEdge(edge1, false);
+
+			   	return sb.createVertexTemplateFromCells([cell1, cell2, edge1], 120, 100, &#039;Participant, Non-Initiating, Multi-Instance, Bottom with Decorator&#039;);
+			})
+		];
+			
+		this.addPalette(&#039;bpmn2Choreographies&#039;, &#039;BPMN 2.0 \ Choreographies&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addBPMN2EventsPalette = function(gn, r, sb)
+	{
+		var dt = &#039;bpmn business process model notation event &#039;;
+		var s = &#039;points=[[0.145,0.145,0],[0.5,0,0],[0.855,0.145,0],[1,0.5,0],[0.855,0.855,0],[0.5,1,0],[0.145,0.855,0],[0,0.5,0]];shape=mxgraph.bpmn.event;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;align=center;perimeter=ellipsePerimeter;outlineConnect=0;aspect=fixed;outline=&#039;;
+		var w = 50;
+		var h = 50;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;standard;symbol=general;&#039;, w, h, &#039;&#039;, &#039;None Start&#039;, null, null, dt + &#039;none start&#039;),
+			this.createVertexTemplateEntry(s + &#039;throwing;symbol=general;&#039;, w, h, &#039;&#039;, &#039;None Intermediate, Throwing&#039;, null, null, dt + &#039;none intermediate throwing&#039;),
+			this.createVertexTemplateEntry(s + &#039;end;symbol=terminate2;&#039;, w, h, &#039;&#039;, &#039;End&#039;, null, null, dt + &#039;end&#039;),
+			this.createVertexTemplateEntry(s + &#039;standard;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message Start, Interrupting&#039;, null, null, dt + &#039;message start interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;eventNonint;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message Start, Non-Interrupting&#039;, null, null, dt + &#039;message start non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;throwing;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message Intermediate, Throwing&#039;, null, null, dt + &#039;message intermediate throwing&#039;),
+			this.createVertexTemplateEntry(s + &#039;catching;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message Intermediate, Catching&#039;, null, null, dt + &#039;message intermediate catching&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundInt;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message Intermediate, Boundary Interrupting&#039;, null, null, dt + &#039;message intermediate boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundNonint;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message Intermediate, Boundary Non-Interrupting&#039;, null, null, dt + &#039;message intermediate boundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;end;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message End&#039;, null, null, dt + &#039;message end&#039;),
+			this.createVertexTemplateEntry(s + &#039;standard;symbol=timer;&#039;, w, h, &#039;&#039;, &#039;Timer Start, Interrupting&#039;, null, null, dt + &#039;timer start interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;eventNonint;symbol=timer;&#039;, w, h, &#039;&#039;, &#039;Timer Start, Non-Interrupting&#039;, null, null, dt + &#039;timer start non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;catching;symbol=timer;&#039;, w, h, &#039;&#039;, &#039;Timer Intermediate, Catching&#039;, null, null, dt + &#039;timer intermediate catching&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundInt;symbol=timer;&#039;, w, h, &#039;&#039;, &#039;Timer Intermediate, Boundary Interrupting&#039;, null, null, dt + &#039;timer intermediate boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundNonint;symbol=timer;&#039;, w, h, &#039;&#039;, &#039;Timer Intermediate, Boundary Non-Interrupting&#039;, null, null, dt + &#039;timer intermediate boundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;eventInt;symbol=escalation;&#039;, w, h, &#039;&#039;, &#039;Escalation Start, Interrupting&#039;, null, null, dt + &#039;escalation start interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;eventNonint;symbol=escalation;&#039;, w, h, &#039;&#039;, &#039;Escalation Start, Non-Interrupting&#039;, null, null, dt + &#039;escalation start non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;throwing;symbol=escalation;&#039;, w, h, &#039;&#039;, &#039;Escalation Intermediate, Boundary Throwing&#039;, null, null, dt + &#039;escalation intermediate boundary throwing&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundInt;symbol=escalation;&#039;, w, h, &#039;&#039;, &#039;Escalation Intermediate, Boundary Interrupting&#039;, null, null, dt + &#039;escalation intermediate boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundNonint;symbol=escalation;&#039;, w, h, &#039;&#039;, &#039;Escalation Intermediate, Non-Interrupting&#039;, null, null, dt + &#039;escalation intermediate non interrupting nonimpterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;end;symbol=escalation;&#039;, w, h, &#039;&#039;, &#039;Escalation End&#039;, null, null, dt + &#039;escalation end&#039;),
+			this.createVertexTemplateEntry(s + &#039;eventInt;symbol=error;&#039;, w, h, &#039;&#039;, &#039;Error Start, Interrupting&#039;, null, null, dt + &#039;error start interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundInt;symbol=error;&#039;, w, h, &#039;&#039;, &#039;Error Intermediate, Boundary Interrupting&#039;, null, null, dt + &#039;error intermediate boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;end;symbol=error;&#039;, w, h, &#039;&#039;, &#039;Error End&#039;, null, null, dt + &#039;error end&#039;),
+			this.createVertexTemplateEntry(s + &#039;eventInt;symbol=compensation;&#039;, w, h, &#039;&#039;, &#039;Compensation Start, Interrupting&#039;, null, null, dt + &#039;compensation start interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;throwing;symbol=compensation;&#039;, w, h, &#039;&#039;, &#039;Compensation Intermediate, Throwing&#039;, null, null, dt + &#039;compensation intermediate throwing&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundInt;symbol=compensation;&#039;, w, h, &#039;&#039;, &#039;Compensation Intermediate, Boundary Interrupting&#039;, null, null, dt + &#039;compensation intermediate boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;end;symbol=compensation;&#039;, w, h, &#039;&#039;, &#039;Compensation End&#039;, null, null, dt + &#039;compensation end&#039;),
+			this.createVertexTemplateEntry(s + &#039;standard;symbol=conditional;&#039;, w, h, &#039;&#039;, &#039;Conditional Start, Interrupting&#039;, null, null, dt + &#039;conditional start interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;eventNonint;symbol=conditional;&#039;, w, h, &#039;&#039;, &#039;Conditional Start, Non-Interrupting&#039;, null, null, dt + &#039;conditional start non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;catching;symbol=conditional;&#039;, w, h, &#039;&#039;, &#039;Conditional Intermediate, Catching&#039;, null, null, dt + &#039;conditional intermediate catching&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundInt;symbol=conditional;&#039;, w, h, &#039;&#039;, &#039;Conditional Intermediate, Boundary Interrupting&#039;, null, null, dt + &#039;conditional intermediate boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundNonint;symbol=conditional;&#039;, w, h, &#039;&#039;, &#039;Conditional Intermediate, Boundary Non-Interrupting&#039;, null, null, dt + &#039;conditional intermediate boundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;catching;symbol=link;&#039;, w, h, &#039;&#039;, &#039;Link Intermediate, Catching&#039;, null, null, dt + &#039;link intermediate catching&#039;),
+			this.createVertexTemplateEntry(s + &#039;throwing;symbol=link;&#039;, w, h, &#039;&#039;, &#039;Link Intermediate, Throwing&#039;, null, null, dt + &#039;link intermediate throwing&#039;),
+			this.createVertexTemplateEntry(s + &#039;standard;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal Start, Interrupting&#039;, null, null, dt + &#039;signal start interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;eventNonint;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal Start, Non-Interrupting&#039;, null, null, dt + &#039;signal start non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;catching;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal Intermediate, Catching&#039;, null, null, dt + &#039;signal intermediate catching&#039;),
+			this.createVertexTemplateEntry(s + &#039;throwing;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal Intermediate, Throwing&#039;, null, null, dt + &#039;signal intermediate throwing&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundInt;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal Intermediate, Boundary Interrupting&#039;, null, null, dt + &#039;signal intermediate boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundNonint;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal Intermediate, Boundary Non-Interrupting&#039;, null, null, dt + &#039;signal intermediate noundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;end;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal End&#039;, null, null, dt + &#039;signal end&#039;),
+			this.createVertexTemplateEntry(s + &#039;standard;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple Start, Interrupting&#039;, null, null, dt + &#039;multiple start interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;eventNonint;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple Start, Non-Interrupting&#039;, null, null, dt + &#039;multiple start non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;catching;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple Intermediate, Catching&#039;, null, null, dt + &#039;multiple intermediate catching&#039;),
+			this.createVertexTemplateEntry(s + &#039;throwing;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple Intermediate, Throwing&#039;, null, null, dt + &#039;multiple intermediate throwing&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundInt;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple Intermediate, Boundary Interrupting&#039;, null, null, dt + &#039;multiple intermediate boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundNonint;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple Intermediate, Boundary Non-Interrupting&#039;, null, null, dt + &#039;multiple intermediate boundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;end;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple End&#039;, null, null, dt + &#039;multiple end&#039;),
+			this.createVertexTemplateEntry(s + &#039;eventInt;symbol=parallelMultiple;&#039;, w, h, &#039;&#039;, &#039;Parallel Multiple Start, Interrupting&#039;, null, null, dt + &#039;parallel multiple start interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;eventNonint;symbol=parallelMultiple;&#039;, w, h, &#039;&#039;, &#039;Parallel Multiple Start, Non-Interrupting&#039;, null, null, dt + &#039;parallel multiple start non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;catching;symbol=parallelMultiple;&#039;, w, h, &#039;&#039;, &#039;Parallel Multiple Intermediate, Catching&#039;, null, null, dt + &#039;parallel multiple intermediate catching&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundInt;symbol=parallelMultiple;&#039;, w, h, &#039;&#039;, &#039;Parallel Multiple Intermediate, Boundary Interrupting&#039;, null, null, dt + &#039;parallel multiple intermediate boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundNonint;symbol=parallelMultiple;&#039;, w, h, &#039;&#039;, &#039;Parallel Multiple Intermediate, Boundary Non-Interrupting&#039;, null, null, dt + &#039;parallel multiple intermediate boundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;boundInt;symbol=cancel;&#039;, w, h, &#039;&#039;, &#039;Cancel Intermediate, Boundary Interrupting&#039;, null, null, dt + &#039;cancel intermediate boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s + &#039;end;symbol=cancel;&#039;, w, h, &#039;&#039;, &#039;Cancel End&#039;, null, null, dt + &#039;cancel end&#039;),
+			this.createVertexTemplateEntry(s + &#039;end;symbol=terminate;&#039;, w, h, &#039;&#039;, &#039;Terminate&#039;, null, null, dt + &#039;terminate&#039;)			
+		];
+			
+		this.addPalette(&#039;bpmn2Events&#039;, &#039;BPMN 2.0 \ Events&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addBPMN2GatewaysPalette = function(gn, r, sb)
+	{
+		var dt = &#039;bpmn business process model notation gateway &#039;;
+		var s2 = &#039;points=[[0.25,0.25,0],[0.5,0,0],[0.75,0.25,0],[1,0.5,0],[0.75,0.75,0],[0.5,1,0],[0.25,0.75,0],[0,0.5,0]];shape=mxgraph.bpmn.gateway2;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;align=center;perimeter=rhombusPerimeter;outlineConnect=0;outline=&#039;;
+		var w = 50;
+		var h = 50;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s2 + &#039;none;symbol=none;&#039;, w, h, &#039;&#039;, &#039;Exclusive&#039;, null, null, dt + &#039;exclusive&#039;),			
+			this.createVertexTemplateEntry(s2 + &#039;none;symbol=none;gwType=exclusive;&#039;, w, h, &#039;&#039;, &#039;Exclusive&#039;, null, null, dt + &#039;exclusive&#039;),			
+			this.createVertexTemplateEntry(s2 + &#039;end;symbol=general;&#039;, w, h, &#039;&#039;, &#039;Inclusive&#039;, null, null, dt + &#039;inclusive&#039;),			
+			this.createVertexTemplateEntry(s2 + &#039;none;symbol=none;gwType=parallel;&#039;, w, h, &#039;&#039;, &#039;Parallel&#039;, null, null, dt + &#039;parallel&#039;),			
+			this.createVertexTemplateEntry(s2 + &#039;none;symbol=none;gwType=complex;&#039;, w, h, &#039;&#039;, &#039;Complex&#039;, null, null, dt + &#039;complex&#039;),			
+			
+			this.createVertexTemplateEntry(s2 + &#039;standard;symbol=general;&#039;, w, h, &#039;&#039;, &#039;Start&#039;, null, null, dt + &#039;none start&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;throwing;symbol=general;&#039;, w, h, &#039;&#039;, &#039;Intermediate&#039;, null, null, dt + &#039;none intermediate&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;end;symbol=general;&#039;, w, h, &#039;&#039;, &#039;End&#039;, null, null, dt + &#039;none end&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;standard;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message&#039;, null, null, dt + &#039;message standard&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventInt;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message (Interrupting)&#039;, null, null, dt + &#039;message interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventNonint;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message (Non-Interrupting)&#039;, null, null, dt + &#039;message non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;catching;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message (Catching)&#039;, null, null, dt + &#039;message catching&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundInt;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message Boundary (Interrupting)&#039;, null, null, dt + &#039;message boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundNonint;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message Boundary (Non-Interrupting)&#039;, null, null, dt + &#039;message boundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;throwing;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message (Throwing)&#039;, null, null, dt + &#039;message throwing&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;end;symbol=message;&#039;, w, h, &#039;&#039;, &#039;Message End&#039;, null, null, dt + &#039;message end&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;standard;symbol=timer;&#039;, w, h, &#039;&#039;, &#039;Timer&#039;, null, null, dt + &#039;timer standard&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventInt;symbol=timer;&#039;, w, h, &#039;&#039;, &#039;Timer (Interrupting)&#039;, null, null, dt + &#039;timer interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventNonint;symbol=timer;&#039;, w, h, &#039;&#039;, &#039;Timer (Non-Interrupting)&#039;, null, null, dt + &#039;timer non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;catching;symbol=timer;&#039;, w, h, &#039;&#039;, &#039;Timer (Catching)&#039;, null, null, dt + &#039;timer catching&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundInt;symbol=timer;&#039;, w, h, &#039;&#039;, &#039;Timer Boundary (Interrupting)&#039;, null, null, dt + &#039;timer boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundNonint;symbol=timer;&#039;, w, h, &#039;&#039;, &#039;Timer Boundary (Non-Interrupting)&#039;, null, null, dt + &#039;timer boundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventInt;symbol=escalation;&#039;, w, h, &#039;&#039;, &#039;Escalation (Interrupting)&#039;, null, null, dt + &#039;escalation interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventNonint;symbol=escalation;&#039;, w, h, &#039;&#039;, &#039;Escalation (Non-Interrupting)&#039;, null, null, dt + &#039;escalation non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundInt;symbol=escalation;&#039;, w, h, &#039;&#039;, &#039;Escalation Boundary (Interrupting)&#039;, null, null, dt + &#039;escalation boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundNonint;symbol=escalation;&#039;, w, h, &#039;&#039;, &#039;Escalation Boundary (Non-Interrupting)&#039;, null, null, dt + &#039;escalation boundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;throwing;symbol=escalation;&#039;, w, h, &#039;&#039;, &#039;Escalation (Throwing)&#039;, null, null, dt + &#039;escalation throwing&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;end;symbol=escalation;&#039;, w, h, &#039;&#039;, &#039;Escalation End&#039;, null, null, dt + &#039;escalation end&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;standard;symbol=conditional;&#039;, w, h, &#039;&#039;, &#039;Conditional&#039;, null, null, dt + &#039;conditional standard&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventInt;symbol=conditional;&#039;, w, h, &#039;&#039;, &#039;Conditional (Interrupting)&#039;, null, null, dt + &#039;conditional interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventNonint;symbol=conditional;&#039;, w, h, &#039;&#039;, &#039;Conditional (Non-Interrupting)&#039;, null, null, dt + &#039;conditional non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;catching;symbol=conditional;&#039;, w, h, &#039;&#039;, &#039;Conditional (Catching)&#039;, null, null, dt + &#039;conditional catching&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundInt;symbol=conditional;&#039;, w, h, &#039;&#039;, &#039;Conditional Boundary (Interrupting)&#039;, null, null, dt + &#039;conditional boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundNonint;symbol=conditional;&#039;, w, h, &#039;&#039;, &#039;Conditional Boundary (Non-Interrupting)&#039;, null, null, dt + &#039;conditional boundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;catching;symbol=link;&#039;, w, h, &#039;&#039;, &#039;Link (Catching)&#039;, null, null, dt + &#039;link catching&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;throwing;symbol=link;&#039;, w, h, &#039;&#039;, &#039;Link (Throwing)&#039;, null, null, dt + &#039;link throwing&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventInt;symbol=error;&#039;, w, h, &#039;&#039;, &#039;Error (Interrupting)&#039;, null, null, dt + &#039;error interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundInt;symbol=error;&#039;, w, h, &#039;&#039;, &#039;Error Boundary (Interrupting)&#039;, null, null, dt + &#039;error boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;end;symbol=error;&#039;, w, h, &#039;&#039;, &#039;Error (End)&#039;, null, null, dt + &#039;error end&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundInt;symbol=cancel;&#039;, w, h, &#039;&#039;, &#039;Cancel Boundary (Interrupting)&#039;, null, null, dt + &#039;cancel boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;end;symbol=cancel;&#039;, w, h, &#039;&#039;, &#039;Cancel End&#039;, null, null, dt + &#039;cancel end&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventInt;symbol=compensation;&#039;, w, h, &#039;&#039;, &#039;Compensation (Interrupting)&#039;, null, null, dt + &#039;compensation interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundInt;symbol=compensation;&#039;, w, h, &#039;&#039;, &#039;Compensation Boundary (Interrupting)&#039;, null, null, dt + &#039;compensation boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;throwing;symbol=compensation;&#039;, w, h, &#039;&#039;, &#039;Compensation (Throwing)&#039;, null, null, dt + &#039;compensation throwing&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;end;symbol=compensation;&#039;, w, h, &#039;&#039;, &#039;Compensation End&#039;, null, null, dt + &#039;compensation end&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;standard;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal&#039;, null, null, dt + &#039;signal standard&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventInt;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal (Interrupting)&#039;, null, null, dt + &#039;signal interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventNonint;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal (Non-Interrupting)&#039;, null, null, dt + &#039;signal non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;catching;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal (Catching)&#039;, null, null, dt + &#039;signal catching&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundInt;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal Boundary (Interrupting)&#039;, null, null, dt + &#039;signal boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundNonint;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal Boundary (Non-Interrupting)&#039;, null, null, dt + &#039;signal boundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;throwing;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal (Throwing)&#039;, null, null, dt + &#039;signal throwing&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;end;symbol=signal;&#039;, w, h, &#039;&#039;, &#039;Signal End&#039;, null, null, dt + &#039;signal end&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;standard;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple &#039;, null, null, dt + &#039;multiple standard&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventInt;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple (Interrupting)&#039;, null, null, dt + &#039;multiple interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventNonint;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple (Non-Interrupting)&#039;, null, null, dt + &#039;multiple non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;catching;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple (Catching)&#039;, null, null, dt + &#039;multiple catching&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundInt;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple Boundary (Interrupting)&#039;, null, null, dt + &#039;multiple boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundNonint;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple Boundary (Non-Interrupting)&#039;, null, null, dt + &#039;multiple boundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;throwing;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple (Throwing)&#039;, null, null, dt + &#039;multiple throwing&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;end;symbol=multiple;&#039;, w, h, &#039;&#039;, &#039;Multiple End&#039;, null, null, dt + &#039;multiple end&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;standard;symbol=star;&#039;, w, h, &#039;&#039;, &#039;Multiple Start&#039;, null, null, dt + &#039;multiple end&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;standard;symbol=parallelMultiple;&#039;, w, h, &#039;&#039;, &#039;Parallel Multiple&#039;, null, null, dt + &#039;parallel multiple standard&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventInt;symbol=parallelMultiple;&#039;, w, h, &#039;&#039;, &#039;Parallel Multiple (Interrupting)&#039;, null, null, dt + &#039;parallel multiple interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;eventNonint;symbol=parallelMultiple;&#039;, w, h, &#039;&#039;, &#039;Parallel Multiple (Non-Interrupting)&#039;, null, null, dt + &#039;parallel multiple non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;catching;symbol=parallelMultiple;&#039;, w, h, &#039;&#039;, &#039;Parallel Multiple (Catching)&#039;, null, null, dt + &#039;parallel multiple catching&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundInt;symbol=parallelMultiple;&#039;, w, h, &#039;&#039;, &#039;Parallel Multiple Boundary (Interrupting)&#039;, null, null, dt + &#039;parallel multiple boundary interrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;boundNonint;symbol=parallelMultiple;&#039;, w, h, &#039;&#039;, &#039;Parallel Multiple Boundary (Non-Interrupting)&#039;, null, null, dt + &#039;parallel multiple boundary non interrupting noninterrupting&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;end;symbol=terminate;&#039;, w, h, &#039;&#039;, &#039;Terminate&#039;, null, null, dt + &#039;terminate&#039;)
+		];
+			
+		this.addPalette(&#039;bpmn2Gateways&#039;, &#039;BPMN 2.0 \ Gateways&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

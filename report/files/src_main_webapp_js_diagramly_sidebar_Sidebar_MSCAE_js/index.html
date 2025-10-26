@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-MSCAE.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-MSCAE.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">64.93</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">1500</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">37.00</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">48.99</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds MSCAE shapes
+	Sidebar.prototype.addMSCAEPalette = function()
+	{
+		var gn = &#039;mxgraph.mscae&#039;;
+		var r = 100;
+		var sb = this;
+		var s = &#039;image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/&#039;;
+		
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeCompanies&#039;);
+		this.addMSCAECompaniesPalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeEnterpriseFlat&#039;);
+		this.addMSCAEEnterpriseFlatPalette(gn, r, sb);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeIntuneFlat&#039;);
+		this.addMSCAEIntuneFlatPalette(gn, r, sb);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeOMSFlat&#039;);
+		this.addMSCAEOMSFlatPalette(gn, r, sb);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeSystem CenterFlat&#039;);
+		this.addMSCAESystemCenterFlatPalette(gn, r, sb);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeAI and ML Service&#039;);
+		this.addMSCAEAIandMLServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeAnalytics Service&#039;);
+		this.addMSCAEAnalyticsServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeCompute Service&#039;);
+		this.addMSCAEComputeServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeCompute Service VM&#039;);
+		this.addMSCAEComputeServiceVMPalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeContainer Service&#039;);
+		this.addMSCAEContainerServiceVMPalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeDatabases Service&#039;);
+		this.addMSCAEDatabasesServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeDevOps Service&#039;);
+		this.addMSCAEDevOpsServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeGeneral Service&#039;);
+		this.addMSCAEGeneralServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeIdentity Service&#039;);
+		this.addMSCAEIdentityServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeIntegration Service&#039;);
+		this.addMSCAEIntegrationServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeInternet of Things Service&#039;);
+		this.addMSCAEInternetOfThingsServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeIntune Service&#039;);
+		this.addMSCAEIntuneServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeManagement and Governance Service&#039;);
+		this.addMSCAEManagementGovernanceServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeManagement and Governance Service Media&#039;);
+		this.addMSCAEManagementGovernanceMediaServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeMigrate Service&#039;);
+		this.addMSCAEMigrateServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeMixed Reality Service&#039;);
+		this.addMSCAEMixedRealityServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeMobile Service&#039;);
+		this.addMSCAEMobileServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeNetworking Service&#039;);
+		this.addMSCAENetworkingServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeOther Category Service&#039;);
+		this.addMSCAEOtherCategoryServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeSecurity Service&#039;);
+		this.addMSCAESecurityServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeStorage Service&#039;);
+		this.addMSCAEStorageServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;mscae&#039;, &#039;mscaeWeb Service&#039;);
+		this.addMSCAEWebServicePalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary();
+	};
+
+	Sidebar.prototype.addMSCAECompaniesPalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise company companies&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Cache_Redis_Product.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Cache Redis Product Icon&#039;, null, null, this.getTagsForStencil(gn, &#039;azure cache redis product icon&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Databricks.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Databricks&#039;, null, null, this.getTagsForStencil(gn, &#039;azure databricks&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;HDInsight.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;HDInsight&#039;, null, null, this.getTagsForStencil(gn, &#039;azure hdinsight&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;sketch=0;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.mscae.cloud.hockeyapp;fillColor=#0079D6;pointerEvents=1;&#039;,
+					r * 0.5, r * 0.38, &#039;&#039;, &#039;HockeyApp&#039;, null, null, this.getTagsForStencil(gn, &#039;azure hockey app hockeyapp&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;OpenShift.svg;&#039;,	
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;OpenShift&#039;, null, null, this.getTagsForStencil(gn, &#039;azure open shift openshift&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Cloud_Cycle.svg;&#039;,	
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;Cloud Cycle&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud cycle&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Kubernetes.svg;&#039;,	
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Kubernetes&#039;, null, null, this.getTagsForStencil(gn, &#039;kubernetes&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;PluralSight_mono.svg;&#039;,	
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;PluralSight Mono&#039;, null, null, this.getTagsForStencil(gn, &#039;pluralsight mono&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;DC_OS.svg;&#039;,	
+					r * 0.4, r * 0.5, &#039;&#039;, &#039;DC OS&#039;, null, null, this.getTagsForStencil(gn, &#039;dc os&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Docker.svg;&#039;,	
+					r * 0.5, r * 0.41, &#039;&#039;, &#039;Docker&#039;, null, null, this.getTagsForStencil(gn, &#039;docker&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;StackOverflow.svg;&#039;,	
+					r * 0.4, r * 0.5, &#039;&#039;, &#039;StackOverflow&#039;, null, null, this.getTagsForStencil(gn, &#039;stack overflow stackoverflow so&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;WebAppUmbraco.svg;&#039;,	
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;WebAppUmbraco&#039;, null, null, this.getTagsForStencil(gn, &#039;webappumbraco webapp umbraco&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;WebAppWordPress.svg;&#039;,	
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;WebAppWordPress&#039;, null, null, this.getTagsForStencil(gn, &#039;webappwordpress webapp wordpress&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeCompanies&#039;, &#039;CAE / Companies&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addMSCAEEnterpriseFlatPalette = function(gn, r, sb)
+	{
+		var s = &#039;sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.&#039;;
+		var s2 = &#039;sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.&#039;;
+		var dt = &#039;ms microsoft cloud enterprise flat&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.d&#039;,
+					r * 0.4, r * 0.5, &#039;&#039;, &#039;Federation Services Proxy&#039;, null, null, this.getTagsForStencil(gn, &#039;active directory ad fs federation services proxy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.ad_fs&#039;,
+					r * 0.4, r * 0.5, &#039;&#039;, &#039;Federation Services&#039;, null, null, this.getTagsForStencil(gn, &#039;active directory ad fs federation services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.android_phone&#039;,
+					r * 0.3, r * 0.5, &#039;&#039;, &#039;Android Phone&#039;, null, null, this.getTagsForStencil(gn, &#039;android phone&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.application&#039;,
+					r * 0.5, r * 0.34, &#039;&#039;, &#039;Application&#039;, null, null, this.getTagsForStencil(gn, &#039;application&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.application_blank&#039;,
+					r * 0.5, r * 0.43, &#039;&#039;, &#039;Application (blank)&#039;, null, null, this.getTagsForStencil(gn, &#039;application blank&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.app_generic&#039;,
+					r * 0.5, r * 0.39, &#039;&#039;, &#039;Application (generic)&#039;, null, null, this.getTagsForStencil(gn, &#039;application generic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.application_server&#039;,
+					r * 0.43, r * 0.5, &#039;&#039;, &#039;Application Server&#039;, null, null, this.getTagsForStencil(gn, &#039;application server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.application_server2&#039;,
+					r * 0.43, r * 0.5, &#039;&#039;, &#039;Application Server&#039;, null, null, this.getTagsForStencil(gn, &#039;application server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.pack&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Pack&#039;, null, null, this.getTagsForStencil(gn, &#039;pack&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.backup_local&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;Backup (local)&#039;, null, null, this.getTagsForStencil(gn, &#039;backup local&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.backup_online&#039;,
+					r * 0.5, r * 0.4, &#039;&#039;, &#039;Backup (local)&#039;, null, null, this.getTagsForStencil(gn, &#039;backup local&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.calendar&#039;,
+					r * 0.5, r * 0.41, &#039;&#039;, &#039;Calendar&#039;, null, null, this.getTagsForStencil(gn, &#039;calendar&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.certificate&#039;,
+					r * 0.5, r * 0.4, &#039;&#039;, &#039;Certificate&#039;, null, null, this.getTagsForStencil(gn, &#039;certificate&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.client_application&#039;,
+					r * 0.5, r * 0.32, &#039;&#039;, &#039;Client Application&#039;, null, null, this.getTagsForStencil(gn, &#039;client application&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.cloud&#039;,
+					r * 0.5, r * 0.32, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.internet&#039;,
+					r * 0.5, r * 0.31, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.cluster_server&#039;,
+					r * 0.4, r * 0.5, &#039;&#039;, &#039;Cluster Server&#039;, null, null, this.getTagsForStencil(gn, &#039;cluster server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.code_file&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;Code File&#039;, null, null, this.getTagsForStencil(gn, &#039;code file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.connectors&#039;,
+					r * 0.5, r * 0.34, &#039;&#039;, &#039;Connectors&#039;, null, null, this.getTagsForStencil(gn, &#039;connectors&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.database_generic&#039;,
+					r * 0.37, r * 0.5, &#039;&#039;, &#039;Database (generic)&#039;, null, null, this.getTagsForStencil(gn, &#039;database generic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.database_server&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;Database (server)&#039;, null, null, this.getTagsForStencil(gn, &#039;database server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.database_synchronization&#039;,
+					r * 0.39, r * 0.5, &#039;&#039;, &#039;Database (synchronization)&#039;, null, null, this.getTagsForStencil(gn, &#039;database synchronization&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.device&#039;,
+					r * 0.5, r * 0.26, &#039;&#039;, &#039;Device&#039;, null, null, this.getTagsForStencil(gn, &#039;device&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.direct_access_feature&#039;,
+					r * 0.5, r * 0.44, &#039;&#039;, &#039;Direct Access (feature)&#039;, null, null, this.getTagsForStencil(gn, &#039;direct access feature&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.code_file&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;Document DB file&#039;, null, null, this.getTagsForStencil(gn, &#039;documentdb document db database file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.document&#039;,
+					r * 0.4, r * 0.5, &#039;&#039;, &#039;Document&#039;, null, null, this.getTagsForStencil(gn, &#039;document&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.domain_controller&#039;,
+					r * 0.36, r * 0.5, &#039;&#039;, &#039;Domain Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;domain controller&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.enterprise&#039;,
+					r * 0.3, r * 0.5, &#039;&#039;, &#039;Enterprise Building&#039;, null, null, this.getTagsForStencil(gn, &#039;enterprise building&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.file&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;File (general)&#039;, null, null, this.getTagsForStencil(gn, &#039;file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.filter&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Filter&#039;, null, null, this.getTagsForStencil(gn, &#039;filter&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.firewall&#039;,
+					r * 0.5, r * 0.44, &#039;&#039;, &#039;Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;firewall&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.folder&#039;,
+					r * 0.5, r * 0.43, &#039;&#039;, &#039;Folder&#039;, null, null, this.getTagsForStencil(gn, &#039;folder&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.gateway&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;gateway&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.general.graph&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Graph&#039;, null, null, this.getTagsForStencil(gn, &#039;graph&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.health_monitoring&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Health Monitoring&#039;, null, null, this.getTagsForStencil(gn, &#039;health monitoring&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.healthy&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Healthy&#039;, null, null, this.getTagsForStencil(gn, &#039;healthy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.import_generic&#039;,
+					r * 0.4, r * 0.5, &#039;&#039;, &#039;Import (generic)&#039;, null, null, this.getTagsForStencil(gn, &#039;import generic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.internet_hollow&#039;,
+					r * 0.5, r * 0.31, &#039;&#039;, &#039;Internet (hollow)&#039;, null, null, this.getTagsForStencil(gn, &#039;internet hollow&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.internet&#039;,
+					r * 0.5, r * 0.31, &#039;&#039;, &#039;Internet&#039;, null, null, this.getTagsForStencil(gn, &#039;internet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.key_permissions&#039;,
+					r * 0.26, r * 0.5, &#039;&#039;, &#039;Key, Permissions&#039;, null, null, this.getTagsForStencil(gn, &#039;key permissions&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.keyboard&#039;,
+					r * 0.5, r * 0.3, &#039;&#039;, &#039;Keyboard&#039;, null, null, this.getTagsForStencil(gn, &#039;keyboard&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.laptop&#039;,
+					r * 0.5, r * 0.3, &#039;&#039;, &#039;Laptop&#039;, null, null, this.getTagsForStencil(gn, &#039;laptop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.load_balancer_generic&#039;,
+					r * 0.37, r * 0.5, &#039;&#039;, &#039;Load Balancer (generic)&#039;, null, null, this.getTagsForStencil(gn, &#039;load balancer generic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.load_testing&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;Load Testing&#039;, null, null, this.getTagsForStencil(gn, &#039;load testing&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.lock_unlocked&#039;,
+					r * 0.37, r * 0.5, &#039;&#039;, &#039;Lock (unlocked)&#039;, null, null, this.getTagsForStencil(gn, &#039;lock unlocked unprotected accessible&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.lock&#039;,
+					r * 0.39, r * 0.5, &#039;&#039;, &#039;Lock, protected&#039;, null, null, this.getTagsForStencil(gn, &#039;lock protected&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.maintenance&#039;,
+					r * 0.39, r * 0.5, &#039;&#039;, &#039;Maintenance&#039;, null, null, this.getTagsForStencil(gn, &#039;maintenance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.management_console;&#039;,
+					r * 0.5, r * 0.34, &#039;&#039;, &#039;Management Console&#039;, null, null, this.getTagsForStencil(gn, &#039;management console&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.message2;&#039;,
+					r * 0.5, r * 0.37, &#039;&#039;, &#039;Message&#039;, null, null, this.getTagsForStencil(gn, &#039;message&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.monitor_running_apps&#039;,
+					r * 0.5, r * 0.39, &#039;&#039;, &#039;Monitor Running Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;monitor running apps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.computer&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Monitor&#039;, null, null, this.getTagsForStencil(gn, &#039;monitor computer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.mouse&#039;,
+					r * 0.3, r * 0.5, &#039;&#039;, &#039;Mouse&#039;, null, null, this.getTagsForStencil(gn, &#039;mouse&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.network_card&#039;,
+					r * 0.5, r * 0.35, &#039;&#039;, &#039;Network Card&#039;, null, null, this.getTagsForStencil(gn, &#039;network card&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s2 + &#039;mscae.enterprise.not_allowed;fillColor=#EA1C24;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Not Allowed&#039;, null, null, this.getTagsForStencil(gn, &#039;not allowed&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.performance_monitor&#039;,
+					r * 0.5, r * 0.36, &#039;&#039;, &#039;Performance Monitor&#039;, null, null, this.getTagsForStencil(gn, &#039;performance monitor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.performance&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Performance&#039;, null, null, this.getTagsForStencil(gn, &#039;performance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.mobile&#039;,
+					r * 0.35, r * 0.5, &#039;&#039;, &#039;Mobile&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.plug_and_play&#039;,
+					r * 0.4, r * 0.5, &#039;&#039;, &#039;Plug and Play&#039;, null, null, this.getTagsForStencil(gn, &#039;plug and play&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s2 + &#039;mscae.other.powerpoint;fillColor=#DE5D24;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;PowerPoint&#039;, null, null, this.getTagsForStencil(gn, &#039;powerpoint&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.powershell_file&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;PowerShell file&#039;, null, null, this.getTagsForStencil(gn, &#039;powershell file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.protocol_stack&#039;,
+					r * 0.5, r * 0.34, &#039;&#039;, &#039;Protocol Stack&#039;, null, null, this.getTagsForStencil(gn, &#039;protocol stack&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.queue_generic&#039;,
+					r * 0.5, r * 0.15, &#039;&#039;, &#039;Queue Generic&#039;, null, null, this.getTagsForStencil(gn, &#039;queue generic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.rms_connector&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;RMS Connector&#039;, null, null, this.getTagsForStencil(gn, &#039;rms connector&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.router&#039;,
+					r * 0.5, r * 0.39, &#039;&#039;, &#039;Router&#039;, null, null, this.getTagsForStencil(gn, &#039;router&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.router&#039;,
+					r * 0.5, r * 0.39, &#039;&#039;, &#039;Router&#039;, null, null, this.getTagsForStencil(gn, &#039;router&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s2 + &#039;azure.rdp_remoting_file;fillColor=#0078D7;&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;RPD Remoting file&#039;, null, null, this.getTagsForStencil(gn, &#039;rpd remoting file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.script_file&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;Script file&#039;, null, null, this.getTagsForStencil(gn, &#039;script file&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.secure_virtual_machine&#039;,
+					r * 0.5, r * 0.38, &#039;&#039;, &#039;Secure Virtual Machine&#039;, null, null, this.getTagsForStencil(gn, &#039;secure virtual machine&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.server&#039;,
+					r * 0.5, r * 0.15, &#039;&#039;, &#039;Server (blade)&#039;, null, null, this.getTagsForStencil(gn, &#039;server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.server_generic&#039;,
+					r * 0.24, r * 0.5, &#039;&#039;, &#039;Server (generic)&#039;, null, null, this.getTagsForStencil(gn, &#039;server generic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.server_directory&#039;,
+					r * 0.36, r * 0.5, &#039;&#039;, &#039;Server Directory&#039;, null, null, this.getTagsForStencil(gn, &#039;server directory&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.server_farm&#039;,
+					r * 0.5, r * 0.32, &#039;&#039;, &#039;Server Farm&#039;, null, null, this.getTagsForStencil(gn, &#039;server farm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.server_rack&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Server Rack&#039;, null, null, this.getTagsForStencil(gn, &#039;server rack&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.settings&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Settings&#039;, null, null, this.getTagsForStencil(gn, &#039;settings&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.shared_folder&#039;,
+					r * 0.43, r * 0.5, &#039;&#039;, &#039;Shared Folder&#039;, null, null, this.getTagsForStencil(gn, &#039;shared folder&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.smartcard&#039;,
+					r * 0.5, r * 0.32, &#039;&#039;, &#039;Smartcard&#039;, null, null, this.getTagsForStencil(gn, &#039;smartcard&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s2 + &#039;azure.startup_task;fillColor=#0078D7;&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;Startup Task&#039;, null, null, this.getTagsForStencil(gn, &#039;startup task&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.storage&#039;,
+					r * 0.5, r * 0.41, &#039;&#039;, &#039;Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.table&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Table&#039;, null, null, this.getTagsForStencil(gn, &#039;table&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.tablet;&#039;,
+					r * 0.5, r * 0.37, &#039;&#039;, &#039;Tablet&#039;, null, null, this.getTagsForStencil(gn, &#039;tablet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.tool;&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Tool&#039;, null, null, this.getTagsForStencil(gn, &#039;tool&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s2 + &#039;mscae.enterprise.triggers;fillColor=#0078D7;&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;Triggers&#039;, null, null, this.getTagsForStencil(gn, &#039;triggers&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.general.tunnel&#039;,
+					r * 0.5, r * 0.09, &#039;&#039;, &#039;Tunnel&#039;, null, null, this.getTagsForStencil(gn, &#039;tunnel&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s2 + &#039;mscae.enterprise.udf_function;fillColor=#0078D7;&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;UDF Function&#039;, null, null, this.getTagsForStencil(gn, &#039;udf function&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s2 + &#039;mscae.enterprise.unhealthy;fillColor=#0078D7;&#039;,
+					r * 0.5, r * 0.41, &#039;&#039;, &#039;Unhealthy&#039;, null, null, this.getTagsForStencil(gn, &#039;unhealthy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.unhealthy&#039;,
+					r * 0.5, r * 0.41, &#039;&#039;, &#039;Unhealthy&#039;, null, null, this.getTagsForStencil(gn, &#039;unhealthy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.usb&#039;,
+					r * 0.5, r * 0.23, &#039;&#039;, &#039;USB&#039;, null, null, this.getTagsForStencil(gn, &#039;usb&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.user&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;User (enterprise)&#039;, null, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s2 + &#039;mscae.enterprise.user_permissions;fillColor=#0078D7;&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;User permissions&#039;, null, null, this.getTagsForStencil(gn, &#039;user permissions&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.general.video&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;Video&#039;, null, null, this.getTagsForStencil(gn, &#039;video&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;azure.virtual_machine_feature&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Virtual Machine&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual machine&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.web_server&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;Web Server&#039;, null, null, this.getTagsForStencil(gn, &#039;web server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s2 + &#039;mscae.enterprise.website_generic;fillColor=#7D7D7D;&#039;,
+					r * 0.5, r * 0.44, &#039;&#039;, &#039;Website (generic)&#039;, null, null, this.getTagsForStencil(gn, &#039;website generic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.windows_server&#039;,
+					r * 0.39, r * 0.5, &#039;&#039;, &#039;Windows Server&#039;, null, null, this.getTagsForStencil(gn, &#039;windows server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.wireless_connection&#039;,
+					r * 0.42, r * 0.5, &#039;&#039;, &#039;Wireless Connection&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless connection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.workstation_client&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Workstation Client&#039;, null, null, this.getTagsForStencil(gn, &#039;workstation client&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					s + &#039;mscae.enterprise.xml_web_service&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;XML Web Service&#039;, null, null, this.getTagsForStencil(gn, &#039;xml web service&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeEnterpriseFlat&#039;, &#039;CAE / Enterprise (flat)&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addMSCAEIntuneFlatPalette = function(gn, r, sb)
+	{
+		var s = &#039;sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#505050;shape=mxgraph.mscae.intune.&#039;;
+		var s2 = &#039;sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#505050;shape=mxgraph.mscae.&#039;;
+		var dt = &#039;ms microsoft cloud enterprise intune&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;account_portal&#039;,
+					r * 0.43, r * 0.5, &#039;&#039;, &#039;Account Portal&#039;, null, null, this.getTagsForStencil(gn, &#039;account portal&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;administration&#039;,
+					r * 0.3, r * 0.5, &#039;&#039;, &#039;Administration&#039;, null, null, this.getTagsForStencil(gn, &#039;administration&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;alerts&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Alerts&#039;, null, null, this.getTagsForStencil(gn, &#039;alerts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;apps&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;apps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;certificate&#039;,
+					r * 0.5, r * 0.49, &#039;&#039;, &#039;Certificate (Compliance)&#039;, null, null, this.getTagsForStencil(gn, &#039;certificate compliance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;client_software&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Client Software Deployment Wizard&#039;, null, null, this.getTagsForStencil(gn, &#039;client software deployment wizard&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;company_portal&#039;,
+					r * 0.5, r * 0.38, &#039;&#039;, &#039;Company Portal&#039;, null, null, this.getTagsForStencil(gn, &#039;company portal&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;computer_inventory&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Computer Inventory&#039;, null, null, this.getTagsForStencil(gn, &#039;computer inventory&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;conditional_access_exchange;fillColorStyles=fillColor2;fillColor2=#2171ba;&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;Conditional Access (Exchange)&#039;, null, null, this.getTagsForStencil(gn, &#039;conditional access exchange&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;conditional_access_sharepoint;fillColorStyles=fillColor2;fillColor2=#2171ba;&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;Conditional Access (Sharepoint)&#039;, null, null, this.getTagsForStencil(gn, &#039;conditional access sharepoint&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;connector&#039;,
+					r * 0.5, r * 0.17, &#039;&#039;, &#039;Connector&#039;, null, null, this.getTagsForStencil(gn, &#039;connector&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dashboard&#039;,
+					r * 0.5, r * 0.4, &#039;&#039;, &#039;Dashboard&#039;, null, null, this.getTagsForStencil(gn, &#039;dashboard&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;data_migration_wizard&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Data Migration Wizard&#039;, null, null, this.getTagsForStencil(gn, &#039;data migration wizard&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;detected_software&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Detected Software&#039;, null, null, this.getTagsForStencil(gn, &#039;detected software&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;device_group&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Device Group&#039;, null, null, this.getTagsForStencil(gn, &#039;device group&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;device_health&#039;,
+					r * 0.5, r * 0.31, &#039;&#039;, &#039;Device Health&#039;, null, null, this.getTagsForStencil(gn, &#039;device_health&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;device_history&#039;,
+					r * 0.45, r * 0.5, &#039;&#039;, &#039;Device History&#039;, null, null, this.getTagsForStencil(gn, &#039;device history&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;device_os&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;Device OS&#039;, null, null, this.getTagsForStencil(gn, &#039;device os operating system&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;end_protection&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;End Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;end protection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;exchange_connector&#039;,
+					r * 0.5, r * 0.49, &#039;&#039;, &#039;Exchange Connector&#039;, null, null, this.getTagsForStencil(gn, &#039;exchange connector&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;groups&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Groups&#039;, null, null, this.getTagsForStencil(gn, &#039;groups&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;hybrid&#039;,
+					r * 0.5, r * 0.39, &#039;&#039;, &#039;Hybrid&#039;, null, null, this.getTagsForStencil(gn, &#039;hybrid&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;intune_certificate_profiles&#039;,
+					r * 0.4, r * 0.5, &#039;&#039;, &#039;Intune Certificate Profiles&#039;, null, null, this.getTagsForStencil(gn, &#039;certificate profiles&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;intune_connector&#039;,
+					r * 0.82, r * 0.59, &#039;&#039;, &#039;Intune Connector&#039;, null, null, this.getTagsForStencil(gn, &#039;intune connector&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;intune_email_profiles&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Intune Email Profiles&#039;, null, null, this.getTagsForStencil(gn, &#039;email profiles&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;intune_managed_app&#039;,
+					r * 0.5, r * 0.38, &#039;&#039;, &#039;Intune Managed App&#039;, null, null, this.getTagsForStencil(gn, &#039;managed app application&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;intune_mobile_application_management&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;Intune Mobile Application Management&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile app aplication management&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;intune_vpn_profiles&#039;,
+					r * 0.42, r * 0.5, &#039;&#039;, &#039;Intune VPN Profiles&#039;, null, null, this.getTagsForStencil(gn, &#039;vpn virtual private network profiles&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;intune_wifi_profiles&#039;,
+					r * 0.43, r * 0.5, &#039;&#039;, &#039;Intune WiFi Profiles&#039;, null, null, this.getTagsForStencil(gn, &#039;wifi profiles&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inventory_license&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Inventory License&#039;, null, null, this.getTagsForStencil(gn, &#039;inventory license&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;inventory_software&#039;,
+					r * 0.5, r * 0.49, &#039;&#039;, &#039;Inventory Software&#039;, null, null, this.getTagsForStencil(gn, &#039;inventory software&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;license_group&#039;,
+					r * 0.5, r * 0.49, &#039;&#039;, &#039;License Group&#039;, null, null, this.getTagsForStencil(gn, &#039;license group&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;license_installation&#039;,
+					r * 0.5, r * 0.43, &#039;&#039;, &#039;License Installation&#039;, null, null, this.getTagsForStencil(gn, &#039;license installation&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;microsoft_intune&#039;,
+					r * 0.5, r * 0.4, &#039;&#039;, &#039;MS Intune&#039;, null, null, this.getTagsForStencil(gn, &#039;microsoft&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;mobile_inventory&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;Mobile Inventory&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile inventory&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;noncompliant_apps&#039;,
+					r * 0.46, r * 0.5, &#039;&#039;, &#039;Noncompliant Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;noncompliant apps applications&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;policy&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Policy&#039;, null, null, this.getTagsForStencil(gn, &#039;policy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;protection&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;protection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;reports&#039;,
+					r * 0.46, r * 0.5, &#039;&#039;, &#039;Reports&#039;, null, null, this.getTagsForStencil(gn, &#039;reports&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;enterprise.settings&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Settings&#039;, null, null, this.getTagsForStencil(gn, &#039;settings&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;subscription_portal&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Subscription Portal&#039;, null, null, this.getTagsForStencil(gn, &#039;subscription portal&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;terms_and_conditions&#039;,
+					r * 0.37, r * 0.5, &#039;&#039;, &#039;Terms and Conditions&#039;, null, null, this.getTagsForStencil(gn, &#039;terms and conditions&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;update&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;Update&#039;, null, null, this.getTagsForStencil(gn, &#039;update&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;user_group&#039;,
+					r * 0.5, r * 0.37, &#039;&#039;, &#039;User Group&#039;, null, null, this.getTagsForStencil(gn, &#039;user group&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;user_management&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;User Management&#039;, null, null, this.getTagsForStencil(gn, &#039;user management&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeIntuneFlat&#039;, &#039;CAE / Intune (flat)&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEOMSFlatPalette = function(gn, r, sb)
+	{
+		var s = &#039;sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#505050;shape=mxgraph.mscae.oms.&#039;;
+		var dt = &#039;ms microsoft cloud enterprise oms&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;alerts&#039;,
+					r * 0.41, r * 0.5, &#039;&#039;, &#039;Alerts&#039;, null, null, this.getTagsForStencil(gn, &#039;alerts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;app_with_changes&#039;,
+					r * 0.5, r * 0.32, &#039;&#039;, &#039;App With Changes&#039;, null, null, this.getTagsForStencil(gn, &#039;app with changes&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;assessments&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;Assessments&#039;, null, null, this.getTagsForStencil(gn, &#039;assessments&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;capacity&#039;,
+					r * 0.41, r * 0.5, &#039;&#039;, &#039;Capacity&#039;, null, null, this.getTagsForStencil(gn, &#039;capacity&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;config_assessment&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Config Assessment&#039;, null, null, this.getTagsForStencil(gn, &#039;config assessment&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dashboard&#039;,
+					r * 0.5, r * 0.41, &#039;&#039;, &#039;Dashboard&#039;, null, null, this.getTagsForStencil(gn, &#039;dashboard&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dependency_monitor&#039;,
+					r * 0.5, r * 0.49, &#039;&#039;, &#039;Dependency Monitor&#039;, null, null, this.getTagsForStencil(gn, &#039;dependency monitor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;diagnostics&#039;,
+					r * 0.5, r * 0.34, &#039;&#039;, &#039;Diagnostics&#039;, null, null, this.getTagsForStencil(gn, &#039;diagnostics&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;jobs&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Jobs&#039;, null, null, this.getTagsForStencil(gn, &#039;jobs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;log_management&#039;,
+					r * 0.41, r * 0.5, &#039;&#039;, &#039;Log Management&#039;, null, null, this.getTagsForStencil(gn, &#039;log management&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;log_search&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Log Search&#039;, null, null, this.getTagsForStencil(gn, &#039;log search&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;malware_assessment&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;Malware Assessment&#039;, null, null, this.getTagsForStencil(gn, &#039;malware assessment&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;overview&#039;,
+					r * 0.5, r * 0.41, &#039;&#039;, &#039;Overview&#039;, null, null, this.getTagsForStencil(gn, &#039;overview&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;security&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Security&#039;, null, null, this.getTagsForStencil(gn, &#039;security&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;server_width_changes&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;Server Width Changes&#039;, null, null, this.getTagsForStencil(gn, &#039;server width changes&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;services&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;Services&#039;, null, null, this.getTagsForStencil(gn, &#039;services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;solutions&#039;,
+					r * 0.5, r * 0.49, &#039;&#039;, &#039;Solutions&#039;, null, null, this.getTagsForStencil(gn, &#039;solutions&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;system_update&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;System Update&#039;, null, null, this.getTagsForStencil(gn, &#039;system update&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;track_changes&#039;,
+					r * 0.42, r * 0.5, &#039;&#039;, &#039;Track Changes&#039;, null, null, this.getTagsForStencil(gn, &#039;track changes&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;wire_data&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Wire Data&#039;, null, null, this.getTagsForStencil(gn, &#039;wire data&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeOMSFlat&#039;, &#039;CAE / OMS (flat)&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAESystemCenterFlatPalette = function(gn, r, sb)
+	{
+		var s = &#039;sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#515151;shape=mxgraph.mscae.system_center.&#039;;
+		var s2 = &#039;sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#515151;shape=mxgraph.mscae.&#039;;
+		var dt = &#039;ms microsoft cloud enterprise system center&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;admin_console&#039;,
+					r * 0.5, r * 0.36, &#039;&#039;, &#039;Admin Console&#039;, null, null, this.getTagsForStencil(gn, &#039;admin console&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;enterprise.database_server&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;Central Administration Site&#039;, null, null, this.getTagsForStencil(gn, &#039;central administration site&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;central_administration_site_sql&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;Central Administration Site SQL&#039;, null, null, this.getTagsForStencil(gn, &#039;central administration site sql&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cloud_distribution_point&#039;,
+					r * 0.46, r * 0.5, &#039;&#039;, &#039;Cloud Distribution Point&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud distribution point&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;distribution_point&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;Distribution Point&#039;, null, null, this.getTagsForStencil(gn, &#039;distribution point&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;management_point&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;Management Point&#039;, null, null, this.getTagsForStencil(gn, &#039;management point&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;primary_site;fillColorStyles=fillColor2;fillColor2=#0079d6;&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;Primary Site&#039;, null, null, this.getTagsForStencil(gn, &#039;primary site&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;roles&#039;,
+					r * 0.42, r * 0.5, &#039;&#039;, &#039;Roles&#039;, null, null, this.getTagsForStencil(gn, &#039;roles&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;secondary_site&#039;,
+					r * 0.41, r * 0.5, &#039;&#039;, &#039;Secondary Site&#039;, null, null, this.getTagsForStencil(gn, &#039;secondary site&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;software_update_point&#039;,
+					r * 0.5, r * 0.43, &#039;&#039;, &#039;Software Update Point&#039;, null, null, this.getTagsForStencil(gn, &#039;software update point&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeSystem CenterFlat&#039;, &#039;CAE / System Center (flat)&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEAIandMLServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise ai ml service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Batch_AI.svg;&#039;,
+					r * 0.36, r * 0.5, &#039;&#039;, &#039;Batch AI&#039;, null, null, this.getTagsForStencil(gn, &#039;batch ai&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Bot_Services.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Bot Services&#039;, null, null, this.getTagsForStencil(gn, &#039;bot services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Cognitive_Services.svg;&#039;,
+					r * 0.5, r * 0.3, &#039;&#039;, &#039;Cognitive Services&#039;, null, null, this.getTagsForStencil(gn, &#039;cognitive services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Genomics_Accounts.svg;&#039;,
+					r * 0.26, r * 0.5, &#039;&#039;, &#039;Genomics Accounts&#039;, null, null, this.getTagsForStencil(gn, &#039;genomics accounts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Machine_Learning_Service_Workspaces.svg;&#039;,
+					r * 0.46, r * 0.5, &#039;&#039;, &#039;Machine Learning Service Workspaces&#039;, null, null, this.getTagsForStencil(gn, &#039;machine learning service workspaces&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Machine_Learning_Studio_Web_Service_Plans.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Machine Learning Studio Web Service Plans&#039;, null, null, this.getTagsForStencil(gn, &#039;machine learning studio web service plans&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Machine_Learning_Studio_Web_Services.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Machine Learning Studio Web Services&#039;, null, null, this.getTagsForStencil(gn, &#039;machine learning studio web services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Machine_Learning_Studio_Workspaces.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Machine Learning Studio Workspaces&#039;, null, null, this.getTagsForStencil(gn, &#039;machine learning studio workspaces&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeAI and ML Service&#039;, &#039;CAE / AI and ML Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEAnalyticsServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise analytics service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Analysis_Services.svg;&#039;,
+					r * 0.5, r * 0.39, &#039;&#039;, &#039;Analysis Services&#039;, null, null, this.getTagsForStencil(gn, &#039;analysis services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_Data_Explorer_Clusters.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure Data Explorer Clusters&#039;, null, null, this.getTagsForStencil(gn, &#039;azure data explorer clusters&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Databricks.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Databricks&#039;, null, null, this.getTagsForStencil(gn, &#039;azure databricks&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Data_Factory.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Data Factories&#039;, null, null, this.getTagsForStencil(gn, &#039;data factory factories&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Data_Lake_Analytics.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Data Lake Analytics&#039;, null, null, this.getTagsForStencil(gn, &#039;data lake analytics&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Data_Lake_Store.svg;&#039;,
+					r * 0.5, r * 0.39, &#039;&#039;, &#039;Data Lake Store&#039;, null, null, this.getTagsForStencil(gn, &#039;data lake store&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Event_Hub_Clusters.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Event Hub Clusters&#039;, null, null, this.getTagsForStencil(gn, &#039;event hub clusters&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Event_Hubs.svg;&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;Event Hubs&#039;, null, null, this.getTagsForStencil(gn, &#039;event hubs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;HDInsightClusters.svg;&#039;,
+					r * 0.5, r * 0.49, &#039;&#039;, &#039;HDInsight Clusters&#039;, null, null, this.getTagsForStencil(gn, &#039;hdinsight clusters&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Log_Analytics_Workspaces.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Log Analytics Workspaces&#039;, null, null, this.getTagsForStencil(gn, &#039;log analytics workspaces&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Stream_Analytics.svg;&#039;,
+					r * 0.5, r * 0.39, &#039;&#039;, &#039;Stream Analytics&#039;, null, null, this.getTagsForStencil(gn, &#039;stream analytics&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeAnalytics Service&#039;, &#039;CAE / Analytics Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEComputeServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise compute service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Batch_Accounts.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Batch Accounts&#039;, null, null, this.getTagsForStencil(gn, &#039;batch accounts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Citrix_Virtual_Desktops_Essentials.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Citrix Virtual Desktops Essentials&#039;, null, null, this.getTagsForStencil(gn, &#039;citrix virtual desktops essentials&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Cloud_Services_Classic.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Cloud Services (classic)&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud services classic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Cloud_Service.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Cloud Services&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;CloudSimple_Virtual_Machines.svg;&#039;,
+					r * 0.5, r * 0.32, &#039;&#039;, &#039;CloudSimple Virtual Machines&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudsimple virtual machines&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;MD_snapshot.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Disk Snapshots&#039;, null, null, this.getTagsForStencil(gn, &#039;disk snapshots&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Discs.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Disks&#039;, null, null, this.getTagsForStencil(gn, &#039;disks&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Functions.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;Function Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;function apps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;SAP_HANA_on_Azure.svg;&#039;,
+					r * 0.5, r * 0.25, &#039;&#039;, &#039;SAP HANA on Azure&#039;, null, null, this.getTagsForStencil(gn, &#039;sap hana on azure&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Service_Fabric.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Service Fabric&#039;, null, null, this.getTagsForStencil(gn, &#039;service fabric&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;VM_Images.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;VM Images&#039;, null, null, this.getTagsForStencil(gn, &#039;vm virtual machine images&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeCompute Service&#039;, &#039;CAE / Compute Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEComputeServiceVMPalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise compute service vm virtual machine&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Virtual_Machines_Availability_Set.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Availability Sets&#039;, null, null, this.getTagsForStencil(gn, &#039;availability sets&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Non_Azure_Machine.svg;&#039;,
+					r * 0.31, r * 0.5, &#039;&#039;, &#039;Non-Azure Machine&#039;, null, null, this.getTagsForStencil(gn, &#039;non azure machine&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;OS_Images_Classic.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;OS Images (classic)&#039;, null, null, this.getTagsForStencil(gn, &#039;os images classic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Virtual_Machine_2.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;VM&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;VM_Scale_Set.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;VM Scale Sets&#039;, null, null, this.getTagsForStencil(gn, &#039;scale sets&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Virtual_Machine.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;VM&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;VM_Linux.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;VM (Linux)&#039;, null, null, this.getTagsForStencil(gn, &#039;linux&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;VM_Linux_Non_Azure.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;VM (Linux, Non-Azure)&#039;, null, null, this.getTagsForStencil(gn, &#039;linux non azure&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;VirtualMachineWindows.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;VM (Windows)&#039;, null, null, this.getTagsForStencil(gn, &#039;windows&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;VM_Windows_Non_Azure.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;VM (Windows, Non-Azure)&#039;, null, null, this.getTagsForStencil(gn, &#039;windows non azure&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeCompute Service VM&#039;, &#039;CAE / Compute Service VM&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEContainerServiceVMPalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise container service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Container_Instances.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Container Instances&#039;, null, null, this.getTagsForStencil(gn, &#039;container instances&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Container_Registries.svg;&#039;,
+					r * 0.5, r * 0.43, &#039;&#039;, &#039;Container Registries&#039;, null, null, this.getTagsForStencil(gn, &#039;container registries&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Kubernetes_Services.svg;&#039;,
+					r * 0.5, r * 0.37, &#039;&#039;, &#039;Kubernetes Services&#039;, null, null, this.getTagsForStencil(gn, &#039;kubernetes services&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeContainer Service&#039;, &#039;CAE / Container Service&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEDatabasesServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise database databases db service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Azure_Cache_for_Redis.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure Cache for Redis&#039;, null, null, this.getTagsForStencil(gn, &#039;azure cache for redis&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Cache_including_Redis.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Cache plus Redis&#039;, null, null, this.getTagsForStencil(gn, &#039;cache including plus redis&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;CosmosDB.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;CosmosDB&#039;, null, null, this.getTagsForStencil(gn, &#039;cosmosdb db database&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Database_General.svg;&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;Database (generic)&#039;, null, null, this.getTagsForStencil(gn, &#039;database generic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;aspect=fixed;html=1;perimeter=none;align=center;shadow=0;dashed=0;fontSize=12;image=img/lib/mscae/Azure_Database_for_MariaDB_servers.svg;&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;Azure Database for MariaDB servers&#039;, null, null, this.getTagsForStencil(gn, &#039;azure database for mariadb servers&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_Database_for_MySQL_servers.svg;&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;Azure Database for MySQL servers&#039;, null, null, this.getTagsForStencil(gn, &#039;azure database db for mysql servers&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_Database_for_PostgreSQL_servers.svg;&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;Azure Database for PostgreSQL servers&#039;, null, null, this.getTagsForStencil(gn, &#039;azure database db for postgresql servers&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;SQL_DataWarehouse.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Azure SQL DataWarehouse&#039;, null, null, this.getTagsForStencil(gn, &#039;azure sql datawarehouse&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;BlobBlock.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Blob Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;blob storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Data_Lake.svg;&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;Data Lake&#039;, null, null, this.getTagsForStencil(gn, &#039;data lake&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Elastic_Database_Pools.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Elastic Database Pools&#039;, null, null, this.getTagsForStencil(gn, &#039;elastic database pools&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Elastic_Job_Agents.svg;&#039;,
+					r * 0.42, r * 0.5, &#039;&#039;, &#039;Elastic Job Agents&#039;, null, null, this.getTagsForStencil(gn, &#039;elastic job agents&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Managed_Databases.svg;&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;Managed Databases&#039;, null, null, this.getTagsForStencil(gn, &#039;managed databases&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;SQL_Database_generic.svg;&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;SQL Databases&#039;, null, null, this.getTagsForStencil(gn, &#039;sql databases&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;SQL_Managed_Instances.svg;&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;SQL Managed Instances&#039;, null, null, this.getTagsForStencil(gn, &#039;sql managed instances&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dep/SQL_Server_Stretch_DB.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;SQL Server Stretch DB&#039;, null, null, this.getTagsForStencil(gn, &#039;sql server stretch db database&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;SQL_Servers.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;SQL Servers&#039;, null, null, this.getTagsForStencil(gn, &#039;sql servers&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Virtual_Clusters.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Virtual Clusters&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual clusters&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Virtual_Datacenter.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Virtual Datacenter&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual datacenter&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeDatabases Service&#039;, &#039;CAE / Databases Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEDevOpsServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise devops service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Application_Insights.svg;&#039;,
+					r * 0.32, r * 0.5, &#039;&#039;, &#039;Application Insights&#039;, null, null, this.getTagsForStencil(gn, &#039;application insights&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_Artifacts.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure Artifacts&#039;, null, null, this.getTagsForStencil(gn, &#039;azure artifacts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_Boards.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure Boards&#039;, null, null, this.getTagsForStencil(gn, &#039;azure boards&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_DevOps.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure DevOps&#039;, null, null, this.getTagsForStencil(gn, &#039;azure devops&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;DevTest_Labs.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure DevTest Labs&#039;, null, null, this.getTagsForStencil(gn, &#039;azure devtest labs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_Pipelines.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure Pipelines&#039;, null, null, this.getTagsForStencil(gn, &#039;azure pipelines&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_Repos.svg;&#039;,
+					r * 0.45, r * 0.5, &#039;&#039;, &#039;Azure Repos&#039;, null, null, this.getTagsForStencil(gn, &#039;azure repos&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_Test_Plans.svg;&#039;,
+					r * 0.45, r * 0.5, &#039;&#039;, &#039;Azure Test Plans&#039;, null, null, this.getTagsForStencil(gn, &#039;azure test plans&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeDevOps Service&#039;, &#039;CAE / DevOps Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEGeneralServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise general service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Grid3x3.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;All Resources&#039;, null, null, this.getTagsForStencil(gn, &#039;all resources&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_Home.svg;&#039;,
+					r * 0.5, r * 0.4, &#039;&#039;, &#039;Azure Home&#039;, null, null, this.getTagsForStencil(gn, &#039;azure home&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Developer_Tools.svg;&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;Developer Tools&#039;, null, null, this.getTagsForStencil(gn, &#039;developer tools&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Support_2.svg;&#039;,
+					r * 0.32, r * 0.5, &#039;&#039;, &#039;Help, Support&#039;, null, null, this.getTagsForStencil(gn, &#039;help support&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Info_2.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Information&#039;, null, null, this.getTagsForStencil(gn, &#039;info information&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Management_Groups.svg;&#039;,
+					r * 0.5, r * 0.4, &#039;&#039;, &#039;Management Groups&#039;, null, null, this.getTagsForStencil(gn, &#039;management groups&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Store_Marketplace.svg;&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;Marketplace&#039;, null, null, this.getTagsForStencil(gn, &#039;marketplace store&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Store_Marketplace.svg;&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;Marketplace&#039;, null, null, this.getTagsForStencil(gn, &#039;marketplace store&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Quick_Start_Center.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Quick Start Center&#039;, null, null, this.getTagsForStencil(gn, &#039;quick start center&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Clock.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Recent&#039;, null, null, this.getTagsForStencil(gn, &#039;clock recent&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Reservations.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Reservations&#039;, null, null, this.getTagsForStencil(gn, &#039;reservations&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ResourceGroup.svg;&#039;,
+					r * 0.5, r * 0.4, &#039;&#039;, &#039;Resource Groups&#039;, null, null, this.getTagsForStencil(gn, &#039;resource group groups&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ServiceHealth.svg;&#039;,
+					r * 0.5, r * 0.44, &#039;&#039;, &#039;Service Health&#039;, null, null, this.getTagsForStencil(gn, &#039;service health&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Shared_Dashboard.svg;&#039;,
+					r * 0.5, r * 0.41, &#039;&#039;, &#039;Shared Dashboard&#039;, null, null, this.getTagsForStencil(gn, &#039;shared dashboard&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Key.svg;&#039;,
+					r * 0.31, r * 0.5, &#039;&#039;, &#039;Subscriptions&#039;, null, null, this.getTagsForStencil(gn, &#039;subscriptions key&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Support_Requests.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;Support Requests&#039;, null, null, this.getTagsForStencil(gn, &#039;support requests&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Tag.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Tag&#039;, null, null, this.getTagsForStencil(gn, &#039;tag&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Tags.svg;&#039;,
+					r * 0.42, r * 0.5, &#039;&#039;, &#039;Tags&#039;, null, null, this.getTagsForStencil(gn, &#039;tags&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Templates.svg;&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;Templates&#039;, null, null, this.getTagsForStencil(gn, &#039;templates&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Two_User_Icon.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Two User Icon&#039;, null, null, this.getTagsForStencil(gn, &#039;two user icon&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;User_Health_Icon.svg;&#039;,
+					r * 0.46, r * 0.5, &#039;&#039;, &#039;User Health Icon&#039;, null, null, this.getTagsForStencil(gn, &#039;user health icon&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Person.svg;&#039;,
+					r * 0.37, r * 0.5, &#039;&#039;, &#039;User&#039;, null, null, this.getTagsForStencil(gn, &#039;user person&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;User_Privacy.svg;&#039;,
+					r * 0.36, r * 0.5, &#039;&#039;, &#039;User Privacy&#039;, null, null, this.getTagsForStencil(gn, &#039;user privacy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;User_Resource.svg;&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;User Resource&#039;, null, null, this.getTagsForStencil(gn, &#039;user resource&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Info.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;What\&#039;s New&#039;, null, null, this.getTagsForStencil(gn, &#039;info whats new&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeGeneral Service&#039;, &#039;CAE / General Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEIdentityServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise identity service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Access_Review.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Access Review&#039;, null, null, this.getTagsForStencil(gn, &#039;access review&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Active_Directory_Health_Monitoring.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Active Directory Connect Health&#039;, null, null, this.getTagsForStencil(gn, &#039;active directory connect health&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Active_Directory.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Active Directory&#039;, null, null, this.getTagsForStencil(gn, &#039;active directory&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;App_Registrations.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;App Registrations&#039;, null, null, this.getTagsForStencil(gn, &#039;app registrations&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_AD_B2C.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;Azure AD B2C&#039;, null, null, this.getTagsForStencil(gn, &#039;azure ad b2c&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_AD_Domain_Services.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure AD Domain Services&#039;, null, null, this.getTagsForStencil(gn, &#039;azure ad domain services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_AD_Identity_Protection.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure AD Identity Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;azure ad identity protection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_AD_Privileged_Identity_Management.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure AD Privileged Identity Management&#039;, null, null, this.getTagsForStencil(gn, &#039;azure ad privileged identity management&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;sketch=0;aspect=fixed;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.mscae.cloud.azure_rights_management_rms;fillColor=#58B4D9;&#039;,
+					r * 0.42, r * 0.5, &#039;&#039;, &#039;Azure Information Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;azure information protection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Security_Center.svg;&#039;,
+					r * 0.36, r * 0.5, &#039;&#039;, &#039;Conditional Access&#039;, null, null, this.getTagsForStencil(gn, &#039;conditional access security center&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Enterprise_Applications.svg;&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;Enterprise Applications&#039;, null, null, this.getTagsForStencil(gn, &#039;enterprise applications&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Identity_Governance.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Identity Governance&#039;, null, null, this.getTagsForStencil(gn, &#039;identity governance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Managed_Identities.svg;&#039;,
+					r * 0.38, r * 0.5, &#039;&#039;, &#039;Managed Identities&#039;, null, null, this.getTagsForStencil(gn, &#039;managed identities&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeIdentity Service&#039;, &#039;CAE / Identity Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEIntegrationServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise integration service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;API_Management.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;API Management Service&#039;, null, null, this.getTagsForStencil(gn, &#039;api application programming interface management service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;App_Configuration.svg;&#039;,
+					r * 0.5, r * 0.49, &#039;&#039;, &#039;App Configuration&#039;, null, null, this.getTagsForStencil(gn, &#039;app configuration&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_API_for_FHIR.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure API for FHIR&#039;, null, null, this.getTagsForStencil(gn, &#039;azure api application programming interface for fhir&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Data_Catalog.svg;&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;Azure Data Catalog&#039;, null, null, this.getTagsForStencil(gn, &#039;azure data catalog&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Service_Bus_Relay.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure Service Bus Relays&#039;, null, null, this.getTagsForStencil(gn, &#039;azure service bus relay relays&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Service_Bus_Relay.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure Service Bus Relays&#039;, null, null, this.getTagsForStencil(gn, &#039;azure service bus relay relays&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Service_Bus.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure Service Bus&#039;, null, null, this.getTagsForStencil(gn, &#039;azure service bus&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;StorSimple.svg;&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Azure StorSimple Device Managers&#039;, null, null, this.getTagsForStencil(gn, &#039;azure storsimple device managers&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Event_Grid.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Event Grid Domains and Subscriptions&#039;, null, null, this.getTagsForStencil(gn, &#039;event grid domains subscriptions&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Event_Grid_Topics.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Event Grid Topics&#039;, null, null, this.getTagsForStencil(gn, &#039;event grid topics&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Event_Grid_Topics.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Event Grid Topics&#039;, null, null, this.getTagsForStencil(gn, &#039;event grid topics&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Integration_Accounts.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Integration Accounts&#039;, null, null, this.getTagsForStencil(gn, &#039;integration accounts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Integration_Service_Environments.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Integration Service Environments&#039;, null, null, this.getTagsForStencil(gn, &#039;integration service environments&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Logic_Apps_Custom_Connector.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Logic Apps Custom Connector&#039;, null, null, this.getTagsForStencil(gn, &#039;logic apps custom connector&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Logic_Apps.svg;&#039;,
+					r * 0.5, r * 0.39, &#039;&#039;, &#039;Logic Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;logic apps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;SendGrid_Accounts.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;SendGrid Accounts&#039;, null, null, this.getTagsForStencil(gn, &#039;sendgrid accounts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Service_Catalog_Managed_Application_Definitions.svg;&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;Service Catalog Managed Application Definitions&#039;, null, null, this.getTagsForStencil(gn, &#039;service catalog managed application definitions&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Software_as_a_Service.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Software as a Service (SaaS)&#039;, null, null, this.getTagsForStencil(gn, &#039;software service saas&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeIntegration Service&#039;, &#039;CAE / Integration Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEInternetOfThingsServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise iot internet of things&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Azure_Digital_Twins.svg;&#039;,
+					r * 0.45, r * 0.5, &#039;&#039;, &#039;Azure Digital Twins&#039;, null, null, this.getTagsForStencil(gn, &#039;azure digital twins&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_IoT_Hub_Security.svg;&#039;,
+					r * 0.37, r * 0.5, &#039;&#039;, &#039;Azure IoT Hub Security&#039;, null, null, this.getTagsForStencil(gn, &#039;azure hub security&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_IoT_Hub.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure IoT Hub&#039;, null, null, this.getTagsForStencil(gn, &#039;azure hub&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_Maps.svg;&#039;,
+					r * 0.39, r * 0.5, &#039;&#039;, &#039;Azure Maps&#039;, null, null, this.getTagsForStencil(gn, &#039;azure maps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_Sphere.svg;&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;Azure Sphere&#039;, null, null, this.getTagsForStencil(gn, &#039;azure sphere&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Device_Provisioning_Services.svg;&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;Device Provisioning Services&#039;, null, null, this.getTagsForStencil(gn, &#039;device provisioning services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;aspect=fixed;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.mscae.cloud.central;fillColor=#0079D6;pointerEvents=1;&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;IoT Central Applications&#039;, null, null, this.getTagsForStencil(gn, &#039;central applications&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Time_Series_Insights_environments.svg;&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;Time Series Insights environments&#039;, null, null, this.getTagsForStencil(gn, &#039;time series insights environments&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Input.svg;&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Time Series Insights Events Sources&#039;, null, null, this.getTagsForStencil(gn, &#039;time series insights events sources input&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Windows_10_IoT_Core_Services.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Windows 10 IoT Core Services&#039;, null, null, this.getTagsForStencil(gn, &#039;windows 10 core services&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeInternet of Things Service&#039;, &#039;CAE / Internet of Things Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEIntuneServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise intune service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Client_Apps.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Client Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;client apps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Dedicated_Event_Hub.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Dedicated Event Hub&#039;, null, null, this.getTagsForStencil(gn, &#039;dedicated event hub&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Device_Compliance.svg;&#039;,
+					r * 0.41, r * 0.5, &#039;&#039;, &#039;Device Compliance&#039;, null, null, this.getTagsForStencil(gn, &#039;device compliance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Device_Config.svg;&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;Device Config&#039;, null, null, this.getTagsForStencil(gn, &#039;device config&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Devices_Groups.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Devices Groups&#039;, null, null, this.getTagsForStencil(gn, &#039;devices groups&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;eBooks.svg;&#039;,
+					r * 0.5, r * 0.41, &#039;&#039;, &#039;eBooks&#039;, null, null, this.getTagsForStencil(gn, &#039;ebooks&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Enrollment.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Enrollment&#039;, null, null, this.getTagsForStencil(gn, &#039;enrollment&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Exchange_On_premises_Access.svg;&#039;,
+					r * 0.29, r * 0.5, &#039;&#039;, &#039;Exchange On-premises Access&#039;, null, null, this.getTagsForStencil(gn, &#039;exchange on premises access&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Intune_App_Protection.svg;&#039;,
+					r * 0.5, r * 0.4, &#039;&#039;, &#039;Intune App Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;intune app protection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Managed_Desktop.svg;&#039;,
+					r * 0.5, r * 0.36, &#039;&#039;, &#039;Managed Desktop&#039;, null, null, this.getTagsForStencil(gn, &#039;managed desktop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Security_Baselines.svg;&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;Security Baselines&#039;, null, null, this.getTagsForStencil(gn, &#039;security baselines&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Software_Update.svg;&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Software Update&#039;, null, null, this.getTagsForStencil(gn, &#039;software update&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Tools.svg;&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;Tools&#039;, null, null, this.getTagsForStencil(gn, &#039;tools&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeIntune Service&#039;, &#039;CAE / Intune Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEManagementGovernanceServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise management and governance service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Log.svg;&#039;,
+					r * 0.45, r * 0.5, &#039;&#039;, &#039;Activity Log&#039;, null, null, this.getTagsForStencil(gn, &#039;activity log&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Advisor.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Advisor&#039;, null, null, this.getTagsForStencil(gn, &#039;advisor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Notification.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Alerts&#039;, null, null, this.getTagsForStencil(gn, &#039;notification alert alerts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Automation.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Automation Accounts&#039;, null, null, this.getTagsForStencil(gn, &#039;automation accounts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Blueprints.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Blueprints&#039;, null, null, this.getTagsForStencil(gn, &#039;blueprints&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;BillingHub.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;BillingHub&#039;, null, null, this.getTagsForStencil(gn, &#039;billinghub&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;LogDiagnostics.svg;&#039;,
+					r * 0.45, r * 0.5, &#039;&#039;, &#039;Diagnostic Settings&#039;, null, null, this.getTagsForStencil(gn, &#039;diagnostic settings log&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Free_Services.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;Free Services&#039;, null, null, this.getTagsForStencil(gn, &#039;free services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Guest_Assignments.svg;&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;Guest Assignments&#039;, null, null, this.getTagsForStencil(gn, &#039;guest assignments&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Managed_Applications.svg;&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;Managed Applications&#039;, null, null, this.getTagsForStencil(gn, &#039;managed applications&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Chart.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Metrics&#039;, null, null, this.getTagsForStencil(gn, &#039;metrics chart&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Monitor.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Monitor&#039;, null, null, this.getTagsForStencil(gn, &#039;monitor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Network_watcher.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Network Watcher&#039;, null, null, this.getTagsForStencil(gn, &#039;network watcher&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Policy.svg;&#039;,
+					r * 0.45, r * 0.5, &#039;&#039;, &#039;Policy&#039;, null, null, this.getTagsForStencil(gn, &#039;policy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Backup.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Recovery Services Vault&#039;, null, null, this.getTagsForStencil(gn, &#039;recovery services vault backup&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Resource_Graph_Explorer.svg;&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;Resource Graph Explorer&#039;, null, null, this.getTagsForStencil(gn, &#039;resource graph explorer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;SchedulerJobCollection.svg;&#039;,
+					r * 0.5, r * 0.43, &#039;&#039;, &#039;Scheduler Job Collections&#039;, null, null, this.getTagsForStencil(gn, &#039;scheduler job collection collections&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Solutions.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Solutions&#039;, null, null, this.getTagsForStencil(gn, &#039;solutions&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeManagement and Governance Service&#039;, &#039;CAE / Management and Governance Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEManagementGovernanceMediaServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise management and governance service media&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Azure_Media_Player.svg;&#039;,
+					r * 0.45, r * 0.5, &#039;&#039;, &#039;Azure Media Player&#039;, null, null, this.getTagsForStencil(gn, &#039;azure media player&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Content_Protection.svg;&#039;,
+					r * 0.45, r * 0.5, &#039;&#039;, &#039;Content Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;content protection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Media_Encoding.svg;&#039;,
+					r * 0.43, r * 0.5, &#039;&#039;, &#039;Media Encoding&#039;, null, null, this.getTagsForStencil(gn, &#039;media encoding&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Media_On_Demand.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Media On Demand&#039;, null, null, this.getTagsForStencil(gn, &#039;media_on_demand&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeManagement and Governance Service Media&#039;, &#039;CAE / Management and Governance Service - Media&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEMigrateServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise migrate service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Azure_Database_Migration_Services.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure Database Migration Services&#039;, null, null, this.getTagsForStencil(gn, &#039;azure database migration services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Migration_Projects.svg;&#039;,
+					r * 0.5, r * 0.32, &#039;&#039;, &#039;Migration Projects&#039;, null, null, this.getTagsForStencil(gn, &#039;migration projects&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Backup.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Recovery Services Vaults&#039;, null, null, this.getTagsForStencil(gn, &#039;recovery services vaults vault&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeMigrate Service&#039;, &#039;CAE / Migrate Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEMixedRealityServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise mixed reality service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Spatial_Anchor.svg;&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;Spatial Anchor&#039;, null, null, this.getTagsForStencil(gn, &#039;spatial anchor&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeMixed Reality Service&#039;, &#039;CAE / Mixed Reality Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEMobileServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise mobile service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;App_Service_Mobile_App.svg;&#039;,
+					r * 0.34, r * 0.5, &#039;&#039;, &#039;Azure App Service - Mobile&#039;, null, null, this.getTagsForStencil(gn, &#039;azure app service mobile&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Mobile_Engagement.svg;&#039;,
+					r * 0.34, r * 0.5, &#039;&#039;, &#039;Azure Mobile Engagement&#039;, null, null, this.getTagsForStencil(gn, &#039;azure mobile engagement&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Notification_Hubs.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Notification_Hubs&#039;, null, null, this.getTagsForStencil(gn, &#039;notification hubs&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeMobile Service&#039;, &#039;CAE / Mobile Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAENetworkingServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise networking service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Application_Gateway.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Application Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;application gateway&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Application_Security_Groups.svg;&#039;,
+					r * 0.37, r * 0.5, &#039;&#039;, &#039;Application Security Groups&#039;, null, null, this.getTagsForStencil(gn, &#039;application security groups&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_Firewall.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;azure firewall&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Content_Delivery_Network.svg;&#039;,
+					r * 0.5, r * 0.23, &#039;&#039;, &#039;CDN Profiles&#039;, null, null, this.getTagsForStencil(gn, &#039;cdn profiles content delivery network&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Connections.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Connections&#039;, null, null, this.getTagsForStencil(gn, &#039;connections&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Connections.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Connections&#039;, null, null, this.getTagsForStencil(gn, &#039;connections&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;DDOS_Protection_Plans.svg;&#039;,
+					r * 0.37, r * 0.5, &#039;&#039;, &#039;DDOS Protection Plans&#039;, null, null, this.getTagsForStencil(gn, &#039;ddos protection plans&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;DNS_Private_Zones.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;DNS Private Zones&#039;, null, null, this.getTagsForStencil(gn, &#039;dns domain name server private zones&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;DNS.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;DNS Zones&#039;, null, null, this.getTagsForStencil(gn, &#039;dns domain name server zones&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Express_Route.svg;&#039;,
+					r * 0.5, r * 0.3, &#039;&#039;, &#039;Express Route Circuits&#039;, null, null, this.getTagsForStencil(gn, &#039;express route circuits&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Front_Doors.svg;&#039;,
+					r * 0.5, r * 0.44, &#039;&#039;, &#039;Front Doors&#039;, null, null, this.getTagsForStencil(gn, &#039;front doors&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Load_Balancer_feature.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Load Balancers&#039;, null, null, this.getTagsForStencil(gn, &#039;load balancer balancers&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Local_Network_Gateways.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Local Network Gateways&#039;, null, null, this.getTagsForStencil(gn, &#039;local network gateways&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;NetworkInterfaceCard.svg;&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;Network Interface Card&#039;, null, null, this.getTagsForStencil(gn, &#039;network interface card&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Network_Security_Groups_Classic.svg;&#039;,
+					r * 0.37, r * 0.5, &#039;&#039;, &#039;Network Security Groups (Classic)&#039;, null, null, this.getTagsForStencil(gn, &#039;network security group classic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Network_watcher.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Network Watcher&#039;, null, null, this.getTagsForStencil(gn, &#039;network watcher&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;On_Premises_Data_Gateways.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;On-Premises Data Gateways&#039;, null, null, this.getTagsForStencil(gn, &#039;on premises data gateways&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;App_Service_IPAddress.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Public IP Addresses&#039;, null, null, this.getTagsForStencil(gn, &#039;app service ip internet protocol address addresses&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ClassicIPAddress.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Reserved IP Addresses (Classic)&#039;, null, null, this.getTagsForStencil(gn, &#039;classic ip internet protocol address adresses&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Route_Filter.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Route Filters&#039;, null, null, this.getTagsForStencil(gn, &#039;route filters&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;UserDefinedRoute.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Route Tables&#039;, null, null, this.getTagsForStencil(gn, &#039;route tables&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Service_Endpoint_Policies.svg;&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;Service Endpoint Policies&#039;, null, null, this.getTagsForStencil(gn, &#039;service endpoint policies&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Traffic_Manager.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Traffic Manager Profiles&#039;, null, null, this.getTagsForStencil(gn, &#039;traffic manager profiles&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Virtual_Network_Classic.svg;&#039;,
+					r * 0.5, r * 0.28, &#039;&#039;, &#039;Virtual Network (Classic)&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual network classic&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;VPN_Gateway.svg;&#039;,
+					r * 0.45, r * 0.5, &#039;&#039;, &#039;Virtual Network Gateways&#039;, null, null, this.getTagsForStencil(gn, &#039;vpn gateway gateways virtual private network&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Virtual_Network.svg;&#039;,
+					r * 0.5, r * 0.28, &#039;&#039;, &#039;Virtual Networks&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual network networks&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Virtual_WANs.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Virtual WANs&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual wans wan wide area network networks&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeNetworking Service&#039;, &#039;CAE / Networking Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEOtherCategoryServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise other category service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;CloudSimple_Nodes.svg;&#039;,
+					r * 0.49, r * 0.5, &#039;&#039;, &#039;CloudSimple Nodes&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudsimple nodes&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;CloudSimple_Services.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;CloudSimple Services&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudsimple services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;CloudSimple_Virtual_Machines.svg;&#039;,
+					r * 0.5, r * 0.32, &#039;&#039;, &#039;CloudSimple Virtual Machines&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudsimple virtual machines&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Controllers.svg;&#039;,
+					r * 0.5, r * 0.44, &#039;&#039;, &#039;Controllers&#039;, null, null, this.getTagsForStencil(gn, &#039;controllers&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Customer_Lockbox.svg;&#039;,
+					r * 0.47, r * 0.5, &#039;&#039;, &#039;Customer Lockbox&#039;, null, null, this.getTagsForStencil(gn, &#039;customer lockbox&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Education.svg;&#039;,
+					r * 0.5, r * 0.39, &#039;&#039;, &#039;Education&#039;, null, null, this.getTagsForStencil(gn, &#039;education&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Image_Definitions.svg;&#039;,
+					r * 0.5, r * 0.39, &#039;&#039;, &#039;Image Definitions&#039;, null, null, this.getTagsForStencil(gn, &#039;image definitions&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Image_Versions.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Image Versions&#039;, null, null, this.getTagsForStencil(gn, &#039;image versions&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Resource_Explorer.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;Resource Explorer&#039;, null, null, this.getTagsForStencil(gn, &#039;resource explorer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Shared_Image_Galleries.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Shared Image Galleries&#039;, null, null, this.getTagsForStencil(gn, &#039;shared image galleries&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Tenant_Status.svg;&#039;,
+				r * 0.46, r * 0.5, &#039;&#039;, &#039;Tenant Status&#039;, null, null, this.getTagsForStencil(gn, &#039;tenant status&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Web_App_Firewall.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Web App Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;web app firewall&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeOther Category Service&#039;, &#039;CAE / Other Category Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAESecurityServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise security service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Azure_Sentinel.svg;&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;Azure Sentinel&#039;, null, null, this.getTagsForStencil(gn, &#039;azure sentinel&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Key_Vaults.svg;&#039;,
+					r * 0.48, r * 0.5, &#039;&#039;, &#039;Key Vaults&#039;, null, null, this.getTagsForStencil(gn, &#039;key vaults&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Security_Center.svg;&#039;,
+					r * 0.36, r * 0.5, &#039;&#039;, &#039;Security Center&#039;, null, null, this.getTagsForStencil(gn, &#039;security center&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeSecurity Service&#039;, &#039;CAE / Security Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEStorageServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise storage service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Archive_Storage.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Archive Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;archive storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Azure_NetApp_files.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;Azure NetApp files&#039;, null, null, this.getTagsForStencil(gn, &#039;azure netapp files&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;StorSimple.svg;&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;StorSimple&#039;, null, null, this.getTagsForStencil(gn, &#039;storsimple&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;AzureFXTEdgeFiler.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;AzureFXTEdgeFiler&#039;, null, null, this.getTagsForStencil(gn, &#039;azurefxtedgefiler&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Blog_Storage.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;Blob Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;blob storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Data_Box_Edge_Data_Box_Gateway.svg;&#039;,
+					r * 0.5, r * 0.32, &#039;&#039;, &#039;Data Box Edge - Data Box Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;data box edge data gateway&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Data_Box.svg;&#039;,
+					r * 0.5, r * 0.47, &#039;&#039;, &#039;Data Box / Import Export Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;data box&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Data_Lake_Storage.svg;&#039;,
+					r * 0.5, r * 0.46, &#039;&#039;, &#039;Data Lake Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;data lake storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;General_Storage.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;General Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;general storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Queues_Storage.svg;&#039;,
+					r * 0.5, r * 0.44, &#039;&#039;, &#039;Queues Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;queues storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ClassicStorage.svg;&#039;,
+					r * 0.5, r * 0.43, &#039;&#039;, &#039;Classic Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;classic storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Storage_Accounts.svg;&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;Storage Accounts&#039;, null, null, this.getTagsForStencil(gn, &#039;storage accounts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Storage_Explorer.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Storage Explorer&#039;, null, null, this.getTagsForStencil(gn, &#039;storage explorer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Storage_sync_service.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Storage Sync Services&#039;, null, null, this.getTagsForStencil(gn, &#039;storage sync services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;StorSimple_Data_Managers.svg;&#039;,
+					r * 0.37, r * 0.5, &#039;&#039;, &#039;StorSimple Data Managers&#039;, null, null, this.getTagsForStencil(gn, &#039;storsimple data managers&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;aspect=fixed;verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.storsimple;&#039;,
+					r * 0.5, r * 0.45, &#039;&#039;, &#039;StorSimple Device Managers&#039;, null, null, this.getTagsForStencil(gn, &#039;storsimple device managers&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;StorSimple_Data_Managers.svg;&#039;,
+					r * 0.37, r * 0.5, &#039;&#039;, &#039;StorSimple Data Managers&#039;, null, null, this.getTagsForStencil(gn, &#039;storsimple data managers&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Table_Storage.svg;&#039;,
+					r * 0.5, r * 0.48, &#039;&#039;, &#039;Table Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;table storage&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeStorage Service&#039;, &#039;CAE / Storage Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+	
+	Sidebar.prototype.addMSCAEWebServicePalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;ms microsoft cloud enterprise web service&#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Connection.svg;&#039;,
+					r * 0.5, r * 0.31, &#039;&#039;, &#039;Connection&#039;, null, null, this.getTagsForStencil(gn, &#039;connection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Certificate.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;App Service Certificates&#039;, null, null, this.getTagsForStencil(gn, &#039;app application certificates certificate&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;CustomDomain.svg;&#039;,
+					r * 0.5, r * 0.42, &#039;&#039;, &#039;App Service Domains&#039;, null, null, this.getTagsForStencil(gn, &#039;app service domain domains&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;App_Service.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;App Service Environments&#039;, null, null, this.getTagsForStencil(gn, &#039;app service environments&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;WebHosting.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;App Service Plans&#039;, null, null, this.getTagsForStencil(gn, &#039;app plans web hosting&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;App_Services.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;App Services&#039;, null, null, this.getTagsForStencil(gn, &#039;app services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Media_Services.svg;&#039;,
+					r * 0.44, r * 0.5, &#039;&#039;, &#039;Azure Media Services&#039;, null, null, this.getTagsForStencil(gn, &#039;azure media services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Search.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Azure Search&#039;, null, null, this.getTagsForStencil(gn, &#039;azure search&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Notification_Hubs.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;Notification Hub Namespaces&#039;, null, null, this.getTagsForStencil(gn, &#039;notification hub namespace namespaces&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;SignalR.svg;&#039;,
+					r * 0.5, r * 0.5, &#039;&#039;, &#039;SignalR&#039;, null, null, this.getTagsForStencil(gn, &#039;signalr&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;mscaeWeb Service&#039;, &#039;CAE / Web Service&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	}
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

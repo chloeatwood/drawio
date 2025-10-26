@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-ThreatModeling.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-ThreatModeling.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">67.28</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">42</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">13.06</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.05</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addThreatModelingPalette = function()
+	{
+		var w = 100;
+		var h = 100;
+		var gn = &#039;&#039;;
+		var dt = &#039;threat modeling &#039;;
+		this.setCurrentSearchEntryLibrary(&#039;threatModeling&#039;);
+		
+		this.addPaletteFunctions(&#039;threatModeling&#039;, &#039;Threat Modeling&#039;, false,
+		[
+			this.createVertexTemplateEntry(&#039;rounded=0;whiteSpace=wrap;html=1;&#039;, w * 1.2, h * 0.6, &#039;&#039;, &#039;External Entity&#039;, null, null, this.getTagsForStencil(gn, &#039;external entity&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;&#039;, w * 0.8, h * 0.8, &#039;&#039;, &#039;Process&#039;, null, null, this.getTagsForStencil(gn, &#039;process&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;ellipse;shape=doubleEllipse;whiteSpace=wrap;html=1;aspect=fixed;&#039;, w * 0.8, h * 0.8, &#039;&#039;, &#039;Multi-Process&#039;, null, null, this.getTagsForStencil(gn, &#039;multi process&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=none;&#039;, w * 1.2, h * 0.8, &#039;&#039;, &#039;Data Store&#039;, null, null, this.getTagsForStencil(gn, &#039;data store&#039;, dt).join(&#039; &#039;)),
+		 	this.createEdgeTemplateEntry(&#039;endArrow=classic;html=1;fontColor=#FF3333;&#039;, w * 0.5, h * 0.5, &#039;&#039;, &#039;Data Flow&#039;, null, dt + &#039;data flow&#039;),
+		 	this.createEdgeTemplateEntry(&#039;endArrow=classic;startArrow=classic;html=1;fontColor=#FF3333;&#039;, w * 0.5, h * 0.5, &#039;&#039;, &#039;Bidirectional Data Flow&#039;, null, dt + &#039;bidirectional data flow&#039;),
+			this.createVertexTemplateEntry(&#039;html=1;fontColor=#FF3333;fontStyle=1;align=left;verticalAlign=top;spacing=0;labelBorderColor=none;fillColor=none;dashed=1;strokeWidth=2;strokeColor=#FF3333;spacingLeft=4;spacingTop=-3;&#039;, w * 2.9, h * 1.4, &#039;Trust Boundary&#039;, &#039;Trust Boundary&#039;, null, null, this.getTagsForStencil(gn, &#039;trust boundary&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=requiredInterface;html=1;verticalLabelPosition=bottom;dashed=1;strokeColor=#FF3333;strokeWidth=2;fillColor=none;fontColor=#FF3333;align=center;verticalAlign=top;labelPosition=center;&#039;, w * 0.2, h * 3.3, &#039;&#039;, &#039;Trust Boundary&#039;, null, null, this.getTagsForStencil(gn, &#039;trust boundary&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;&#039;, w * 0.8, h * 0.2, &#039;Label&#039;, &#039;Label&#039;, null, null, this.getTagsForStencil(gn, &#039;label&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;&#039;, w * 0.4, h * 0.2, &#039;A01&#039;, &#039;Asset Label&#039;, null, null, this.getTagsForStencil(gn, &#039;asset label&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;&#039;, w * 0.3, h * 0.2, &#039;C01&#039;, &#039;Security Control Label&#039;, null, null, this.getTagsForStencil(gn, &#039;security control label&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;text;html=1;strokeColor=#b85450;fillColor=#f8cecc;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;&#039;, w * 0.4, h * 0.2, &#039;TA01&#039;, &#039;Threat Actor Label&#039;, null, null, this.getTagsForStencil(gn, &#039;threat actor label&#039;, dt).join(&#039; &#039;)),
+
+			this.addDataEntry(&#039;asset table&#039;, 360, 90, &#039;Asset Table&#039;, &#039;5Vdtb9owEP41+TrlpWTbxxFKO2n7UvYHTHwhVh07so8G+ut3ThxICQUqoUkrUZB8T+7Ozj3PnUiQZNXmwbC6/K05yCC5D5LMaI3dqtpkIGUQh4IHySyI45B+QTx/52nUPg1rZkDhJQFxF/DC5Bo65Ie1gLaDLW6lh23JardEtnTQ1CIzuBCvDktCAnKtkAkFhoCotaVktRWt+6z1KIXkv9hWr7FP1FvTQkiZaalNu1tSFEWc5+02Rj/D4AlPl+kkdRG038Kfz+1HB+S66Y1GVJIpmL9NO28vHzzAw/YivCkFwqJmucvaECuElVhJn9YXCwzC5t2Ct5Cv9gPoCtBsyaURHMvOI0k7UsISxKr0Yd89xmxnr3ahe/po4Rk8zmYyYvM0j0+uYNNSG/Hq2JOeqCG34aCaj8D4ATTVfLuLGlIlVAlGOGpR195DQoF+udSIuvKG8VUIj8qGG13/YWYFvctQK/ttai0UtrWbTOmmambhl0kwoZfOyI72Nt3O3ZACFB2aROsyA7PYgMVeWt3rR+kJtVwkh/i4HLaeMc/6OXUkV1DH3UgdP2cjfQzUfqwZqMsV5H4InKRdU10K2XZkKTgHdcCc0gp62sDcv0DHXnSi3m9b/pLiJ2d7MYo/WG2f7clVQa3oLB9PxyS9sWJI3bNW3I443J30IlonI1pnYHMjahRa3Sa/mwMyBgTFd1fl+6J01+U7vbkhP5TSfzfh03844b+O/82F0ScfAekNjPhv51v+Jkj9THOdzP1nXuc+/Ar8Cw==&#039;),
+			this.addDataEntry(&#039;threat actor table&#039;, 360, 90, &#039;Threat Actor Table&#039;, &#039;5VfbjtowEP2avFa5EEofNwG2ldqXZX/ASwZs1bEjZ9jAfn3HjgMpYYGVUKUuUZA84/HYPufMiARJXm4fDav4L12ADJJZkORGa2xH5TYHKYM4FEWQTIM4DukXxPN3ZiM3G1bMgMJrFsTtglcmN9B6nrkBhuR7WKI2dTtf4076+Zqzyg6RvVhXViMzuBBv1peE5FhqhUwoMOSInC0lq2rhwqcuggtZ/GQ7vcEuUWdlKyFlrqU2brdkPslnee62Mfo39GaySTpKbbYV7bfw57P70QEL3XRGI0rJFMyP0rrHL+75Q/eQv+ECYVGxpc3aED3k41hKn9ajBgZh+y7yzuVhfwRdApodhTSiQN5GJOOWnZCDWHO/7Jv3sbq11/ulBx5p4Kk8TWsyoPU8j08WsIxrI94se9IT1ec27KH5HVhx5Mp0sduv6lMlFAcjLLWoKx8hYYV++KIRdekN41EIT8qmMLp6ZmYNXUhfK4dtKi0UOuzSjF5CMw+/pEFKl87Jjg42vTbckAIUHZpEazMDq7GBGjtptdePxmfUcpUc4tNy2HnGPOuX1JHcQB2jgTp+TAf66Kn9VDFQlStY+iZwlnZNuKykq0guigLUEXNKK+hoAzN7hZa96Azef5f8NeAnF2sxij+Its/2ZFFQazrLx9MxSTdWDKl6NqqoBxzuT3oVremA1inUSyMqFFrdJ7/bIzJ6BMWjm/J9Vbrb8j2+uybfl9J/1+HH/7DDfx3+rXsIo0/eA8Z30OMnl2v+Lkj9TI2dzMMHXxve/x78Aw==&#039;),
+			this.addDataEntry(&#039;security control table&#039;, 360, 90, &#039;Security Control Table&#039;, &#039;5VdRb9owEP41eZ2SGDL2Sihdpe6l7A8YfBBrjh3ZRwP99TsnBlJCgUpo0kqUSL7z3dn+vu8sJWJ5uXm0vCp+GQEqYg8Ry60x2I7KTQ5KRWksRcQmUZrG9EXp9IPZpJmNK25B4zUJaZvwytUaWs8MFmsrcUve3Gi0Rrk2xuFWhRhX8MoPkc+9a+yQW5zJN+9jMTkWlMmlBkuOpLGV4pWTTfikiSikEs98a9a4K7SzxkupVG6Usc1qTAxhJAbNMtb8gc7MKJ2zLPMZtN4s7M+v52pZKq5h+r7StHlCfMcfNw/560IizCq+8IVqYoV8BZYqlA1ggUXYfAh44wpoP4IpAa0Hs5YCizaCZS0pcQFyVYS0H8HHXWuv9qkH+mgQGDzNJuuxeZ66F1P7Axor3zxhKnDTpTPuoPkTuDhyjY3Y7rO67EhdAMmI/GiqEKFgiWE4N4imDIYNKMQnlSKsqX5zu4JdSFceh2UqIzU22A3H9BKaefxtGA3p0DnZycGm14dbUoCmTZNOfWXgDmtwuFNTe/wkO6OWq+SQnpbDNjAWWL+kDnYDdQx66nia9PTRUfupZqDG1rAIfX+WdkO4LJUX2KSQQoA+Yk4bDTvawD68Qstecgbv911+DfjsYi8m6SfRDtVePAp6RXv5fDmu6MSaI3XPWgvX43C/06toHfZonYBbWFmhNPo++d0ckdEhKB3clO+ryt2W7+zuLvmulP67Gz77hzf895408jj54ldAdgdX/Ohyy98FqV/pXifz8JvXhnf/Av8C&#039;),
+			
+			this.createVertexTemplateEntry(&#039;shape=note;strokeWidth=2;fontSize=14;size=20;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#666600;&#039;, w * 1.1, h * 0.8, &#039;Note&#039;, &#039;Note&#039;, null, null, this.getTagsForStencil(gn, &#039;note&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=or;whiteSpace=wrap;html=1;direction=north;fillColor=#dae8fc;strokeColor=#6c8ebf;&#039;, w * 1.2, h * 0.8, &#039;AND&#039;, &#039;AND Gate&#039;, null, null, this.getTagsForStencil(gn, &#039;and gate&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;shape=xor;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;direction=north;&#039;, w * 1.2, h * 0.8, &#039;OR&#039;, &#039;OR Gate&#039;, null, null, this.getTagsForStencil(gn, &#039;or gate&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;&#039;, w * 1.2, h * 0.8, &#039;Leaf&#039;, &#039;Leaf Node&#039;, null, null, this.getTagsForStencil(gn, &#039;leaf node&#039;, dt).join(&#039; &#039;)),
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

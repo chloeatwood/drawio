@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Advanced.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Advanced.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">59.03</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">100</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">13.93</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">0.90</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds containers
+	var sidebarCreateAdvancedShapes = Sidebar.prototype.createAdvancedShapes;
+	
+	Sidebar.prototype.createAdvancedShapes = function()
+	{
+		this.setCurrentSearchEntryLibrary(&#039;general&#039;, &#039;advanced&#039;);
+		
+		var fns = sidebarCreateAdvancedShapes.apply(this, arguments);
+		
+		// Avoids having to bind all functions to &quot;this&quot;
+		var sb = this;
+
+		// Reusable cells
+		var flow = new mxCell(&#039;Vertical Flow Layout&#039;, new mxGeometry(0, 0, 270, 280),
+				&#039;swimlane;startSize=20;horizontal=1;childLayout=flowLayout;flowOrientation=north;&#039; +
+				&#039;resizable=0;interRankCellSpacing=50;containerType=tree;fontSize=12;&#039;);
+		flow.vertex = true;
+		
+		var flow1 = new mxCell(&#039;Start&#039;, new mxGeometry(20, 20, 100, 40), &#039;whiteSpace=wrap;html=1;&#039;);
+		flow1.vertex = true;
+		flow.insert(flow1);
+		
+		var flow2 = new mxCell(&#039;Task&#039;, new mxGeometry(20, 20, 100, 40), &#039;whiteSpace=wrap;html=1;&#039;);
+		flow2.vertex = true;
+		flow.insert(flow2);
+		
+		var edge = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0),
+			&#039;html=1;rounded=1;curved=0;sourcePerimeterSpacing=0;&#039; +
+			&#039;targetPerimeterSpacing=0;startSize=6;endSize=6;&#039;);
+		edge.geometry.relative = true;
+		edge.edge = true;
+		flow1.insertEdge(edge, true);
+		flow2.insertEdge(edge, false);
+		flow.insert(edge);
+		
+		var flow3 = new mxCell(&#039;Task&#039;, new mxGeometry(20, 20, 100, 40), &#039;whiteSpace=wrap;html=1;&#039;);
+		flow3.vertex = true;
+		flow.insert(flow3);
+		
+		edge = edge.clone();
+		flow1.insertEdge(edge, true);
+		flow3.insertEdge(edge, false);
+		flow.insert(edge);
+		
+		var flow4 = new mxCell(&#039;End&#039;, new mxGeometry(20, 20, 100, 40), &#039;whiteSpace=wrap;html=1;&#039;);
+		flow4.vertex = true;
+		flow.insert(flow4);
+		
+		edge = edge.clone();
+		flow2.insertEdge(edge, true);
+		flow4.insertEdge(edge, false);
+		flow.insert(edge);
+		
+		edge = edge.clone();
+		flow3.insertEdge(edge, true);
+		flow4.insertEdge(edge, false);
+		flow.insert(edge);
+
+		fns = fns.concat(
+		[
+			this.addDataEntry(&#039;container swimlane pool horizontal&#039;, 480, 380, &#039;Horizontal Pool 1&#039;,
+				&#039;zZRBbsMgEEVPwx4Gt+o6bptNIkXKCVA8CqhgIiCNndMXG2iUNk6rqq2ysMT8+Z/xvAWE16abO7GTS9ugJvyJ8NpZG9LJdDVqTYCqhvBHAkDjR+B5osvGLt0Jh234TgBS4FXoPSZlZa1Oog+9zqI/KKNFG6vZRirdLERv98MAH8TmpVQzh14dcVWmsw/SUnRRpVGV1qmjbYPQ2RbvcWEdnbGGc8d6GFFywZRE/nF0AbvJ5Ucpbz5HazC4PloOqgkyOaqHBIhKVFuZY7yIwidh+549sYyHjPMyWv4J7WIgCJRdw3sFxA8ZwGUGfe7mTb9CwuAXkFRTSOCWkLDqP5ncTTHht8QE7v+QSSxPL97YO3sQ3wA=&#039;),
+			this.addDataEntry(&#039;container swimlane pool horizontal&#039;, 480, 360, &#039;Horizontal Pool 2&#039;,
+				&#039;zZRRb8IgEMc/De/06MyerZsvmpj4CYi9CBkUA6itn360UE1da5ZlW3wg4f53f477hUBYoeul5QexNiUqwt4IK6wxPu50XaBSBKgsCVsQABoWgfeJbNZl6YFbrPx3DBANJ66OGJWNMSqKzjcqie4steJViOY7IVW54o05tg2c57uPPppbdPKCm757dieteR1UGlRhrLyYynOVhHCO9dtQGWIYVmzbFr3Pa5UOThdH67GeHL6T0uRLNBq9bULJWZZexIr8NQKiAuVeJBubJZG7KOyv3hvLsEk4x9GyL2hXLUGg2SO8D0D8kAGMM0iG9D4GSGYjSDL4BST5FBJ4RiTN3eT/guhlChF7YkSQ/yGiEN7+wy43+C4/AQ==&#039;),
+			this.addDataEntry(&#039;container swimlane pool horizontal&#039;, 360, 480, &#039;Vertical Pool 1&#039;,
+				&#039;xZTRbsIgFIafhsstcKC11zrnjSYmewJiT4SMiqE42z39aMGZabss2bJekHD+n//A+S4gfFE1KyePamNLNIQvCV84a33cVc0CjSFAdUn4EwGgYRF4HnFZ79KjdHjwPwlADLxJc8KobK01Uax9a5JYn3Vl5CFU853SplzL1p66C2ovd6+Xau6w1u+4vdzObqSNbIJKgxpizr8EI9TQCcpXJiXSi9B5bEan6qU00gpthd614UgKiMdMzMSMZ7QocpELhg+MxyZnXXoVT/E8sqEK9V6lxqJIoqyjsP/sfsUYNonkMFV+R3XdwQPKviP7aygwDKVNLr0jwGCIQP4HBMQYAZiCQHMz7hREsjEifEIiIP6PSCiv/1rvffn2PgA=&#039;),
+			this.addDataEntry(&#039;container swimlane pool vertical&#039;, 380, 480, &#039;Vertical Pool 2&#039;,
+				&#039;vZRBbsIwEEVP470zTquuSVs2ICFxAouMsFUnRrYpCafvJHYILaRiQxaRPG/8Pfnfkpkoqmbp5EGtbYmGiQ8mCmdtiKuqKdAYBlyXTLwzAE4fg8+JbtZ3+UE6rMMjAoiCb2mOGMnGWhOhD61J0J90ZWRN1WKntClXsrXHboAPcvc1VAuHXp9xM0zP/qC1bIhyoiRzYUsNqqEDyjp9tnWQJu0YwbYbkU5Lf4suYDPpuEfJ7hJthcG1tOWky6DiDvEWU+EK9V4lWT5A6SPYX7RjgLRIGd7PU9zkuepiA579l+lNHA/5hPs+kyBd/LXtDJ5lO5+yDXPbzvI5fb9M+RazX/frE31TOT5Jfe/Xi/UD&#039;),
+			this.addDataEntry(&#039;vertical tree layout&#039;, 280, 190, &#039;Vertical Tree Layout&#039;,
+				&#039;7VZLT4NAEP413IHVqtc+7EUTYxvvWxhhk4Ulw1JKf72z7GJBimmiXtQDYeebx858MxPw2CI7rJEX6aOKQXps5bEFKqXtKTssQEov9EXssaUXhj49Xng/oQ1arV9whFxf4hBahz2XFVjkBVCLiBujLQLQ64E3qtLWsNSNdIZlLTLJc5LmpeaoN+JoNHQhm6cKxVHlmsKwZUBAlAoZu0BsqSlwJ/Rs2/vY0gQoFepVnEDp/BFKceQ72ekj4yBywG1TgItI8CvBLo8gJNlVRyXBYZKhFnL0rEFloLEhk1rEOnUs3VoW/RREknZudw7kpQWSd98T4XRwnJ/nn434fza9/8h1nQoNm4JHRq5pWgxvOuvYvajM8HyZzsHNid8MxR4JgX+GhKtv4OBqxMHCTAtBwd8i4npExKh+oJ3YOBHkTtWrEzBvAVLsuxUecIOqymOIu4WscN8KdtsqjOAJUFDOgIZfkSdOSbudgJ5Q9jd/ZlLI455k0zc5f94MKrHNYLAT9t7eiIxbhiC5Fvth9K90YDY5iuNW/OpRvPkfxYlRnP3MKJJ4+uq3usFPwRs=&#039;),
+			this.addDataEntry(&#039;horizontal tree layout&#039;, 310, 160, &#039;Horizontal Tree Layout&#039;,
+				&#039;7VbbToNAEP0a3oGt+N5S9UETY/sDWxhhk4VthqWUfr2zl1oqxTRRX9QHAufMZXfOzKQN2KLa3yPflk8qBxmwZcAWqJR2X9V+AVIGcSjygKVBHIf0BPHdhDWy1nDLEWp9TUDsAnZctuCYB4XioGrNjdsaAej1yHvVaufa6F5616YTleQ1oXmjOeqVOBgLHcnm5SkNSw2RlULmPhFLNSU+goGvPY+lkcmoUC/zAhqPERpx4Bt7ts1nAkQNuO634DMS/Uq0v0cUE/b1AWrYT2pkKS/QPagKNPbk0olcl86DRU7HsARRlMewxJO8cUTxHnuSnD686pc7wEYdeDHd/6h1VwoNqy3PDO5oXoxuupJenavKjC+X6QP8pIT9ORyIEIUXRJh9gwazkQYLMy1ERX9LiJuREKP6gXZi5SHIjeqWJ2JuCTIMt2+oDqq2ziH3KGtxZ0Fo963FDJ4BBd0a0Cgs6sIbabsL0BPG4e4n5hJ1PkCuAHPrz9tBRdobnG2FO3cwJOOmIUiuxe48+1d6kEwO47gZv3oYb/+HcXIYk58ZRoKn335rO/tr8AY=&#039;),
+
+			this.addEntry(&#039;vertical flow layout&#039;, function()
+			{
+		 		return sb.createVertexTemplateFromCells([flow], flow.geometry.width, flow.geometry.height, &#039;Vertical Flow Layout&#039;, true);
+		 	}),
+		 	this.addEntry(&#039;horizontal flow layout&#039;, function()
+			{
+				var cell = sb.graph.cloneCell(flow);
+				cell.geometry = new mxGeometry(0, 0, 460, 150);
+				cell.style = &#039;swimlane;html=1;startSize=20;horizontal=0;childLayout=flowLayout;flowOrientation=west;&#039; +
+					&#039;resizable=0;interRankCellSpacing=50;containerType=tree;fontSize=12;&#039;;
+				cell.value = &#039;Horizontal Flow Layout&#039;;
+				
+				return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, &#039;Horizontal Flow Layout&#039;, true);
+			})
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+
+		return fns;
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

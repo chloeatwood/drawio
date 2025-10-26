@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Dynamics365.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Dynamics365.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">67.91</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">157</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">28.25</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.96</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds Dynamics365 shapes
+	Sidebar.prototype.addDynamics365Palette = function()
+	{
+		var gn = &#039;dynamics365&#039;;
+		var r = 400;
+		var sb = this;
+		var s = &#039;image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/dynamics365/&#039;;
+		
+		this.setCurrentSearchEntryLibrary(&#039;dynamics365&#039;, &#039;dynamics365App&#039;);
+		this.addDynamics365AppPalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;dynamics365&#039;, &#039;dynamics365Mixed Reality&#039;);
+		this.addDynamics365MixedRealityPalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;dynamics365&#039;, &#039;dynamics365Product Family&#039;);
+		this.addDynamics365ProductFamilyPalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;dynamics365&#039;, &#039;dynamics365Sub App&#039;);
+		this.addDynamics365SubAppPalette(gn, r, sb, s);
+		this.setCurrentSearchEntryLibrary();
+	};
+
+	Sidebar.prototype.addDynamics365AppPalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;app &#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;BusinessCentral.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;Business Central&#039;, null, null, this.getTagsForStencil(gn, &#039;business central&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Commerce.svg;&#039;,
+				r * 0.17, r * 0.1488, &#039;&#039;, &#039;Commerce&#039;, null, null, this.getTagsForStencil(gn, &#039;commerce&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ConnectedStore.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;Connected Store&#039;, null, null, this.getTagsForStencil(gn, &#039;connected store&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;CoreHR.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;Core HR&#039;, null, null, this.getTagsForStencil(gn, &#039;core hr human resources&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;CustomerInsights.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;Customer Insights&#039;, null, null, this.getTagsForStencil(gn, &#039;customer insights&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;CustomerService.svg;&#039;,
+				r * 0.17, r * 0.1488, &#039;&#039;, &#039;Customer Service&#039;, null, null, this.getTagsForStencil(gn, &#039;customer service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;CustomerServiceInsights.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;Customer Service Insights&#039;, null, null, this.getTagsForStencil(gn, &#039;customer service insights&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;CustomerVoice.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;Customer Voice&#039;, null, null, this.getTagsForStencil(gn, &#039;customer voice&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;FieldService.svg;&#039;,
+				r * 0.17, r * 0.1594, &#039;&#039;, &#039;Field Service&#039;, null, null, this.getTagsForStencil(gn, &#039;field service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Finance.svg;&#039;,
+				r * 0.17, r * 0.168, &#039;&#039;, &#039;Finance&#039;, null, null, this.getTagsForStencil(gn, &#039;finance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Finance_Operations.svg;&#039;,
+				r * 0.1381, r * 0.17, &#039;&#039;, &#039;Finance Operations&#039;, null, null, this.getTagsForStencil(gn, &#039;finance operations&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;FraudProtection.svg;&#039;,
+				r * 0.1503, r * 0.17, &#039;&#039;, &#039;Fraud Protection&#039;, null, null, this.getTagsForStencil(gn, &#039;fraud protection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;IntelligentOrderManagement.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;Intelligent Order Management&#039;, null, null, this.getTagsForStencil(gn, &#039;intelligent order management&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Marketing.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;Marketing&#039;, null, null, this.getTagsForStencil(gn, &#039;marketing&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Product_Insights.svg;&#039;,
+				r * 0.17, r * 0.1488, &#039;&#039;, &#039;Product Insights&#039;, null, null, this.getTagsForStencil(gn, &#039;product insights&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ProjectServiceAutomation.svg;&#039;,
+				r * 0.17, r * 0.1587, &#039;&#039;, &#039;Project Service Automation&#039;, null, null, this.getTagsForStencil(gn, &#039;project service automation&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Sales.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;Sales&#039;, null, null, this.getTagsForStencil(gn, &#039;sales&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;SupplyChainManagement.svg;&#039;,
+				r * 0.17, r * 0.1488, &#039;&#039;, &#039;Supply Chain Management&#039;, null, null, this.getTagsForStencil(gn, &#039;supply chain management&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;SustainabilityCalculator.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;Sustainability Calculator&#039;, null, null, this.getTagsForStencil(gn, &#039;sustainability calculator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;TalentAttract.svg;&#039;,
+				r * 0.1381, r * 0.17, &#039;&#039;, &#039;Talent Attract&#039;, null, null, this.getTagsForStencil(gn, &#039;talent attract&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;TalentOnboard.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;Talent Onboard&#039;, null, null, this.getTagsForStencil(gn, &#039;talent onboard&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;dynamics365App&#039;, &#039;Dynamics365 / App&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addDynamics365MixedRealityPalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;mixed reality &#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;ImportTool.svg;&#039;,
+				r * 0.1503, r * 0.17, &#039;&#039;, &#039;Import Tool&#039;, null, null, this.getTagsForStencil(gn, &#039;import tool&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;Layout.svg;&#039;,
+				r * 0.1519, r * 0.17, &#039;&#039;, &#039;Layout&#039;, null, null, this.getTagsForStencil(gn, &#039;layout&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;MRPortal.svg;&#039;,
+				r * 0.17, r * 0.1558, &#039;&#039;, &#039;MR Portal&#039;, null, null, this.getTagsForStencil(gn, &#039;mr portal&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ProductVisualize.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;Product Visualize&#039;, null, null, this.getTagsForStencil(gn, &#039;product visualize&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;RemoteAssist.svg;&#039;,
+				r * 0.1503, r * 0.17, &#039;&#039;, &#039;Remote Assist&#039;, null, null, this.getTagsForStencil(gn, &#039;remote assist&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;VoiceAssistant.svg;&#039;,
+				r * 0.1519, r * 0.17, &#039;&#039;, &#039;Voice Assistant&#039;, null, null, this.getTagsForStencil(gn, &#039;voice assistant&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;dynamics365Mixed Reality&#039;, &#039;Dynamics365 / Mixed Reality&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addDynamics365ProductFamilyPalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;product family &#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;Dynamics365.svg;&#039;,
+				r * 0.1253, r * 0.17, &#039;&#039;, &#039;Dynamics 365&#039;, null, null, this.getTagsForStencil(gn, &#039;dynamics 365&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;dynamics365Product Family&#039;, &#039;Dynamics365 / Product Family&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+
+	Sidebar.prototype.addDynamics365SubAppPalette = function(gn, r, sb, s)
+	{
+		var dt = &#039;sub app &#039;;
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;ProjectTimesheet.svg;&#039;,
+				r * 0.17, r * 0.1629, &#039;&#039;, &#039;Project Timesheet&#039;, null, null, this.getTagsForStencil(gn, &#039;project timesheet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ReturnToSchool.svg;&#039;,
+				r * 0.17, r * 0.1665, &#039;&#039;, &#039;Return To School&#039;, null, null, this.getTagsForStencil(gn, &#039;return to school&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;ReturnToWork.svg;&#039;,
+				r * 0.17, r * 0.1558, &#039;&#039;, &#039;Return To Work&#039;, null, null, this.getTagsForStencil(gn, &#039;return to work&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;SCMWarehousing.svg;&#039;,
+				r * 0.17, r * 0.17, &#039;&#039;, &#039;SCM Warehousing&#039;, null, null, this.getTagsForStencil(gn, &#039;scm warehousing&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;dynamics365Sub App&#039;, &#039;Dynamics365 / Sub App&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

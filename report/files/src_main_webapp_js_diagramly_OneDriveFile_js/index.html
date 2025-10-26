@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\OneDriveFile.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\OneDriveFile.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">73.53</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">610</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">68.76</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">4.10</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2006-2017, JGraph Holdings Ltd
+ * Copyright (c) 2006-2017, draw.io AG
+ */
+OneDriveFile = function(ui, data, meta)
+{
+	DrawioFile.call(this, ui, data);
+	
+	this.meta = meta;
+};
+
+//Extends mxEventSource
+mxUtils.extend(OneDriveFile, DrawioFile);
+
+/**
+ * Shorter autosave delay for optimistic sync.
+ */
+OneDriveFile.prototype.autosaveDelay = 500;
+
+/**
+ * Hook for subclassers.
+ */
+OneDriveFile.prototype.isRealtimeSupported = function()
+{
+	return true;
+};
+
+/**
+ * Returns true if copy, export and print are not allowed for this file.
+ */
+OneDriveFile.prototype.getFileUrl = function()
+{
+	var url = this.meta.webUrl;
+	url = url.substring(0, url.lastIndexOf(&#039;/&#039;));
+	
+	if (this.meta.parentReference != null)
+	{
+		try
+		{
+			// Best effort guessing of the web interface URL for the file
+			if (this.meta.parentReference.driveType == &#039;personal&#039;)
+			{
+				url = &#039;https://onedrive.live.com/?cid=&#039; + encodeURIComponent(this.meta.parentReference.driveId) +
+					&#039;&amp;id=&#039; + encodeURIComponent(this.meta.id);
+			}
+			else if (this.meta.parentReference.driveType == &#039;documentLibrary&#039;)
+			{
+				var path = this.meta.parentReference.path;
+				path = path.substring(path.indexOf(&#039;/root:&#039;) + 6);
+				
+				var id = this.meta.webUrl;
+				var url = id.substring(0, id.length - path.length - encodeURIComponent(this.meta.name).length - 1); 
+				id = id.substring(id.indexOf(&#039;/&#039;, 8));
+				
+				url = url + &#039;/Forms/AllItems.aspx?id=&#039; + id + &#039;&amp;parent=&#039; + id.substring(0, id.lastIndexOf(&#039;/&#039;));
+			}
+			else if (this.meta.parentReference.driveType == &#039;business&#039;)
+			{
+				var url = this.meta[&#039;@microsoft.graph.downloadUrl&#039;];
+				var idx = url.indexOf(&#039;/_layouts/15/download.aspx?&#039;);
+			
+				// Strips protocol
+				var id = this.meta.webUrl;
+				var parent = id;
+				
+				id = id.substring(8);
+			
+				// Gets path and parent path
+				id = id.substring(id.indexOf(&#039;/&#039;));
+				parent = parent.substring(0, parent.lastIndexOf(&#039;/&#039;));
+				parent = parent.substring(parent.indexOf(&#039;/&#039;, 8))
+				
+				url = url.substring(0, idx) + &#039;/_layouts/15/onedrive.aspx?id=&#039; + id + &#039;&amp;parent=&#039; + parent;
+			}
+		}
+		catch (e)
+		{
+			// ignore
+		}
+	}
+
+	return url;
+};
+
+/**
+ * Returns true if copy, export and print are not allowed for this file.
+ */
+OneDriveFile.prototype.getFolderUrl = function()
+{
+	var url = this.meta.webUrl;
+	var name = encodeURIComponent(this.meta.name);
+	
+	if (url.substring(url.length - name.length, url.length) == name)
+	{
+		url = url.substring(0, url.length - name.length);
+	}
+
+	return url;
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.share = function()
+{
+	this.ui.openLink(this.getFileUrl());
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.getId = function()
+{
+	return this.getIdOf(this.meta);
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.getParentId = function()
+{
+	return this.getIdOf(this.meta, true);
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.getIdOf = function(itemObj, parent)
+{
+	//TODO driveId is most probably always there. No need to check if it exists. Also, after some time, the code that check the old id format won&#039;t be needed 
+	return ((itemObj.parentReference != null &amp;&amp; itemObj.parentReference.driveId != null) ? itemObj.parentReference.driveId + &#039;/&#039; : &#039;&#039;) +
+		((parent != null) ? itemObj.parentReference.id : (itemObj.id + (itemObj.folder &amp;&amp; itemObj.folder.isRoot? &#039;/root&#039; : &#039;&#039;)));
+};
+
+/**
+ * Gets the channel ID for sync messages.
+ */
+OneDriveFile.prototype.getChannelId = function()
+{
+	return &#039;W-&#039; + DrawioFile.prototype.getChannelId.apply(this, arguments);
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.getHash = function()
+{
+	return &#039;W&#039; + encodeURIComponent(this.getId());
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.getMode = function()
+{
+	return App.MODE_ONEDRIVE;
+};
+
+/**
+ * Overridden to enable the autosave option in the document properties dialog.
+ */
+OneDriveFile.prototype.isAutosaveOptional = function()
+{
+	return true;
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.getTitle = function()
+{
+	return this.meta.name;
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.isRenamable = function()
+{
+	return true;
+};
+
+/**
+ * Returns true if the notification to update should be sent
+ * together with the save request.
+ */
+OneDriveFile.prototype.isOptimisticSync = function()
+{
+	return true;
+};
+
+/**
+ * Hook for subclassers.
+ */
+OneDriveFile.prototype.isSyncSupported = function()
+{
+	return true;
+};
+
+/**
+ * Specifies if notify events should be ignored.
+ */
+OneDriveFile.prototype.getSize = function()
+{
+	return this.meta.size;
+};
+
+/**
+ * Adds the listener for automatically saving the diagram for local changes.
+ */
+OneDriveFile.prototype.isConflict = function(req)
+{
+	return req != null &amp;&amp; (req.getStatus() == 412 || req.getStatus() == 409);
+};
+
+/**
+ * Returns the current etag.
+ */
+OneDriveFile.prototype.getCurrentUser = function()
+{
+	return (this.ui.oneDrive != null) ? this.ui.oneDrive.user : null;
+};
+
+/**
+ * Adds the listener for automatically saving the diagram for local changes.
+ */
+OneDriveFile.prototype.loadDescriptor = function(success, error)
+{
+	this.ui.oneDrive.executeRequest(this.ui.oneDrive.getItemURL(this.getId()), mxUtils.bind(this, function(req)
+	{
+		if (req.getStatus() &gt;= 200 &amp;&amp; req.getStatus() &lt;= 299)
+		{
+			success(JSON.parse(req.getText()));
+		}
+		else if (error != null)
+		{
+			error();
+		}
+	}), error);
+};
+
+/**
+ * Adds the listener for automatically saving the diagram for local changes.
+ */
+OneDriveFile.prototype.getLatestVersion = function(success, error)
+{
+	this.ui.oneDrive.getFile(this.getId(), success, error);
+};
+
+/**
+ * Hook for subclassers to update the descriptor from given file
+ */
+OneDriveFile.prototype.getDescriptor = function()
+{
+	return this.meta;
+};
+
+/**
+ * Hook for subclassers to update the descriptor from given file
+ */
+OneDriveFile.prototype.setDescriptor = function(desc)
+{
+	this.meta = desc;
+};
+
+/**
+ * Adds all listeners.
+ */
+OneDriveFile.prototype.getDescriptorEtag = function(desc)
+{
+	return desc.eTag;
+};
+
+/**
+ * Adds the listener for automatically saving the diagram for local changes.
+ */
+OneDriveFile.prototype.setDescriptorEtag = function(desc, etag)
+{
+	desc.eTag = etag;
+};
+
+/**
+ * Adds the listener for automatically saving the diagram for local changes.
+ */
+OneDriveFile.prototype.loadPatchDescriptor = function(success, error)
+{
+	var url = this.ui.oneDrive.getItemURL(this.getId());
+
+	this.ui.oneDrive.executeRequest(url + &#039;?select=etag,file&#039; , mxUtils.bind(this, function(req)
+	{
+		if (req.getStatus() &gt;= 200 &amp;&amp; req.getStatus() &lt;= 299)
+		{
+			success(JSON.parse(req.getText()));
+		}
+		else
+		{
+			error(this.ui.oneDrive.parseRequestText(req));
+		}
+	}), error)
+};
+
+/**
+ * Using MD5 of create timestamp and user ID as crypto key.
+ */
+OneDriveFile.prototype.getChannelKey = function()
+{
+	if (typeof CryptoJS !== &#039;undefined&#039;)
+	{
+		return CryptoJS.MD5(this.meta.createdDateTime +
+			((this.meta.createdBy != null &amp;&amp;
+			this.meta.createdBy.user != null) ?
+			this.meta.createdBy.user.id : &#039;&#039;)).toString();
+	}
+	
+	return null;
+};
+
+/**
+ * Adds all listeners.
+ */
+OneDriveFile.prototype.getLastModifiedDate = function()
+{
+	return new Date(this.meta.lastModifiedDateTime);
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.save = function(revision, success, error, unloading, overwrite)
+{
+	this.doSave(this.getTitle(), revision, success, error, unloading, overwrite);
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.saveAs = function(title, success, error)
+{
+	this.doSave(title, false, success, error);
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.doSave = function(title, revision, success, error, unloading, overwrite)
+{
+	// Forces update of data for new extensions
+	var prev = this.meta.name;
+	this.meta.name = title;
+	
+	DrawioFile.prototype.save.apply(this, [null, mxUtils.bind(this, function()
+	{
+		this.meta.name = prev;
+		this.saveFile(title, revision, success, error, unloading, overwrite);
+	}), error, unloading, overwrite]);
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.saveFile = function(title, revision, success, error, unloading, overwrite)
+{
+	if (!this.isEditable())
+	{
+		if (success != null)
+		{
+			success();
+		}
+	}
+	else if (!this.savingFile)
+	{
+		if (this.getTitle() == title)
+		{
+			var doSave = mxUtils.bind(this, function()
+			{
+				try
+				{
+					// Sets shadow modified state during save
+					this.savingFileTime = new Date();
+					this.setShadowModified(false);
+					this.savingFile = true;
+					
+					var etag = (!overwrite &amp;&amp; this.constructor == OneDriveFile &amp;&amp;
+						(DrawioFile.SYNC == &#039;manual&#039; || DrawioFile.SYNC == &#039;auto&#039;)) ?
+						this.getCurrentEtag() : null;
+					var lastDesc = this.meta;
+
+					if (this.sync != null)
+					{
+						this.sync.fileSaving();
+					}
+
+					this.ui.oneDrive.saveFile(this, mxUtils.bind(this, function(meta, savedData)
+					{
+						// Checks for changes during save
+						this.setModified(this.getShadowModified());
+						this.savingFile = false;
+						this.meta = meta;
+	
+						this.fileSaved(savedData, lastDesc, mxUtils.bind(this, function()
+						{
+							this.contentChanged();
+							
+							if (success != null)
+							{
+								success();
+							}
+						}), error);
+					}), mxUtils.bind(this, function(err, req)
+					{
+						try
+						{
+							this.savingFile = false;
+							
+							if (this.isConflict(req))
+					    	{
+								this.inConflictState = true;
+		
+								if (this.sync != null)
+								{	
+									this.savingFile = true;
+									
+									this.sync.fileConflict(null, mxUtils.bind(this, function()
+									{
+										// Adds random cool-off
+										window.setTimeout(mxUtils.bind(this, function()
+										{
+											this.updateFileData();
+											doSave();
+										}), 100 + Math.random() * 500);
+									}), mxUtils.bind(this, function()
+									{
+										this.savingFile = false;
+							
+										if (error != null)
+										{
+											error();
+										}
+									}));
+								}
+								else if (error != null)
+								{
+									error();
+								}
+							}
+							else if (error != null)
+							{
+								error(err);
+							}
+						}
+						catch (e)
+						{
+							this.savingFile = false;
+				
+							if (error != null)
+							{
+								error(e);
+							}
+							else
+							{
+								throw e;
+							}
+						}
+					}), etag);
+				}
+				catch (e)
+				{
+					this.savingFile = false;
+					
+					if (error != null)
+					{
+						error(e);
+					}
+					else
+					{
+						throw e;
+					}
+				}
+			});
+			
+			doSave();
+		}
+		else
+		{
+			// Sets shadow modified state during save
+			this.savingFileTime = new Date();
+			this.setShadowModified(false);
+			this.savingFile = true;
+		
+			this.ui.oneDrive.insertFile(title, this.getData(), mxUtils.bind(this, function(file)
+			{
+				// Checks for changes during save
+				this.setModified(this.getShadowModified());
+				this.savingFile = false;
+				
+				if (success != null)
+				{
+					success();
+				}
+				
+				this.ui.fileLoaded(file);
+			}), mxUtils.bind(this, function()
+			{
+				this.savingFile = false;
+				
+				if (error != null)
+				{
+					error();
+				}
+			}));
+		}
+	}
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.rename = function(title, success, error)
+{
+	var rev = this.getCurrentRevisionId();
+	
+	this.ui.oneDrive.renameFile(this, title, mxUtils.bind(this, function(meta)
+	{
+		if (!this.hasSameExtension(title, this.getTitle()))
+		{
+			this.meta = meta;
+			
+			if (this.sync != null)
+			{
+				this.sync.descriptorChanged(rev);
+			}
+			
+			this.save(true, success, error);
+		}
+		else
+		{
+			this.meta = meta;
+			this.descriptorChanged();
+
+			if (this.sync != null)
+			{
+				this.sync.descriptorChanged(rev);
+			}
+			
+			if (success != null)
+			{
+				success(meta);
+			}
+		}
+	}), error);
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+OneDriveFile.prototype.move = function(folderId, success, error)
+{
+	this.ui.oneDrive.moveFile(this.getId(), folderId, mxUtils.bind(this, function(meta)
+	{
+		this.meta = meta;
+		this.descriptorChanged();
+		
+		if (success != null)
+		{
+			success(meta);
+		}
+	}), error);
+};</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

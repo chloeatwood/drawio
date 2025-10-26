@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Basic.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Basic.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">60.54</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">90</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">21.59</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">4.05</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addBasicPalette = function()
+	{
+		var w = 100;
+		var h = 100;
+		var s = &#039;whiteSpace=wrap;html=1;shape=mxgraph.basic.&#039;;
+		var s2 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;html=1;shape=mxgraph.basic.&#039;;
+		var s3 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;html=1;shape=&#039;;
+		var gn = &#039;mxgraph.basic&#039;;
+		var dt = &#039;&#039;;
+		this.setCurrentSearchEntryLibrary(&#039;basic&#039;);
+		
+		this.addPaletteFunctions(&#039;basic&#039;, mxResources.get(&#039;basic&#039;), false,
+		[
+			this.createVertexTemplateEntry(s2 + &#039;rect;fillColor2=none;strokeWidth=1;size=20;indent=5;&#039;, w * 1.2, h * 0.6, &#039;&#039;, &#039;Partial Rectangle&#039;),
+			this.createVertexTemplateEntry(&#039;shape=partialRectangle;whiteSpace=wrap;html=1;top=0;bottom=0;fillColor=none;&#039;, w * 1.2, h * 0.6, &#039;&#039;, &#039;Partial Rectangle&#039;),
+			this.createVertexTemplateEntry(&#039;shape=partialRectangle;whiteSpace=wrap;html=1;right=0;top=0;bottom=0;fillColor=none;routingCenterX=-0.5;&#039;, w * 1.2, h * 0.6, &#039;&#039;, &#039;Partial Rectangle&#039;),
+			this.createVertexTemplateEntry(&#039;shape=partialRectangle;whiteSpace=wrap;html=1;bottom=0;right=0;fillColor=none;&#039;, w * 1.2, h * 0.6, &#039;&#039;, &#039;Partial Rectangle&#039;),
+			this.createVertexTemplateEntry(&#039;shape=partialRectangle;whiteSpace=wrap;html=1;top=0;left=0;fillColor=none;&#039;, w * 1.2, h * 0.6, &#039;&#039;, &#039;Partial Rectangle&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;polygon;polyCoords=[[0.25,0],[0.75,0],[1,0.25],[1,0.75],[0.75,1],[0.25,1],[0,0.75],[0,0.25]];polyline=0;&#039;, w, h, &#039;&#039;, &#039;Polygon&#039;, null, null, this.getTagsForStencil(gn, &#039;polygon&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;polygon;polyCoords=[[0.25,0],[0.75,0],[1,0.25],[1,0.75],[0.75,1],[0.25,1],[0,0.75],[0,0.25]];polyline=1;fillColor=none;&#039;, w, h, &#039;&#039;, &#039;Polyline&#039;, null, null, this.getTagsForStencil(gn, &#039;polyline&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;patternFillRect;fillStyle=diag;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;&#039;, w * 1.2, h * 0.6, &#039;&#039;, &#039;Rectangle with diagonal fill&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;patternFillRect;fillStyle=diagRev;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;&#039;, w * 1.2, h * 0.6, &#039;&#039;, &#039;Rectangle with reverse diagonal fill&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;patternFillRect;fillStyle=vert;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;&#039;, w * 1.2, h * 0.6, &#039;&#039;, &#039;Rectangle with vertical fill&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;patternFillRect;fillStyle=hor;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;&#039;, w * 1.2, h * 0.6, &#039;&#039;, &#039;Rectangle with horizontal fill&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;patternFillRect;fillStyle=grid;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;&#039;, w * 1.2, h * 0.6, &#039;&#039;, &#039;Rectangle with grid fill&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;patternFillRect;fillStyle=diagGrid;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;&#039;, w * 1.2, h * 0.6, &#039;&#039;, &#039;Rectangle with diagonal grid fill&#039;),
+			this.createVertexTemplateEntry(s2 + &#039;4_point_star_2;dx=0.8;&#039;, w, h, &#039;&#039;, &#039;4 Point Star&#039;, null, null, this.getTagsForStencil(gn, &#039;4_point_star&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;6_point_star&#039;, w, h * 0.9, &#039;&#039;, &#039;6 Point Star&#039;, null, null, this.getTagsForStencil(gn, &#039;6_point_star&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;8_point_star&#039;, w, h, &#039;&#039;, &#039;8 Point Star&#039;, null, null, this.getTagsForStencil(gn, &#039;8_point_star&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;banner&#039;, w, h * 0.5, &#039;&#039;, &#039;Banner&#039;, null, null, this.getTagsForStencil(gn, &#039;banner&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cloud_callout&#039;, w * 0.9, h * 0.6, &#039;&#039;, &#039;Cloud Callout&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud_callout&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cloud_rect&#039;, w * 1.2, h * 0.9, &#039;&#039;, &#039;Cloud Rectangle&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud_rect&#039;, dt + &#039; rectangle&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cone&#039;, w, h, &#039;&#039;, &#039;Cone&#039;, null, null, this.getTagsForStencil(gn, &#039;cone&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cone2;dx=0.5;dy=0.9;&#039;, w, h, &#039;&#039;, &#039;Cone (adjustable)&#039;, null, null, this.getTagsForStencil(gn, &#039;cone&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;document&#039;, w, h, &#039;&#039;, &#039;Document&#039;, null, null, this.getTagsForStencil(gn, &#039;document&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;donut;dx=25;&#039;, w, h, &#039;&#039;, &#039;Donut&#039;, null, null, this.getTagsForStencil(gn, &#039;donut&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;drop&#039;, w * 0.7, h, &#039;&#039;, &#039;Drop&#039;, null, null, this.getTagsForStencil(gn, &#039;drop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;flash&#039;, w * 0.6, h, &#039;&#039;, &#039;Flash&#039;, null, null, this.getTagsForStencil(gn, &#039;flash&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;half_circle&#039;, w, h * 0.5, &#039;&#039;, &#039;Half Circle&#039;, null, null, this.getTagsForStencil(gn, &#039;half_circle&#039;, dt + &#039; semicircle&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;heart&#039;, w, h, &#039;&#039;, &#039;Heart&#039;, null, null, this.getTagsForStencil(gn, &#039;heart&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;html=1;shape=mxgraph.basic.isocube;isoAngle=15;&#039;, w, h, &#039;&#039;, &#039;Isometric Cube&#039;, null, null, this.getTagsForStencil(gn, &#039;isometric cube&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;loud_callout&#039;, w, h * 0.6, &#039;&#039;, &#039;Loud Callout&#039;, null, null, this.getTagsForStencil(gn, &#039;loud_callout&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;moon&#039;, w * 0.75, h, &#039;&#039;, &#039;Moon&#039;, null, null, this.getTagsForStencil(gn, &#039;moon&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;no_symbol&#039;, w, h, &#039;&#039;, &#039;No Symbol&#039;, null, null, this.getTagsForStencil(gn, &#039;no_symbol&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;octagon2;align=center;verticalAlign=middle;dx=15;&#039;, w, h, &#039;&#039;, &#039;Octagon&#039;, null, null, this.getTagsForStencil(gn, &#039;octagon&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;orthogonal_triangle&#039;, w, h * 0.7, &#039;&#039;, &#039;Orthogonal Triangle&#039;, null, null, this.getTagsForStencil(gn, &#039;orthogonal_triangle&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;acute_triangle;dx=0.5;&#039;, w, h * 0.7, &#039;&#039;, &#039;Acute Triangle&#039;, null, null, this.getTagsForStencil(gn, &#039;acute_triangle&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;obtuse_triangle;dx=0.25;&#039;, w, h * 0.7, &#039;&#039;, &#039;Obtuse Triangle&#039;, null, null, this.getTagsForStencil(gn, &#039;obtuse_triangle&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;oval_callout&#039;, w, h * 0.6, &#039;&#039;, &#039;Oval Callout&#039;, null, null, this.getTagsForStencil(gn, &#039;oval_callout&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;pentagon&#039;, w, h * 0.9, &#039;&#039;, &#039;Pentagon&#039;, null, null, this.getTagsForStencil(gn, &#039;pentagon&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;pointed_oval&#039;, w * 0.5, h, &#039;&#039;, &#039;Pointed Oval&#039;, null, null, this.getTagsForStencil(gn, &#039;pointed oval&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;pyramid;dx1=0.4;dx2=0.6;dy1=0.9;dy2=0.8;&#039;, w, h, &#039;&#039;, &#039;Pyramid&#039;, null, null, this.getTagsForStencil(gn, &#039;pyramid&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;diag_snip_rect;dx=6;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Diagonal Snip Rectangle&#039;, null, null, this.getTagsForStencil(gn, &#039;diag_snip_rect&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;diag_round_rect;dx=6;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Diagonal Rounded Rectangle&#039;, null, null, this.getTagsForStencil(gn, &#039;diag_round_rect&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;corner_round_rect;dx=6;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Corner Rounded Rectangle&#039;, null, null, this.getTagsForStencil(gn, &#039;corner_round_rect&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;three_corner_round_rect;dx=6;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Rounded Rectangle (three corners)&#039;, null, null, this.getTagsForStencil(gn, &#039;three_corner_round_rect&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;plaque;dx=6;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Plaque&#039;, null, null, this.getTagsForStencil(gn, &#039;plaque&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;frame;dx=10;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Frame&#039;, null, null, this.getTagsForStencil(gn, &#039;frame&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rounded_frame;dx=10;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Rounded Frame&#039;, null, null, this.getTagsForStencil(gn, &#039;rounded_frame&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;plaque_frame;dx=10;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Plaque Frame&#039;, null, null, this.getTagsForStencil(gn, &#039;plaque_frame&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;frame_corner;dx=10;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Frame Corner&#039;, null, null, this.getTagsForStencil(gn, &#039;frame_corner&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;diag_stripe;dx=10;&#039;, w, h * 0.6, &#039;&#039;, &#039;Diagonal Stripe&#039;, null, null, this.getTagsForStencil(gn, &#039;diag_stripe&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rectCallout;dx=30;dy=15;boundedLbl=1;&#039;, w, h * 0.6, &#039;&#039;, &#039;Rectangular Callout&#039;, null, null, this.getTagsForStencil(gn, &#039;rectangular_callout&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;roundRectCallout;dx=30;dy=15;size=5;boundedLbl=1;&#039;, w, h * 0.6, &#039;&#039;, &#039;Rounded Rectangular Callout&#039;, null, null, this.getTagsForStencil(gn, &#039;rectangular_callout&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;layered_rect;dx=10;outlineConnect=0;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;&#039;, &#039;Layered Rectangle&#039;, null, null, this.getTagsForStencil(gn, &#039;layered_rect&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;smiley&#039;, w, h, &#039;&#039;, &#039;Smiley&#039;, null, null, this.getTagsForStencil(gn, &#039;smiley&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;star&#039;, w, h * 0.95, &#039;&#039;, &#039;Star&#039;, null, null, this.getTagsForStencil(gn, &#039;star&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;sun&#039;, w, h, &#039;&#039;, &#039;Sun&#039;, null, null, this.getTagsForStencil(gn, &#039;sun&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;tick&#039;, w * 0.85, h, &#039;&#039;, &#039;Tick&#039;, null, null, this.getTagsForStencil(gn, &#039;tick&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;wave2;dy=0.3;&#039;, w, h * 0.6, &#039;&#039;, &#039;Wave&#039;, null, null, this.getTagsForStencil(gn, &#039;wave&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;labelPosition=center;verticalLabelPosition=middle;align=center;html=1;shape=mxgraph.basic.button;dx=10;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;Button&#039;, &#039;Button&#039;, null, null, this.getTagsForStencil(gn, &#039;button&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;labelPosition=center;verticalLabelPosition=middle;align=center;html=1;shape=mxgraph.basic.shaded_button;dx=10;fillColor=#E6E6E6;strokeColor=none;whiteSpace=wrap;&#039;, w, h * 0.6, &#039;Button&#039;, &#039;Button (shaded)&#039;, null, null, this.getTagsForStencil(gn, &#039;button&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;x&#039;, w, h, &#039;&#039;, &#039;X&#039;, null, null, this.getTagsForStencil(gn, &#039;x&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;pie;startAngle=0.2;endAngle=0.9;&#039;, w, h, &#039;&#039;, &#039;Pie&#039;, null, null, this.getTagsForStencil(gn, &#039;pie&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;arc;startAngle=0.3;endAngle=0.1;&#039;, w, h, &#039;&#039;, &#039;Arc&#039;, null, null, this.getTagsForStencil(gn, &#039;arc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;partConcEllipse;startAngle=0.25;endAngle=0.1;arcWidth=0.5;&#039;, w, h, &#039;&#039;, &#039;Partial Concentric Ellipse&#039;, null, null, this.getTagsForStencil(gn, &#039;partConcEllipse&#039;, dt).join(&#039; &#039;)),
+		 	this.createVertexTemplateEntry(&#039;shape=message;html=1;html=1;outlineConnect=0;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;&#039;, 60, 40, &#039;&#039;, &#039;Message&#039;, null, null, &#039;message mail&#039;),
+ 		 	this.createVertexTemplateEntry(&#039;shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;lid=0;&#039;, 60, 80, &#039;&#039;, &#039;Cylinder Stack&#039;, null, null, &#039;cylinder data database stack tube&#039;)
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

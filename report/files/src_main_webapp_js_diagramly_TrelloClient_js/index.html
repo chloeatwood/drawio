@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\TrelloClient.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\TrelloClient.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">70.86</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">730</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">75.06</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">6.60</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2006-2017, JGraph Holdings Ltd
+ * Copyright (c) 2006-2017, draw.io AG
+ */
+TrelloClient = function(editorUi)
+{
+	DrawioClient.call(this, editorUi, &#039;tauth&#039;);
+	Trello.setKey(this.key);
+};
+
+// Extends DrawioClient
+mxUtils.extend(TrelloClient, DrawioClient);
+
+TrelloClient.prototype.key = (window.location.hostname == &#039;test.draw.io&#039;) ?
+	&#039;e89d109082298ce91f6576f82f458551&#039; : &#039;e89d109082298ce91f6576f82f458551&#039;;
+
+TrelloClient.prototype.baseUrl = &#039;https://api.trello.com/1/&#039;;
+
+TrelloClient.prototype.SEPARATOR = &#039;|$|&#039;;
+
+/**
+ * Maximum attachment size of Trello.
+ */
+TrelloClient.prototype.maxFileSize = 10000000 /*10MB*/;
+
+/**
+ * Default extension for new files.
+ */
+TrelloClient.prototype.extension = &#039;.xml&#039;; //TODO export to png
+
+/**
+ * Authorizes the client, used with methods that can be called without a user click and popup blockers will interfere
+ * Show the AuthDialog to work around the popup blockers if the file is opened directly
+ */
+TrelloClient.prototype.authenticate = function(fn, error, force)
+{
+	if (force)
+	{
+		this.logout();
+	}
+	
+	var callback = mxUtils.bind(this, function(remember, success)
+	{
+		Trello.authorize(
+		{
+			type: &#039;popup&#039;,
+			name: &#039;draw.io&#039;,
+			scope:
+			{
+				read: &#039;true&#039;,
+			    write: &#039;true&#039;
+			},
+			expiration: remember ? &#039;never&#039; : &#039;1hour&#039;,
+			success: function()
+			{
+				// backup from the token since viewer removes it for some reason
+				localStorage.setItem(&#039;drawio_trello_token&#039;, localStorage[&#039;trello_token&#039;]);
+
+				if (success != null)
+				{
+					success();
+				}
+				
+				fn();
+			},
+			error: function()
+			{
+				if (success != null)
+				{
+					success();
+				}
+				
+				if (error != null)
+				{
+					error(mxResources.get(&#039;loggedOut&#039;));
+				}
+			}
+		});
+	});
+	
+	if (this.isAuthorized()) 
+	{
+		callback(true);
+	}
+	else
+	{
+		this.ui.showAuthDialog(this, true, callback);
+	}
+}
+
+/**
+ * 
+ */
+TrelloClient.prototype.getLibrary = function(id, success, error)
+{
+	this.getFile(id, success, error, false, true);
+};
+
+/**
+ * 
+ */
+TrelloClient.prototype.getFile = function(id, success, error, denyConvert, asLibrary)
+{
+	//In getFile only, we 
+	asLibrary = (asLibrary != null) ? asLibrary : false;
+
+	var callback = mxUtils.bind(this, function()
+	{
+		var ids = id.split(this.SEPARATOR);
+		var acceptResponse = true;
+		
+		var timeoutThread = window.setTimeout(mxUtils.bind(this, function()
+		{
+			acceptResponse = false;
+			error({code: App.ERROR_TIMEOUT, retry: callback})
+		}), this.ui.timeout);
+		
+		Trello.cards.get(ids[0] + &#039;/attachments/&#039; + ids[1], mxUtils.bind(this, function(meta) 
+		{ 
+			window.clearTimeout(timeoutThread);
+	    	
+		    if (acceptResponse)
+		    {
+				var binary = /\.png$/i.test(meta.name);
+				var headers = {
+					Authorization: &#039;OAuth oauth_consumer_key=&quot;&#039; + Trello.key() + &#039;&quot;, oauth_token=&quot;&#039; + Trello.token() + &#039;&quot;&#039;
+				};
+				
+				// TODO Trello doesn&#039;t allow CORS requests to load attachments. Confirm that
+				// and make sure that only a proxy technique can work!
+				// Handles .vsdx, Gliffy and PNG+XML files by creating a temporary file
+				if (/\.v(dx|sdx?)$/i.test(meta.name) || /\.gliffy$/i.test(meta.name) ||
+					(!Editor.useCanvasForExport &amp;&amp; binary))
+				{
+					this.ui.convertFile(PROXY_URL + &#039;?url=&#039; + encodeURIComponent(meta.url), meta.name, meta.mimeType,
+						this.extension, success, error, null, headers);
+				}
+				else
+				{
+					acceptResponse = true;
+					
+					timeoutThread = window.setTimeout(mxUtils.bind(this, function()
+					{
+						acceptResponse = false;
+						error({code: App.ERROR_TIMEOUT})
+					}), this.ui.timeout);
+					
+					this.ui.editor.loadUrl(PROXY_URL + &#039;?url=&#039; + encodeURIComponent(meta.url), mxUtils.bind(this, function(data)
+					{
+						window.clearTimeout(timeoutThread);
+				    	
+					    if (acceptResponse)
+					   	{
+					    	//keep our id which includes the cardId
+					    	meta.compoundId = id;
+					    		
+							var index = (binary) ? data.lastIndexOf(&#039;,&#039;) : -1;
+	
+							if (index &gt; 0)
+							{
+								var xml = this.ui.extractGraphModelFromPng(data);
+								
+								if (xml != null &amp;&amp; xml.length &gt; 0)
+								{
+									data = xml;
+								}
+								else
+								{
+									// TODO: Import PNG
+								}
+							}
+				    		
+							if (asLibrary)
+							{
+								success(new TrelloLibrary(this.ui, data, meta));
+							}
+							else
+							{
+								success(new TrelloFile(this.ui, data, meta));
+							}
+					    }
+			    	}), mxUtils.bind(this, function(err, req)
+					{
+						window.clearTimeout(timeoutThread);
+					    	
+				    	if (acceptResponse)
+				    	{
+				    		if (req.status == 401)
+				    		{
+				    			this.authenticate(callback, error, true);
+				    		}
+				    		else
+				    		{
+				    			error();
+				    		}
+				    	}
+					}), binary || (meta.mimeType != null &amp;&amp;
+						meta.mimeType.substring(0, 6) == &#039;image/&#039;), null, null, null, headers);
+				}
+		    }
+		}), mxUtils.bind(this, function(err)
+		{
+			window.clearTimeout(timeoutThread);
+	    	
+		    	if (acceptResponse)
+		    	{
+		    		if (err != null &amp;&amp; err.status == 401)
+		    		{
+		    			this.authenticate(callback, error, true);
+		    		}
+		    		else
+		    		{
+		    			error();
+		    		}
+		    	}
+		}));
+	});
+	
+	this.authenticate(callback, error);
+};
+
+/**
+ * 
+ */
+TrelloClient.prototype.insertLibrary = function(filename, data, success, error, cardId)
+{
+	this.insertFile(filename, data, success, error, true, cardId);
+};
+
+/**
+ * 
+ */
+TrelloClient.prototype.insertFile = function(filename, data, success, error, asLibrary, cardId)
+{
+	asLibrary = (asLibrary != null) ? asLibrary : false;
+	
+	var callback = mxUtils.bind(this, function()
+	{
+		var fn = mxUtils.bind(this, function(fileData)
+		{
+			this.writeFile(filename, fileData, cardId, mxUtils.bind(this, function(meta)
+			{
+				if (asLibrary)
+				{
+					success(new TrelloLibrary(this.ui, data, meta));
+				}
+				else
+				{
+					success(new TrelloFile(this.ui, data, meta));
+				}
+			}), error);
+		});
+						
+		if (Editor.useCanvasForExport &amp;&amp; /(\.png)$/i.test(filename))
+		{
+			this.ui.getEmbeddedPng(mxUtils.bind(this, function(pngData)
+			{
+				fn(this.ui.base64ToBlob(pngData, &#039;image/png&#039;));
+			}), error, data);
+		}
+		else
+		{
+			fn(data);
+		}
+	});
+	
+	this.authenticate(callback, error);
+};
+
+/**
+ * 
+ */
+TrelloClient.prototype.saveFile = function(file, success, error)
+{
+	// write the file first (with the same name), then delete the old file
+	// so that nothing is lost if something goes wrong with deleting
+	var ids = file.meta.compoundId.split(this.SEPARATOR);
+
+	var fn = mxUtils.bind(this, function(data)
+	{
+		this.writeFile(file.meta.name, data, ids[0], function(meta)
+		{
+			Trello.del(&#039;cards/&#039; + ids[0] + &#039;/attachments/&#039; + ids[1], mxUtils.bind(this, function()
+			{
+				success(meta);
+			}), mxUtils.bind(this, function(err)
+			{
+				if (err != null &amp;&amp; err.status == 401)
+	    		{
+					// KNOWN: Does not wait for popup to close for callback
+	    			this.authenticate(callback, error, true);
+	    		}
+	    		else
+	    		{
+	    			error();
+	    		}
+			}));
+		}, error);
+	});
+	
+	var callback = mxUtils.bind(this, function()
+	{
+		if (Editor.useCanvasForExport &amp;&amp; /(\.png)$/i.test(file.meta.name))
+		{
+			this.ui.getEmbeddedPng(mxUtils.bind(this, function(data)
+			{
+				fn(this.ui.base64ToBlob(data, &#039;image/png&#039;));
+			}), error, (this.ui.getCurrentFile() != file) ? file.getData() : null);
+		}
+		else
+		{
+			fn(file.getData());
+		}
+	});
+	
+	this.authenticate(callback, error);
+};
+
+/**
+ * 
+ */
+TrelloClient.prototype.writeFile = function(filename, data, cardId, success, error)
+{
+	if (filename != null &amp;&amp; data != null)
+	{
+		if (data.length &gt;= this.maxFileSize)
+		{
+			error({message: mxResources.get(&#039;drawingTooLarge&#039;) + &#039; (&#039; +
+				this.ui.formatFileSize(data.length) + &#039; / 10 MB)&#039;});
+			
+			return;
+		}
+		
+		var fn = mxUtils.bind(this, function()
+		{
+		  var acceptResponse = true;
+			
+		  var timeoutThread = window.setTimeout(mxUtils.bind(this, function()
+		  {
+			acceptResponse = false;
+			error({code: App.ERROR_TIMEOUT, retry: fn});
+		  }), this.ui.timeout);
+			
+		  var formData = new FormData();
+		  formData.append(&#039;key&#039;, Trello.key());
+		  formData.append(&#039;token&#039;, Trello.token());
+		  formData.append(&#039;file&#039;, typeof data === &#039;string&#039; ? new Blob([data]) : data, filename);
+		  formData.append(&#039;name&#039;, filename);
+
+		  var request = new XMLHttpRequest();
+		  request.responseType = &#039;json&#039;;
+		  
+		  request.onreadystatechange = mxUtils.bind(this, function() 
+		  {
+		    if (request.readyState === 4)
+		    {
+		    	window.clearTimeout(timeoutThread);
+		    	
+		    	if (acceptResponse)
+	    		{
+		    		if (request.status == 200)
+	    			{
+		    			var fileMeta = request.response;
+		    			fileMeta.compoundId = cardId + this.SEPARATOR + fileMeta.id
+		    			success(fileMeta);
+	    			}
+		    		else if (request.status == 401)
+		    		{
+		    			this.authenticate(fn, error, true);
+		    		}
+	    			else
+    				{
+		    			error();
+    				}
+	    		}
+		    }
+		  });
+		  
+		  request.open(&#039;POST&#039;, this.baseUrl + &#039;cards/&#039; + cardId + &#039;/attachments&#039;);
+		  request.send(formData);
+		});
+		
+		this.authenticate(fn, error);
+	}
+	else
+	{
+		error({message: mxResources.get(&#039;unknownError&#039;)});
+	}
+};
+
+/**
+ * Checks if the client is authorized and calls the next step.
+ */
+TrelloClient.prototype.pickLibrary = function(fn)
+{
+	this.pickFile(fn);
+};
+
+/**
+ * 
+ */
+TrelloClient.prototype.pickFolder = function(fn)
+{
+	this.authenticate(mxUtils.bind(this, function()
+	{
+	  	// show file select
+		this.showTrelloDialog(false, fn);
+	}), mxUtils.bind(this, function(e)
+	{
+		this.ui.showError(mxResources.get(&#039;error&#039;), e);
+	}));
+};
+
+/**
+ * Checks if the client is authorized and calls the next step.
+ */
+TrelloClient.prototype.pickFile = function(fn, returnObject)
+{
+	fn = (fn != null) ? fn : mxUtils.bind(this, function(id)
+	{
+		this.ui.loadFile(&#039;T&#039; + encodeURIComponent(id));
+	});
+
+	this.authenticate(mxUtils.bind(this, function()
+	{
+	  	// show file select
+		this.showTrelloDialog(true, fn);
+	}), mxUtils.bind(this, function(e)
+	{
+		this.ui.showError(mxResources.get(&#039;error&#039;), e, mxResources.get(&#039;ok&#039;));
+	}));
+};
+
+
+/**
+ * 
+ */
+TrelloClient.prototype.showTrelloDialog = function(showFiles, fn)
+{
+	var cardId = null;
+	var filter = &#039;@me&#039;;
+	var linkCounter = 0;
+	
+	var content = document.createElement(&#039;div&#039;);
+	content.style.whiteSpace = &#039;nowrap&#039;;
+	content.style.overflow = &#039;hidden&#039;;
+	content.style.height = &#039;224px&#039;;
+
+	var hd = document.createElement(&#039;h3&#039;);
+	mxUtils.write(hd, showFiles? mxResources.get(&#039;selectFile&#039;) : mxResources.get(&#039;selectCard&#039;));
+	hd.style.cssText = &#039;width:100%;text-align:center;margin-top:0px;margin-bottom:12px&#039;;
+	content.appendChild(hd);
+
+	var div = document.createElement(&#039;div&#039;);
+	div.style.whiteSpace = &#039;nowrap&#039;;
+	div.style.overflow = &#039;auto&#039;;
+	div.style.height = &#039;194px&#039;;
+	content.appendChild(div);
+
+	var dlg = new CustomDialog(this.ui, content);
+	this.ui.showDialog(dlg.container, 340, 290, true, true);
+	
+	dlg.okButton.parentNode.removeChild(dlg.okButton);
+	
+	var createLink = mxUtils.bind(this, function(label, fn, preview)
+	{
+		linkCounter++;
+		var div = document.createElement(&#039;div&#039;);
+		div.style = &#039;width:100%;text-overflow:ellipsis;overflow:hidden;vertical-align:middle;&#039; +
+			&#039;padding:2px 0 2px 0;background:&#039; + (linkCounter % 2 == 0?
+			((Editor.isDarkMode()) ? &#039;#000&#039; : &#039;#eee&#039;) :
+			((Editor.isDarkMode()) ? &#039;&#039; : &#039;#fff&#039;));
+		var link = document.createElement(&#039;a&#039;);
+		link.style.cursor = &#039;pointer&#039;;
+		
+		if (preview != null)
+		{
+			var img = document.createElement(&#039;img&#039;);
+			img.src = preview.url;
+			img.width = preview.width;
+			img.height= preview.height;
+			img.style= &quot;border: 1px solid black;margin:5px;vertical-align:middle&quot;
+			link.appendChild(img);
+		}
+		
+		mxUtils.write(link,  label);
+		mxEvent.addListener(link, &#039;click&#039;, fn);
+		
+		div.appendChild(link);
+		
+		return div;
+	});
+	
+	var error = mxUtils.bind(this, function(err)
+	{
+		this.ui.handleError(err, null, mxUtils.bind(this, function()
+		{
+			this.ui.spinner.stop();
+			this.ui.hideDialog();
+		}));
+	});
+
+	var selectAtt = mxUtils.bind(this, function()
+	{
+		linkCounter = 0;
+		div.innerText = &#039;&#039;;
+		this.ui.spinner.spin(div, mxResources.get(&#039;loading&#039;));
+		
+		var callback = mxUtils.bind(this, function()
+		{
+			Trello.cards.get(cardId + &#039;/attachments&#039;, {fields: &#039;id,name,previews&#039;}, mxUtils.bind(this, function(data)
+			{
+				this.ui.spinner.stop();
+				var files = data;
+				div.appendChild(createLink(&#039;../ [Up]&#039;, mxUtils.bind(this, function()
+				{
+					selectCard();
+				})));
+				mxUtils.br(div);
+	
+				if (files == null || files.length == 0)
+				{
+					mxUtils.write(div, mxResources.get(&#039;noFiles&#039;));
+				}
+				else
+				{
+					var listFiles = mxUtils.bind(this, function()
+					{
+						for (var i = 0; i &lt; files.length; i++)
+						{
+							(mxUtils.bind(this, function(file)
+							{
+								div.appendChild(createLink(file.name, mxUtils.bind(this, function()
+								{
+									this.ui.hideDialog();
+									fn(cardId + this.SEPARATOR + file.id);
+								}), file.previews != null? file.previews[0] : null));
+							}))(files[i]);
+						}
+					});
+					
+					listFiles();
+				}
+			}),
+			mxUtils.bind(this, function(req)
+			{
+	    		if (req.status == 401)
+	    		{
+	    			this.authenticate(callback, error, true);
+	    		}
+	    		else if (error != null)
+	    		{
+	    			error(req);
+	    		}	
+			}));
+		});
+		
+		callback();
+	});
+	
+	// Adds paging for cards (files limited to 1000 by API)
+	var pageSize = 100;
+	var nextPageDiv = null;
+	var scrollFn = null;
+
+	var selectCard = mxUtils.bind(this, function(page)
+	{
+		if (page == null)
+		{
+			linkCounter = 0;
+			div.innerText = &#039;&#039;;
+			page = 1;
+		}
+		
+		this.ui.spinner.spin(div, mxResources.get(&#039;loading&#039;));
+		
+		if (nextPageDiv != null &amp;&amp; nextPageDiv.parentNode != null)
+		{
+			nextPageDiv.parentNode.removeChild(nextPageDiv);
+		}
+		
+		nextPageDiv = document.createElement(&#039;a&#039;);
+		nextPageDiv.style.display = &#039;block&#039;;
+		nextPageDiv.style.cursor = &#039;pointer&#039;;
+		mxUtils.write(nextPageDiv, mxResources.get(&#039;more&#039;) + &#039;...&#039;);
+		
+		var nextPage = mxUtils.bind(this, function()
+		{
+			mxEvent.removeListener(div, &#039;scroll&#039;, scrollFn);
+			selectCard(page + 1);
+		});
+		
+		mxEvent.addListener(nextPageDiv, &#039;click&#039;, nextPage);
+		
+		var callback = mxUtils.bind(this, function()
+		{
+			Trello.get(&#039;search&#039;, {
+				&#039;query&#039;: (mxUtils.trim(filter) == &#039;&#039;) ? &#039;is:open&#039; : filter,
+				&#039;cards_limit&#039;: pageSize,
+				&#039;cards_page&#039;: page-1
+			},
+			mxUtils.bind(this, function(data)
+			{
+				this.ui.spinner.stop();
+				var cards = (data != null) ? data.cards : null;
+				
+				if (cards == null || cards.length == 0)
+				{
+					mxUtils.write(div, mxResources.get(&#039;noFiles&#039;));
+				}
+				else
+				{
+					if (page == 1)
+					{
+						div.appendChild(createLink(mxResources.get(&#039;filterCards&#039;) + &#039;...&#039;,
+							mxUtils.bind(this, function()
+						{
+							var dlg = new FilenameDialog(this.ui, filter, mxResources.get(&#039;ok&#039;),
+								mxUtils.bind(this, function(value)
+							{
+								if (value != null)
+								{
+									filter = value;
+									selectCard();
+								}
+							}), mxResources.get(&#039;filterCards&#039;), null, null,
+								&#039;http://help.trello.com/article/808-searching-for-cards-all-boards&#039;);
+							this.ui.showDialog(dlg.container, 300, 80, true, false);
+							dlg.init();
+						})));
+						
+						mxUtils.br(div);
+					}
+					
+					for (var i = 0; i &lt; cards.length; i++)
+					{
+						(mxUtils.bind(this, function(card)
+						{
+							div.appendChild(createLink(card.name, mxUtils.bind(this, function()
+							{
+								if (showFiles)
+								{
+									cardId = card.id;
+									selectAtt();
+								}
+								else
+								{
+									this.ui.hideDialog();
+									fn(card.id);
+								}
+							})));
+						}))(cards[i]);
+					}
+	
+					if (cards.length == pageSize)
+					{
+						div.appendChild(nextPageDiv);
+						
+						scrollFn = function()
+						{
+							if (div.scrollTop &gt;= div.scrollHeight - div.offsetHeight)
+							{
+								nextPage();
+							}
+						};
+						
+						mxEvent.addListener(div, &#039;scroll&#039;, scrollFn);
+					}
+				}
+			}),
+			mxUtils.bind(this, function(req)
+			{
+	    		if (req.status == 401)
+	    		{
+	    			this.authenticate(callback, error, true);
+	    		}
+	    		else if (error != null)
+	    		{
+	    			error({message: req.responseText});
+	    		}	
+			}));
+		});
+		
+		callback();
+	});
+	
+	selectCard();
+};
+
+/**
+ * Checks if the client is authorized
+ */
+TrelloClient.prototype.isAuthorized = function()
+{
+	//TODO this may break if Trello client.js is changed
+	try
+	{
+		var token = localStorage[&#039;trello_token&#039;]; //Trello.authorized(); doesn&#039;t work unless authorize is called first
+
+		if (token == null)
+		{
+			token = localStorage[&#039;drawio_trello_token&#039;];
+
+			// Restores token from backup
+			if (token != null)
+			{
+				localStorage.setItem(&#039;trello_token&#039;, token);
+			}
+			
+		}
+
+		return token != null;
+	}
+	catch (e)
+	{
+		// ignores access denied
+	}
+	
+	return false;
+};
+
+
+/**
+ * Logout and deauthorize the user. 
+ */
+TrelloClient.prototype.logout = function()
+{
+	localStorage.removeItem(&#039;drawio_trello_token&#039;);
+	Trello.deauthorize();
+};</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

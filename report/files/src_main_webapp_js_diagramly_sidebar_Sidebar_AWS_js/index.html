@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-AWS.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-AWS.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">62.49</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">790</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">23.89</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">22.44</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds AWS (legacy) shapes
+	Sidebar.prototype.addAWSPalette = function()
+	{
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Analytics&#039;);
+		this.addAWSAnalyticsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Application Services&#039;);
+		this.addAWSApplicationServicesPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Compute&#039;);
+		this.addAWSComputePalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Database&#039;);
+		this.addAWSDatabasePalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Developer Tools&#039;);
+		this.addAWSDeveloperToolsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Enterprise Applications&#039;);
+		this.addAWSEnterpriseApplicationsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Game Development&#039;);
+		this.addAWSGameDevelopmentPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2General&#039;);
+		this.addAWSGeneralPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Internet of Things&#039;);
+		this.addAWSInternetOfThingsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Management Tools&#039;);
+		this.addAWSManagementToolsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Mobile Services&#039;);
+		this.addAWSMobileServicesPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Networking&#039;);
+		this.addAWSNetworkingPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2On-Demand Workforce&#039;);
+		this.addAWSOnDemandWorkforcePalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2SDKs&#039;);
+		this.addAWSSDKPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Security and Identity&#039;);
+		this.addAWSSecurityAndIdentityPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Storage and Content Delivery&#039;);
+		this.addAWSStorageAndContentDeliveryPalette();
+		this.setCurrentSearchEntryLibrary(&#039;aws2&#039;, &#039;aws2Groups&#039;);
+		this.addAWSGroupPalette();
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+	Sidebar.prototype.addAWSAnalyticsPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.analytics&#039;;
+		var dt = &#039;aws group amazon web service analytics&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Analytics&#039;, &#039;AWS / Analytics&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;analytics.data_pipeline;strokeColor=none;&#039;,
+				 60, 72, &#039;&#039;, &#039;Data Pipeline&#039;, null, null, this.getTagsForStencil(gn, &#039;data pipeline&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;analytics.elasticsearch;strokeColor=none;&#039;,
+				 60, 72, &#039;&#039;, &#039;ElasticSearch&#039;, null, null, this.getTagsForStencil(gn, &#039;elasticsearch&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;analytics.emr;strokeColor=none;&#039;,
+				 60, 72, &#039;&#039;, &#039;EMR&#039;, null, null, this.getTagsForStencil(gn, &#039;emr&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.emr_cluster;strokeColor=none;&#039;,
+				 49, 55, &#039;&#039;, &#039;EMR Cluster&#039;, null, null, this.getTagsForStencil(gn, &#039;emr cluster&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.emr_engine;strokeColor=none;&#039;,
+				 74, 53, &#039;&#039;, &#039;EMR Engine&#039;, null, null, this.getTagsForStencil(gn, &#039;emr engine&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.emr_hdfs_cluster;strokeColor=none;&#039;,
+				 54, 56, &#039;&#039;, &#039;EMR HDFS Cluster&#039;, null, null, this.getTagsForStencil(gn, &#039;emr hdfs cluster&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.emr_mapr_m3_engine;strokeColor=none;&#039;,
+				 74, 53, &#039;&#039;, &#039;EMR MapR M3 Engine&#039;, null, null, this.getTagsForStencil(gn, &#039;emr mapr m3 engine&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.emr_mapr_m5_engine;strokeColor=none;&#039;,
+				 74, 53, &#039;&#039;, &#039;EMR MapR M5 Engine&#039;, null, null, this.getTagsForStencil(gn, &#039;emr mapr m5 engine&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.emr_mapr_m7_engine;strokeColor=none;&#039;,
+				 74, 53, &#039;&#039;, &#039;EMR MapR M7 Engine&#039;, null, null, this.getTagsForStencil(gn, &#039;emr mapr m7 engine&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;analytics.kinesis;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;Kinesis&#039;, null, null, this.getTagsForStencil(gn, &#039;kinesis&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;analytics.kinesis_analytics;strokeColor=none;&#039;,
+				 66, 67, &#039;&#039;, &#039;Kinesis Analytics&#039;, null, null, this.getTagsForStencil(gn, &#039;kinesis analytics&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;analytics.kinesis_enabledapp;strokeColor=none;&#039;,
+				 58, 60, &#039;&#039;, &#039;Kinesis EnabledApp&#039;, null, null, this.getTagsForStencil(gn, &#039;kinesis enabledapp enabled app&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;analytics.kinesis_firehose;strokeColor=none;&#039;,
+				 53, 56, &#039;&#039;, &#039;Kinesis Firehose&#039;, null, null, this.getTagsForStencil(gn, &#039;kinesis firehose&#039;, dt).join(&#039; &#039;)),
+
+		 this.createVertexTemplateEntry(s + &#039;analytics.kinesis_streams;strokeColor=none;&#039;,
+				 53, 56, &#039;&#039;, &#039;Kinesis Streams&#039;, null, null, this.getTagsForStencil(gn, &#039;kinesis streams&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;analytics.machine_learning;strokeColor=none;&#039;,
+				 60, 72, &#039;&#039;, &#039;Machine Learning&#039;, null, null, this.getTagsForStencil(gn, &#039;machine learning&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;analytics.quicksight;strokeColor=none;&#039;,
+				 60, 66, &#039;&#039;, &#039;QuickSight&#039;, null, null, this.getTagsForStencil(gn, &#039;quicksight&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSApplicationServicesPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.applicationServices&#039;;
+		var dt = &#039;aws group amazon web service application services&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Application Services&#039;, &#039;AWS / Application Services&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;app_services.api_gateway;strokeColor=none;&#039;,
+				 60, 72, &#039;&#039;, &#039;API Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;api gateway&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;app_services.appstream;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;AppStream&#039;, null, null, this.getTagsForStencil(gn, &#039;appstream&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;app_services.cloudsearch;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;CloudSearch&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudsearch&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;app_services.cloudsearch_sdf_metadata;strokeColor=none;&#039;,
+				 52, 56, &#039;&#039;, &#039;CloudSearch SDF Metadata&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudsearch sdf metadata&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;app_services.elastic_transcoder;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;Elastic Transcoder&#039;, null, null, this.getTagsForStencil(gn, &#039;elastic transcoder&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;app_services.ses;strokeColor=none;&#039;,
+				 61, 72, &#039;&#039;, &#039;SES&#039;, null, null, this.getTagsForStencil(gn, &#039;ses&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;app_services.email;strokeColor=none;&#039;,
+				 73, 54, &#039;&#039;, &#039;SES Email&#039;, null, null, this.getTagsForStencil(gn, &#039;ses email&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;app_services.sqs;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;SQS&#039;, null, null, this.getTagsForStencil(gn, &#039;sqs&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;app_services.sqs_message;strokeColor=none;&#039;,
+				 37, 42, &#039;&#039;, &#039;SQS Message&#039;, null, null, this.getTagsForStencil(gn, &#039;sqs message&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;app_services.sqs_queue;strokeColor=none;&#039;,
+				 65, 42, &#039;&#039;, &#039;SQS Queue&#039;, null, null, this.getTagsForStencil(gn, &#039;sqs queue&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;app_services.swf;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;SWF&#039;, null, null, this.getTagsForStencil(gn, &#039;swf&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;app_services.swf_decider;strokeColor=none;&#039;,
+				 55, 57, &#039;&#039;, &#039;SWF Decider&#039;, null, null, this.getTagsForStencil(gn, &#039;swf decider&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;app_services.swf_worker;strokeColor=none;&#039;,
+				 53, 56, &#039;&#039;, &#039;SWF Worker&#039;, null, null, this.getTagsForStencil(gn, &#039;swf worker&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSComputePalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.compute_and_networking.&quot;;
+		var gn = &#039;mxgraph.aws.compute&#039;;
+		var dt = &#039;aws group amazon web service compute&#039;;
+
+		this.addPaletteFunctions(&#039;aws2Compute&#039;, &#039;AWS / Compute&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;auto_scaling;strokeColor=none;&#039;,
+				 59, 57, &#039;&#039;, &#039;Auto Scaling&#039;, null, null, this.getTagsForStencil(gn, &#039;auto scaling&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;ec2;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;EC2&#039;, null, null, this.getTagsForStencil(gn, &#039;ec2&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;ec2_ami;strokeColor=none;&#039;,
+				 53, 56, &#039;&#039;, &#039;EC2 AMI&#039;, null, null, this.getTagsForStencil(gn, &#039;ec2 ami&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;ec2_cloudwatch;strokeColor=none;&#039;,
+				 53, 56, &#039;&#039;, &#039;EC2 CloudWatch&#039;, null, null, this.getTagsForStencil(gn, &#039;ec2 cloudwatch&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;ec2_db_on_instance;strokeColor=none;&#039;,
+				 52, 56, &#039;&#039;, &#039;EC2 DB On Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;ec2 db on instance database&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;ec2_elastic_ip;strokeColor=none;&#039;,
+				 67, 22, &#039;&#039;, &#039;EC2 Elastic IP&#039;, null, null, this.getTagsForStencil(gn, &#039;ec2 elastic ip&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;ec2_instance;strokeColor=none;&#039;,
+				 52, 56, &#039;&#039;, &#039;EC2 Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;ec2 instance&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;ec2_instances;strokeColor=none;&#039;,
+				 50, 57, &#039;&#039;, &#039;EC2 Instances&#039;, null, null, this.getTagsForStencil(gn, &#039;ec2 instances&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;ec2_optimized_instance;strokeColor=none;&#039;,
+				 53, 56, &#039;&#039;, &#039;EC2 Optimized Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;ec2 optimized instance&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;ec2_spot_instance;strokeColor=none;&#039;,
+				 53, 57, &#039;&#039;, &#039;EC2 Spot Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;ec2 spot instance&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;ec2_container_registry;strokeColor=none;&#039;,
+				 61, 63, &#039;&#039;, &#039;EC2 Container Registry&#039;, null, null, this.getTagsForStencil(gn, &#039;ec2 container registry&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;ec2_container_service;strokeColor=none;&#039;,
+				 61, 63, &#039;&#039;, &#039;EC2 Container Service&#039;, null, null, this.getTagsForStencil(gn, &#039;ec2 container service&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;elastic_beanstalk;strokeColor=none;&#039;,
+				 59, 82, &#039;&#039;, &#039;Elastic Beanstalk&#039;, null, null, this.getTagsForStencil(gn, &#039;elastic beanstalk&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;elastic_beanstalk_application;strokeColor=none;&#039;,
+				 31, 57, &#039;&#039;, &#039;Elastic Beanstalk Application&#039;, null, null, this.getTagsForStencil(gn, &#039;elastic beanstalk application&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;elastic_beanstalk_deployment;strokeColor=none;&#039;,
+				 50, 66, &#039;&#039;, &#039;Elastic Beanstalk Deployment&#039;, null, null, this.getTagsForStencil(gn, &#039;elastic beanstalk deployment&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;elastic_load_balancing_2;strokeColor=none;&#039;,
+				 56, 58, &#039;&#039;, &#039;Elastic Load Balancing&#039;, null, null, this.getTagsForStencil(gn, &#039;elastic load balancing&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;lambda;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;Lambda&#039;, null, null, this.getTagsForStencil(gn, &#039;lambda&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSDatabasePalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.database&#039;;
+		var dt = &#039;aws group amazon web service database&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Database&#039;, &#039;AWS / Database&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;database.database_migration_service;strokeColor=none;&#039;,
+				 64, 72, &#039;&#039;, &#039;Database Migration Service&#039;, null, null, this.getTagsForStencil(gn, &#039;database migration service&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.dynamodb;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;DynamoDB&#039;, null, null, this.getTagsForStencil(gn, &#039;dynamodb&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.dynamodb_attribute;strokeColor=none;&#039;,
+				 54, 56, &#039;&#039;, &#039;DynamoDB Attribute&#039;, null, null, this.getTagsForStencil(gn, &#039;dynamodb attribute&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.dynamodb_attributes;strokeColor=none;&#039;,
+				 52, 56, &#039;&#039;, &#039;DynamoDB Attributes&#039;, null, null, this.getTagsForStencil(gn, &#039;dynamodb attributes&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.dynamodb_global_secondary_indexes;strokeColor=none;&#039;,
+				 53, 56, &#039;&#039;, &#039;DynamoDB Global Secondary Index&#039;, null, null, this.getTagsForStencil(gn, &#039;dynamodb global secondary indexes&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.dynamodb_item;strokeColor=none;&#039;,
+				 55, 56, &#039;&#039;, &#039;DynamoDB Item&#039;, null, null, this.getTagsForStencil(gn, &#039;dynamodb item&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.dynamodb_items;strokeColor=none;&#039;,
+				 52, 57, &#039;&#039;, &#039;DynamoDB Items&#039;, null, null, this.getTagsForStencil(gn, &#039;dynamodb items&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.dynamodb_table;strokeColor=none;&#039;,
+				 60, 56, &#039;&#039;, &#039;DynamoDB Table&#039;, null, null, this.getTagsForStencil(gn, &#039;dynamodb table&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.elasticcache_memcache;strokeColor=none;&#039;,
+				 52, 55, &#039;&#039;, &#039;ElasticCache MemCache&#039;, null, null, this.getTagsForStencil(gn, &#039;elasticcache memcache&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.elasticcache;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;ElasticCache&#039;, null, null, this.getTagsForStencil(gn, &#039;elasticcache&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.elasticcache_node;strokeColor=none;&#039;,
+				 52, 55, &#039;&#039;, &#039;ElasticCache Node&#039;, null, null, this.getTagsForStencil(gn, &#039;elasticcache node&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.elasticcache_redis;strokeColor=none;&#039;,
+				 52, 55, &#039;&#039;, &#039;ElasticCache Redis&#039;, null, null, this.getTagsForStencil(gn, &#039;elasticcache redis&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds;strokeColor=none;&#039;,
+				 63, 72, &#039;&#039;, &#039;RDS&#039;, null, null, this.getTagsForStencil(gn, &#039;rds&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_db_instance;strokeColor=none;&#039;,
+				 43, 56, &#039;&#039;, &#039;RDS DB Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;rds db instance&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_instance_read_replica;strokeColor=none;&#039;,
+				 43, 56, &#039;&#039;, &#039;RDS Instance Read Replica&#039;, null, null, this.getTagsForStencil(gn, &#039;rds instance read replica&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_instance_standby;strokeColor=none;&#039;,
+				 43, 56, &#039;&#039;, &#039;RDS Instance Standby&#039;, null, null, this.getTagsForStencil(gn, &#039;rds instance standby&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_ms_sql_instance;strokeColor=none;&#039;,
+				 52, 55, &#039;&#039;, &#039;RDS MS SQL Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;rds ms sql instance&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_ms_sql_instance_2;strokeColor=none;&#039;,
+				 52, 56, &#039;&#039;, &#039;RDS MS SQL Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;rds ms sql instance&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_mysql_db_instance;strokeColor=none;&#039;,
+				 52, 55, &#039;&#039;, &#039;RDS MySQL Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;rds mysql db instance&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_mysql_db_instance_2;strokeColor=none;&#039;,
+				 52, 56, &#039;&#039;, &#039;RDS MySQL Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;rds mysql db instance&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_oracle_db_instance;strokeColor=none;&#039;,
+				 52, 55, &#039;&#039;, &#039;RDS Oracle Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;rds oracle db instance&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_oracle_db_instance_2;strokeColor=none;&#039;,
+				 52, 56, &#039;&#039;, &#039;RDS Oracle Instance&#039;, null, null, this.getTagsForStencil(gn, &#039;rds oracle db instance&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_replica_sets_with_piop;strokeColor=none;&#039;,
+				 53, 55, &#039;&#039;, &#039;RDS PIOP&#039;, null, null, this.getTagsForStencil(gn, &#039;rds piop&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_postgresql;strokeColor=none;&#039;,
+				 52, 55, &#039;&#039;, &#039;RDS PostgreSQL&#039;, null, null, this.getTagsForStencil(gn, &#039;rds postgresql&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_mastersql;strokeColor=none;&#039;,
+				 52, 56, &#039;&#039;, &#039;RDS SQL Master&#039;, null, null, this.getTagsForStencil(gn, &#039;rds sql master&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.rds_slavesql;strokeColor=none;&#039;,
+				 52, 56, &#039;&#039;, &#039;RDS SQL Slave&#039;, null, null, this.getTagsForStencil(gn, &#039;rds sql slave&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.redshift;strokeColor=none;&#039;,
+				 60, 66, &#039;&#039;, &#039;Redshift&#039;, null, null, this.getTagsForStencil(gn, &#039;redshift&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.redshift_dense_compute_node;strokeColor=none;&#039;,
+				 49, 55, &#039;&#039;, &#039;Redshift Dense Compute Node&#039;, null, null, this.getTagsForStencil(gn, &#039;redshift dense compute node&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;database.redshift_dense_storage_node;strokeColor=none;&#039;,
+				 49, 55, &#039;&#039;, &#039;Redshift Dense Storage Node&#039;, null, null, this.getTagsForStencil(gn, &#039;redshift dense storage node&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSDeveloperToolsPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.developerTools&#039;;
+		var dt = &#039;aws group amazon web service developer tools&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Developer Tools&#039;, &#039;AWS / Developer Tools&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;developer_tools.code_commit;strokeColor=none;&#039;,
+				 68, 82, &#039;&#039;, &#039;Code Commit&#039;, null, null, this.getTagsForStencil(gn, &#039;code commit&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.codedeploy;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;Code Deploy&#039;, null, null, this.getTagsForStencil(gn, &#039;codedeploy&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;developer_tools.code_pipeline;strokeColor=none;&#039;,
+				 60, 72, &#039;&#039;, &#039;Code Pipeline&#039;, null, null, this.getTagsForStencil(gn, &#039;code pipeline&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSEnterpriseApplicationsPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.enterpriseApplications&#039;;
+		var dt = &#039;aws group amazon web service enterprise applications&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Enterprise Applications&#039;, &#039;AWS / Enterprise Applications&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;enterprise_applications.workdocs;strokeColor=none;&#039;,
+				 74, 85, &#039;&#039;, &#039;WorkDocs&#039;, null, null, this.getTagsForStencil(gn, &#039;workdocs&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;enterprise_applications.workmail;strokeColor=none;&#039;,
+				 74, 85, &#039;&#039;, &#039;WorkMail&#039;, null, null, this.getTagsForStencil(gn, &#039;workmail&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;enterprise_applications.workspaces;strokeColor=none;&#039;,
+				 74, 85, &#039;&#039;, &#039;WorkSpaces&#039;, null, null, this.getTagsForStencil(gn, &#039;workspaces&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSGameDevelopmentPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.gameDevelopment&#039;;
+		var dt = &#039;aws amazon web service game development&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Game Development&#039;, &#039;AWS / Game Development&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;game_development.gamelift;strokeColor=none;&#039;,
+				 62, 75, &#039;&#039;, &#039;GameLift&#039;, null, null, this.getTagsForStencil(gn, &#039;game lift&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSGeneralPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.general&#039;;
+		var dt = &#039;aws amazon web service general&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2General&#039;, &#039;AWS / General&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.client;strokeColor=none;&#039;,
+				 57, 57, &#039;&#039;, &#039;Client&#039;, null, null, this.getTagsForStencil(gn, &#039;client&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.cloud;strokeColor=none;&#039;,
+				 70, 46, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.corporate_data_center;strokeColor=none;&#039;,
+				 42, 57, &#039;&#039;, &#039;Corporate Data Center&#039;, null, null, this.getTagsForStencil(gn, &#039;corporate data center&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.disk;strokeColor=none;&#039;,
+				 57, 57, &#039;&#039;, &#039;Disk&#039;, null, null, this.getTagsForStencil(gn, &#039;disk&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.forums;strokeColor=none;&#039;,
+				 76, 73, &#039;&#039;, &#039;Forums&#039;, null, null, this.getTagsForStencil(gn, &#039;forums&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.generic_database;strokeColor=none;&#039;,
+				 44, 57, &#039;&#039;, &#039;Generic Database&#039;, null, null, this.getTagsForStencil(gn, &#039;generic database&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.internet;strokeColor=none;&#039;,
+				 70, 46, &#039;&#039;, &#039;Internet&#039;, null, null, this.getTagsForStencil(gn, &#039;internet&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.management_console;strokeColor=none;&#039;,
+				 57, 57, &#039;&#039;, &#039;Management Console&#039;, null, null, this.getTagsForStencil(gn, &#039;management console&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.mobile_client;strokeColor=none;&#039;,
+				 37, 57, &#039;&#039;, &#039;Mobile Client&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile client&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.multimedia;strokeColor=none;&#039;,
+				 59, 57, &#039;&#039;, &#039;Multimedia&#039;, null, null, this.getTagsForStencil(gn, &#039;multimedia&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.tape_storage;strokeColor=none;&#039;,
+				 68, 38, &#039;&#039;, &#039;Tape Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;tape storage&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.traditional_server;strokeColor=none;&#039;,
+				 41, 56, &#039;&#039;, &#039;Traditional Server&#039;, null, null, this.getTagsForStencil(gn, &#039;traditional server&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.user;strokeColor=none;&#039;,
+				 41, 56, &#039;&#039;, &#039;User&#039;, null, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.users;strokeColor=none;&#039;,
+				 58, 56, &#039;&#039;, &#039;Users&#039;, null, null, this.getTagsForStencil(gn, &#039;users&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;non-service_specific.virtual_private_cloud;strokeColor=none;&#039;,
+				 70, 46, &#039;&#039;, &#039;Virtual Private Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;vpc virtual private cloud&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSInternetOfThingsPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.internet_of_things.&quot;;
+		var gn = &#039;mxgraph.aws.internetOfThings&#039;;
+		var dt = &#039;aws group amazon web service internet of things iot&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Internet of Things&#039;, &#039;AWS / Internet of Things&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;action;strokeColor=none;&#039;,
+				 55, 57, &#039;&#039;, &#039;Action&#039;, null, null, this.getTagsForStencil(gn, &#039;action&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;actuator;strokeColor=none;&#039;,
+				 68, 80, &#039;&#039;, &#039;Actuator&#039;, null, null, this.getTagsForStencil(gn, &#039;actuator&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;aws-iot;strokeColor=none;&#039;,
+				 60, 72, &#039;&#039;, &#039;AWS IOT&#039;, null, null, this.getTagsForStencil(gn, &#039;aws iot&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;bank;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Bank&#039;, null, null, this.getTagsForStencil(gn, &#039;bank&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;bicycle;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Bicycle&#039;, null, null, this.getTagsForStencil(gn, &#039;bicycle&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;camera;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Camera&#039;, null, null, this.getTagsForStencil(gn, &#039;camera&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;car;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Car&#039;, null, null, this.getTagsForStencil(gn, &#039;car&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;cart;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Cart&#039;, null, null, this.getTagsForStencil(gn, &#039;cart&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;certificate;strokeColor=none;&#039;,
+				 56, 77, &#039;&#039;, &#039;Certificate&#039;, null, null, this.getTagsForStencil(gn, &#039;certificate&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;coffee_pot;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Coffee Pot&#039;, null, null, this.getTagsForStencil(gn, &#039;coffee pot&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;desired_state;strokeColor=none;&#039;,
+				 53, 57, &#039;&#039;, &#039;Desired State&#039;, null, null, this.getTagsForStencil(gn, &#039;desired_state&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;door_lock;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Door Lock&#039;, null, null, this.getTagsForStencil(gn, &#039;door lock&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;factory;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Factory&#039;, null, null, this.getTagsForStencil(gn, &#039;factory&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;generic_iot_thing;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Generic IOT Thing&#039;, null, null, this.getTagsForStencil(gn, &#039;generic iot thing&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;hardware_board;strokeColor=none;&#039;,
+				 75, 87, &#039;&#039;, &#039;Hardware Board&#039;, null, null, this.getTagsForStencil(gn, &#039;hardware_board&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;house;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;House&#039;, null, null, this.getTagsForStencil(gn, &#039;house&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;http_protocol;strokeColor=none;&#039;,
+				 56, 59, &#039;&#039;, &#039;HTTP Protocol&#039;, null, null, this.getTagsForStencil(gn, &#039;http protocol&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;http2_protocol;strokeColor=none;&#039;,
+				 56, 59, &#039;&#039;, &#039;HTTP2 Protocol&#039;, null, null, this.getTagsForStencil(gn, &#039;http2 protocol&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;lightbulb;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Lightbulb&#039;, null, null, this.getTagsForStencil(gn, &#039;lightbulb&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;medical_emergency;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Medical Emergency&#039;, null, null, this.getTagsForStencil(gn, &#039;medical_emergency&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;mqtt_protocol;strokeColor=none;&#039;,
+				 56, 59, &#039;&#039;, &#039;MQTT Protocol&#039;, null, null, this.getTagsForStencil(gn, &#039;mqtt protocol&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;police_emergency;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Police Emergency&#039;, null, null, this.getTagsForStencil(gn, &#039;police_emergency&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;policy;strokeColor=none;&#039;,
+				 49, 79, &#039;&#039;, &#039;Policy&#039;, null, null, this.getTagsForStencil(gn, &#039;policy&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;reported_state;strokeColor=none;&#039;,
+				 53, 57, &#039;&#039;, &#039;Reported State&#039;, null, null, this.getTagsForStencil(gn, &#039;reported_state&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;rule;strokeColor=none;&#039;,
+				 44, 87, &#039;&#039;, &#039;Rule&#039;, null, null, this.getTagsForStencil(gn, &#039;rule&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sensor;strokeColor=none;&#039;,
+				 68, 80, &#039;&#039;, &#039;Sensor&#039;, null, null, this.getTagsForStencil(gn, &#039;sensor&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;servo;strokeColor=none;&#039;,
+				 75, 53, &#039;&#039;, &#039;Servo&#039;, null, null, this.getTagsForStencil(gn, &#039;servo&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;shadow;strokeColor=none;&#039;,
+				 75, 80, &#039;&#039;, &#039;Shadow&#039;, null, null, this.getTagsForStencil(gn, &#039;shadow&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;simulator;strokeColor=none;&#039;,
+				 67, 70, &#039;&#039;, &#039;Simulator&#039;, null, null, this.getTagsForStencil(gn, &#039;simulator&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;thermostat;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Thermostat&#039;, null, null, this.getTagsForStencil(gn, &#039;thermostat&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;topic;strokeColor=none;&#039;,
+				 44, 59, &#039;&#039;, &#039;Topic&#039;, null, null, this.getTagsForStencil(gn, &#039;topic&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;travel;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Travel&#039;, null, null, this.getTagsForStencil(gn, &#039;travel&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;utility;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Utility&#039;, null, null, this.getTagsForStencil(gn, &#039;utility&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;windfarm;strokeColor=none;&#039;,
+				 71, 71, &#039;&#039;, &#039;Windfarm&#039;, null, null, this.getTagsForStencil(gn, &#039;windfarm&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSManagementToolsPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.managementTools&#039;;
+		var dt = &#039;aws group amazon web service management tools&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Management Tools&#039;, &#039;AWS / Management Tools&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.cloudformation;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;CloudFormation&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudformation&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.cloudformation_stack;strokeColor=none;&#039;,
+				 64, 49, &#039;&#039;, &#039;CloudFormation Stack&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudformation stack&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.cloudformation_template;strokeColor=none;&#039;,
+				 48, 56, &#039;&#039;, &#039;CloudFormation Template&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudformation template&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.cloudtrail;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;CloudTrail&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudtrail&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.cloudwatch;strokeColor=none;&#039;,
+				 63, 72, &#039;&#039;, &#039;CloudWatch&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudwatch&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.cloudwatch_alarm;strokeColor=none;&#039;,
+				 48, 58, &#039;&#039;, &#039;CloudWatch Alarm&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudwatch alarm&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;administration_and_security.config;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;Config&#039;, null, null, this.getTagsForStencil(gn, &#039;config&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.opsworks;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;OpsWorks&#039;, null, null, this.getTagsForStencil(gn, &#039;opsworks&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.opsworks_apps;strokeColor=none;&#039;,
+				 72, 72, &#039;&#039;, &#039;OpsWorks Apps&#039;, null, null, this.getTagsForStencil(gn, &#039;opsworks apps&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.opsworks_deployments;strokeColor=none;&#039;,
+				 72, 68, &#039;&#039;, &#039;OpsWorks Deployments&#039;, null, null, this.getTagsForStencil(gn, &#039;opsworks deployments&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.opsworks_instances;strokeColor=none;&#039;,
+				 72, 72, &#039;&#039;, &#039;OpsWorks Instances&#039;, null, null, this.getTagsForStencil(gn, &#039;opsworks instances&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.opsworks_layers;strokeColor=none;&#039;,
+				 72, 72, &#039;&#039;, &#039;OpsWorks Layers&#039;, null, null, this.getTagsForStencil(gn, &#039;opsworks layers&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.opsworks_monitoring;strokeColor=none;&#039;,
+				 72, 60, &#039;&#039;, &#039;OpsWorks Monitoring&#039;, null, null, this.getTagsForStencil(gn, &#039;opsworks monitoring&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.opsworks_permissions;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;OpsWorks Permissions&#039;, null, null, this.getTagsForStencil(gn, &#039;opsworks permissions&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.opsworks_resources;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;OpsWorks Resources&#039;, null, null, this.getTagsForStencil(gn, &#039;opsworks resources&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.opsworks_stack;strokeColor=none;&#039;,
+				 60, 70, &#039;&#039;, &#039;OpsWorks Stack&#039;, null, null, this.getTagsForStencil(gn, &#039;opsworks stack&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;management_tools.service_catalog;strokeColor=none;&#039;,
+				 60, 70, &#039;&#039;, &#039;Service Catalog&#039;, null, null, this.getTagsForStencil(gn, &#039;service catalog&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;administration_and_security.trusted_advisor;strokeColor=none;&#039;,
+				 60, 72, &#039;&#039;, &#039;Trusted Advisor&#039;, null, null, this.getTagsForStencil(gn, &#039;trusted advisor&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSMobileServicesPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.mobileServices&#039;;
+		var dt = &#039;aws group amazon web service mobile services&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Mobile Services&#039;, &#039;AWS / Mobile Services&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;mobile_services.aws_mobile_hub;strokeColor=none;&#039;,
+				 83, 86, &#039;&#039;, &#039;AWS Mobile Hub&#039;, null, null, this.getTagsForStencil(gn, &#039;aws mobile hub&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;mobile_services.cognito;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;Cognito&#039;, null, null, this.getTagsForStencil(gn, &#039;cognito&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;mobile_services.device_farm;strokeColor=none;&#039;,
+				 68, 82, &#039;&#039;, &#039;Device Farm&#039;, null, null, this.getTagsForStencil(gn, &#039;device farm&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;mobile_services.mobile_analytics;strokeColor=none;&#039;,
+				 70, 72, &#039;&#039;, &#039;Mobile Analytics&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile analytics&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;mobile_services.sns;strokeColor=none;&#039;,
+				 69, 69, &#039;&#039;, &#039;SNS&#039;, null, null, this.getTagsForStencil(gn, &#039;sns&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;mobile_services.sns_email_notification;strokeColor=none;&#039;,
+				 90, 56, &#039;&#039;, &#039;SNS Email Notification&#039;, null, null, this.getTagsForStencil(gn, &#039;sns email notification&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;mobile_services.sns_http_notification;strokeColor=none;&#039;,
+				 90, 56, &#039;&#039;, &#039;SNS HTTP Notification&#039;, null, null, this.getTagsForStencil(gn, &#039;sns http notification&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;mobile_services.sns_topic;strokeColor=none;&#039;,
+				 90, 56, &#039;&#039;, &#039;SNS Topic&#039;, null, null, this.getTagsForStencil(gn, &#039;sns topic&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSNetworkingPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.networking&#039;;
+		var dt = &#039;aws group amazon web service networking&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Networking&#039;, &#039;AWS / Networking&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.aws_direct_connect;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;Direct Connect&#039;, null, null, this.getTagsForStencil(gn, &#039;direct connect&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.route_53;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;Route 53&#039;, null, null, this.getTagsForStencil(gn, &#039;route 53&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.route_53_hosted_zone;strokeColor=none;&#039;,
+				 58, 56, &#039;&#039;, &#039;Route 53 Hosted Zone&#039;, null, null, this.getTagsForStencil(gn, &#039;route 53 hosted zone&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.route_53_route_table;strokeColor=none;&#039;,
+				 66, 61, &#039;&#039;, &#039;Route 53 Table&#039;, null, null, this.getTagsForStencil(gn, &#039;route 53 table&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.vpc;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;VPC&#039;, null, null, this.getTagsForStencil(gn, &#039;vpc virtual private cloud&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;networking.vpc_customer_gateway;strokeColor=none;&#039;,
+				 61, 64, &#039;&#039;, &#039;VPC Customer Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;vpc virtual private cloud customer gateway&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;networking.vpc_endpoints;strokeColor=none;&#039;,
+				 61, 64, &#039;&#039;, &#039;VPC Endpoints&#039;, null, null, this.getTagsForStencil(gn, &#039;vpc virtual private cloud endpoints&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;networking.vpc_flowlogs;strokeColor=none;&#039;,
+				 61, 64, &#039;&#039;, &#039;VPC Flowlogs&#039;, null, null, this.getTagsForStencil(gn, &#039;vpc virtual private cloud flowlogs&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.vpc_internet_gateway;strokeColor=none;&#039;,
+				 55, 57, &#039;&#039;, &#039;VPC Internet Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;vpc virtual private cloud internet gateway&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.vpc_peering;strokeColor=none;&#039;,
+				 55, 57, &#039;&#039;, &#039;VPC Peering&#039;, null, null, this.getTagsForStencil(gn, &#039;vpc virtual private cloud peering&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;networking.vpc_router;strokeColor=none;&#039;,
+				 61, 64, &#039;&#039;, &#039;VPC Router&#039;, null, null, this.getTagsForStencil(gn, &#039;vpc virtual private cloud router&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.vpc_vpn_connection;strokeColor=none;&#039;,
+				 52, 41, &#039;&#039;, &#039;VPC VPN Connection&#039;, null, null, this.getTagsForStencil(gn, &#039;vpc virtual private cloud vpn connection&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;compute_and_networking.vpc_vpn_gateway;strokeColor=none;&#039;,
+				 55, 57, &#039;&#039;, &#039;VPC VPN Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;vpc virtual private cloud vpn gateway&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;networking.vpcnat_gateway;strokeColor=none;&#039;,
+				 61, 64, &#039;&#039;, &#039;VPCNAT Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;vpc virtual private cloud vpcnat gateway&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSOnDemandWorkforcePalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.on-demand_workforce&#039;;
+		var dt = &#039;aws group amazon web service on demand workforce&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2On-Demand Workforce&#039;, &#039;AWS / On-Demand Workforce&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;on-demand_workforce.mechanical_turk;strokeColor=none;&#039;,
+				 60, 72, &#039;&#039;, &#039;Mechanical Turk&#039;, null, null, this.getTagsForStencil(gn, &#039;mechanical turk&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;on-demand_workforce.mechanical_turk_assignment_task;strokeColor=none;&#039;,
+				 41, 56, &#039;&#039;, &#039;Mechanical Turk Assignment Task&#039;, null, null, this.getTagsForStencil(gn, &#039;mechanical turk assignment task&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;on-demand_workforce.mechanical_turk_human_intelligence_tasks;strokeColor=none;&#039;,
+				 46, 50, &#039;&#039;, &#039;Mechanical Turk Human Intelligence Task (HIT)&#039;, null, null, this.getTagsForStencil(gn, &#039;mechanical turk human intelligence task hit&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;on-demand_workforce.mechanical_turk_requester;strokeColor=none;&#039;,
+				 49, 57, &#039;&#039;, &#039;Mechanical Turk Requester&#039;, null, null, this.getTagsForStencil(gn, &#039;mechanical turk requester&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;on-demand_workforce.mechanical_turk_workers;strokeColor=none;&#039;,
+				 59, 57, &#039;&#039;, &#039;Mechanical Turk Workers&#039;, null, null, this.getTagsForStencil(gn, &#039;mechanical turk workers&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSSDKPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.sdks&#039;;
+		var dt = &#039;aws group amazon web service sdk softvare development kit&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2SDKs&#039;, &#039;AWS / SDKs&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;sdks.android;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;Android&#039;, null, null, this.getTagsForStencil(gn, &#039;android&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.cli;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;CLI&#039;, null, null, this.getTagsForStencil(gn, &#039;cli&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.aws_toolkit_for_eclipse;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;Toolkit for Eclipse&#039;, null, null, this.getTagsForStencil(gn, &#039;toolkit eclipse&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.aws_toolkit_for_visual_studio;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;Toolkit for Visual Studio&#039;, null, null, this.getTagsForStencil(gn, &#039;toolkit visual studio&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.tools_for_windows_powershell;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;Tools for Windows PowerShell&#039;, null, null, this.getTagsForStencil(gn, &#039;tools windows powershell&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.ios;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;iOS&#039;, null, null, this.getTagsForStencil(gn, &#039;ios&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.java;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;Java&#039;, null, null, this.getTagsForStencil(gn, &#039;java&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.javascript;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;JavaScript&#039;, null, null, this.getTagsForStencil(gn, &#039;javascript&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.net;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;Net&#039;, null, null, this.getTagsForStencil(gn, &#039;net&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.nodejs;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;NodeJS&#039;, null, null, this.getTagsForStencil(gn, &#039;nodejs&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.php;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;PHP&#039;, null, null, this.getTagsForStencil(gn, &#039;php&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.python;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;Python&#039;, null, null, this.getTagsForStencil(gn, &#039;python&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.ruby;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;Ruby&#039;, null, null, this.getTagsForStencil(gn, &#039;ruby&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;sdks.xamarin;strokeColor=none;&#039;,
+				 62, 72, &#039;&#039;, &#039;Xamarin&#039;, null, null, this.getTagsForStencil(gn, &#039;xamarin&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSSecurityAndIdentityPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.securityAndIdentity&#039;;
+		var dt = &#039;aws group amazon web service security identity&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Security and Identity&#039;, &#039;AWS / Security and Identity&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;security_and_identity.acm;strokeColor=none;&#039;,
+				 68, 55, &#039;&#039;, &#039;ACM&#039;, null, null, this.getTagsForStencil(gn, &#039;acm&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;security_and_identity.acm_certificate_manager;strokeColor=none;&#039;,
+				 65, 56, &#039;&#039;, &#039;ACM Certificate Manager&#039;, null, null, this.getTagsForStencil(gn, &#039;acm certificate manager&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;security_and_identity.service_catalog;strokeColor=none;&#039;,
+				 68, 82, &#039;&#039;, &#039;Inspector&#039;, null, null, this.getTagsForStencil(gn, &#039;service catalog&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;security_and_identity.cloud_hsm;strokeColor=none;&#039;,
+				 60, 72, &#039;&#039;, &#039;Cloud HSM&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud hsm&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;security_and_identity.directory_service;strokeColor=none;&#039;,
+				 60, 72, &#039;&#039;, &#039;Directory Service&#039;, null, null, this.getTagsForStencil(gn, &#039;directory service&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.iam;strokeColor=none;&#039;,
+				 37, 72, &#039;&#039;, &#039;IAM&#039;, null, null, this.getTagsForStencil(gn, &#039;iam&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.iam_add-on;strokeColor=none;&#039;,
+				 44, 24, &#039;&#039;, &#039;IAM Add-on&#039;, null, null, this.getTagsForStencil(gn, &#039;iam addon add on&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.iam_sts;strokeColor=none;&#039;,
+				 54, 31, &#039;&#039;, &#039;IAM Security Token Service&#039;, null, null, this.getTagsForStencil(gn, &#039;iam sts security token service&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.iam_security_token_service;strokeColor=none;&#039;,
+				 40, 55, &#039;&#039;, &#039;IAM Security Token Service&#039;, null, null, this.getTagsForStencil(gn, &#039;iam sts security token service&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.iam_data_encryption_key;strokeColor=none;&#039;,
+				 40, 53, &#039;&#039;, &#039;IAM Data Encryption Key&#039;, null, null, this.getTagsForStencil(gn, &#039;iam data encryption key&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.iam_encrypted_data;strokeColor=none;&#039;,
+				 38, 49, &#039;&#039;, &#039;IAM Encrypted Data&#039;, null, null, this.getTagsForStencil(gn, &#039;iam encrypted data&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.iam_credentials;strokeColor=none;&#039;,
+				 53, 39, &#039;&#039;, &#039;IAM Long Term Security Credential&#039;, null, null, this.getTagsForStencil(gn, &#039;iam long term security credential&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.iam_mfa_token;strokeColor=none;&#039;,
+				 53, 53, &#039;&#039;, &#039;IAM MFA Token&#039;, null, null, this.getTagsForStencil(gn, &#039;iam mfa token&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.iam_permissions;strokeColor=none;&#039;,
+				 42, 57, &#039;&#039;, &#039;IAM Permissions&#039;, null, null, this.getTagsForStencil(gn, &#039;iam permissions&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.iam_roles;strokeColor=none;&#039;,
+				 84, 72, &#039;&#039;, &#039;IAM Role&#039;, null, null, this.getTagsForStencil(gn, &#039;iam role&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;deployment_and_management.iam_short_term_credentials;strokeColor=none;&#039;,
+				 61, 49, &#039;&#039;, &#039;IAM Temporary Security Credential&#039;, null, null, this.getTagsForStencil(gn, &#039;iam temporary security credential&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;security_and_identity.key_management_service;strokeColor=none;&#039;,
+				 68, 82, &#039;&#039;, &#039;Key Management Service&#039;, null, null, this.getTagsForStencil(gn, &#039;key management service&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;security_and_identity.webapp_firewall;strokeColor=none;&#039;,
+				 68, 82, &#039;&#039;, &#039;WebApp Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;webapp firewall&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSStorageAndContentDeliveryPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws2.&quot;;
+		var gn = &#039;mxgraph.aws.storageAndContentDelivery&#039;;
+		var dt = &#039;aws group amazon web service storage content delivery&#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Storage and Content Delivery&#039;, &#039;AWS / Storage and Content Delivery&#039;, false,
+		[
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.cloudfront;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;CloudFront&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudfront&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.cloudfront_download_distribution;strokeColor=none;&#039;,
+				 55, 57, &#039;&#039;, &#039;CloudFront Download Distribution&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudfront download distribution&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.cloudfront_edge_location;strokeColor=none;&#039;,
+				 55, 57, &#039;&#039;, &#039;CloudFront Edge Location&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudfront edge location&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.cloudfront_streaming_distribution;strokeColor=none;&#039;,
+				 55, 57, &#039;&#039;, &#039;CloudFront Streaming Distribution&#039;, null, null, this.getTagsForStencil(gn, &#039;cloudfront streaming distribution&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.efs;strokeColor=none;&#039;,
+				 60, 72, &#039;&#039;, &#039;EFS&#039;, null, null, this.getTagsForStencil(gn, &#039;efs&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.ebs;strokeColor=none;&#039;,
+				 46, 66, &#039;&#039;, &#039;Elastic Block Store&#039;, null, null, this.getTagsForStencil(gn, &#039;ebs elastic block store&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.glacier;strokeColor=none;&#039;,
+				 59, 71, &#039;&#039;, &#039;Glacier&#039;, null, null, this.getTagsForStencil(gn, &#039;glacier&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.glacier_archive;strokeColor=none;&#039;,
+				 56, 66, &#039;&#039;, &#039;Glacier Archive&#039;, null, null, this.getTagsForStencil(gn, &#039;glacier archive&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.glacier_vault;strokeColor=none;&#039;,
+				 46, 66, &#039;&#039;, &#039;Glacier Vault&#039;, null, null, this.getTagsForStencil(gn, &#039;glacier vault&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.aws_import_export;strokeColor=none;&#039;,
+				 57, 56, &#039;&#039;, &#039;Import Export&#039;, null, null, this.getTagsForStencil(gn, &#039;aws import export&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.snowball;strokeColor=none;&#039;,
+				 68, 82, &#039;&#039;, &#039;Import Export Snowball&#039;, null, null, this.getTagsForStencil(gn, &#039;snowball&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.s3;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;S3&#039;, null, null, this.getTagsForStencil(gn, &#039;s3&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.s3_bucket;strokeColor=none;&#039;,
+				 54, 56, &#039;&#039;, &#039;S3 Bucket&#039;, null, null, this.getTagsForStencil(gn, &#039;s3 bucket&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.s3_bucket_with_objects;strokeColor=none;&#039;,
+				 55, 56, &#039;&#039;, &#039;S3 Bucket with Objects&#039;, null, null, this.getTagsForStencil(gn, &#039;s3 bucket with objects&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.s3_objects;strokeColor=none;&#039;,
+				 37, 40, &#039;&#039;, &#039;S3 Objects&#039;, null, null, this.getTagsForStencil(gn, &#039;s3 objects&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.ebs_snapshot;strokeColor=none;&#039;,
+				 53, 65, &#039;&#039;, &#039;Snapshot&#039;, null, null, this.getTagsForStencil(gn, &#039;snapshot&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.aws_storage_gateway;strokeColor=none;&#039;,
+				 59, 72, &#039;&#039;, &#039;Storage Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;storage gateway&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.storage_gateway_cached_volumn;strokeColor=none;&#039;,
+				 52, 66, &#039;&#039;, &#039;Storage Gateway Cached Volume&#039;, null, null, this.getTagsForStencil(gn, &#039;storage gateway cached volume&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.storage_gateway_non-cached_volumn;strokeColor=none;&#039;,
+				 52, 66, &#039;&#039;, &#039;Storage Gateway Non-Cached Volume&#039;, null, null, this.getTagsForStencil(gn, &#039;storage gateway non cached volume&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.storage_gateway_virtual_tape_library;strokeColor=none;&#039;,
+				 52, 66, &#039;&#039;, &#039;Storage Gateway Virtual Tape Library&#039;, null, null, this.getTagsForStencil(gn, &#039;storage gateway virtual tape library&#039;, dt).join(&#039; &#039;)),
+		 this.createVertexTemplateEntry(s + &#039;storage_and_content_delivery.ebs_volume;strokeColor=none;&#039;,
+				 46, 66, &#039;&#039;, &#039;Volume&#039;, null, null, this.getTagsForStencil(gn, &#039;volume&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addAWSGroupPalette = function()
+	{
+		var sb = this;
+		var s = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &quot;=mxgraph.aws.groups.&quot;;
+		var gn = &#039;mxgraph.aws.groups&#039;;
+		var dt = &#039;aws group amazon web service &#039;;
+		
+		this.addPaletteFunctions(&#039;aws2Groups&#039;, &#039;AWS / Groups&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;auto_scaling_group;fillColor=none;gradientColor=none;&#039;, 
+					200, 200, &#039;&#039;, &#039;Auto Scaling Group&#039;, null, null, this.getTagsForStencil(gn, &#039;auto_scaling_group&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;availability_zone;strokeColor=#f69721;fillColor=none;gradientColor=none;&#039;, 
+					200, 200, &#039;&#039;, &#039;Availability Zone&#039;, null, null, this.getTagsForStencil(gn, &#039;availability_zone&#039;, dt).join(&#039; &#039;)),
+					
+			this.addEntry(dt + &#039;cloud&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 30, 200, 200), s + &#039;rrect;fillColor=none;gradientColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;&#039;, new mxGeometry(10, 0, 70, 40), s + &#039;aws_cloud_icon;strokeColor=none;fillColor=#F69721;gradientColor=none;&#039;);
+				bg2.vertex = true;
+			    
+			   	return sb.createVertexTemplateFromCells([bg1, bg2], 200, 230, &#039;AWS Cloud&#039;);
+			}),
+									
+			this.addEntry(dt + &#039;corporate data center&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 20, 200, 200), s + &#039;rrect;fillColor=none;gradientColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;&#039;, new mxGeometry(20, 0, 30, 40), s + &#039;corporate_data_center_icon;strokeColor=none;fillColor=#6D6F70;gradientColor=none;&#039;);
+				bg2.vertex = true;
+			    
+			   	return sb.createVertexTemplateFromCells([bg1, bg2], 200, 220, &#039;Corporate Data Center&#039;);
+			}),
+													
+			this.addEntry(dt + &#039;ec2 instance content&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 20, 200, 200), s + &#039;rrect;fillColor=none;gradientColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;&#039;, new mxGeometry(20, 0, 40, 40), s + &#039;rrect;strokeColor=none;fillColor=#F69721;gradientColor=none;&#039;);
+				bg2.vertex = true;
+			    
+			   	return sb.createVertexTemplateFromCells([bg1, bg2], 200, 220, &#039;EC2 Instance Contents&#039;);
+			}),
+															
+			this.addEntry(dt + &#039;EC2 Spot Fleet&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 30, 200, 200), s + &#039;rrect;fillColor=none;gradientColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;&#039;, new mxGeometry(20, 0, 43, 40), s + &#039;ec2_spot_instance;strokeColor=none;gradientColor=none;&#039;);
+				bg2.vertex = true;
+			    
+			   	return sb.createVertexTemplateFromCells([bg1, bg2], 200, 230, &#039;EC2 Spot Fleet&#039;);
+			}),
+
+			this.addEntry(dt + &#039;elastic beanstalk container&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 20, 200, 200), s + &#039;rrect;fillColor=none;gradientColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;&#039;, new mxGeometry(20, 0, 40, 40), s + &#039;elastic_beanstalk_container_icon;strokeColor=none;fillColor=#2A6A35;gradientColor=none;&#039;);
+				bg2.vertex = true;
+			    
+			   	return sb.createVertexTemplateFromCells([bg1, bg2], 200, 220, &#039;Elastic Beanstalk Container&#039;);
+			}),
+																	
+			this.createVertexTemplateEntry(s + &#039;region;fillColor=none;gradientColor=none;&#039;, 
+					200, 200, &#039;&#039;, &#039;Region&#039;, null, null, this.getTagsForStencil(gn, &#039;region&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rrect;fillColor=none;gradientColor=none;&#039;, 
+					200, 200, &#039;&#039;, &#039;Security Group&#039;, null, null, this.getTagsForStencil(gn, &#039;security&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rrect;fillColor=#F2F2F2;gradientColor=none;&#039;, 
+					200, 200, &#039;&#039;, &#039;Server Contents&#039;, null, null, this.getTagsForStencil(gn, &#039;server content&#039;, dt).join(&#039; &#039;)),
+
+			this.addEntry(dt + &#039;virtual private cloud&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 30, 200, 200), s + &#039;rrect;fillColor=none;gradientColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;&#039;, new mxGeometry(10, 0, 70, 40), s + &#039;virtual_private_cloud_icon;strokeColor=none;fillColor=#282560;gradientColor=none;&#039;);
+				bg2.vertex = true;
+			    
+			   	return sb.createVertexTemplateFromCells([bg1, bg2], 200, 230, &#039;Virtual Private Cloud&#039;);
+			}),
+										
+			this.addEntry(dt + &#039;virtual private cloud subnet vpc&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 30, 200, 200), s + &#039;rrect;fillColor=none;gradientColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;&#039;, new mxGeometry(20, 0, 40, 40), s + &#039;vpc_subnet_icon;strokeColor=none;fillColor=#282560;gradientColor=none;&#039;);
+				bg2.vertex = true;
+			    
+			   	return sb.createVertexTemplateFromCells([bg1, bg2], 200, 230, &#039;VPC Subnet&#039;);
+			})
+		]);
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

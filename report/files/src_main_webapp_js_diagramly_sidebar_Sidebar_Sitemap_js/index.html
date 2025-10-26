@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Sitemap.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Sitemap.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">62.59</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">136</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">26.99</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">3.27</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds Sitemap shapes
+	Sidebar.prototype.addSitemapPalette = function()
+	{
+		var s = &#039;html=1;whiteSpace=wrap;strokeColor=none;fillColor=#0079D6;labelPosition=center;verticalLabelPosition=middle;verticalAlign=top;align=center;fontSize=12;outlineConnect=0;spacingTop=-6;fontColor=#FFFFFF;sketch=0;shape=mxgraph.sitemap.&#039;;
+
+		// Space savers
+		var sb = this;
+		var gn = &#039;mxgraph.sitemap&#039;;
+		var dt = &#039;&#039;;
+		
+		var scale = 0.2;
+		var w = 600 * scale;
+		var h = 350 * scale;
+		this.setCurrentSearchEntryLibrary(&#039;sitemap&#039;);
+		
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;page;&#039;,
+					w, h, &#039;Page&#039;, &#039;Page&#039;, null, null, this.getTagsForStencil(gn, &#039;page&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;about_us;&#039;,
+					w, h, &#039;About us&#039;, &#039;About us&#039;, null, null, this.getTagsForStencil(gn, &#039;about&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;audio;&#039;,
+					w, h, &#039;Audio&#039;, &#039;Audio&#039;, null, null, this.getTagsForStencil(gn, &#039;audio&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;biography;&#039;,
+					w, h, &#039;Biography&#039;, &#039;Biography&#039;, null, null, this.getTagsForStencil(gn, &#039;biography&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;blog;&#039;,
+					w, h, &#039;Blog&#039;, &#039;Blog&#039;, null, null, this.getTagsForStencil(gn, &#039;blog&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;calendar;&#039;,
+					w, h, &#039;Calendar&#039;, &#039;Calendar&#039;, null, null, this.getTagsForStencil(gn, &#039;calendar&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;chart;&#039;,
+					w, h, &#039;Chart&#039;, &#039;Chart&#039;, null, null, this.getTagsForStencil(gn, &#039;chart&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;chat;&#039;,
+					w, h, &#039;Chat&#039;, &#039;Chat&#039;, null, null, this.getTagsForStencil(gn, &#039;chat&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cloud;&#039;,
+					w, h, &#039;Cloud&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;contact;&#039;,
+					w, h, &#039;Contact&#039;, &#039;Contact&#039;, null, null, this.getTagsForStencil(gn, &#039;contact&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;contact_us;&#039;,
+					w, h, &#039;Contact us&#039;, &#039;Contact us&#039;, null, null, this.getTagsForStencil(gn, &#039;contact&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;document;&#039;,
+					w, h, &#039;Document&#039;, &#039;Document&#039;, null, null, this.getTagsForStencil(gn, &#039;document&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;download;&#039;,
+					w, h, &#039;Download&#039;, &#039;Download&#039;, null, null, this.getTagsForStencil(gn, &#039;download&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;error;&#039;,
+					w, h, &#039;Error&#039;, &#039;Error&#039;, null, null, this.getTagsForStencil(gn, &#039;error&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;faq;&#039;,
+					w, h, &#039;FAQ&#039;, &#039;FAQ&#039;, null, null, this.getTagsForStencil(gn, &#039;faq frequently asked questions&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;form;&#039;,
+					w, h, &#039;Form&#039;, &#039;Form&#039;, null, null, this.getTagsForStencil(gn, &#039;form&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;gallery;&#039;,
+					w, h, &#039;Gallery&#039;, &#039;Gallery&#039;, null, null, this.getTagsForStencil(gn, &#039;gallery&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;game;&#039;,
+					w, h, &#039;Game&#039;, &#039;Game&#039;, null, null, this.getTagsForStencil(gn, &#039;game&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;home;&#039;,
+					w, h, &#039;Home&#039;, &#039;Home&#039;, null, null, this.getTagsForStencil(gn, &#039;home&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;info;&#039;,
+					w, h, &#039;Info&#039;, &#039;Info&#039;, null, null, this.getTagsForStencil(gn, &#039;info&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;jobs;&#039;,
+					w, h, &#039;Jobs&#039;, &#039;Jobs&#039;, null, null, this.getTagsForStencil(gn, &#039;jobs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;log;&#039;,
+					w, h, &#039;Log&#039;, &#039;Log&#039;, null, null, this.getTagsForStencil(gn, &#039;log&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;login;&#039;,
+					w, h, &#039;Login&#039;, &#039;Login&#039;, null, null, this.getTagsForStencil(gn, &#039;login&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;mail;&#039;,
+					w, h, &#039;Mail&#039;, &#039;Mail&#039;, null, null, this.getTagsForStencil(gn, &#039;mail&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;map;&#039;,
+					w, h, &#039;Map&#039;, &#039;Map&#039;, null, null, this.getTagsForStencil(gn, &#039;map&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;news;&#039;,
+					w, h, &#039;News&#039;, &#039;News&#039;, null, null, this.getTagsForStencil(gn, &#039;news&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;payment;&#039;,
+					w, h, &#039;Payment&#039;, &#039;Payment&#039;, null, null, this.getTagsForStencil(gn, &#039;payment&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;photo;&#039;,
+					w, h, &#039;Photo&#039;, &#039;Photo&#039;, null, null, this.getTagsForStencil(gn, &#039;photo&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;portfolio;&#039;,
+					w, h, &#039;Portfolio&#039;, &#039;Portfolio&#039;, null, null, this.getTagsForStencil(gn, &#039;portfolio&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;post;&#039;,
+					w, h, &#039;Post&#039;, &#039;Post&#039;, null, null, this.getTagsForStencil(gn, &#039;post&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;pricing;&#039;,
+					w, h, &#039;Pricing&#039;, &#039;Pricing&#039;, null, null, this.getTagsForStencil(gn, &#039;pricing&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;print;&#039;,
+					w, h, &#039;Print&#039;, &#039;Print&#039;, null, null, this.getTagsForStencil(gn, &#039;print&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;products;&#039;,
+					w, h, &#039;Products&#039;, &#039;Products&#039;, null, null, this.getTagsForStencil(gn, &#039;products&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;profile;&#039;,
+					w, h, &#039;Profile&#039;, &#039;Profile&#039;, null, null, this.getTagsForStencil(gn, &#039;profile&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;references;&#039;,
+					w, h, &#039;References&#039;, &#039;References&#039;, null, null, this.getTagsForStencil(gn, &#039;references&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;script;&#039;,
+					w, h, &#039;Script&#039;, &#039;Script&#039;, null, null, this.getTagsForStencil(gn, &#039;script&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;search;&#039;,
+					w, h, &#039;Search&#039;, &#039;Search&#039;, null, null, this.getTagsForStencil(gn, &#039;search&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;security;&#039;,
+					w, h, &#039;Security&#039;, &#039;Security&#039;, null, null, this.getTagsForStencil(gn, &#039;security&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;services;&#039;,
+					w, h, &#039;Services&#039;, &#039;Services&#039;, null, null, this.getTagsForStencil(gn, &#039;services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;settings;&#039;,
+					w, h, &#039;Settings&#039;, &#039;Settings&#039;, null, null, this.getTagsForStencil(gn, &#039;settings&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;shopping;&#039;,
+					w, h, &#039;Shopping&#039;, &#039;Shopping&#039;, null, null, this.getTagsForStencil(gn, &#039;shopping&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;sitemap;&#039;,
+					w, h, &#039;Sitemap&#039;, &#039;Sitemap&#039;, null, null, this.getTagsForStencil(gn, &#039;sitemap&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;slideshow;&#039;,
+					w, h, &#039;Slideshow&#039;, &#039;Slideshow&#039;, null, null, this.getTagsForStencil(gn, &#039;slideshow&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;sports;&#039;,
+					w, h, &#039;Sports&#039;, &#039;Sports&#039;, null, null, this.getTagsForStencil(gn, &#039;sports&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;success;&#039;,
+					w, h, &#039;Success&#039;, &#039;Success&#039;, null, null, this.getTagsForStencil(gn, &#039;success&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;text;&#039;,
+					w, h, &#039;Text&#039;, &#039;Text&#039;, null, null, this.getTagsForStencil(gn, &#039;text&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;upload;&#039;,
+					w, h, &#039;Upload&#039;, &#039;Upload&#039;, null, null, this.getTagsForStencil(gn, &#039;upload&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;user;&#039;,
+					w, h, &#039;User&#039;, &#039;User&#039;, null, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;video;&#039;,
+					w, h, &#039;Video&#039;, &#039;Video&#039;, null, null, this.getTagsForStencil(gn, &#039;video&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;warning;&#039;,
+					w, h, &#039;Warning&#039;, &#039;Warning&#039;, null, null, this.getTagsForStencil(gn, &#039;warning&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;sitemap&#039;, &#039;Sitemap&#039;, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

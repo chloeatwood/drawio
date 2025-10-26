@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Infographic.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Infographic.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">52.52</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">1691</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">48.71</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">37.62</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addInfographicPalette = function()
+	{
+		var w = 100;
+		var h = 100;
+		var s = &#039;whiteSpace=wrap;html=1;shape=mxgraph.infographic.&#039;;
+		var s2 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;html=1;shape=mxgraph.infographic.&#039;;
+		var s3 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;html=1;shape=&#039;;
+		var s4 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;html=1;shape=mxgraph.basic.&#039;;
+		var gn = &#039;mxgraph.infographic&#039;;
+		var dt = &#039;&#039;;
+		this.setCurrentSearchEntryLibrary(&#039;infographic&#039;);
+		
+		this.addPaletteFunctions(&#039;infographic&#039;, &#039;Infographic&#039;, false,
+		[
+			this.createVertexTemplateEntry(s4 + &#039;pie;fillColor=#10739E;strokeColor=none;startAngle=0.2;endAngle=0.9;&#039;, w, h, &#039;&#039;, &#039;Pie&#039;, null, null, this.getTagsForStencil(gn, &#039;pie&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;arc;strokeColor=#10739E;strokeWidth=6;startAngle=0.3;endAngle=0.1;&#039;, w, h, &#039;&#039;, &#039;Arc&#039;, null, null, this.getTagsForStencil(gn, &#039;arc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s4 + &#039;partConcEllipse;fillColor=#10739E;strokeColor=none;startAngle=0.25;endAngle=0.1;arcWidth=0.5;&#039;, w, h, &#039;&#039;, &#039;Partial Concentric Ellipse&#039;, null, null, this.getTagsForStencil(gn, &#039;partConcEllipse&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;parallelogram;dx=15;fillColor=#10739E;strokeColor=none;&#039;, w, h * 0.7, &#039;&#039;, &#039;Trapezoid&#039;, null, null, this.getTagsForStencil(gn, &#039;partConcEllipse&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=20;notch2=20;fillColor=#10739E;strokeColor=none;align=center;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;&#039;, 
+					w * 2, h * 0.4, &#039;Label&#039;, &#039;Ribbon&#039;, null, null, this.getTagsForStencil(gn, &#039;ribbonRolled&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;html=1;shape=mxgraph.infographic.ribbonRolled;dx=185;dy=15;fillColor=#10739E;strokeColor=none;align=center;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;&#039;, 
+					w * 2, h * 0.7, &#039;Label&#039;, &#039;Ribbon (rolled)&#039;, null, null, this.getTagsForStencil(gn, &#039;ribbonRolled&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;html=1;shape=mxgraph.infographic.ribbonDoubleFolded;dx=25;dy=15;fillColor=#10739E;strokeColor=none;align=center;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;&#039;, 
+					w * 2, h * 0.7, &#039;Label&#039;, &#039;Ribbon (double folded)&#039;, null, null, this.getTagsForStencil(gn, &#039;ribbonDoubleFolded&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;html=1;shape=mxgraph.infographic.ribbonFrontFolded;dx=25;dy=15;notch=15;fillColor=#10739E;strokeColor=none;align=center;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;spacingTop=10;&#039;, 
+					w * 2, h * 0.55, &#039;Label&#039;, &#039;Ribbon (front folded)&#039;, null, null, this.getTagsForStencil(gn, &#039;ribbonFrontFolded&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;html=1;shape=mxgraph.infographic.ribbonBackFolded;dx=25;dy=15;notch=15;fillColor=#10739E;strokeColor=none;align=center;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;spacingTop=10;&#039;, 
+					w * 2, h * 0.55, &#039;Label&#039;, &#039;Ribbon (back folded)&#039;, null, null, this.getTagsForStencil(gn, &#039;ribbonBackFolded&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;html=1;shape=mxgraph.infographic.banner;dx=32;dy=17;notch=15;fillColor=#10739E;strokeColor=none;align=center;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;spacingBottom=15;&#039;, 
+					w * 2.6, h * 0.7, &#039;Label&#039;, &#039;Banner&#039;, null, null, this.getTagsForStencil(gn, &#039;banner&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;html=1;shape=mxgraph.infographic.bannerSingleFold;dx=32;dx2=20;dy=17;notch=15;fillColor=#10739E;strokeColor=none;align=left;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;spacingBottom=15;spacingLeft=25;&#039;, 
+					w * 2.6, h * 0.7, &#039;Label&#039;, &#039;Banner (single fold)&#039;, null, null, this.getTagsForStencil(gn, &#039;bannerSingleFold&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;html=1;shape=mxgraph.infographic.bannerHalfFold;dx=40;dx2=20;notch=15;fillColor=#10739E;strokeColor=none;align=left;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;spacingLeft=25;spacingTop=5;&#039;, 
+					w * 2, h * 2, &#039;Label&#039;, &#039;Banner (half fold)&#039;, null, null, this.getTagsForStencil(gn, &#039;bannerHalfFold&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;html=1;shape=mxgraph.infographic.barCallout;dx=100;dy=30;fillColor=#10739E;strokeColor=none;align=center;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingTop=5;&#039;, 
+					w * 2, h * 0.7, &#039;Label&#039;, &#039;Bar with callout&#039;, null, null, this.getTagsForStencil(gn, &#039;ribbonRolled&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;html=1;shape=mxgraph.infographic.flag;dx=30;dy=20;fillColor=#10739E;strokeColor=none;align=center;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingTop=5;&#039;, 
+					w * 2, h * 0.7, &#039;Label&#039;, &#039;Flag&#039;, null, null, this.getTagsForStencil(gn, &#039;flag&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;shadedTriangle;fillColor=#10739E;strokeColor=none;&#039;, w * 0.8, h, &#039;&#039;, &#039;Triangle&#039;, null, null, this.getTagsForStencil(gn, &#039;shadedTriangle&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;shadedPyramid;fillColor=#10739E;strokeColor=none;&#039;, w * 0.6, h, &#039;&#039;, &#039;Pyramid&#039;, null, null, this.getTagsForStencil(gn, &#039;shadedTriangle&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;pyramidStep;fillColor=#10739E;strokeColor=none;&#039;, w * 0.6, h, &#039;&#039;, &#039;Pyramid step&#039;, null, null, this.getTagsForStencil(gn, &#039;pyramidStep&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;cylinder;fillColor=#10739E;strokeColor=none;&#039;, w * 0.6, h, &#039;&#039;, &#039;Cylinder&#039;, null, null, this.getTagsForStencil(gn, &#039;cylinder&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;shadedCube;isoAngle=15;fillColor=#10739E;strokeColor=none;&#039;, w, h, &#039;&#039;, &#039;Cube&#039;, null, null, this.getTagsForStencil(gn, &#039;shaded cube&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.partConcEllipse;fillColor=#10739E;strokeColor=none;startAngle=0;endAngle=0.75;arcWidth=0.4;fontSize=20;fontColor=#10739E;align=center;fontStyle=1;&#039;, 
+					w, h, &#039;75%&#039;, &#039;Partial Concentric Ellipse&#039;, null, null, this.getTagsForStencil(gn, &#039;partConcEllipse&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;verticalLabelPosition=middle;verticalAlign=bottom;html=1;shape=mxgraph.infographic.circularDial;dy=15;fillColor=#10739E;strokeColor=none;labelPosition=center;align=center;fontStyle=1;fontSize=15;spacingBottom=5;whiteSpace=wrap;&#039;, 
+					w * 0.8, h * 1.1, &#039;Label&#039;, &#039;Circular Dial&#039;, null, null, this.getTagsForStencil(gn, &#039;circularDial&#039;, dt).join(&#039; &#039;)),
+
+			this.addEntry(dt + &#039;chevron list&#039;, function()
+			{
+			   	var button1 = new mxCell(&#039;LABEL&#039;, new mxGeometry(0, 0, 200, 30), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#10739E;strokeColor=none;fontSize=17;fontStyle=1;align=center;&#039;);
+			   	button1.vertex = true;
+			   	var button2 = new mxCell(&#039;&amp;nbsp;- Lorem ipsum dolor sit amet&lt;br&gt;&#039; +
+			   			&#039;&amp;nbsp;- consectetur adipisicing elit&lt;br&gt;&#039; +
+			   			&#039;&amp;nbsp;- sed do eiusmod tempor&lt;br&gt;&#039; +
+			   			&#039;&amp;nbsp;- incididunt ut labore et dolore&lt;br&gt;&#039; +
+			   			&#039;&amp;nbsp;- magna aliqua.&#039;, 
+			   			new mxGeometry(0, 40, 190, 120), &#039;shape=rect;fillColor=#B1DDF0;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;&#039;);
+			   	button2.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([button1, button2], 200, 160, &#039;Chevron list&#039;);
+			}),				
+				
+			this.addEntry(dt + &#039;roadmap vertical&#039;, function()
+		    {
+		    	var chevron1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 70, 80), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;direction=south;fillColor=#10739E;strokeColor=none;rounded=0;&#039;);
+		    	chevron1.vertex = true;
+
+			   	var label1 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#10739E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(100, 0, 200, 70), &#039;rounded=1;strokeColor=none;fillColor=#DDDDDD;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label1.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([chevron1, label1], 300, 70, &#039;Roadmap (vertical)&#039;);
+			}),				
+				
+			this.addEntry(dt + &#039;numbered entry&#039;, function()
+			{
+			   	var rect1 = new mxCell(&#039;Label&#039;, new mxGeometry(30, 10, 170, 40), &#039;shape=rect;rounded=1;whiteSpace=wrap;html=1;shadow=0;strokeColor=none;fillColor=#B1DDF0;arcSize=30;fontSize=14;spacingLeft=42;fontStyle=1;fontColor=#FFFFFF;align=left;&#039;);
+			   	rect1.vertex = true;
+			   	var ellipse1 = new mxCell(&#039;1&#039;, new mxGeometry(0, 0, 60, 60), &#039;shape=ellipse;perimeter=ellipsePerimeter;fontSize=22;fontStyle=1;shadow=0;strokeColor=#ffffff;fillColor=#10739E;strokeWidth=4;fontColor=#ffffff;align=center;whiteSpace=wrap;html=1;&#039;);
+			   	ellipse1.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([rect1, ellipse1], 200, 60, &#039;Numbered Entry&#039;);
+			}),				
+				
+			this.createVertexTemplateEntry(mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=middle;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;html=1;shape=mxgraph.infographic.numberedEntryVert;dy=25;fillColor=#10739E;strokeColor=none;fontSize=17;fontColor=#FFFFFF;align=center;labelPosition=center;spacingTop=32;fontStyle=1;whiteSpace=wrap;&#039;, w * 0.8, h * 1.6, &#039;Label&#039;, &#039;Numbered Entry (vertical)&#039;, null, null, this.getTagsForStencil(gn, &#039;numberedEntryVert&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.bendingArch;startAngle=0.75;endAngle=0.25;arcWidth=0.25;fillColor=#10739E;strokeColor=none;fontSize=19;fontColor=#FFFFFF;labelPosition=center;align=center;fontStyle=1;whiteSpace=wrap;&#039;, w, h, &#039;50%&#039;, &#039;Bending Arch&#039;, null, null, this.getTagsForStencil(gn, &#039;bendingArch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.circularCallout;dy=15;fillColor=#10739E;strokeColor=none;labelPosition=center;align=center;fontColor=#10739E;fontStyle=1;fontSize=24;whiteSpace=wrap;&#039;, 
+					w, h, &#039;50%&#039;, &#039;Circular Callout&#039;, null, null, this.getTagsForStencil(gn, &#039;circularCallout&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(
+					&#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.circularCallout2;dy=15;strokeColor=#10739E;labelPosition=center;align=center;fontColor=#10739E;fontStyle=1;fontSize=24;&#039;, 
+					w * 0.6, h * 1.4, &#039;&#039;, &#039;Circular Callout&#039;, null, null, this.getTagsForStencil(gn, &#039;circularCallout2&#039;, dt).join(&#039; &#039;)),
+
+			this.addEntry(dt + &#039;circular dial&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.donut;dx=10;strokeColor=none;fillColor=#10739E;fontSize=10;align=center;fillOpacity=20;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;65%&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.basic.partConcEllipse;startAngle=0;endAngle=0.65;arcWidth=0.2;strokeColor=none;fillColor=#10739E;fontSize=22;fontColor=#10739E;align=center;fontStyle=1;whiteSpace=wrap;&#039;);
+			   	part2.vertex = true;
+			   	part1.insert(part2);
+			   	return sb.createVertexTemplateFromCells([part1], part1.geometry.width, part1.geometry.height, &#039;Circular Dial&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;angled entry&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;1&#039;, new mxGeometry(0, 0, 50, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;fillColor=#10739E;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(45, 0, 95, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;;html=1;fillColor=#B1DDF0;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;whiteSpace=wrap;&#039;);
+			   	part2.vertex = true;
+			   	return sb.createVertexTemplateFromCells([part1, part2], 140, 30, &#039;Angled Entry&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;chevron list&#039;, function()
+			{
+				
+				var str1 = &#039;&amp;nbsp;- Lorem ipsum dolor sit amet&lt;br&gt;&#039; +
+	   			&#039;&amp;nbsp;- consectetur adipisicing elit&lt;br&gt;&#039; +
+	   			&#039;&amp;nbsp;- sed do eiusmod tempor&lt;br&gt;&#039; +
+	   			&#039;&amp;nbsp;- incididunt ut labore et dolore&lt;br&gt;&#039; +
+	   			&#039;&amp;nbsp;- magna aliqua.&#039;;
+				
+			   	var chrevron1 = new mxCell(&#039;LABEL&#039;, new mxGeometry(0, 0, 200, 30), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#10739E;strokeColor=none;fontSize=17;fontColor=#FFFFFF;fontStyle=1;align=center;rounded=0;&#039;);
+			   	chrevron1.vertex = true;
+			   	var process1 = new mxCell(str1, new mxGeometry(0, 40, 190, 120), 
+			   			&#039;shape=rect;fillColor=#B1DDF0;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process1.vertex = true;
+			   	var process2 = new mxCell(str1, 
+			   			new mxGeometry(0, 170, 190, 120), &#039;shape=rect;fillColor=#B1DDF0;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process2.vertex = true;
+			   	var process3 = new mxCell(str1, 
+			   			new mxGeometry(0, 300, 190, 120), &#039;shape=rect;fillColor=#B1DDF0;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process3.vertex = true;
+			   	var chrevron2 = new mxCell(&#039;LABEL&#039;, new mxGeometry(200, 0, 200, 30), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#F2931E;strokeColor=none;fontSize=17;fontColor=#FFFFFF;fontStyle=1;align=center;rounded=0;&#039;);
+			   	chrevron2.vertex = true;
+			   	var process4 = new mxCell(str1, 
+			   			new mxGeometry(200, 40, 190, 120), &#039;shape=rect;fillColor=#FCE7CD;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process4.vertex = true;
+			   	var process5 = new mxCell(str1, 
+			   			new mxGeometry(200, 170, 190, 120), &#039;shape=rect;fillColor=#FCE7CD;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process5.vertex = true;
+			   	var process6 = new mxCell(str1, 
+			   			new mxGeometry(200, 300, 190, 120), &#039;shape=rect;fillColor=#FCE7CD;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process6.vertex = true;
+			   	var chrevron3 = new mxCell(&#039;LABEL&#039;, new mxGeometry(400, 0, 200, 30), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#AE4132;strokeColor=none;fontSize=17;fontColor=#FFFFFF;fontStyle=1;align=center;rounded=0;&#039;);
+			   	chrevron3.vertex = true;
+			   	var process7 = new mxCell(str1, 
+			   			new mxGeometry(400, 40, 190, 120), &#039;shape=rect;fillColor=#FAD9D5;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process7.vertex = true;
+			   	var process8 = new mxCell(str1, 
+			   			new mxGeometry(400, 170, 190, 120), &#039;shape=rect;fillColor=#FAD9D5;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process8.vertex = true;
+			   	var process9 = new mxCell(str1, 
+			   			new mxGeometry(400, 300, 190, 120), &#039;shape=rect;fillColor=#FAD9D5;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process9.vertex = true;
+			   	var chrevron4 = new mxCell(&#039;LABEL&#039;, new mxGeometry(600, 0, 200, 30), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#23445D;strokeColor=none;fontSize=17;fontColor=#FFFFFF;fontStyle=1;align=center;rounded=0;&#039;);
+			   	chrevron4.vertex = true;
+			   	var process10 = new mxCell(str1, 
+			   			new mxGeometry(600, 40, 190, 120), &#039;shape=rect;fillColor=#BAC8D3;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process10.vertex = true;
+			   	var process11 = new mxCell(str1, 
+			   			new mxGeometry(600, 170, 190, 120), &#039;shape=rect;fillColor=#BAC8D3;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process11.vertex = true;
+			   	var process12 = new mxCell(str1, 
+			   			new mxGeometry(600, 300, 190, 120), &#039;shape=rect;fillColor=#BAC8D3;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process12.vertex = true;
+			   	var chrevron5 = new mxCell(&#039;LABEL&#039;, new mxGeometry(800, 0, 200, 30), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#12AAB5;strokeColor=none;fontSize=17;fontColor=#FFFFFF;fontStyle=1;align=center;rounded=0;&#039;);
+			   	chrevron5.vertex = true;
+			   	var process13 = new mxCell(str1, 
+			   			new mxGeometry(800, 40, 190, 120), &#039;shape=rect;fillColor=#B0E3E6;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process13.vertex = true;
+			   	var process14 = new mxCell(str1, 
+			   			new mxGeometry(800, 170, 190, 120), &#039;shape=rect;fillColor=#B0E3E6;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process14.vertex = true;
+			   	var process15 = new mxCell(str1, 
+			   			new mxGeometry(800, 300, 190, 120), &#039;shape=rect;fillColor=#B0E3E6;strokeColor=none;fontSize=12;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacing=5;rounded=0;&#039;);
+			   	process15.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([chrevron1, chrevron2, chrevron3, chrevron4, chrevron5, process1, process2, process3, process4, process5, process6, process7, process8, process9, process10, process11, process12, process13, process14, process15], 1000, 420, &#039;Chevron list&#039;);
+			}),				
+				
+			this.addEntry(dt + &#039;roadmap vertical&#039;, function()
+		    {
+		    	var chevron1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 70, 80), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;direction=south;fillColor=#10739E;strokeColor=none;rounded=0;&#039;);
+		    	chevron1.vertex = true;
+
+			   	var label1 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#10739E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(100, 0, 200, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label1.vertex = true;
+
+		    	var chevron2 = new mxCell(&#039;&#039;, new mxGeometry(0, 80, 70, 80), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;direction=south;fillColor=#F2931E;strokeColor=none;rounded=0;&#039;);
+		    	chevron2.vertex = true;
+		    	
+			   	var label2 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#F2931E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(100, 80, 200, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label2.vertex = true;
+
+		    	var chevron3 = new mxCell(&#039;&#039;, new mxGeometry(0, 160, 70, 80), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;direction=south;fillColor=#AE4132;strokeColor=none;rounded=0;&#039;);
+		    	chevron3.vertex = true;
+		    	
+			   	var label3 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#AE4132&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(100, 160, 200, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label3.vertex = true;
+
+		    	var chevron4 = new mxCell(&#039;&#039;, new mxGeometry(0, 240, 70, 80), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;direction=south;fillColor=#23445D;strokeColor=none;rounded=0;&#039;);
+		    	chevron4.vertex = true;
+		    	
+			   	var label4 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#23445D&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(100, 240, 200, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label4.vertex = true;
+
+		    	var chevron5 = new mxCell(&#039;&#039;, new mxGeometry(0, 320, 70, 80), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;direction=south;fillColor=#12AAB5;strokeColor=none;rounded=0;&#039;);
+		    	chevron5.vertex = true;
+		    	
+			   	var label5 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#12AAB5&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(100, 320, 200, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label5.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([chevron1, chevron2, chevron3, chevron4, chevron5, label1, label2, label3, label4, label5], 300, 400, &#039;Roadmap (vertical)&#039;);
+			}),				
+				
+			this.addEntry(dt + &#039;numbered list&#039;, function()
+			{
+			   	var rect1 = new mxCell(&#039;Label&#039;, new mxGeometry(30, 10, 220, 40), &#039;shape=rect;rounded=1;whiteSpace=wrap;html=1;shadow=0;strokeColor=none;fillColor=#64BBE2;arcSize=30;fontSize=14;spacingLeft=42;fontStyle=1;fontColor=#FFFFFF;align=left;&#039;);
+			   	rect1.vertex = true;
+			   	var ellipse1 = new mxCell(&#039;1&#039;, new mxGeometry(0, 0, 60, 60), &#039;shape=ellipse;perimeter=ellipsePerimeter;fontSize=22;fontStyle=1;shadow=0;strokeColor=#ffffff;fillColor=#10739E;strokeWidth=4;fontColor=#ffffff;align=center;whiteSpace=wrap;html=1;&#039;);
+			   	ellipse1.vertex = true;
+
+			   	var rect2 = new mxCell(&#039;Label&#039;, new mxGeometry(30, 75, 220, 40), &#039;shape=rect;rounded=1;whiteSpace=wrap;html=1;shadow=0;strokeColor=none;fillColor=#F8C382;arcSize=30;fontSize=14;spacingLeft=42;fontStyle=1;fontColor=#FFFFFF;align=left;&#039;);
+			   	rect2.vertex = true;
+			   	var ellipse2 = new mxCell(&#039;2&#039;, new mxGeometry(0, 65, 60, 60), &#039;shape=ellipse;perimeter=ellipsePerimeter;fontSize=22;fontStyle=1;shadow=0;strokeColor=#ffffff;fillColor=#F2931E;strokeWidth=4;fontColor=#ffffff;align=center;whiteSpace=wrap;html=1;&#039;);
+			   	ellipse2.vertex = true;
+
+			   	var rect3 = new mxCell(&#039;Label&#039;, new mxGeometry(30, 140, 220, 40), &#039;shape=rect;rounded=1;whiteSpace=wrap;html=1;shadow=0;strokeColor=none;fillColor=#F08E81;arcSize=30;fontSize=14;spacingLeft=42;fontStyle=1;fontColor=#FFFFFF;align=left;&#039;);
+			   	rect3.vertex = true;
+			   	var ellipse3 = new mxCell(&#039;3&#039;, new mxGeometry(0, 130, 60, 60), &#039;shape=ellipse;perimeter=ellipsePerimeter;fontSize=22;fontStyle=1;shadow=0;strokeColor=#ffffff;fillColor=#AE4132;strokeWidth=4;fontColor=#ffffff;align=center;whiteSpace=wrap;html=1;&#039;);
+			   	ellipse3.vertex = true;
+
+			   	var rect4 = new mxCell(&#039;Label&#039;, new mxGeometry(30, 205, 220, 40), &#039;shape=rect;rounded=1;whiteSpace=wrap;html=1;shadow=0;strokeColor=none;fillColor=#5D7F99;arcSize=30;fontSize=14;spacingLeft=42;fontStyle=1;fontColor=#FFFFFF;align=left;&#039;);
+			   	rect4.vertex = true;
+			   	var ellipse4 = new mxCell(&#039;4&#039;, new mxGeometry(0, 195, 60, 60), &#039;shape=ellipse;perimeter=ellipsePerimeter;fontSize=22;fontStyle=1;shadow=0;strokeColor=#ffffff;fillColor=#23445D;strokeWidth=4;fontColor=#ffffff;align=center;whiteSpace=wrap;html=1;&#039;);
+			   	ellipse4.vertex = true;
+
+			   	var rect5 = new mxCell(&#039;Label&#039;, new mxGeometry(30, 270, 220, 40), &#039;shape=rect;rounded=1;whiteSpace=wrap;html=1;shadow=0;strokeColor=none;fillColor=#61C6CE;arcSize=30;fontSize=14;spacingLeft=42;fontStyle=1;fontColor=#FFFFFF;align=left;&#039;);
+			   	rect5.vertex = true;
+			   	var ellipse5 = new mxCell(&#039;5&#039;, new mxGeometry(0, 260, 60, 60), &#039;shape=ellipse;perimeter=ellipsePerimeter;fontSize=22;fontStyle=1;shadow=0;strokeColor=#ffffff;fillColor=#12AAB5;strokeWidth=4;fontColor=#ffffff;align=center;whiteSpace=wrap;html=1;&#039;);
+			   	ellipse5.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([rect1, ellipse1, rect2, ellipse2, rect3, ellipse3, rect4, ellipse4, rect5, ellipse5], 200, 320, &#039;Numbered List&#039;);
+			}),				
+						
+			this.addEntry(dt + &#039;list&#039;, function()
+			{
+				
+				var st1 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=middle;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;html=1;shape=mxgraph.infographic.numberedEntryVert;dy=25;strokeColor=none;fontSize=17;fontColor=#FFFFFF;align=center;labelPosition=center;spacingTop=32;fontStyle=1;whiteSpace=wrap;fillColor=#&#039; 
+
+				var item1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 80, 160), st1 + &#039;10739E;&#039;);
+			   	item1.vertex = true;
+				var item2 = new mxCell(&#039;Label&#039;, new mxGeometry(85, 0, 80, 160), st1 + &#039;F2931E;&#039;);
+			   	item2.vertex = true;
+				var item3 = new mxCell(&#039;Label&#039;, new mxGeometry(170, 0, 80, 160), st1 + &#039;AE4132;&#039;);
+			   	item3.vertex = true;
+				var item4 = new mxCell(&#039;Label&#039;, new mxGeometry(255, 0, 80, 160), st1 + &#039;23445D;&#039;);
+			   	item4.vertex = true;
+				var item5 = new mxCell(&#039;Label&#039;, new mxGeometry(340, 0, 80, 160), st1 + &#039;12AAB5;&#039;);
+			   	item5.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([item1, item2, item3, item4, item5], 420, 160, &#039;List&#039;);
+			}),				
+						
+			this.addEntry(dt + &#039;rodmap horizontal&#039;, function()
+			{
+			   	var arch1 = new mxCell(&#039;&#039;, new mxGeometry(0, 90, 120, 120), s4 + &#039;partConcEllipse;startAngle=0.25;endAngle=0.75;arcWidth=0.25;fillColor=#10739E;strokeColor=none;&#039;);
+			   	arch1.vertex = true;
+			   	var arch2 = new mxCell(&#039;&#039;, new mxGeometry(105, 90, 120, 120), s4 + &#039;partConcEllipse;startAngle=0.75;endAngle=0.25;arcWidth=0.25;fillColor=#F2931E;strokeColor=none;&#039;);
+			   	arch2.vertex = true;
+			   	var arch3 = new mxCell(&#039;&#039;, new mxGeometry(210, 90, 120, 120), s4 + &#039;partConcEllipse;startAngle=0.25;endAngle=0.75;arcWidth=0.25;fillColor=#AE4132;strokeColor=none;&#039;);
+			   	arch3.vertex = true;
+			   	var arch4 = new mxCell(&#039;&#039;, new mxGeometry(315, 90, 120, 120), s4 + &#039;partConcEllipse;startAngle=0.75;endAngle=0.25;arcWidth=0.25;fillColor=#23445D;strokeColor=none;&#039;);
+			   	arch4.vertex = true;
+			   	var arch5 = new mxCell(&#039;&#039;, new mxGeometry(420, 90, 120, 120), s4 + &#039;partConcEllipse;startAngle=0.25;endAngle=0.75;arcWidth=0.25;fillColor=#15AA96;strokeColor=none;&#039;);
+			   	arch5.vertex = true;
+
+			   	var circle1 = new mxCell(&#039;1&#039;, new mxGeometry(35, 125, 50, 50), &#039;shape=ellipse;strokeWidth=6;strokeColor=#10739E;fontSize=15;html=1;whiteSpace=wrap;fontStyle=1;fontColor=#10739E;&#039;);
+			   	circle1.vertex = true;
+			   	var circle2 = new mxCell(&#039;2&#039;, new mxGeometry(140, 125, 50, 50), &#039;shape=ellipse;strokeWidth=6;strokeColor=#F2931E;fontSize=15;html=1;whiteSpace=wrap;fontStyle=1;fontColor=#F2931E;&#039;);
+			   	circle2.vertex = true;
+			   	var circle3 = new mxCell(&#039;3&#039;, new mxGeometry(245, 125, 50, 50), &#039;shape=ellipse;strokeWidth=6;strokeColor=#AE4132;fontSize=15;html=1;whiteSpace=wrap;fontStyle=1;fontColor=#AE4132;&#039;);
+			   	circle3.vertex = true;
+			   	var circle4 = new mxCell(&#039;4&#039;, new mxGeometry(350, 125, 50, 50), &#039;shape=ellipse;strokeWidth=6;strokeColor=#23445D;fontSize=15;html=1;whiteSpace=wrap;fontStyle=1;fontColor=#23445D;&#039;);
+			   	circle4.vertex = true;
+			   	var circle5 = new mxCell(&#039;5&#039;, new mxGeometry(455, 125, 50, 50), &#039;shape=ellipse;strokeWidth=6;strokeColor=#12AAB5;fontSize=15;html=1;whiteSpace=wrap;fontStyle=1;fontColor=#12AAB5;&#039;);
+			   	circle5.vertex = true;
+
+			   	var label1 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#10739E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(0, 220, 120, 80), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label1.vertex = true;
+			   	var label2 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#F2931E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(105, 0, 120, 80), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label2.vertex = true;
+			   	var label3 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#AE4132&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(210, 220, 120, 80), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label3.vertex = true;
+			   	var label4 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#23445D&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(315, 0, 120, 80), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label4.vertex = true;
+			   	var label5 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#12AAB5&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(420, 220, 120, 80), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label5.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([arch1, arch2, arch3, arch4, arch5, circle1, circle2, circle3, circle4, circle5, label1, label2, label3, label4, label5], 540, 300, &#039;Roadmap (horizontal)&#039;);
+			}),				
+				
+			this.addEntry(dt + &#039;roadmap diagonal&#039;, function()
+			{
+			   	var arch1 = new mxCell(&#039;&#039;, new mxGeometry(190, 0, 120, 120), s4 + &#039;partConcEllipse;startAngle=0.75;endAngle=0.5;arcWidth=0.25;fillColor=#10739E;strokeColor=none;shadow=0;&#039;);
+			   	arch1.vertex = true;
+			   	var arch2 = new mxCell(&#039;&#039;, new mxGeometry(190, 105, 120, 120), s4 + &#039;partConcEllipse;startAngle=0.25;endAngle=0;arcWidth=0.25;fillColor=#F2931E;strokeColor=none;shadow=0;&#039;);
+			   	arch2.vertex = true;
+			   	var arch3 = new mxCell(&#039;&#039;, new mxGeometry(295, 105, 120, 120), s4 + &#039;partConcEllipse;startAngle=0.75;endAngle=0.5;arcWidth=0.25;fillColor=#AE4132;strokeColor=none;shadow=0;&#039;);
+			   	arch3.vertex = true;
+			   	var arch4 = new mxCell(&#039;&#039;, new mxGeometry(295, 210, 120, 120), s4 + &#039;partConcEllipse;startAngle=0.25;endAngle=0;arcWidth=0.25;fillColor=#23445D;strokeColor=none;shadow=0;&#039;);
+			   	arch4.vertex = true;
+			   	var arch5 = new mxCell(&#039;&#039;, new mxGeometry(400, 210, 120, 120), s4 + &#039;partConcEllipse;startAngle=0.75;endAngle=0.5;arcWidth=0.25;fillColor=#12AAB5;strokeColor=none;shadow=0;&#039;);
+			   	arch5.vertex = true;
+
+			   	var circle1 = new mxCell(&#039;1&#039;, new mxGeometry(225, 35, 50, 50), &#039;shape=ellipse;strokeWidth=6;strokeColor=#10739E;fontSize=15;html=1;whiteSpace=wrap;fontStyle=1;fontColor=#10739E;shadow=1;&#039;);
+			   	circle1.vertex = true;
+			   	var circle2 = new mxCell(&#039;2&#039;, new mxGeometry(225, 140, 50, 50), &#039;shape=ellipse;strokeWidth=6;strokeColor=#F2931E;fontSize=15;html=1;whiteSpace=wrap;fontStyle=1;fontColor=#F2931E;shadow=1;&#039;);
+			   	circle2.vertex = true;
+			   	var circle3 = new mxCell(&#039;3&#039;, new mxGeometry(330, 140, 50, 50), &#039;shape=ellipse;strokeWidth=6;strokeColor=#AE4132;fontSize=15;html=1;whiteSpace=wrap;fontStyle=1;fontColor=#AE4132;shadow=1;&#039;);
+			   	circle3.vertex = true;
+			   	var circle4 = new mxCell(&#039;4&#039;, new mxGeometry(330, 245, 50, 50), &#039;shape=ellipse;strokeWidth=6;strokeColor=#23445D;fontSize=15;html=1;whiteSpace=wrap;fontStyle=1;fontColor=#23445D;shadow=1;&#039;);
+			   	circle4.vertex = true;
+			   	var circle5 = new mxCell(&#039;5&#039;, new mxGeometry(435, 245, 50, 50), &#039;shape=ellipse;strokeWidth=6;strokeColor=#12AAB5;fontSize=15;html=1;whiteSpace=wrap;fontStyle=1;fontColor=#12AAB5;shadow=1;&#039;);
+			   	circle5.vertex = true;
+
+			   	var label1 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#10739E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(320, 20, 180, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;spacing=3;shadow=0;&#039;);
+			   	label1.vertex = true;
+			   	var label2 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#F2931E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(0, 130, 180, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;spacing=3;shadow=0;&#039;);
+			   	label2.vertex = true;
+			   	var label3 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#AE4132&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(425, 130, 180, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;spacing=3;shadow=0;&#039;);
+			   	label3.vertex = true;
+			   	var label4 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#23445D&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(105, 235, 180, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;spacing=3;shadow=0;&#039;);
+			   	label4.vertex = true;
+			   	var label5 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#12AAB5&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(530, 235, 180, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;spacing=3;shadow=0;&#039;);
+			   	label5.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([arch1, arch2, arch3, arch4, arch5, circle1, circle2, circle3, circle4, circle5, label1, label2, label3, label4, label5], 710, 330, &#039;Roadmap (diagonal)&#039;);
+			}),				
+				
+			this.addEntry(dt + &#039;arrow list&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;1&#039;, new mxGeometry(0, 0, 40, 40), &#039;html=1;whiteSpace=wrap;fillColor=#10739E;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;rounded=0;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(45, 0, 95, 40), &#039;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=10;notch=0;html=1;whiteSpace=wrap;fillColor=#64BBE2;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;2&#039;, new mxGeometry(0, 45, 40, 40), &#039;html=1;whiteSpace=wrap;fillColor=#F2931E;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;rounded=0;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(45, 45, 115, 40), &#039;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=10;notch=0;html=1;whiteSpace=wrap;fillColor=#F8C382;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;3&#039;, new mxGeometry(0, 90, 40, 40), &#039;html=1;whiteSpace=wrap;fillColor=#AE4132;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;rounded=0;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;Label&#039;, new mxGeometry(45, 90, 135, 40), &#039;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=10;notch=0;html=1;whiteSpace=wrap;fillColor=#F08E81;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part6.vertex = true;
+			   	var part7 = new mxCell(&#039;4&#039;, new mxGeometry(0, 135, 40, 40), &#039;html=1;whiteSpace=wrap;fillColor=#23445D;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;rounded=0;&#039;);
+			   	part7.vertex = true;
+			   	var part8 = new mxCell(&#039;Label&#039;, new mxGeometry(45,135, 155, 40), &#039;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=10;notch=0;html=1;whiteSpace=wrap;fillColor=#5D7F99;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part8.vertex = true;
+			   	var part9 = new mxCell(&#039;5&#039;, new mxGeometry(0, 180, 40, 40), &#039;html=1;whiteSpace=wrap;fillColor=#12AAB5;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;rounded=0;&#039;);
+			   	part9.vertex = true;
+			   	var part10 = new mxCell(&#039;Label&#039;, new mxGeometry(45, 180, 175, 40), &#039;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=10;notch=0;html=1;whiteSpace=wrap;fillColor=#61C6CE;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part10.vertex = true;
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, part6, part7, part8, part9, part10], 220, 220, &#039;Arrow List&#039;);
+			}),				
+				
+			this.addEntry(dt + &#039;angled list&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;1&#039;, new mxGeometry(0, 0, 50, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#10739E;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(45, 0, 95, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#64BBE2;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;2&#039;, new mxGeometry(0, 35, 50, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#F2931E;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(45, 35, 115, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#F8C382;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;3&#039;, new mxGeometry(0, 70, 50, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#AE4132;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;Label&#039;, new mxGeometry(45, 70, 135, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#F08E81;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part6.vertex = true;
+			   	var part7 = new mxCell(&#039;4&#039;, new mxGeometry(0, 105, 50, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#23445D;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;&#039;);
+			   	part7.vertex = true;
+			   	var part8 = new mxCell(&#039;Label&#039;, new mxGeometry(45, 105, 155, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#5D7F99;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part8.vertex = true;
+			   	var part9 = new mxCell(&#039;5&#039;, new mxGeometry(0, 140, 50, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#12AAB5;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;&#039;);
+			   	part9.vertex = true;
+			   	var part10 = new mxCell(&#039;Label&#039;, new mxGeometry(45, 140, 175, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#61C6CE;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part10.vertex = true;
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, part6, part7, part8, part9, part10], 220, 170, &#039;Angled List&#039;);
+			}),				
+				
+			this.addEntry(dt + &#039;angled list&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;1&#039;, new mxGeometry(200, 0, 50, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#10739E;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(245, 0, 145, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#64BBE2;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;2&#039;, new mxGeometry(150, 35, 50, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#F2931E;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(195, 35, 145, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#F8C382;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;3&#039;, new mxGeometry(100, 70, 50, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#AE4132;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;Label&#039;, new mxGeometry(145, 70, 145, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#F08E81;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part6.vertex = true;
+			   	var part7 = new mxCell(&#039;4&#039;, new mxGeometry(50, 105, 50, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#23445D;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;&#039;);
+			   	part7.vertex = true;
+			   	var part8 = new mxCell(&#039;Label&#039;, new mxGeometry(95, 105, 145, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#5D7F99;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part8.vertex = true;
+			   	var part9 = new mxCell(&#039;5&#039;, new mxGeometry(0, 140, 50, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#12AAB5;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;&#039;);
+			   	part9.vertex = true;
+			   	var part10 = new mxCell(&#039;Label&#039;, new mxGeometry(45, 140, 145, 30), &#039;shape=mxgraph.infographic.parallelogram;dx=5;html=1;whiteSpace=wrap;fillColor=#61C6CE;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;&#039;);
+			   	part10.vertex = true;
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, part6, part7, part8, part9, part10], 390, 170, &#039;Angled List&#039;);
+			}),				
+				
+			this.addEntry(dt + &#039;matrix&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(35, 35, 100, 100), &#039;html=1;fillColor=#10739E;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(140, 35, 100, 100), &#039;html=1;fillColor=#F2931E;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(35, 140, 100, 100), &#039;html=1;fillColor=#AE4132;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(140, 140, 100, 100), &#039;html=1;fillColor=#23445D;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part4.vertex = true;
+
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 35, 30, 100), &#039;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;horizontal=0;rounded=0;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 140, 30, 100), &#039;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;horizontal=0;rounded=0;&#039;);
+			   	part6.vertex = true;
+			   	var part7 = new mxCell(&#039;Label&#039;, new mxGeometry(35, 0, 100, 30), &#039;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;rounded=0;&#039;);
+			   	part7.vertex = true;
+			   	var part8 = new mxCell(&#039;Label&#039;, new mxGeometry(140, 0, 100, 30), &#039;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;rounded=0;&#039;);
+			   	part8.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, part6, part7, part8], 240, 240, &#039;Matrix (2x2)&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;matrix&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(35, 35, 100, 100), &#039;shape=mxgraph.basic.three_corner_round_rect;dx=18;flipH=1;html=1;fillColor=#10739E;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(140, 35, 100, 100), &#039;shape=mxgraph.basic.three_corner_round_rect;dx=18;html=1;fillColor=#F2931E;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(35, 140, 100, 100), &#039;shape=mxgraph.basic.three_corner_round_rect;dx=18;flipH=1;flipV=1;html=1;fillColor=#AE4132;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(140, 140, 100, 100), &#039;shape=mxgraph.basic.three_corner_round_rect;dx=18;flipV=1;html=1;fillColor=#23445D;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part4.vertex = true;
+
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 45, 30, 80), &#039;rounded=1;arcSize=50;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;horizontal=0;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 150, 30, 80), &#039;rounded=1;arcSize=50;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;horizontal=0;&#039;);
+			   	part6.vertex = true;
+			   	var part7 = new mxCell(&#039;Label&#039;, new mxGeometry(45, 0, 80, 30), &#039;rounded=1;arcSize=50;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;&#039;);
+			   	part7.vertex = true;
+			   	var part8 = new mxCell(&#039;Label&#039;, new mxGeometry(150, 0, 80, 30), &#039;rounded=1;arcSize=50;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;&#039;);
+			   	part8.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, part6, part7, part8], 240, 240, &#039;Matrix (2x2)&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;matrix&#039;, function()
+			{
+			   	var part11 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(35, 35, 100, 100), &#039;html=1;fillColor=#F2931E;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part11.vertex = true;
+			   	var part12 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(140, 35, 100, 100), &#039;html=1;fillColor=#F5AB50;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part12.vertex = true;
+			   	var part13 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(245, 35, 100, 100), &#039;html=1;fillColor=#F8C382;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part13.vertex = true;
+			   	var part21 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(35, 140, 100, 100), &#039;html=1;fillColor=#444444;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part21.vertex = true;
+			   	var part22 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(140, 140, 100, 100), &#039;html=1;fillColor=#777777;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part22.vertex = true;
+			   	var part23 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(245, 140, 100, 100), &#039;html=1;fillColor=#909090;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part23.vertex = true;
+			   	var part31 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(35, 245, 100, 100), &#039;html=1;fillColor=#23445D;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part31.vertex = true;
+			   	var part32 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(140, 245, 100, 100), &#039;html=1;fillColor=#2F5B7C;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part32.vertex = true;
+			   	var part33 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(245, 245, 100, 100), &#039;html=1;fillColor=#5D7F99;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;rounded=0;&#039;);
+			   	part33.vertex = true;
+
+			   	var label1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 35, 30, 100), &#039;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;horizontal=0;rounded=0;&#039;);
+			   	label1.vertex = true;
+			   	var label2 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 140, 30, 100), &#039;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;horizontal=0;rounded=0;&#039;);
+			   	label2.vertex = true;
+			   	var label3 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 245, 30, 100), &#039;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;horizontal=0;rounded=0;&#039;);
+			   	label3.vertex = true;
+			   	var label4 = new mxCell(&#039;Label&#039;, new mxGeometry(35, 0, 100, 30), &#039;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;rounded=0;&#039;);
+			   	label4.vertex = true;
+			   	var label5 = new mxCell(&#039;Label&#039;, new mxGeometry(140, 0, 100, 30), &#039;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;rounded=0;&#039;);
+			   	label5.vertex = true;
+			   	var label6 = new mxCell(&#039;Label&#039;, new mxGeometry(245, 0, 100, 30), &#039;html=1;fillColor=#CCCCCC;strokeColor=none;shadow=0;fontSize=14;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;rounded=0;&#039;);
+			   	label6.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part11, part12, part13, part21, part22, part23, part31, part32, part33, label1, label2, label3, label4, label5, label6], 345, 345, &#039;Matrix (3x3)&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;hex loop&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Lorem ipsum&lt;br&gt; dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(0, 51, 112, 102), &#039;shape=hexagon;strokeWidth=4;html=1;fillColor=#F5AB50;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;rounded=0;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Lorem ipsum&lt;br&gt; dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(0, 153, 112, 102), &#039;shape=hexagon;strokeWidth=4;html=1;fillColor=#E85642;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;rounded=0;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;Lorem ipsum&lt;br&gt; dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(84, 102, 112, 102), &#039;shape=hexagon;strokeWidth=4;html=1;fillColor=#12AAB5;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;rounded=0;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;Lorem ipsum&lt;br&gt; dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(84, 0, 112, 102), &#039;shape=hexagon;strokeWidth=4;html=1;fillColor=#1699D3;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;rounded=0;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;Lorem ipsum&lt;br&gt; dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(168, 51, 112, 102), &#039;shape=hexagon;strokeWidth=4;html=1;fillColor=#736CA8;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;rounded=0;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;Lorem ipsum&lt;br&gt; dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(168, 153, 112, 102), &#039;shape=hexagon;strokeWidth=4;html=1;fillColor=#2F5B7C;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;rounded=0;&#039;);
+			   	part6.vertex = true;
+			   	var part7 = new mxCell(&#039;Lorem ipsum&lt;br&gt; dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(84, 204, 112, 102), &#039;shape=hexagon;strokeWidth=4;html=1;fillColor=#777777;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;rounded=0;&#039;);
+			   	part7.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, part6, part7], 284, 312, &#039;Hex Loop&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;target&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 350, 350), &#039;ellipse;html=1;strokeWidth=4;fillColor=#F2931E;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;&#039;, new mxGeometry(25, 25, 300, 300), &#039;ellipse;html=1;strokeWidth=4;fillColor=#F8C382;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;&#039;, new mxGeometry(50, 50, 250, 250), &#039;ellipse;html=1;strokeWidth=4;fillColor=#FCE7CD;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(75, 75, 200, 200), &#039;ellipse;html=1;strokeWidth=4;fillColor=#BAC8D3;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;&#039;, new mxGeometry(100, 100, 150, 150), &#039;ellipse;html=1;strokeWidth=4;fillColor=#5D7F99;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;&#039;, new mxGeometry(125, 125, 100, 100), &#039;ellipse;html=1;strokeWidth=4;fillColor=#2F5B7C;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part6.vertex = true;
+			   	var part7 = new mxCell(&#039;&#039;, new mxGeometry(150, 150, 50, 50), &#039;ellipse;html=1;strokeWidth=4;fillColor=#23445D;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part7.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, part6, part7], 350, 350, &#039;Target&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;target simple&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 350, 350), &#039;ellipse;html=1;strokeWidth=4;fillColor=#10739E;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;&#039;, new mxGeometry(50, 50, 250, 250), &#039;ellipse;html=1;strokeWidth=4;fillColor=#F2931E;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;&#039;, new mxGeometry(100, 100, 150, 150), &#039;ellipse;html=1;strokeWidth=4;fillColor=#AE4132;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(150, 150, 50, 50), &#039;ellipse;html=1;strokeWidth=4;fillColor=#23445D;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part4.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4], 350, 350, &#039;Target (simple)&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;onion&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 350, 350), &#039;ellipse;html=1;strokeWidth=4;fillColor=#F5AB50;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;&#039;, new mxGeometry(25, 50, 300, 300), &#039;ellipse;html=1;strokeWidth=4;fillColor=#F8C382;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;&#039;, new mxGeometry(50, 100, 250, 250), &#039;ellipse;html=1;strokeWidth=4;fillColor=#FCE7CD;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(75, 150, 200, 200), &#039;ellipse;html=1;strokeWidth=4;fillColor=#BAC8D3;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;&#039;, new mxGeometry(100, 200, 150, 150), &#039;ellipse;html=1;strokeWidth=4;fillColor=#5D7F99;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;&#039;, new mxGeometry(125, 250, 100, 100), &#039;ellipse;html=1;strokeWidth=4;fillColor=#2F5B7C;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part6.vertex = true;
+			   	var part7 = new mxCell(&#039;&#039;, new mxGeometry(150, 300, 50, 50), &#039;ellipse;html=1;strokeWidth=4;fillColor=#23445D;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part7.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, part6, part7], 350, 350, &#039;Onion&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;onion simple&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 350, 350), &#039;ellipse;html=1;strokeWidth=4;fillColor=#10739E;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;&#039;, new mxGeometry(50, 100, 250, 250), &#039;ellipse;html=1;strokeWidth=4;fillColor=#F2931E;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;&#039;, new mxGeometry(100, 200, 150, 150), &#039;ellipse;html=1;strokeWidth=4;fillColor=#AE4132;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(150, 300, 50, 50), &#039;ellipse;html=1;strokeWidth=4;fillColor=#23445D;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part4.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4], 350, 350, &#039;Onion (simple)&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;triangle&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 350, 350), &#039;triangle;direction=north;html=1;strokeWidth=4;fillColor=#F2931E;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;&#039;, new mxGeometry(25, 0, 300, 300), &#039;triangle;direction=north;html=1;strokeWidth=4;fillColor=#F8C382;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 250, 250), &#039;triangle;direction=north;html=1;strokeWidth=4;fillColor=#FCE7CD;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(75, 0, 200, 200), &#039;triangle;direction=north;html=1;strokeWidth=4;fillColor=#BAC8D3;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;&#039;, new mxGeometry(100, 0, 150, 150), &#039;triangle;direction=north;html=1;strokeWidth=4;fillColor=#5D7F99;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;&#039;, new mxGeometry(125, 0, 100, 100), &#039;triangle;direction=north;html=1;strokeWidth=4;fillColor=#2F5B7C;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part6.vertex = true;
+			   	var part7 = new mxCell(&#039;&#039;, new mxGeometry(150, 0, 50, 50), &#039;triangle;direction=north;html=1;strokeWidth=4;fillColor=#23445D;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part7.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, part6, part7], 350, 350, &#039;Triangle&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;triangle simple&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 350, 350), &#039;triangle;direction=north;strokeWidth=4;html=1;fillColor=#10739E;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 250, 250), &#039;triangle;direction=north;strokeWidth=4;html=1;fillColor=#F2931E;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;&#039;, new mxGeometry(100, 0, 150, 150), &#039;triangle;direction=north;strokeWidth=4;html=1;fillColor=#AE4132;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(150, 0, 50, 50), &#039;triangle;direction=north;strokeWidth=4;html=1;fillColor=#23445D;strokeColor=#ffffff;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part4.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4], 350, 350, &#039;Triangle (simple)&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;percent percentage list&#039;, function()
+			{
+			   	var chevron1 = new mxCell(&#039;30%&#039;, new mxGeometry(0, 0, 60, 40), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#4A5768;strokeColor=none;fontSize=16;fontColor=#ffffff;fontStyle=1;rounded=0;&#039;);
+			   	chevron1.vertex = true;
+			   	var bg1 = new mxCell(&#039;&#039;, new mxGeometry(70, 10, 300, 20), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#B1DDF0;strokeColor=none;&#039;);
+			   	bg1.vertex = true;
+			   	var bar1 = new mxCell(&#039;&#039;, new mxGeometry(70, 10, 90, 20), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#10739E;strokeColor=none;shadow=0;&#039;);
+			   	bar1.vertex = true;
+
+			   	var chevron2 = new mxCell(&#039;75%&#039;, new mxGeometry(0, 50, 60, 40), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#4A5768;strokeColor=none;fontSize=16;fontColor=#ffffff;fontStyle=1;rounded=0;&#039;);
+			   	chevron2.vertex = true;
+			   	var bg2 = new mxCell(&#039;&#039;, new mxGeometry(70, 60, 300, 20), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#FCE7CD;strokeColor=none;&#039;);
+			   	bg2.vertex = true;
+			   	var bar2 = new mxCell(&#039;&#039;, new mxGeometry(70, 60, 225, 20), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#F2931E;strokeColor=none;shadow=0;&#039;);
+			   	bar2.vertex = true;
+
+			   	var chevron3 = new mxCell(&#039;90%&#039;, new mxGeometry(0, 100, 60, 40), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#4A5768;strokeColor=none;fontSize=16;fontColor=#ffffff;fontStyle=1;rounded=0;&#039;);
+			   	chevron3.vertex = true;
+			   	var bg3 = new mxCell(&#039;&#039;, new mxGeometry(70, 110, 300, 20), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#FAD9D5;strokeColor=none;&#039;);
+			   	bg3.vertex = true;
+			   	var bar3 = new mxCell(&#039;&#039;, new mxGeometry(70, 110, 270, 20), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#AE4132;strokeColor=none;shadow=0;&#039;);
+			   	bar3.vertex = true;
+
+			   	var chevron4 = new mxCell(&#039;25%&#039;, new mxGeometry(0, 150, 60, 40), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#4A5768;strokeColor=none;fontSize=16;fontColor=#ffffff;fontStyle=1;rounded=0;&#039;);
+			   	chevron4.vertex = true;
+			   	var bg4 = new mxCell(&#039;&#039;, new mxGeometry(70, 160, 300, 20), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#BAC8D3;strokeColor=none;&#039;);
+			   	bg4.vertex = true;
+			   	var bar4 = new mxCell(&#039;&#039;, new mxGeometry(70, 160, 75, 20), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#23445D;strokeColor=none;shadow=0;&#039;);
+			   	bar4.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([chevron1, bg1, bar1, chevron2, bg2, bar2, chevron3, bg3, bar3, chevron4, bg4, bar4], 370, 190, &#039;Percentage list&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;percent percentage list&#039;, function()
+			{
+			   	var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 400, 40), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#dddddd;strokeColor=none;rounded=0;&#039;);
+			   	bg1.vertex = true;
+			   	var bar1 = new mxCell(&#039;65%&#039;, new mxGeometry(0, 0, 260, 40), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=20;fillColor=#10739E;strokeColor=none;align=left;verticalAlign=middle;fontColor=#ffffff;fontSize=18;spacingLeft=10;fontStyle=1;shadow=0;&#039;);
+			   	bar1.vertex = true;
+			   	var label1 = new mxCell(&#039;Label&#039;, new mxGeometry(320, 0, 80, 40), &#039;text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontSize=18;spacingRight=10;&#039;);
+			   	label1.vertex = true;
+
+			   	var bg2 = new mxCell(&#039;&#039;, new mxGeometry(0, 50, 400, 40), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#dddddd;strokeColor=none;rounded=0;&#039;);
+			   	bg2.vertex = true;
+			   	var bar2 = new mxCell(&#039;45%&#039;, new mxGeometry(0, 50, 180, 40), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=20;fillColor=#F2931E;strokeColor=none;align=left;verticalAlign=middle;fontColor=#ffffff;fontSize=18;spacingLeft=10;fontStyle=1;shadow=0;&#039;);
+			   	bar2.vertex = true;
+			   	var label2 = new mxCell(&#039;Label&#039;, new mxGeometry(320, 50, 80, 40), &#039;text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontSize=18;spacingRight=10;&#039;);
+			   	label2.vertex = true;
+
+			   	var bg3 = new mxCell(&#039;&#039;, new mxGeometry(0, 100, 400, 40), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#dddddd;strokeColor=none;rounded=0;&#039;);
+			   	bg3.vertex = true;
+			   	var bar3 = new mxCell(&#039;30%&#039;, new mxGeometry(0, 100, 120, 40), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=20;fillColor=#AE4132;strokeColor=none;align=left;verticalAlign=middle;fontColor=#ffffff;fontSize=18;spacingLeft=10;fontStyle=1;shadow=0;&#039;);
+			   	bar3.vertex = true;
+			   	var label3 = new mxCell(&#039;Label&#039;, new mxGeometry(320, 100, 80, 40), &#039;text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontSize=18;spacingRight=10;&#039;);
+			   	label3.vertex = true;
+
+			   	var bg4 = new mxCell(&#039;&#039;, new mxGeometry(0, 150, 400, 40), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#dddddd;strokeColor=none;rounded=0;&#039;);
+			   	bg4.vertex = true;
+			   	var bar4 = new mxCell(&#039;60%&#039;, new mxGeometry(0, 150, 240, 40), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=20;fillColor=#23445D;strokeColor=none;align=left;verticalAlign=middle;fontColor=#ffffff;fontSize=18;spacingLeft=10;fontStyle=1;shadow=0;&#039;);
+			   	bar4.vertex = true;
+			   	var label4 = new mxCell(&#039;Label&#039;, new mxGeometry(320, 150, 80, 40), &#039;text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontSize=18;spacingRight=10;&#039;);
+			   	label4.vertex = true;
+
+			   	var bg5 = new mxCell(&#039;&#039;, new mxGeometry(0, 200, 400, 40), &#039;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#dddddd;strokeColor=none;rounded=0;&#039;);
+			   	bg5.vertex = true;
+			   	var bar5 = new mxCell(&#039;85%&#039;, new mxGeometry(0, 200, 340, 40), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=20;fillColor=#12AAB5;strokeColor=none;align=left;verticalAlign=middle;fontColor=#ffffff;fontSize=18;spacingLeft=10;fontStyle=1;shadow=0;&#039;);
+			   	bar5.vertex = true;
+			   	var label5 = new mxCell(&#039;Label&#039;, new mxGeometry(320, 200, 80, 40), &#039;text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;fontSize=18;spacingRight=10;&#039;);
+			   	label5.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([bg1, bar1, bg2, bar2, bg3, bar3, bg4, bar4, bg5, bar5, label1, label2, label3, label4, label5], 400, 250, &#039;Percentage list&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;arc list&#039;, function()
+			{
+			   	var arc1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 260, 260), s4 + &#039;partConcEllipse;fillColor=#10739E;strokeColor=#ffffff;startAngle=0.75;endAngle=0.08;arcWidth=0.16;strokeWidth=3;&#039;);
+			   	arc1.vertex = true;
+			   	var arc2 = new mxCell(&#039;&#039;, new mxGeometry(20, 20, 220, 220), s4 + &#039;partConcEllipse;fillColor=#F2931E;strokeColor=#ffffff;startAngle=0.91;endAngle=0.17;arcWidth=0.18;strokeWidth=3;&#039;);
+			   	arc2.vertex = true;
+			   	var arc3 = new mxCell(&#039;&#039;, new mxGeometry(40, 40, 180, 180), s4 + &#039;partConcEllipse;fillColor=#AE4132;strokeColor=#ffffff;startAngle=0.75;endAngle=0.11;arcWidth=0.22;strokeWidth=3;&#039;);
+			   	arc3.vertex = true;
+			   	var arc4 = new mxCell(&#039;&#039;, new mxGeometry(60, 60, 140, 140), s4 + &#039;partConcEllipse;fillColor=#12AAB5;strokeColor=#ffffff;startAngle=0.02;endAngle=0.25;arcWidth=0.29;strokeWidth=3;&#039;);
+			   	arc4.vertex = true;
+			   	var arc5 = new mxCell(&#039;&#039;, new mxGeometry(80, 80, 100, 100), s4 + &#039;partConcEllipse;fillColor=#CCCCCC;strokeColor=#ffffff;startAngle=0.75;endAngle=0.25;arcWidth=0.4;strokeWidth=3;&#039;);
+			   	arc5.vertex = true;
+			   	var part1 = new mxCell(&#039;2018&#039;, new mxGeometry(100, 100, 60, 60), &#039;html=1;shape=mxgraph.basic.pie;fillColor=#23445D;strokeColor=#ffffff;startAngle=0.75;endAngle=0.25;fontSize=16;fontColor=#FFFFFF;verticalAlign=top;fontStyle=1;strokeWidth=3;&#039;);
+			   	part1.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([arc1, arc2, arc3, arc4, arc5, part1], 200, 200, &#039;Arc list&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;arc list&#039;, function()
+			{
+			   	var circle1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 250, 250), &#039;ellipse;fillColor=none;strokeColor=#444444;&#039;);
+			   	circle1.vertex = true;
+			   	var circle2 = new mxCell(&#039;&#039;, new mxGeometry(20, 20, 210, 210), &#039;ellipse;fillColor=none;strokeColor=#444444;&#039;);
+			   	circle2.vertex = true;
+			   	var circle3 = new mxCell(&#039;&#039;, new mxGeometry(40, 40, 170, 170), &#039;ellipse;fillColor=none;strokeColor=#444444;&#039;);
+			   	circle3.vertex = true;
+			   	var circle4 = new mxCell(&#039;&#039;, new mxGeometry(60, 60, 130, 130), &#039;ellipse;fillColor=none;strokeColor=#444444;&#039;);
+			   	circle4.vertex = true;
+			   	var circle5 = new mxCell(&#039;&#039;, new mxGeometry(80, 80, 90, 90), &#039;ellipse;fillColor=none;strokeColor=#444444;&#039;);
+			   	circle5.vertex = true;
+			   	
+			   	var arc1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 250, 250), s4 + &#039;arc;fillColor=none;strokeColor=#10739E;startAngle=0.75;endAngle=0.08;strokeWidth=16;&#039;);
+			   	arc1.vertex = true;
+			   	var arc2 = new mxCell(&#039;&#039;, new mxGeometry(20, 20, 210, 210), s4 + &#039;arc;fillColor=none;strokeColor=#F2931E;startAngle=0.91;endAngle=0.17;strokeWidth=16;&#039;);
+			   	arc2.vertex = true;
+			   	var arc3 = new mxCell(&#039;&#039;, new mxGeometry(40, 40, 170, 170), s4 + &#039;arc;fillColor=none;strokeColor=#AE4132;startAngle=0.75;endAngle=0.11;strokeWidth=16;&#039;);
+			   	arc3.vertex = true;
+			   	var arc4 = new mxCell(&#039;&#039;, new mxGeometry(60, 60, 130, 130), s4 + &#039;arc;fillColor=none;strokeColor=#12AAB5;startAngle=0.02;endAngle=0.25;strokeWidth=16;&#039;);
+			   	arc4.vertex = true;
+			   	var arc5 = new mxCell(&#039;&#039;, new mxGeometry(80, 80, 90, 90), s4 + &#039;arc;fillColor=none;strokeColor=#CCCCCC;startAngle=0.75;endAngle=0.25;strokeWidth=16;&#039;);
+			   	arc5.vertex = true;
+			   	var part1 = new mxCell(&#039;2018&#039;, new mxGeometry(92, 92, 66, 66), &#039;html=1;shape=mxgraph.basic.pie;fillColor=#23445D;strokeColor=none;startAngle=0.75;endAngle=0.25;fontSize=16;fontColor=#FFFFFF;verticalAlign=top;spacingTop=8;fontStyle=1;&#039;);
+			   	part1.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([circle1, circle2, circle3, circle4, circle5, arc1, arc2, arc3, arc4, arc5, part1], 200, 200, &#039;Arc list&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;triangle graph&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 70, 80, 70), &#039;verticalLabelPosition=middle;verticalAlign=bottom;html=1;whiteSpace=wrap;shape=mxgraph.infographic.shadedTriangle;fillColor=#10739E;strokeColor=none;fontSize=10;labelPosition=center;align=center;fontColor=#FFFFFF;fontStyle=1;shadow=0;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(60, 10, 80, 130), &#039;verticalLabelPosition=middle;verticalAlign=bottom;html=1;whiteSpace=wrap;shape=mxgraph.infographic.shadedTriangle;fillColor=#F2931E;strokeColor=none;fontSize=10;labelPosition=center;align=center;fontColor=#FFFFFF;fontStyle=1;shadow=0;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(120, 0, 80, 140), &#039;verticalLabelPosition=middle;verticalAlign=bottom;html=1;whiteSpace=wrap;shape=mxgraph.infographic.shadedTriangle;fillColor=#AE4132;strokeColor=none;fontSize=10;labelPosition=center;align=center;fontColor=#FFFFFF;fontStyle=1;shadow=0;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(180, 40, 80, 100), &#039;verticalLabelPosition=middle;verticalAlign=bottom;html=1;whiteSpace=wrap;shape=mxgraph.infographic.shadedTriangle;fillColor=#12AAB5;strokeColor=none;fontSize=10;labelPosition=center;align=center;fontColor=#FFFFFF;fontStyle=1;shadow=0;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(240, 60, 80, 80), &#039;verticalLabelPosition=middle;verticalAlign=bottom;html=1;whiteSpace=wrap;shape=mxgraph.infographic.shadedTriangle;fillColor=#23445D;strokeColor=none;fontSize=10;labelPosition=center;align=center;fontColor=#FFFFFF;fontStyle=1;shadow=0;&#039;);
+			   	part5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part5, part4, part3, part2, part1], 320, 140, &#039;Triangle Graph&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;pyramid graph&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 70, 80, 70), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.infographic.shadedPyramid;fillColor=#10739E;strokeColor=none;fontSize=10;labelPosition=center;align=center;shadow=0;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(60, 10, 80, 130), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.infographic.shadedPyramid;fillColor=#F2931E;strokeColor=none;fontSize=10;labelPosition=center;align=center;shadow=0;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(120, 0, 80, 140), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.infographic.shadedPyramid;fillColor=#AE4132;strokeColor=none;fontSize=10;labelPosition=center;align=center;shadow=0;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(180, 40, 80, 100), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.infographic.shadedPyramid;fillColor=#12AAB5;strokeColor=none;fontSize=10;labelPosition=center;align=center;shadow=0;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(240, 60, 80, 80), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.infographic.shadedPyramid;fillColor=#23445D;strokeColor=none;fontSize=10;labelPosition=center;align=center;shadow=0;&#039;);
+			   	part5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part5, part4, part3, part2, part1], 320, 140, &#039;Pyramid Graph&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;change graph&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(0, 30, 30, 100), &#039;fillColor=#10739E;strokeColor=none;&#039;);
+			   	part1.vertex = true;
+			   	var arrow1 = new mxCell(&#039;&#039;, new mxGeometry(3, 30, 24, 70), &#039;shape=mxgraph.arrows2.arrow;dy=0.4;dx=16;notch=0;direction=north;fillColor=#1699D3;strokeColor=none;&#039;);
+			   	arrow1.vertex = true;
+			   	part1.insert(arrow1);
+			   	var text1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 30, 20), &#039;text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=10;strokeColor=none;fillColor=none;&#039;);
+			   	text1.vertex = true;
+			   	part1.insert(text1);
+			   	
+			   	var part2 = new mxCell(&#039;&#039;, new mxGeometry(35, 10, 30, 120), &#039;fillColor=#F2931E;strokeColor=none;&#039;);
+			   	part2.vertex = true;
+			   	var arrow2 = new mxCell(&#039;&#039;, new mxGeometry(3, 0, 24, 80), &#039;shape=mxgraph.arrows2.arrow;dy=0.4;dx=16;notch=0;direction=south;fillColor=#F5AB50;strokeColor=none;&#039;);
+			   	arrow2.vertex = true;
+			   	part2.insert(arrow2);
+			   	var text2 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 30, 20), &#039;text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=10;strokeColor=none;fillColor=none;&#039;);
+			   	text2.vertex = true;
+			   	part2.insert(text2);
+			   	
+			   	var part3 = new mxCell(&#039;&#039;, new mxGeometry(70, 0, 30, 130), &#039;fillColor=#AE4132;strokeColor=none;&#039;);
+			   	part3.vertex = true;
+			   	var arrow3 = new mxCell(&#039;&#039;, new mxGeometry(3, 80, 24, 50), &#039;shape=mxgraph.arrows2.arrow;dy=0.4;dx=16;notch=0;direction=north;fillColor=#E85642;strokeColor=none;&#039;);
+			   	arrow3.vertex = true;
+			   	part3.insert(arrow3);
+			   	var text3 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 30, 20), &#039;text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=10;strokeColor=none;fillColor=none;&#039;);
+			   	text3.vertex = true;
+			   	part3.insert(text3);
+			   	
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(105, 50, 30, 80), &#039;fillColor=#12AAB5;strokeColor=none;&#039;);
+			   	part4.vertex = true;
+			   	var arrow4 = new mxCell(&#039;&#039;, new mxGeometry(3, 0, 24, 30), &#039;shape=mxgraph.arrows2.arrow;dy=0.4;dx=16;notch=0;direction=south;fillColor=#64BBE2;strokeColor=none;&#039;);
+			   	arrow4.vertex = true;
+			   	part4.insert(arrow4);
+			   	var text4 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 30, 20), &#039;text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=10;strokeColor=none;fillColor=none;&#039;);
+			   	text4.vertex = true;
+			   	part4.insert(text4);
+			   	
+			   	var part5 = new mxCell(&#039;&#039;, new mxGeometry(140, 60, 30, 70), &#039;fillColor=#23445D;strokeColor=none;&#039;);
+			   	part5.vertex = true;
+			   	var arrow5 = new mxCell(&#039;&#039;, new mxGeometry(3, 10, 24, 60), &#039;shape=mxgraph.arrows2.arrow;dy=0.4;dx=16;notch=0;direction=north;fillColor=#2F5B7C;strokeColor=none;&#039;);
+			   	arrow5.vertex = true;
+			   	part5.insert(arrow5);
+			   	var text5 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 30, 20), &#039;text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=10;strokeColor=none;fillColor=none;&#039;);
+			   	text5.vertex = true;
+			   	part5.insert(text5);
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5], 170, 130, &#039;Change Graph&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;step pyramid&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(70, 0, 20, 95), &#039;html=1;shape=mxgraph.infographic.pyramidStep;fillColor=#F2931E;strokeColor=none;shadow=0;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;&#039;, new mxGeometry(60, 10, 40, 85), &#039;html=1;shape=mxgraph.infographic.pyramidStep;fillColor=#F8C382;strokeColor=none;shadow=0;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;&#039;, new mxGeometry(50, 20, 60, 75), &#039;html=1;shape=mxgraph.infographic.pyramidStep;fillColor=#FCE7CD;strokeColor=none;shadow=0;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(40, 30, 80, 65), &#039;html=1;shape=mxgraph.infographic.pyramidStep;fillColor=#BAC8D3;strokeColor=none;shadow=0;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;&#039;, new mxGeometry(30, 40, 100, 55), &#039;html=1;shape=mxgraph.infographic.pyramidStep;fillColor=#5D7F99;strokeColor=none;shadow=0;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;&#039;, new mxGeometry(20, 50, 120, 45), &#039;html=1;shape=mxgraph.infographic.pyramidStep;fillColor=#2F5B7C;strokeColor=none;shadow=0;&#039;);
+			   	part6.vertex = true;
+			   	var part7 = new mxCell(&#039;&#039;, new mxGeometry(10, 60, 140, 35), &#039;html=1;shape=mxgraph.infographic.pyramidStep;fillColor=#23445D;strokeColor=none;shadow=0;&#039;);
+			   	part7.vertex = true;
+			   	var part8 = new mxCell(&#039;&#039;, new mxGeometry(0, 70, 160, 25), &#039;html=1;shape=mxgraph.infographic.pyramidStep;fillColor=#333333;strokeColor=none;shadow=0;&#039;);
+			   	part8.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, part6, part7, part8], 160, 95, &#039;Step Pyramid&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;circular dial list horizontal&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.donut;dx=10;strokeColor=none;fillColor=#B1DDF0;fontSize=12;fontColor=#10739E;align=center;fontStyle=1;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;65%&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.basic.partConcEllipse;startAngle=0;endAngle=0.65;arcWidth=0.2;strokeColor=none;fillColor=#10739E;fontSize=22;fontColor=#10739E;align=center;fontStyle=1&#039;);
+			   	part2.vertex = true;
+			   	part1.insert(part2);
+			   	
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(110, 0, 100, 100), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.donut;dx=10;strokeColor=none;fillColor=#F8C382;fontSize=12;fontColor=#F2931E;align=center;fontStyle=1;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;40%&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.basic.partConcEllipse;startAngle=0;endAngle=0.4;arcWidth=0.2;strokeColor=none;fillColor=#F2931E;fontSize=22;fontColor=#F2931E;align=center;fontStyle=1&#039;);
+			   	part4.vertex = true;
+			   	part3.insert(part4);
+			   	
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(220, 0, 100, 100), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.donut;dx=10;strokeColor=none;fillColor=#F08E81;fontSize=12;fontColor=#AE4132;align=center;fontStyle=1;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;25%&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.basic.partConcEllipse;startAngle=0;endAngle=0.25;arcWidth=0.2;strokeColor=none;fillColor=#AE4132;fontSize=22;fontColor=#AE4132;align=center;fontStyle=1&#039;);
+			   	part6.vertex = true;
+			   	part5.insert(part6);
+			   	
+			   	var part7 = new mxCell(&#039;Label&#039;, new mxGeometry(330, 0, 100, 100), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.donut;dx=10;strokeColor=none;fillColor=#5D7F99;fontSize=12;fontColor=#23445D;align=center;fontStyle=1;&#039;);
+			   	part7.vertex = true;
+			   	var part8 = new mxCell(&#039;60%&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.basic.partConcEllipse;startAngle=0;endAngle=0.6;arcWidth=0.2;strokeColor=none;fillColor=#23445D;fontSize=22;fontColor=#23445D;align=center;fontStyle=1&#039;);
+			   	part8.vertex = true;
+			   	part7.insert(part8);
+			   	
+			   	var part9 = new mxCell(&#039;Label&#039;, new mxGeometry(440, 0, 100, 100), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.donut;dx=10;strokeColor=none;fillColor=#61C6CE;fontSize=12;fontColor=#12AAB5;align=center;fontStyle=1;&#039;);
+			   	part9.vertex = true;
+			   	var part10 = new mxCell(&#039;80%&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.basic.partConcEllipse;startAngle=0;endAngle=0.8;arcWidth=0.2;strokeColor=none;fillColor=#12AAB5;fontSize=22;fontColor=#12AAB5;align=center;fontStyle=1&#039;);
+			   	part10.vertex = true;
+			   	part9.insert(part10);
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part3, part5, part7, part9], 540, 100, &#039;Circular Dial List (horizontal)&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;circular dial list vertical&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 100, 100), &#039;labelPosition=right;spacingLeft=10;html=1;shape=mxgraph.basic.donut;dx=10;strokeColor=none;fillColor=#B1DDF0;fontSize=12;fontColor=#10739E;align=left;fontStyle=1;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;65%&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.basic.partConcEllipse;startAngle=0;endAngle=0.65;arcWidth=0.2;strokeColor=none;fillColor=#10739E;fontSize=22;fontColor=#10739E;align=center;fontStyle=1&#039;);
+			   	part2.vertex = true;
+			   	part1.insert(part2);
+			   	
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 110, 100, 100), &#039;labelPosition=right;spacingLeft=10;html=1;shape=mxgraph.basic.donut;dx=10;strokeColor=none;fillColor=#F8C382;fontSize=12;fontColor=#F2931E;align=left;fontStyle=1;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;40%&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.basic.partConcEllipse;startAngle=0;endAngle=0.4;arcWidth=0.2;strokeColor=none;fillColor=#F2931E;fontSize=22;fontColor=#F2931E;align=center;fontStyle=1&#039;);
+			   	part4.vertex = true;
+			   	part3.insert(part4);
+			   	
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 220, 100, 100), &#039;labelPosition=right;spacingLeft=10;html=1;shape=mxgraph.basic.donut;dx=10;strokeColor=none;fillColor=#F08E81;fontSize=12;fontColor=#AE4132;align=left;fontStyle=1;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;25%&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.basic.partConcEllipse;startAngle=0;endAngle=0.25;arcWidth=0.2;strokeColor=none;fillColor=#AE4132;fontSize=22;fontColor=#AE4132;align=center;fontStyle=1&#039;);
+			   	part6.vertex = true;
+			   	part5.insert(part6);
+			   	
+			   	var part7 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 330, 100, 100), &#039;labelPosition=right;spacingLeft=10;html=1;shape=mxgraph.basic.donut;dx=10;strokeColor=none;fillColor=#5D7F99;fontSize=12;fontColor=#23445D;align=left;fontStyle=1;&#039;);
+			   	part7.vertex = true;
+			   	var part8 = new mxCell(&#039;60%&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.basic.partConcEllipse;startAngle=0;endAngle=0.6;arcWidth=0.2;strokeColor=none;fillColor=#23445D;fontSize=22;fontColor=#23445D;align=center;fontStyle=1&#039;);
+			   	part8.vertex = true;
+			   	part7.insert(part8);
+			   	
+			   	var part9 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 440, 100, 100), &#039;labelPosition=right;spacingLeft=10;html=1;shape=mxgraph.basic.donut;dx=10;strokeColor=none;fillColor=#61C6CE;fontSize=12;fontColor=#12AAB5;align=left;fontStyle=1;&#039;);
+			   	part9.vertex = true;
+			   	var part10 = new mxCell(&#039;80%&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.basic.partConcEllipse;startAngle=0;endAngle=0.8;arcWidth=0.2;strokeColor=none;fillColor=#12AAB5;fontSize=22;fontColor=#12AAB5;align=center;fontStyle=1&#039;);
+			   	part10.vertex = true;
+			   	part9.insert(part10);
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part3, part5, part7, part9], 100, 540, &#039;Circular Dial List (vertical)&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;circular dial list horizontal&#039;, function()
+			{
+			   	var label1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 100, 30), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;fillColor=none;strokeColor=none;fontSize=15;fontColor=#10739E;align=center;fontStyle=1;&#039;);
+			   	label1.vertex = true;
+			   	var part1 = new mxCell(&#039;65%&#039;, new mxGeometry(0, 30, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.infographic.partConcEllipse;startAngle=0;endAngle=0.65;arcWidth=0.4;strokeColor=none;fillColor=#10739E;fontSize=22;fontColor=#10739E;align=center;fontStyle=1;&#039;);
+			   	part1.vertex = true;
+			   	var text1 = new mxCell(
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(0, 140, 100, 120), 
+			   			&#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;fillColor=#EEEEEE;strokeColor=none;fontSize=10;align=left;fontStyle=0;rounded=1;whiteSpace=wrap;arcSize=8;spacing=5;&#039;);
+			   	text1.vertex = true;
+			   	
+			   	var label2 = new mxCell(&#039;Label&#039;, new mxGeometry(110, 0, 100, 30), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;fillColor=none;strokeColor=none;fontSize=15;fontColor=#F2931E;align=center;fontStyle=1;&#039;);
+			   	label2.vertex = true;
+			   	var part2 = new mxCell(&#039;40%&#039;, new mxGeometry(110, 30, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.infographic.partConcEllipse;startAngle=0;endAngle=0.4;arcWidth=0.4;strokeColor=none;fillColor=#F2931E;fontSize=22;fontColor=#F2931E;align=center;fontStyle=1;&#039;);
+			   	part2.vertex = true;
+			   	var text2 = new mxCell(
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(110, 140, 100, 120), 
+			   			&#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;fillColor=#EEEEEE;strokeColor=none;fontSize=10;align=left;fontStyle=0;rounded=1;whiteSpace=wrap;arcSize=8;spacing=5;&#039;);
+			   	text2.vertex = true;
+			   	
+			   	var label3 = new mxCell(&#039;Label&#039;, new mxGeometry(220, 0, 100, 30), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;fillColor=none;strokeColor=none;fontSize=15;fontColor=#AE4132;align=center;fontStyle=1;&#039;);
+			   	label3.vertex = true;
+			   	var part3 = new mxCell(&#039;25%&#039;, new mxGeometry(220, 30, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.infographic.partConcEllipse;startAngle=0;endAngle=0.25;arcWidth=0.4;strokeColor=none;fillColor=#AE4132;fontSize=22;fontColor=#AE4132;align=center;fontStyle=1;&#039;);
+			   	part3.vertex = true;
+			   	var text3 = new mxCell(
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(220, 140, 100, 120), 
+			   			&#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;fillColor=#EEEEEE;strokeColor=none;fontSize=10;align=left;fontStyle=0;rounded=1;whiteSpace=wrap;arcSize=8;spacing=5;&#039;);
+			   	text3.vertex = true;
+			   	
+			   	var label4 = new mxCell(&#039;Label&#039;, new mxGeometry(330, 0, 100, 30), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;fillColor=none;strokeColor=none;fontSize=15;fontColor=#23445D;align=center;fontStyle=1;&#039;);
+			   	label4.vertex = true;
+			   	var part4 = new mxCell(&#039;60%&#039;, new mxGeometry(330, 30, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.infographic.partConcEllipse;startAngle=0;endAngle=0.6;arcWidth=0.4;strokeColor=none;fillColor=#23445D;fontSize=22;fontColor=#23445D;align=center;fontStyle=1;&#039;);
+			   	part4.vertex = true;
+			   	var text4 = new mxCell(
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(330, 140, 100, 120), 
+			   			&#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;fillColor=#EEEEEE;strokeColor=none;fontSize=10;align=left;fontStyle=0;rounded=1;whiteSpace=wrap;arcSize=8;spacing=5;&#039;);
+			   	text4.vertex = true;
+			   	
+			   	var label5 = new mxCell(&#039;Label&#039;, new mxGeometry(440, 0, 100, 30), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;fillColor=none;strokeColor=none;fontSize=15;fontColor=#12AAB5;align=center;fontStyle=1;&#039;);
+			   	label5.vertex = true;
+			   	var part5 = new mxCell(&#039;80%&#039;, new mxGeometry(440, 30, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.infographic.partConcEllipse;startAngle=0;endAngle=0.8;arcWidth=0.4;strokeColor=none;fillColor=#12AAB5;fontSize=22;fontColor=#12AAB5;align=center;fontStyle=1;&#039;);
+			   	part5.vertex = true;
+			   	var text5 = new mxCell(
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(440, 140, 100, 120), 
+			   			&#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;fillColor=#EEEEEE;strokeColor=none;fontSize=10;align=left;fontStyle=0;rounded=1;whiteSpace=wrap;arcSize=8;spacing=5;&#039;);
+			   	text5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, label1, label2, label3, label4, label5, text1, text2, text3, text4, text5], 540, 260, &#039;Circular Dial List (horizontal)&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;circular dial list vertical&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;65%&#039;, new mxGeometry(0, 0, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.infographic.partConcEllipse;startAngle=0;endAngle=0.65;arcWidth=0.4;strokeColor=none;fillColor=#10739E;fontSize=22;fontColor=#10739E;align=center;fontStyle=1;&#039;);
+			   	part1.vertex = true;
+			   	var label1 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#10739E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(110, 0, 210, 100), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=left;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;spacing=8;&#039;);
+			   	label1.vertex = true;
+
+			   	var part2 = new mxCell(&#039;40%&#039;, new mxGeometry(0, 110, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.infographic.partConcEllipse;startAngle=0;endAngle=0.4;arcWidth=0.4;strokeColor=none;fillColor=#F2931E;fontSize=22;fontColor=#F2931E;align=center;fontStyle=1;&#039;);
+			   	part2.vertex = true;
+			   	var label2 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#F2931E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(110, 110, 210, 100), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=left;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;spacing=8;&#039;);
+			   	label2.vertex = true;
+			   	
+			   	var part3 = new mxCell(&#039;25%&#039;, new mxGeometry(0, 220, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.infographic.partConcEllipse;startAngle=0;endAngle=0.25;arcWidth=0.4;strokeColor=none;fillColor=#AE4132;fontSize=22;fontColor=#AE4132;align=center;fontStyle=1;&#039;);
+			   	part3.vertex = true;
+			   	var label3 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#AE4132&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(110, 220, 210, 100), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=left;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;spacing=8;&#039;);
+			   	label3.vertex = true;
+			   	
+			   	var part4 = new mxCell(&#039;60%&#039;, new mxGeometry(0, 330, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.infographic.partConcEllipse;startAngle=0;endAngle=0.6;arcWidth=0.4;strokeColor=none;fillColor=#23445D;fontSize=22;fontColor=#23445D;align=center;fontStyle=1;&#039;);
+			   	part4.vertex = true;
+			   	var label4 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#23445D&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(110, 330, 210, 100), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=left;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;spacing=8;&#039;);
+			   	label4.vertex = true;
+			   	
+			   	var part5 = new mxCell(&#039;80%&#039;, new mxGeometry(0, 440, 100, 100), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;whiteSpace=wrap;shape=mxgraph.infographic.partConcEllipse;startAngle=0;endAngle=0.8;arcWidth=0.4;strokeColor=none;fillColor=#12AAB5;fontSize=22;fontColor=#12AAB5;align=center;fontStyle=1;&#039;);
+			   	part5.vertex = true;
+			   	var label5 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#12AAB5&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(110, 440, 210, 100), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=left;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;spacing=8;&#039;);
+			   	label5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, label1, label2, label3, label4, label5], 320, 540, &#039;Circular Dial List (vertical)&#039;);
+			}),				
+
+
+			this.addEntry(dt + &#039;bar graph&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 20, 40, 80), s2 + &#039;shadedCube;isoAngle=15;fillColor=#10739E;strokeColor=none;fontStyle=1;fontColor=#10739E;fontSize=12;shadow=0;&#039;);
+			   	part1.vertex = true;
+			   	
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(50, 0, 40, 100), s2 + &#039;shadedCube;isoAngle=15;fillColor=#F2931E;strokeColor=none;fontStyle=1;fontColor=#F2931E;fontSize=12;shadow=0;&#039;);
+			   	part2.vertex = true;
+			   	
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(100, 10, 40, 90), s2 + &#039;shadedCube;isoAngle=15;fillColor=#AE4132;strokeColor=none;fontStyle=1;fontColor=#AE4132;fontSize=12;shadow=0;&#039;);
+			   	part3.vertex = true;
+			   	
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(150, 50, 40, 50), s2 + &#039;shadedCube;isoAngle=15;fillColor=#23445D;strokeColor=none;fontStyle=1;fontColor=#23445D;fontSize=12;shadow=0;&#039;);
+			   	part4.vertex = true;
+			   	
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(200, 30, 40, 70), s2 + &#039;shadedCube;isoAngle=15;fillColor=#12AAB5;strokeColor=none;fontStyle=1;fontColor=#12AAB5;fontSize=12;shadow=0;&#039;);
+			   	part5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5], 240, 100, &#039;Bar Graph&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;bar graph&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 40, 40, 80), s2 + &#039;shadedCube;isoAngle=15;fillColor=#10739E;strokeColor=none;fontStyle=1;fontColor=#10739E;fontSize=12;shadow=0;&#039;);
+			   	part1.vertex = true;
+			   	var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 40, 60), &#039;verticalLabelPosition=top;verticalAlign=bottom;html=1;shape=mxgraph.infographic.shadedCube;isoAngle=15;fillColor=#CCCCCC;strokeColor=none;fontStyle=1;fontColor=#10739E;fontSize=12;shadow=0;align=left;opacity=70;&#039;);
+			   	bg1.vertex = true;
+			   	
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(50, 20, 40, 100), s2 + &#039;shadedCube;isoAngle=15;fillColor=#F2931E;strokeColor=none;fontStyle=1;fontColor=#F2931E;fontSize=12;shadow=0;&#039;);
+			   	part2.vertex = true;
+			   	var bg2 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 40, 40), &#039;verticalLabelPosition=top;verticalAlign=bottom;html=1;shape=mxgraph.infographic.shadedCube;isoAngle=15;fillColor=#CCCCCC;strokeColor=none;fontStyle=1;fontColor=#F19A19;fontSize=12;shadow=0;align=left;opacity=70;&#039;);
+			   	bg2.vertex = true;
+			   	
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(100, 30, 40, 90), s2 + &#039;shadedCube;isoAngle=15;fillColor=#AE4132;strokeColor=none;fontStyle=1;fontColor=#AE4132;fontSize=12;shadow=0;&#039;);
+			   	part3.vertex = true;
+			   	var bg3 = new mxCell(&#039;&#039;, new mxGeometry(100, 0, 40, 50), &#039;verticalLabelPosition=top;verticalAlign=bottom;html=1;shape=mxgraph.infographic.shadedCube;isoAngle=15;fillColor=#CCCCCC;strokeColor=none;fontStyle=1;fontColor=#D82A23;fontSize=12;shadow=0;align=left;opacity=70;&#039;);
+			   	bg3.vertex = true;
+			   	
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(150, 70, 40, 50), s2 + &#039;shadedCube;isoAngle=15;fillColor=#23445D;strokeColor=none;fontStyle=1;fontColor=#23445D;fontSize=12;shadow=0;&#039;);
+			   	part4.vertex = true;
+			   	var bg4 = new mxCell(&#039;&#039;, new mxGeometry(150, 0, 40, 90), &#039;verticalLabelPosition=top;verticalAlign=bottom;html=1;shape=mxgraph.infographic.shadedCube;isoAngle=15;fillColor=#CCCCCC;strokeColor=none;fontStyle=1;fontColor=#4A5768;fontSize=12;shadow=0;align=left;opacity=70;&#039;);
+			   	bg4.vertex = true;
+			   	
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(200, 50, 40, 70), s2 + &#039;shadedCube;isoAngle=15;fillColor=#12AAB5;strokeColor=none;fontStyle=1;fontColor=#12AAB5;fontSize=12;shadow=0;&#039;);
+			   	part5.vertex = true;
+			   	var bg5 = new mxCell(&#039;&#039;, new mxGeometry(200, 0, 40, 70), &#039;verticalLabelPosition=top;verticalAlign=bottom;html=1;shape=mxgraph.infographic.shadedCube;isoAngle=15;fillColor=#CCCCCC;strokeColor=none;fontStyle=1;fontColor=#15AA96;fontSize=12;shadow=0;align=left;opacity=70;&#039;);
+			   	bg5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, bg1, bg2, bg3, bg4, bg5], 240, 120, &#039;Bar Graph&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;bar graph&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(0, 38, 40, 80), s2 + &#039;shadedCube;isoAngle=15;fillColor=#10739E;strokeColor=none;shadow=0;&#039;);
+			   	part1.vertex = true;
+			   	
+			   	var part2 = new mxCell(&#039;&#039;, new mxGeometry(25, 6, 40, 100), s2 + &#039;shadedCube;isoAngle=15;fillColor=#F2931E;strokeColor=none;shadow=0;&#039;);
+			   	part2.vertex = true;
+			   	
+			   	var part3 = new mxCell(&#039;&#039;, new mxGeometry(50, 4, 40, 90), s2 + &#039;shadedCube;isoAngle=15;fillColor=#AE4132;strokeColor=none;shadow=0;&#039;);
+			   	part3.vertex = true;
+			   	
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(75, 32, 40, 50), s2 + &#039;shadedCube;isoAngle=15;fillColor=#23445D;strokeColor=none;shadow=0;&#039;);
+			   	part4.vertex = true;
+			   	
+			   	var part5 = new mxCell(&#039;&#039;, new mxGeometry(100, 0, 40, 70), s2 + &#039;shadedCube;isoAngle=15;fillColor=#12AAB5;strokeColor=none;shadow=0;&#039;);
+			   	part5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part5, part4, part3, part2, part1], 140, 100, &#039;Bar Graph&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;bar graph&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 40, 40, 80), s2 + &#039;cylinder;isoAngle=15;fillColor=#10739E;strokeColor=none;fontStyle=1;fontColor=#10739E;fontSize=12;shadow=0;&#039;);
+			   	part1.vertex = true;
+			   	var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 40, 60), &#039;verticalLabelPosition=top;verticalAlign=bottom;html=1;shape=mxgraph.infographic.cylinder;isoAngle=15;fillColor=#CCCCCC;strokeColor=none;fontStyle=1;fontColor=#10739E;fontSize=12;shadow=0;align=left;opacity=70;&#039;);
+			   	bg1.vertex = true;
+			   	
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(50, 20, 40, 100), s2 + &#039;cylinder;isoAngle=15;fillColor=#F2931E;strokeColor=none;fontStyle=1;fontColor=#F2931E;fontSize=12;shadow=0;&#039;);
+			   	part2.vertex = true;
+			   	var bg2 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 40, 40), &#039;verticalLabelPosition=top;verticalAlign=bottom;html=1;shape=mxgraph.infographic.cylinder;isoAngle=15;fillColor=#CCCCCC;strokeColor=none;fontStyle=1;fontColor=#F2931E;fontSize=12;shadow=0;align=left;opacity=70;&#039;);
+			   	bg2.vertex = true;
+			   	
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(100, 30, 40, 90), s2 + &#039;cylinder;isoAngle=15;fillColor=#AE4132;strokeColor=none;fontStyle=1;fontColor=#AE4132;fontSize=12;shadow=0;&#039;);
+			   	part3.vertex = true;
+			   	var bg3 = new mxCell(&#039;&#039;, new mxGeometry(100, 0, 40, 50), &#039;verticalLabelPosition=top;verticalAlign=bottom;html=1;shape=mxgraph.infographic.cylinder;isoAngle=15;fillColor=#CCCCCC;strokeColor=none;fontStyle=1;fontColor=#AE4132;fontSize=12;shadow=0;align=left;opacity=70;&#039;);
+			   	bg3.vertex = true;
+			   	
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(150, 70, 40, 50), s2 + &#039;cylinder;isoAngle=15;fillColor=#23445D;strokeColor=none;fontStyle=1;fontColor=#23445D;fontSize=12;shadow=0;&#039;);
+			   	part4.vertex = true;
+			   	var bg4 = new mxCell(&#039;&#039;, new mxGeometry(150, 0, 40, 90), &#039;verticalLabelPosition=top;verticalAlign=bottom;html=1;shape=mxgraph.infographic.cylinder;isoAngle=15;fillColor=#CCCCCC;strokeColor=none;fontStyle=1;fontColor=#23445D;fontSize=12;shadow=0;align=left;opacity=70;&#039;);
+			   	bg4.vertex = true;
+			   	
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(200, 50, 40, 70), s2 + &#039;cylinder;isoAngle=15;fillColor=#12AAB5;strokeColor=none;fontStyle=1;fontColor=#12AAB5;fontSize=12;shadow=0;&#039;);
+			   	part5.vertex = true;
+			   	var bg5 = new mxCell(&#039;&#039;, new mxGeometry(200, 0, 40, 70), &#039;verticalLabelPosition=top;verticalAlign=bottom;html=1;shape=mxgraph.infographic.cylinder;isoAngle=15;fillColor=#CCCCCC;strokeColor=none;fontStyle=1;fontColor=#12AAB5;fontSize=12;shadow=0;align=left;opacity=70;&#039;);
+			   	bg5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, bg1, bg2, bg3, bg4, bg5], 240, 120, &#039;Bar Graph&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;folded banners&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 200, 100), 
+			   		&#039;html=1;shape=mxgraph.infographic.bannerHalfFold;dx=40;dx2=20;notch=15;fillColor=#10739E;strokeColor=none;align=left;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;spacingLeft=25;spacingTop=5;&#039;);
+			   	part1.vertex = true;
+	   	
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 60, 200, 100), 
+			   		&#039;html=1;shape=mxgraph.infographic.bannerHalfFold;dx=40;dx2=20;notch=15;fillColor=#F2931E;strokeColor=none;align=left;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;spacingLeft=25;spacingTop=5;&#039;);
+			   	part2.vertex = true;
+	
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 120, 200, 100), 
+					&#039;html=1;shape=mxgraph.infographic.bannerHalfFold;dx=40;dx2=20;notch=15;fillColor=#AE4132;strokeColor=none;align=left;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;spacingLeft=25;spacingTop=5;&#039;);
+				part3.vertex = true;
+
+				var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 180, 200, 100), 
+					&#039;html=1;shape=mxgraph.infographic.bannerHalfFold;dx=40;dx2=20;notch=15;fillColor=#23445D;strokeColor=none;align=left;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;spacingLeft=25;spacingTop=5;&#039;);
+				part4.vertex = true;
+
+				var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 240, 200, 120), 
+					&#039;html=1;shape=mxgraph.infographic.bannerHalfFold;dx=40;dx2=20;notch=15;fillColor=#12AAB5;strokeColor=none;align=left;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;spacingLeft=25;spacingTop=5;&#039;);
+				part5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5], 200, 360, &#039;Folded Banners&#039;);
+			}),				
+					
+			this.addEntry(dt + &#039;cylinder graph&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 100, 85), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#10739E;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#10739E;&#039;);
+			   	part1.vertex = true;
+			   	
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 75, 100, 55), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#F2931E;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#F2931E;&#039;);
+			   	part2.vertex = true;
+			   	
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 120, 100, 110), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#AE4132;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#AE4132;&#039;);
+			   	part3.vertex = true;
+			   	
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 220, 100, 150), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#23445D;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#23445D;&#039;);
+			   	part4.vertex = true;
+			   	
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 360, 100, 90), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#12AAB5;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#12AAB5;&#039;);
+			   	part5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part5, part4, part3, part2, part1], 100, 460, &#039;Cylinder Graph&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;cylinder graph&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 100, 85), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#10739E;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#10739E;&#039;);
+			   	part1.vertex = true;
+			   	
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 65, 100, 55), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#F2931E;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#F2931E;&#039;);
+			   	part2.vertex = true;
+			   	
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 100, 100, 110), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#AE4132;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#AE4132;&#039;);
+			   	part3.vertex = true;
+			   	
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 190, 100, 150), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#23445D;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#23445D;&#039;);
+			   	part4.vertex = true;
+			   	
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 320, 100, 90), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#12AAB5;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#12AAB5;&#039;);
+			   	part5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part5, part4, part3, part2, part1], 100, 410, &#039;Cylinder Graph&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;ribbon list&#039;, function()
+			{
+			   	var ribbon1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 500, 100), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=20;notch2=0;fillColor=#10739E;strokeColor=none;shadow=1;&#039;);
+			   	ribbon1.vertex = true;
+			   	var item1 = new mxCell(&#039;Label&#039;, new mxGeometry(410, 50, 100, 60), &#039;shape=manualInput;whiteSpace=wrap;html=1;shadow=1;strokeColor=none;fillColor=#dddddd;fontSize=15;fontColor=#444444;align=right;direction=south;flipH=1;shadow=1;spacing=10;fontStyle=1;&#039;);
+			   	item1.vertex = true;
+			   	var chevron1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0.5, 30, 40), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeColor=none;strokeWidth=6;fillColor=#CCCCCC;size=20;&#039;);
+			   	chevron1.vertex = true;
+			   	chevron1.geometry.relative = true;
+			   	chevron1.geometry.offset = new mxPoint(150, -20);
+			   	ribbon1.insert(chevron1);
+			   	var text1 = new mxCell(
+			   			&#039;&lt;b&gt;Heading&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/font&gt;&#039;, 
+			   			new mxGeometry(0, 0, 230, 100), &#039;text;strokeColor=none;fillColor=none;spacing=5;spacingTop=0;whiteSpace=wrap;overflow=hidden;rounded=0;shadow=0;fontSize=15;fontColor=#FFFFFF;align=left;html=1;&#039;);
+			   	text1.vertex = true;
+			   	text1.geometry.relative = true;
+			   	text1.geometry.offset = new mxPoint(200, 0);
+			   	ribbon1.insert(text1);
+			   	var icon1 = new mxCell(&#039;&#039;, new mxGeometry(50, 32, 50, 37), &#039;shadow=0;dashed=0;html=1;strokeColor=none;shape=mxgraph.mscae.intune.user_group;fontSize=15;fontColor=#FFFFFF;align=left;&#039;);
+			   	icon1.vertex = true;
+			   	
+			   	var ribbon2 = new mxCell(&#039;&#039;, new mxGeometry(0, 120, 500, 100), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=20;notch2=0;fillColor=#F2931E;strokeColor=none;shadow=1;&#039;);
+			   	ribbon2.vertex = true;
+			   	var item2 = new mxCell(&#039;Label&#039;, new mxGeometry(410, 170, 100, 60), &#039;shape=manualInput;whiteSpace=wrap;html=1;shadow=1;strokeColor=none;fillColor=#dddddd;fontSize=15;fontColor=#444444;align=right;direction=south;flipH=1;shadow=1;spacing=10;fontStyle=1;&#039;);
+			   	item2.vertex = true;
+			   	var chevron2 = new mxCell(&#039;&#039;, new mxGeometry(0, 0.5, 30, 40), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeColor=none;strokeWidth=6;fillColor=#CCCCCC;size=20;&#039;);
+			   	chevron2.vertex = true;
+			   	chevron2.geometry.relative = true;
+			   	chevron2.geometry.offset = new mxPoint(150, -20);
+			   	ribbon2.insert(chevron2);
+			   	var text2 = new mxCell(
+			   			&#039;&lt;b&gt;Heading&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/font&gt;&#039;, 
+			   			new mxGeometry(0, 0, 230, 100), &#039;text;strokeColor=none;fillColor=none;spacing=5;spacingTop=0;whiteSpace=wrap;overflow=hidden;rounded=0;shadow=0;fontSize=15;fontColor=#FFFFFF;align=left;html=1;&#039;);
+			   	text2.vertex = true;
+			   	text2.geometry.relative = true;
+			   	text2.geometry.offset = new mxPoint(200, 0);
+			   	ribbon2.insert(text2);
+			   	var icon2 = new mxCell(&#039;&#039;, new mxGeometry(50, 152, 50, 37), &#039;shadow=0;dashed=0;html=1;strokeColor=none;shape=mxgraph.mscae.intune.user_group;fontSize=15;fontColor=#FFFFFF;align=left;&#039;);
+			   	icon2.vertex = true;
+			   	
+			   	var ribbon3 = new mxCell(&#039;&#039;, new mxGeometry(0, 240, 500, 100), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=20;notch2=0;fillColor=#AE4132;strokeColor=none;shadow=1;&#039;);
+			   	ribbon3.vertex = true;
+			   	var item3 = new mxCell(&#039;Label&#039;, new mxGeometry(410, 290, 100, 60), &#039;shape=manualInput;whiteSpace=wrap;html=1;shadow=1;strokeColor=none;fillColor=#dddddd;fontSize=15;fontColor=#444444;align=right;direction=south;flipH=1;shadow=1;spacing=10;fontStyle=1;&#039;);
+			   	item3.vertex = true;
+			   	var chevron3 = new mxCell(&#039;&#039;, new mxGeometry(0, 0.5, 30, 40), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeColor=none;strokeWidth=6;fillColor=#CCCCCC;size=20;&#039;);
+			   	chevron3.vertex = true;
+			   	chevron3.geometry.relative = true;
+			   	chevron3.geometry.offset = new mxPoint(150, -20);
+			   	ribbon3.insert(chevron3);
+			   	var text3 = new mxCell(
+			   			&#039;&lt;b&gt;Heading&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/font&gt;&#039;, 
+			   			new mxGeometry(0, 0, 230, 100), &#039;text;strokeColor=none;fillColor=none;spacing=5;spacingTop=0;whiteSpace=wrap;overflow=hidden;rounded=0;shadow=0;fontSize=15;fontColor=#FFFFFF;align=left;html=1;&#039;);
+			   	text3.vertex = true;
+			   	text3.geometry.relative = true;
+			   	text3.geometry.offset = new mxPoint(200, 0);
+			   	ribbon3.insert(text3);
+			   	var icon3 = new mxCell(&#039;&#039;, new mxGeometry(50, 272, 50, 37), &#039;shadow=0;dashed=0;html=1;strokeColor=none;shape=mxgraph.mscae.intune.user_group;fontSize=15;fontColor=#FFFFFF;align=left;&#039;);
+			   	icon3.vertex = true;
+			   	
+			   	var ribbon4 = new mxCell(&#039;&#039;, new mxGeometry(0, 360, 500, 100), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=20;notch2=0;fillColor=#23445D;strokeColor=none;shadow=1;&#039;);
+			   	ribbon4.vertex = true;
+			   	var item4 = new mxCell(&#039;Label&#039;, new mxGeometry(410, 410, 100, 60), &#039;shape=manualInput;whiteSpace=wrap;html=1;shadow=1;strokeColor=none;fillColor=#dddddd;fontSize=15;fontColor=#444444;align=right;direction=south;flipH=1;shadow=1;spacing=10;fontStyle=1;&#039;);
+			   	item4.vertex = true;
+			   	var chevron4 = new mxCell(&#039;&#039;, new mxGeometry(0, 0.5, 30, 40), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeColor=none;strokeWidth=6;fillColor=#CCCCCC;size=20;&#039;);
+			   	chevron4.vertex = true;
+			   	chevron4.geometry.relative = true;
+			   	chevron4.geometry.offset = new mxPoint(150, -20);
+			   	ribbon4.insert(chevron4);
+			   	var text4 = new mxCell(
+			   			&#039;&lt;b&gt;Heading&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/font&gt;&#039;, 
+			   			new mxGeometry(0, 0, 230, 100), &#039;text;strokeColor=none;fillColor=none;spacing=5;spacingTop=0;whiteSpace=wrap;overflow=hidden;rounded=0;shadow=0;fontSize=15;fontColor=#FFFFFF;align=left;html=1;&#039;);
+			   	text4.vertex = true;
+			   	text4.geometry.relative = true;
+			   	text4.geometry.offset = new mxPoint(200, 0);
+			   	ribbon4.insert(text4);
+			   	var icon4 = new mxCell(&#039;&#039;, new mxGeometry(50, 392, 50, 37), &#039;shadow=0;dashed=0;html=1;strokeColor=none;shape=mxgraph.mscae.intune.user_group;fontSize=15;fontColor=#FFFFFF;align=left;&#039;);
+			   	icon4.vertex = true;
+			   	
+			   	var ribbon5 = new mxCell(&#039;&#039;, new mxGeometry(0, 480, 500, 100), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=20;notch2=0;fillColor=#12AAB5;strokeColor=none;shadow=1;&#039;);
+			   	ribbon5.vertex = true;
+			   	var item5 = new mxCell(&#039;Label&#039;, new mxGeometry(410, 530, 100, 60), &#039;shape=manualInput;whiteSpace=wrap;html=1;shadow=1;strokeColor=none;fillColor=#dddddd;fontSize=15;fontColor=#444444;align=right;direction=south;flipH=1;shadow=1;spacing=10;fontStyle=1;&#039;);
+			   	item5.vertex = true;
+			   	var chevron5 = new mxCell(&#039;&#039;, new mxGeometry(0, 0.5, 30, 40), &#039;shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;shadow=0;strokeColor=none;strokeWidth=6;fillColor=#CCCCCC;size=20;&#039;);
+			   	chevron5.vertex = true;
+			   	chevron5.geometry.relative = true;
+			   	chevron5.geometry.offset = new mxPoint(150, -20);
+			   	ribbon5.insert(chevron5);
+			   	var text5 = new mxCell(
+			   			&#039;&lt;b&gt;Heading&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/font&gt;&#039;, 
+			   			new mxGeometry(0, 0, 230, 100), &#039;text;strokeColor=none;fillColor=none;spacing=5;spacingTop=0;whiteSpace=wrap;overflow=hidden;rounded=0;shadow=0;fontSize=15;fontColor=#FFFFFF;align=left;html=1;&#039;);
+			   	text5.vertex = true;
+			   	text5.geometry.relative = true;
+			   	text5.geometry.offset = new mxPoint(200, 0);
+			   	ribbon5.insert(text5);
+			   	var icon5 = new mxCell(&#039;&#039;, new mxGeometry(50, 512, 50, 37), &#039;shadow=0;dashed=0;html=1;strokeColor=none;shape=mxgraph.mscae.intune.user_group;fontSize=15;fontColor=#FFFFFF;align=left;&#039;);
+			   	icon5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([ribbon1, item1, icon1, ribbon2, item2, icon2, ribbon3, item3, icon3, ribbon4, item4, icon4, ribbon5, item5, icon5], 550, 590, &#039;Ribbon List&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;bar graph&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 120, 70), &#039;html=1;whiteSpace=wrap;shape=mxgraph.infographic.barCallout;dx=60;dy=30;fillColor=#10739E;strokeColor=none;align=center;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingTop=5;&#039;);
+			   	part1.vertex = true;
+			   	var dial1 = new mxCell(&#039;12&#039;, new mxGeometry(40, 75, 40, 40), &#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;shadow=0;strokeColor=#10739E;strokeWidth=6;fontSize=16;align=center;fontStyle=1&#039;);
+			   	dial1.vertex = true;
+			   	
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(120, 0, 160, 70), &#039;html=1;whiteSpace=wrap;shape=mxgraph.infographic.barCallout;dx=80;dy=30;fillColor=#F2931E;strokeColor=none;align=center;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingTop=5;&#039;);
+			   	part2.vertex = true;
+			   	var dial2 = new mxCell(&#039;16&#039;, new mxGeometry(180, 75, 40, 40), &#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;shadow=0;strokeColor=#F2931E;strokeWidth=6;fontSize=16;align=center;fontStyle=1&#039;);
+			   	dial2.vertex = true;
+			   	
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(280, 0, 80, 70), &#039;html=1;whiteSpace=wrap;shape=mxgraph.infographic.barCallout;dx=40;dy=30;fillColor=#AE4132;strokeColor=none;align=center;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingTop=5;&#039;);
+			   	part3.vertex = true;
+			   	var dial3 = new mxCell(&#039;8&#039;, new mxGeometry(300, 75, 40, 40), &#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;shadow=0;strokeColor=#AE4132;strokeWidth=6;fontSize=16;align=center;fontStyle=1&#039;);
+			   	dial3.vertex = true;
+			   	
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(360, 0, 200, 70), &#039;html=1;whiteSpace=wrap;shape=mxgraph.infographic.barCallout;dx=100;dy=30;fillColor=#23445D;strokeColor=none;align=center;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingTop=5;&#039;);
+			   	part4.vertex = true;
+			   	var dial4 = new mxCell(&#039;20&#039;, new mxGeometry(440, 75, 40, 40), &#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;shadow=0;strokeColor=#23445D;strokeWidth=6;fontSize=16;align=center;fontStyle=1&#039;);
+			   	dial4.vertex = true;
+			   	
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(560, 0, 140, 70), &#039;html=1;whiteSpace=wrap;shape=mxgraph.infographic.barCallout;dx=70;dy=30;fillColor=#12AAB5;strokeColor=none;align=center;verticalAlign=top;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingTop=5;&#039;);
+			   	part5.vertex = true;
+			   	var dial5 = new mxCell(&#039;14&#039;, new mxGeometry(610, 75, 40, 40), &#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;shadow=0;strokeColor=#12AAB5;strokeWidth=6;fontSize=16;align=center;fontStyle=1&#039;);
+			   	dial5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, dial1, dial2, dial3, dial4, dial5], 700, 115, &#039;Bar Graph&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;arrow graph&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 40, 90, 160), &#039;html=1;shadow=0;dashed=0;align=center;verticalAlign=top;shape=mxgraph.arrows2.arrow;dy=0.4;dx=60;direction=north;notch=0;strokeColor=#FFFFFF;strokeWidth=6;fillColor=#10739E;fontSize=14;labelPosition=center;verticalLabelPosition=bottom;fontStyle=1&#039;);
+			   	part1.vertex = true;
+
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(50, 0, 90, 200), &#039;html=1;shadow=0;dashed=0;align=center;verticalAlign=top;shape=mxgraph.arrows2.arrow;dy=0.4;dx=60;direction=north;notch=0;strokeColor=#FFFFFF;strokeWidth=6;fillColor=#F2931E;fontSize=14;labelPosition=center;verticalLabelPosition=bottom;fontStyle=1&#039;);
+			   	part2.vertex = true;
+			   	
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(100, 20, 90, 180), &#039;html=1;shadow=0;dashed=0;align=center;verticalAlign=top;shape=mxgraph.arrows2.arrow;dy=0.4;dx=60;direction=north;notch=0;strokeColor=#FFFFFF;strokeWidth=6;fillColor=#AE4132;fontSize=14;labelPosition=center;verticalLabelPosition=bottom;fontStyle=1&#039;);
+			   	part3.vertex = true;
+			   	
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(150, 90, 90, 110), &#039;html=1;shadow=0;dashed=0;align=center;verticalAlign=top;shape=mxgraph.arrows2.arrow;dy=0.4;dx=60;direction=north;notch=0;strokeColor=#FFFFFF;strokeWidth=6;fillColor=#23445D;fontSize=14;labelPosition=center;verticalLabelPosition=bottom;fontStyle=1&#039;);
+			   	part4.vertex = true;
+			   	
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(200, 60, 90, 140), &#039;html=1;shadow=0;dashed=0;align=center;verticalAlign=top;shape=mxgraph.arrows2.arrow;dy=0.4;dx=60;direction=north;notch=0;strokeColor=#FFFFFF;strokeWidth=6;fillColor=#12AAB5;fontSize=14;labelPosition=center;verticalLabelPosition=bottom;fontStyle=1&#039;);
+			   	part5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5], 300, 200, &#039;Arrow Graph&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;triangular diagram&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(120, 0, 240, 180), &#039;triangle;whiteSpace=wrap;html=1;shadow=0;strokeColor=#FFFFFF;strokeWidth=6;fillColor=#10739E;fontSize=16;fontColor=#FFFFFF;align=center;direction=north;fontStyle=1&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 180, 240, 180), &#039;triangle;whiteSpace=wrap;html=1;shadow=0;strokeColor=#FFFFFF;strokeWidth=6;fillColor=#F2931E;fontSize=16;fontColor=#FFFFFF;align=center;direction=north;fontStyle=1&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(120, 180, 240, 180), &#039;triangle;whiteSpace=wrap;html=1;shadow=0;strokeColor=#FFFFFF;strokeWidth=6;fillColor=#AE4132;fontSize=16;fontColor=#FFFFFF;align=center;direction=south;fontStyle=1&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(240, 180, 240, 180), &#039;triangle;whiteSpace=wrap;html=1;shadow=0;strokeColor=#FFFFFF;strokeWidth=6;fillColor=#23445D;fontSize=16;fontColor=#FFFFFF;align=center;direction=north;fontStyle=1&#039;);
+			   	part4.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4], 480, 360, &#039;Triangular Diagram&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;roll&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 400, 400), &#039;ellipse;html=1;strokeWidth=4;fillColor=#23445D;strokeColor=none;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;&#039;, new mxGeometry(25, 25, 350, 350), &#039;ellipse;html=1;strokeWidth=4;fillColor=#2F5B7C;strokeColor=none;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;&#039;, new mxGeometry(50, 50, 300, 300), &#039;ellipse;html=1;strokeWidth=4;fillColor=#5D7F99;strokeColor=none;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(75, 75, 250, 250), &#039;ellipse;html=1;strokeWidth=4;fillColor=#BAC8D3;strokeColor=none;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;&#039;, new mxGeometry(100, 100, 200, 200), &#039;ellipse;html=1;strokeWidth=4;fillColor=#FCE7CD;strokeColor=none;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;&#039;, new mxGeometry(125, 125, 150, 150), &#039;ellipse;html=1;strokeWidth=4;fillColor=#F8C382;strokeColor=none;shadow=0;fontSize=10;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;spacing=10;&#039;);
+			   	part6.vertex = true;
+			   	var part7 = new mxCell(&#039;Label&#039;, new mxGeometry(150, 150, 100, 100), &#039;ellipse;html=1;strokeWidth=4;fillColor=#F5AB50;strokeColor=none;shadow=0;fontSize=20;fontColor=#FFFFFF;align=center;fontStyle=1;whiteSpace=wrap;spacing=10;&#039;);
+			   	part7.vertex = true;
+
+			   	var ribbon1 = new mxCell(&#039;Label&#039;, new mxGeometry(200, 225, 300, 25), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=20;fillColor=#F5AB50;strokeColor=none;align=right;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingRight=25;&#039;);
+			   	ribbon1.vertex = true;
+			   	var ribbon2 = new mxCell(&#039;Label&#039;, new mxGeometry(200, 250, 340, 25), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=20;fillColor=#F8C382;strokeColor=none;align=right;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingRight=25;&#039;);
+			   	ribbon2.vertex = true;
+			   	var ribbon3 = new mxCell(&#039;Label&#039;, new mxGeometry(200, 275, 380, 25), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=20;fillColor=#FCE7CD;strokeColor=none;align=right;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingRight=25;&#039;);
+			   	ribbon3.vertex = true;
+			   	var ribbon4 = new mxCell(&#039;Label&#039;, new mxGeometry(200, 300, 420, 25), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=20;fillColor=#BAC8D3;strokeColor=none;align=right;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingRight=25;&#039;);
+			   	ribbon4.vertex = true;
+			   	var ribbon5 = new mxCell(&#039;Label&#039;, new mxGeometry(200, 325, 460, 25), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=20;fillColor=#5D7F99;strokeColor=none;align=right;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingRight=25;&#039;);
+			   	ribbon5.vertex = true;
+			   	var ribbon6 = new mxCell(&#039;Label&#039;, new mxGeometry(200, 350, 500, 25), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=20;fillColor=#2F5B7C;strokeColor=none;align=right;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingRight=25;&#039;);
+			   	ribbon6.vertex = true;
+			   	var ribbon7 = new mxCell(&#039;Label&#039;, new mxGeometry(200, 375, 540, 25), &#039;html=1;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=20;fillColor=#23445D;strokeColor=none;align=right;verticalAlign=middle;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=0;spacingRight=25;&#039;);
+			   	ribbon7.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, part6, part7, ribbon1, ribbon2, ribbon3, ribbon4, ribbon5, ribbon6, ribbon7], 740, 400, &#039;Roll&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;cylinder graph&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(315, 160, 100, 25), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#10739E;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#10739E;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;&#039;, new mxGeometry(315, 180, 100, 25), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#F2931E;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#F2931E;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;&#039;, new mxGeometry(315, 200, 100, 25), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#AE4132;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#AE4132;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(315, 220, 100, 25), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#23445D;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#23445D;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;&#039;, new mxGeometry(315, 240, 100, 25), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.cylinder;fillColor=#12AAB5;strokeColor=none;shadow=0;align=left;labelPosition=right;spacingLeft=10;fontStyle=1;fontColor=#12AAB5;&#039;);
+			   	part5.vertex = true;
+
+			   	var callout1 = new mxCell(&#039;Label&#039;, new mxGeometry(175, 0, 130, 160), &#039;strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.text.callout;linkText=;textSize=17;textColor=#666666;callDir=NW;callStyle=line;fontSize=17;fontColor=#10739E;align=left;verticalAlign=top;strokeColor=#666666;fillColor=#4D9900;flipV=0;fontStyle=1;&#039;);
+			   	callout1.vertex = true;
+			   	var callout2 = new mxCell(&#039;Label&#039;, new mxGeometry(175, 80, 130, 110), &#039;strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.text.callout;linkText=;textSize=17;textColor=#666666;callDir=NW;callStyle=line;fontSize=17;fontColor=#F2931E;align=left;verticalAlign=top;strokeColor=#666666;fillColor=#4D9900;flipV=0;fontStyle=1;&#039;);
+			   	callout2.vertex = true;
+			   	var callout3 = new mxCell(&#039;Label&#039;, new mxGeometry(175, 160, 130, 50), &#039;strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.text.callout;linkText=;textSize=17;textColor=#666666;callDir=NW;callStyle=line;fontSize=17;fontColor=#AE4132;align=left;verticalAlign=top;strokeColor=#666666;fillColor=#4D9900;flipV=0;fontStyle=1;&#039;);
+			   	callout3.vertex = true;
+			   	var callout4 = new mxCell(&#039;Label&#039;, new mxGeometry(175, 230, 130, 50), &#039;strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.text.callout;linkText=;textSize=17;textColor=#666666;callDir=SW;callStyle=line;fontSize=17;fontColor=#23445D;align=left;verticalAlign=bottom;strokeColor=#666666;fillColor=#4D9900;flipV=0;fontStyle=1;&#039;);
+			   	callout4.vertex = true;
+			   	var callout5 = new mxCell(&#039;Label&#039;, new mxGeometry(175, 250, 130, 120), &#039;strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.text.callout;linkText=;textSize=17;textColor=#666666;callDir=SW;callStyle=line;fontSize=17;fontColor=#12AAB5;align=left;verticalAlign=bottom;strokeColor=#666666;fillColor=#4D9900;flipV=0;fontStyle=1;&#039;);
+			   	callout5.vertex = true;
+
+			   	var text1 = new mxCell(
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(0, 30, 240, 50), &#039;rounded=0;whiteSpace=wrap;shadow=0;strokeColor=none;strokeWidth=6;fillColor=none;fontSize=12;align=right;html=1;&#039;);
+			   	text1.vertex = true;
+			   	var text2 = new mxCell(
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(0, 110, 240, 50), &#039;rounded=0;whiteSpace=wrap;shadow=0;strokeColor=none;strokeWidth=6;fillColor=none;fontSize=12;align=right;html=1;&#039;);
+			   	text2.vertex = true;
+			   	var text3 = new mxCell(
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(0, 190, 240, 50), &#039;rounded=0;whiteSpace=wrap;shadow=0;strokeColor=none;strokeWidth=6;fillColor=none;fontSize=12;align=right;html=1;&#039;);
+			   	text3.vertex = true;
+			   	var text4 = new mxCell(
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(0, 290, 240, 50), &#039;rounded=0;whiteSpace=wrap;shadow=0;strokeColor=none;strokeWidth=6;fillColor=none;fontSize=12;align=right;html=1;&#039;);
+			   	text4.vertex = true;
+			   	var text5 = new mxCell(
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(0, 380, 240, 50), &#039;rounded=0;whiteSpace=wrap;shadow=0;strokeColor=none;strokeWidth=6;fillColor=none;fontSize=12;align=right;html=1;&#039;);
+			   	text5.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([part5, part4, part3, part2, part1, callout1, callout2, callout3, callout4, callout5, text1, text2, text3, text4, text5], 415, 430, &#039;Cylinder Graph&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;swirl&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 300, 140), &#039;html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.uTurnArrow;dy=22;arrowHead=70;dx2=35;strokeColor=#ffffff;fillColor=#10739E;fontSize=12;fontColor=#3333FF;flipH=1;flipV=1;strokeWidth=4;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;&#039;, new mxGeometry(0, 79, 230, 140), &#039;html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.uTurnArrow;dy=22;arrowHead=70;dx2=35;strokeColor=#ffffff;fillColor=#F2931E;fontSize=12;fontColor=#3333FF;flipV=1;strokeWidth=4;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;&#039;, new mxGeometry(70, 158, 230, 140), &#039;html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.uTurnArrow;dy=22;arrowHead=70;dx2=35;strokeColor=#ffffff;fillColor=#AE4132;fontSize=12;fontColor=#3333FF;flipH=1;flipV=1;strokeWidth=4;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(0, 237, 230, 140), &#039;html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.uTurnArrow;dy=22;arrowHead=70;dx2=35;strokeColor=#ffffff;fillColor=#23445D;fontSize=12;fontColor=#3333FF;flipV=1;strokeWidth=4;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;&#039;, new mxGeometry(70, 316, 230, 140), &#039;html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.uTurnArrow;dy=22;arrowHead=70;dx2=35;strokeColor=#ffffff;fillColor=#12AAB5;fontSize=12;fontColor=#3333FF;flipH=1;flipV=1;strokeWidth=4;&#039;);
+			   	part5.vertex = true;
+
+			   	var text1 = new mxCell(
+			   			&#039;&lt;b style=&quot;font-size: 7px&quot;&gt;LABEL&lt;/b&gt;&lt;br style=&quot;font-size: 7px&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(50, 0, 150, 40), &#039;rounded=0;whiteSpace=wrap;shadow=0;strokeColor=none;strokeWidth=6;fillColor=none;fontSize=7;fontColor=#FFFFFF;align=left;html=1;spacingLeft=5;&#039;);
+			   	text1.vertex = true;
+			   	var text2 = new mxCell(
+			   			&#039;&lt;b style=&quot;font-size: 7px&quot;&gt;LABEL&lt;/b&gt;&lt;br style=&quot;font-size: 7px&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(50, 79, 150, 40), &#039;rounded=0;whiteSpace=wrap;shadow=0;strokeColor=none;strokeWidth=6;fillColor=none;fontSize=7;fontColor=#FFFFFF;align=left;html=1;spacingLeft=5;&#039;);
+			   	text2.vertex = true;
+			   	var text3 = new mxCell(
+			   			&#039;&lt;b style=&quot;font-size: 7px&quot;&gt;LABEL&lt;/b&gt;&lt;br style=&quot;font-size: 7px&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(100, 158, 150, 40), &#039;rounded=0;whiteSpace=wrap;shadow=0;strokeColor=none;strokeWidth=6;fillColor=none;fontSize=7;fontColor=#FFFFFF;align=left;html=1;spacingLeft=5;&#039;);
+			   	text3.vertex = true;
+			   	var text4 = new mxCell(
+			   			&#039;&lt;b style=&quot;font-size: 7px&quot;&gt;LABEL&lt;/b&gt;&lt;br style=&quot;font-size: 7px&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(50, 237, 150, 40), &#039;rounded=0;whiteSpace=wrap;shadow=0;strokeColor=none;strokeWidth=6;fillColor=none;fontSize=7;fontColor=#FFFFFF;align=left;html=1;spacingLeft=5;&#039;);
+			   	text4.vertex = true;
+			   	var text5 = new mxCell(
+			   			&#039;&lt;b style=&quot;font-size: 7px&quot;&gt;LABEL&lt;/b&gt;&lt;br style=&quot;font-size: 7px&quot;&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&#039;, 
+			   			new mxGeometry(100, 316, 150, 40), &#039;rounded=0;whiteSpace=wrap;shadow=0;strokeColor=none;strokeWidth=6;fillColor=none;fontSize=7;fontColor=#FFFFFF;align=left;html=1;spacingLeft=5;&#039;);
+			   	text5.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([part5, part4, part3, part2, part1, text1, text2, text3, text4, text5], 300, 456, &#039;Swirl&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;swirl&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Label&#039;, new mxGeometry(60, 0, 120, 15), &#039;shape=manualInput;whiteSpace=wrap;html=1;shadow=0;fillColor=#10739E;strokeColor=none;fontSize=12;fontColor=#FFFFFF;align=center;direction=north;flipV=1;rounded=0;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(30, 15, 150, 15), &#039;shape=manualInput;whiteSpace=wrap;html=1;shadow=0;fillColor=#F2931E;strokeColor=none;fontSize=12;fontColor=#FFFFFF;align=center;direction=north;flipV=1;rounded=0;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 30, 180, 15), &#039;shape=manualInput;whiteSpace=wrap;html=1;shadow=0;fillColor=#AE4132;strokeColor=none;fontSize=12;fontColor=#FFFFFF;align=center;direction=north;flipV=1;rounded=0;&#039;);
+			   	part3.vertex = true;
+			   	
+			   	var arc1 = new mxCell(&#039;&#039;, new mxGeometry(114, 0, 130, 130), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.partConcEllipse;fillColor=#10739E;strokeColor=none;startAngle=0;endAngle=0.5;arcWidth=0.23;shadow=0;fontSize=7;fontColor=#FFFFFF;align=left;&#039;);
+			   	arc1.vertex = true;
+			   	var arc2 = new mxCell(&#039;&#039;, new mxGeometry(129, 15, 100, 100), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.partConcEllipse;fillColor=#F2931E;strokeColor=none;startAngle=0;endAngle=0.5;arcWidth=0.3;shadow=0;fontSize=7;fontColor=#FFFFFF;align=left;&#039;);
+			   	arc2.vertex = true;
+			   	var arc3 = new mxCell(&#039;&#039;, new mxGeometry(144, 30, 70, 70), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.partConcEllipse;fillColor=#AE4132;strokeColor=none;startAngle=0;endAngle=0.5;arcWidth=0.43;shadow=0;fontSize=7;fontColor=#FFFFFF;align=left;&#039;);
+			   	arc3.vertex = true;
+
+			   	var arc4 = new mxCell(&#039;&#039;, new mxGeometry(115, 85, 130, 130), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.partConcEllipse;fillColor=#AE4132;strokeColor=none;startAngle=0.5;endAngle=0.00001;arcWidth=0.23;shadow=0;fontSize=7;fontColor=#FFFFFF;align=left;&#039;);
+			   	arc4.vertex = true;
+			   	var arc5 = new mxCell(&#039;&#039;, new mxGeometry(130, 100, 100, 100), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.partConcEllipse;fillColor=#F2931E;strokeColor=none;startAngle=0.5;endAngle=0.00001;arcWidth=0.3;shadow=0;fontSize=7;fontColor=#FFFFFF;align=left;&#039;);
+			   	arc5.vertex = true;
+			   	var arc6 = new mxCell(&#039;&#039;, new mxGeometry(145, 115, 70, 70), &#039;verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.partConcEllipse;fillColor=#10739E;strokeColor=none;startAngle=0.5;endAngle=0.00001;arcWidth=0.43;shadow=0;fontSize=7;fontColor=#FFFFFF;align=left;&#039;);
+			   	arc6.vertex = true;
+
+			   	var part4 = new mxCell(&#039;&#039;, new mxGeometry(179, 170, 181, 15), &#039;shape=manualInput;whiteSpace=wrap;html=1;shadow=0;fillColor=#10739E;strokeColor=none;fontSize=12;fontColor=#FFFFFF;align=center;direction=north;flipH=1;rounded=0;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;&#039;, new mxGeometry(179, 185, 151, 15), &#039;shape=manualInput;whiteSpace=wrap;html=1;shadow=0;fillColor=#F2931E;strokeColor=none;fontSize=12;fontColor=#FFFFFF;align=center;direction=north;flipH=1;rounded=0;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;&#039;, new mxGeometry(179, 200, 121, 15), &#039;shape=manualInput;whiteSpace=wrap;html=1;shadow=0;fillColor=#AE4132;strokeColor=none;fontSize=12;fontColor=#FFFFFF;align=center;direction=north;flipH=1;rounded=0;&#039;);
+			   	part6.vertex = true;
+			   	
+			   	var marker1 = new mxCell(&#039;1&#039;, new mxGeometry(0, 60, 30, 30), &#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;shadow=0;strokeColor=none;fillColor=#10739E;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;rounded=0;&#039;);
+			   	marker1.vertex = true;
+			   	var marker2 = new mxCell(&#039;2&#039;, new mxGeometry(40, 60, 30, 30), &#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;shadow=0;strokeColor=none;fillColor=#F2931E;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;rounded=0;&#039;);
+			   	marker2.vertex = true;
+			   	var marker3 = new mxCell(&#039;3&#039;, new mxGeometry(80, 60, 30, 30), &#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;shadow=0;strokeColor=none;fillColor=#AE4132;fontSize=17;fontColor=#FFFFFF;align=center;fontStyle=1;rounded=0;&#039;);
+			   	marker3.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, arc1, arc2, arc3, arc4, arc5, arc6, part4, part5, part6, marker1, marker2, marker3], 360, 215, &#039;Swirl&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;callout&#039;, function()
+		   	{
+			   	var edge1 = new mxCell(&#039;Label&#039;, new mxGeometry(0, 0, 0, 0), &#039;endArrow=oval;html=1;fontSize=16;fontColor=#10739E;endFill=0;endSize=24;strokeWidth=5;labelBackgroundColor=none;verticalAlign=top;fontStyle=1;strokeColor=#10739E;&#039;);
+			   	edge1.geometry.setTerminalPoint(new mxPoint(0, 100), true);
+			   	edge1.geometry.setTerminalPoint(new mxPoint(100, 0), false);
+			   	edge1.geometry.x=-1;
+		    	edge1.geometry.relative = true;
+			   	edge1.edge = true;
+
+			   	return sb.createVertexTemplateFromCells([edge1], 100, 100, &#039;Callout&#039;);
+			}),				
+				
+			this.addEntry(dt + &#039;roadmap vertical&#039;, function()
+			{
+			   	var startPoint = new mxCell(&#039;&#039;, new mxGeometry(234, 0, 12, 12), &#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;shadow=0;fillColor=none;strokeColor=#333333;fontSize=16;align=center;strokeWidth=2;&#039;);
+			   	startPoint.vertex = true;
+			   	var endPoint = new mxCell(&#039;&#039;, new mxGeometry(234, 498, 12, 12), &#039;ellipse;whiteSpace=wrap;html=1;aspect=fixed;shadow=0;fillColor=none;strokeColor=#333333;fontSize=16;align=center;strokeWidth=2;&#039;);
+			   	endPoint.vertex = true;
+
+			   	var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;endArrow=none;html=1;strokeWidth=3;strokeColor=#CCCCCC;labelBackgroundColor=none;fontSize=16&#039;);
+		    	edge1.geometry.relative = true;
+			   	edge1.edge = true;
+			   	startPoint.insertEdge(edge1, true);
+		    	endPoint.insertEdge(edge1, false);
+
+			   	var item1 = new mxCell(&#039;&#039;, new mxGeometry(0, 30, 246, 60), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.circularCallout2;dy=15;strokeColor=#10739E;labelPosition=center;align=center;fontColor=#10739E;fontStyle=1;fontSize=24;shadow=0;direction=north;&#039;);
+			   	item1.vertex = true;
+			   	var item2 = new mxCell(&#039;&#039;, new mxGeometry(234, 100, 246, 60), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.circularCallout2;dy=15;strokeColor=#F2931E;labelPosition=center;align=center;fontColor=#F2931E;fontStyle=1;fontSize=24;shadow=0;direction=north;flipH=1;&#039;);
+			   	item2.vertex = true;
+			   	var item3 = new mxCell(&#039;&#039;, new mxGeometry(0, 170, 246, 60), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.circularCallout2;dy=15;strokeColor=#AE4132;labelPosition=center;align=center;fontColor=#10739E;fontStyle=1;fontSize=24;shadow=0;direction=north;&#039;);
+			   	item3.vertex = true;
+			   	var item4 = new mxCell(&#039;&#039;, new mxGeometry(234, 240, 246, 60), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.circularCallout2;dy=15;strokeColor=#23445D;labelPosition=center;align=center;fontColor=#10739E;fontStyle=1;fontSize=24;shadow=0;direction=north;flipH=1;&#039;);
+			   	item4.vertex = true;
+			   	var item5 = new mxCell(&#039;&#039;, new mxGeometry(0, 310, 246, 60), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.circularCallout2;dy=15;strokeColor=#12AAB5;labelPosition=center;align=center;fontColor=#10739E;fontStyle=1;fontSize=24;shadow=0;direction=north;&#039;);
+			   	item5.vertex = true;
+			   	var item6 = new mxCell(&#039;&#039;, new mxGeometry(234, 380, 246, 60), &#039;verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.infographic.circularCallout2;dy=15;strokeColor=#56517E;labelPosition=center;align=center;fontColor=#10739E;fontStyle=1;fontSize=24;shadow=0;direction=north;flipH=1;&#039;);
+			   	item6.vertex = true;
+
+			   	var label1 = new mxCell(&#039;Label&#039;, new mxGeometry(70, 20, 160, 30), &#039;fillColor=#10739E;strokecolor=none;rounded=1;fontColor=#FFFFFF;strokeColor=none;fontStyle=1;fontSize=14;whiteSpace=wrap;html=1;&#039;);
+			   	label1.vertex = true;
+			   	var label2 = new mxCell(&#039;Label&#039;, new mxGeometry(250, 85, 160, 30), &#039;fillColor=#F2931E;strokecolor=none;rounded=1;fontColor=#FFFFFF;strokeColor=none;fontStyle=1;fontSize=14;whiteSpace=wrap;html=1;&#039;);
+			   	label2.vertex = true;
+			   	var label3 = new mxCell(&#039;Label&#039;, new mxGeometry(70, 160, 160, 30), &#039;fillColor=#AE4132;strokecolor=none;rounded=1;fontColor=#FFFFFF;strokeColor=none;fontStyle=1;fontSize=14;whiteSpace=wrap;html=1;&#039;);
+			   	label3.vertex = true;
+			   	var label4 = new mxCell(&#039;Label&#039;, new mxGeometry(250, 225, 160, 30), &#039;fillColor=#23445D;strokecolor=none;rounded=1;fontColor=#FFFFFF;strokeColor=none;fontStyle=1;fontSize=14;whiteSpace=wrap;html=1;&#039;);
+			   	label4.vertex = true;
+			   	var label5 = new mxCell(&#039;Label&#039;, new mxGeometry(70, 300, 160, 30), &#039;fillColor=#12AAB5;strokecolor=none;rounded=1;fontColor=#FFFFFF;strokeColor=none;fontStyle=1;fontSize=14;whiteSpace=wrap;html=1;&#039;);
+			   	label5.vertex = true;
+			   	var label6 = new mxCell(&#039;Label&#039;, new mxGeometry(250, 365, 160, 30), &#039;fillColor=#56517E;strokecolor=none;rounded=1;fontColor=#FFFFFF;strokeColor=none;fontStyle=1;fontSize=14;whiteSpace=wrap;html=1;&#039;);
+			   	label6.vertex = true;
+
+			   	var label7 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#10739E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(70, 70, 160, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label7.vertex = true;
+			   	var label8 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#F2931E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(250, 140, 160, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label8.vertex = true;
+			   	var label9 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#AE4132&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(70, 210, 160, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label9.vertex = true;
+			   	var label10 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#23445D&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(250, 280, 160, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label10.vertex = true;
+			   	var label11 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#12AAB5&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(70, 350, 160, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label11.vertex = true;
+			   	var label12 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#56517E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(250, 420, 160, 70), &#039;rounded=1;strokeColor=none;fillColor=#EEEEEE;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label12.vertex = true;
+			   	return sb.createVertexTemplateFromCells(
+			   			[edge1, startPoint, endPoint, item1, item2, item3, item4, item5, item6, label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11, label12], 
+			   			480, 510, &#039;Roadmap (vertical)&#039;);
+			}),				
+			
+			this.addEntry(dt + &#039;roadmap horizontal&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;&#039;, new mxGeometry(0, 90, 840, 30), &#039;fillColor=#dddddd;rounded=0;strokeColor=none;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Label&#039;, new mxGeometry(40, 80, 120, 50), &#039;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=10;notch=0;html=1;fillColor=#10739E;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;whiteSpace=wrap;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;Label&#039;, new mxGeometry(200, 80, 120, 50), &#039;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=10;notch=0;html=1;fillColor=#F2931E;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;whiteSpace=wrap;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;Label&#039;, new mxGeometry(360, 80, 120, 50), &#039;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=10;notch=0;html=1;fillColor=#AE4132;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;whiteSpace=wrap;&#039;);
+			   	part4.vertex = true;
+			   	var part5 = new mxCell(&#039;Label&#039;, new mxGeometry(520, 80, 120, 50), &#039;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=10;notch=0;html=1;fillColor=#23445D;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;whiteSpace=wrap;&#039;);
+			   	part5.vertex = true;
+			   	var part6 = new mxCell(&#039;Label&#039;, new mxGeometry(680, 80, 120, 50), &#039;shape=mxgraph.infographic.ribbonSimple;notch1=0;notch2=10;notch=0;html=1;fillColor=#12AAB5;strokeColor=none;shadow=0;fontSize=17;fontColor=#FFFFFF;align=left;spacingLeft=10;fontStyle=1;whiteSpace=wrap;&#039;);
+			   	part6.vertex = true;
+			   	
+			   	var label1 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#10739E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(0, 0, 200, 70), &#039;rounded=1;strokeColor=none;fillColor=#DDDDDD;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label1.vertex = true;
+			   	
+			   	var label2 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#F2931E&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(160, 140, 200, 70), &#039;rounded=1;strokeColor=none;fillColor=#DDDDDD;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label2.vertex = true;
+			   	
+			   	var label3 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#AE4132&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(320, 0, 200, 70), &#039;rounded=1;strokeColor=none;fillColor=#DDDDDD;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label3.vertex = true;
+			   	
+			   	var label4 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#23445D&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(480, 140, 200, 70), &#039;rounded=1;strokeColor=none;fillColor=#DDDDDD;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label4.vertex = true;
+			   	
+			   	var label5 = new mxCell(&#039;&lt;font style=&quot;font-size: 10px&quot;&gt;&lt;font style=&quot;font-size: 12px&quot; color=&quot;#12AAB5&quot;&gt;&lt;b&gt;Label&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font size=&quot;1&quot;&gt;&#039; + 
+			   			&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&lt;/font&gt;&lt;/font&gt;&#039;, 
+			   			new mxGeometry(640, 0, 200, 70), &#039;rounded=1;strokeColor=none;fillColor=#DDDDDD;align=center;arcSize=12;verticalAlign=top;whiteSpace=wrap;html=1;fontSize=12;&#039;);
+			   	label5.vertex = true;
+			   	
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4, part5, part6, label1, label2, label3, label4, label5], 840, 210, &#039;Roadmap (horizontal)&#039;);
+			}),				
+
+			this.addEntry(dt + &#039;flower&#039;, function()
+			{
+			   	var part1 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(0, 0, 150, 150), &#039;shape=mxgraph.basic.diag_round_rect;dx=37;flipH=1;html=1;fillColor=#10739E;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;strokeWidth=8;&#039;);
+			   	part1.vertex = true;
+			   	var part2 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(160, 0, 150, 150), &#039;shape=mxgraph.basic.diag_round_rect;dx=37;html=1;fillColor=#F2931E;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;strokeWidth=8;&#039;);
+			   	part2.vertex = true;
+			   	var part3 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(0, 160, 150, 150), &#039;shape=mxgraph.basic.diag_round_rect;dx=37;flipH=1;flipV=1;html=1;fillColor=#AE4132;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;strokeWidth=8;&#039;);
+			   	part3.vertex = true;
+			   	var part4 = new mxCell(&#039;Lorem ipsum dolor sit amet, consectetur adipisicing elit&#039;, new mxGeometry(160, 160, 150, 150), &#039;shape=mxgraph.basic.diag_round_rect;dx=37;flipV=1;html=1;fillColor=#23445D;strokeColor=none;shadow=0;fontSize=12;fontColor=#FFFFFF;align=center;fontStyle=0;whiteSpace=wrap;strokeWidth=8;&#039;);
+			   	part4.vertex = true;
+
+			   	return sb.createVertexTemplateFromCells([part1, part2, part3, part4], 310, 310, &#039;Flower&#039;);
+			})		
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

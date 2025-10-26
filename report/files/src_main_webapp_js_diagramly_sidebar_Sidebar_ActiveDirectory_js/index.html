@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-ActiveDirectory.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-ActiveDirectory.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">63.16</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">167</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">25.84</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">5.05</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addActiveDirectoryPalette = function()
+	{
+		var d = 50;
+		var dt = &#039;ibm&#039;;
+		var sb = this;
+		var s = &#039;image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;spacingTop=3;image=img/lib/active_directory/&#039;;
+		var gn = &#039;ms active directory &#039;;
+		this.setCurrentSearchEntryLibrary(&#039;active_directory&#039;);
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;active_directory.svg;&#039;,
+					 d, d * 0.85, &#039;&#039;, &#039;Active Directory&#039;, false, null, this.getTagsForStencil(gn, &#039;active directory&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;cd_dvd.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;CD / DVD&#039;, false, null, this.getTagsForStencil(gn, &#039;cd dvd compact digital video disc&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;cell_phone.svg;&#039;,
+					 d * 0.42, d, &#039;&#039;, &#039;Cell Phone&#039;, false, null, this.getTagsForStencil(gn, &#039;cell phone&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;cluster_server.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Cluster Server&#039;, false, null, this.getTagsForStencil(gn, &#039;active&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;community_discussion.svg;&#039;,
+					 d, d * 0.9, &#039;&#039;, &#039;Community Discussion&#039;, false, null, this.getTagsForStencil(gn, &#039;community discussion&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;data_jack.svg;&#039;,
+					 d * 0.55, d, &#039;&#039;, &#039;Data Jack&#039;, false, null, this.getTagsForStencil(gn, &#039;data jack&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;database.svg;&#039;,
+					 d, d * 0.74, &#039;&#039;, &#039;Database&#039;, false, null, this.getTagsForStencil(gn, &#039;database&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;database_cube.svg;&#039;,
+					 d * 0.9, d, &#039;&#039;, &#039;Database Cube&#039;, false, null, this.getTagsForStencil(gn, &#039;database cube&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;database_partition_2.svg;&#039;,
+					 d, d * 0.74, &#039;&#039;, &#039;Database Partition 2&#039;, false, null, this.getTagsForStencil(gn, &#039;database partition two&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;database_partition_3.svg;&#039;,
+					 d, d * 0.74, &#039;&#039;, &#039;Database Partition 3&#039;, false, null, this.getTagsForStencil(gn, &#039;database partition three&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;database_partition_4.svg;&#039;,
+					 d, d * 0.74, &#039;&#039;, &#039;Database Partition 4&#039;, false, null, this.getTagsForStencil(gn, &#039;database partition four&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;database_partition_5.svg;&#039;,
+					 d, d * 0.74, &#039;&#039;, &#039;Database Partition 5&#039;, false, null, this.getTagsForStencil(gn, &#039;database partition five&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;database_server.svg;&#039;,
+					 d * 0.82, d, &#039;&#039;, &#039;Database Server&#039;, false, null, this.getTagsForStencil(gn, &#039;database server&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;databases.svg;&#039;,
+					 d, d * 0.98, &#039;&#039;, &#039;Databases&#039;, false, null, this.getTagsForStencil(gn, &#039;databases&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;documents.svg;&#039;,
+					 d * 0.66, d, &#039;&#039;, &#039;Documents&#039;, false, null, this.getTagsForStencil(gn, &#039;documents&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;domain_controller.svg;&#039;,
+					 d * 0.7, d, &#039;&#039;, &#039;Domain Controller&#039;, false, null, this.getTagsForStencil(gn, &#039;domain controller&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;fax.svg;&#039;,
+					 d, d * 0.75, &#039;&#039;, &#039;Fax&#039;, false, null, this.getTagsForStencil(gn, &#039;fax&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;firewall.svg;&#039;,
+					 d * 0.61, d, &#039;&#039;, &#039;Firewall&#039;, false, null, this.getTagsForStencil(gn, &#039;firewall&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;folder.svg;&#039;,
+					 d * 0.73, d, &#039;&#039;, &#039;Folder&#039;, false, null, this.getTagsForStencil(gn, &#039;folder&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;folder_open.svg;&#039;,
+					 d * 0.92, d, &#039;&#039;, &#039;Folder Open&#039;, false, null, this.getTagsForStencil(gn, &#039;folder open&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;generic_node.svg;&#039;,
+					 d, d * 0.98, &#039;&#039;, &#039;Generic Node&#039;, false, null, this.getTagsForStencil(gn, &#039;generic node&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;generic_server.svg;&#039;,
+					 d * 0.56, d, &#039;&#039;, &#039;Generic Server&#039;, false, null, this.getTagsForStencil(gn, &#039;generic server&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;hard_disk.svg;&#039;,
+					 d, d * 0.54, &#039;&#039;, &#039;Hard Disk&#039;, false, null, this.getTagsForStencil(gn, &#039;hard disk&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;home.svg;&#039;,
+					 d, d * 0.97, &#039;&#039;, &#039;Home&#039;, false, null, this.getTagsForStencil(gn, &#039;home&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;home_page.svg;&#039;,
+					 d, d * 0.9, &#039;&#039;, &#039;Home Page&#039;, false, null, this.getTagsForStencil(gn, &#039;home page&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;input_output_filter.svg;&#039;,
+					 d * 0.67, d, &#039;&#039;, &#039;Input/Output Filter&#039;, false, null, this.getTagsForStencil(gn, &#039;input output filter io&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;interface.svg;&#039;,
+					 d, d * 0.47, &#039;&#039;, &#039;Interface&#039;, false, null, this.getTagsForStencil(gn, &#039;active&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;internet_cloud.svg;&#039;,
+					 d, d * 0.63, &#039;&#039;, &#039;Internet Cloud&#039;, false, null, this.getTagsForStencil(gn, &#039;internet cloud&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;internet_globe.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Internet Globe&#039;, false, null, this.getTagsForStencil(gn, &#039;internet globe&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;key.svg;&#039;,
+					 d, d * 0.74, &#039;&#039;, &#039;Key&#039;, false, null, this.getTagsForStencil(gn, &#039;key&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;laptop_client.svg;&#039;,
+					 d * 0.9, d, &#039;&#039;, &#039;Laptop Client&#039;, false, null, this.getTagsForStencil(gn, &#039;laptop client&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;list.svg;&#039;,
+					 d * 0.7, d, &#039;&#039;, &#039;List&#039;, false, null, this.getTagsForStencil(gn, &#039;list&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;mac_client.svg;&#039;,
+					 d * 0.94, d, &#039;&#039;, &#039;Mac Client&#039;, false, null, this.getTagsForStencil(gn, &#039;mac macintosh client&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;mainframe.svg;&#039;,
+					 d, d * 0.95, &#039;&#039;, &#039;Mainframe&#039;, false, null, this.getTagsForStencil(gn, &#039;mainframe&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;mainframe_host.svg;&#039;,
+					 d * 0.72, d, &#039;&#039;, &#039;Mainframe Host&#039;, false, null, this.getTagsForStencil(gn, &#039;mainframe host&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;meeting.svg;&#039;,
+					 d, d * 0.91, &#039;&#039;, &#039;Meeting&#039;, false, null, this.getTagsForStencil(gn, &#039;meeting&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;modem.svg;&#039;,
+					 d, d * 0.83, &#039;&#039;, &#039;Modem&#039;, false, null, this.getTagsForStencil(gn, &#039;modem&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;my_sites.svg;&#039;,
+					 d, d * 0.9, &#039;&#039;, &#039;My Sites&#039;, false, null, this.getTagsForStencil(gn, &#039;my sites&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;not_secure.svg;&#039;,
+					 d * 0.88, d, &#039;&#039;, &#039;Not Secure&#039;, false, null, this.getTagsForStencil(gn, &#039;not secure&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;pda.svg;&#039;,
+					 d * 0.54, d, &#039;&#039;, &#039;PDA&#039;, false, null, this.getTagsForStencil(gn, &#039;pda personal digital assistant&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;phone.svg;&#039;,
+					 d, d * 0.79, &#039;&#039;, &#039;Phone&#039;, false, null, this.getTagsForStencil(gn, &#039;phone&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;printer.svg;&#039;,
+					 d, d * 0.66, &#039;&#039;, &#039;Printer&#039;, false, null, this.getTagsForStencil(gn, &#039;printer&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;router.svg;&#039;,
+					 d, d * 0.76, &#039;&#039;, &#039;Router&#039;, false, null, this.getTagsForStencil(gn, &#039;router&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;secure.svg;&#039;,
+					 d * 0.64, d, &#039;&#039;, &#039;Secure&#039;, false, null, this.getTagsForStencil(gn, &#039;secure&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;security.svg;&#039;,
+					 d * 0.63, d, &#039;&#039;, &#039;Security&#039;, false, null, this.getTagsForStencil(gn, &#039;security&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;server_farm.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Server Farm&#039;, false, null, this.getTagsForStencil(gn, &#039;server farm&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;shadowed_router.svg;&#039;,
+					 d * 0.82, d, &#039;&#039;, &#039;Shadowed Router&#039;, false, null, this.getTagsForStencil(gn, &#039;shadowed router&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;site_collection.svg;&#039;,
+					 d, d * 0.94, &#039;&#039;, &#039;Site Collection&#039;, false, null, this.getTagsForStencil(gn, &#039;site collection&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;sql_server.svg;&#039;,
+					 d * 0.77, d, &#039;&#039;, &#039;SQL Server&#039;, false, null, this.getTagsForStencil(gn, &#039;sql server&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;sub_site.svg;&#039;,
+					 d, d * 0.86, &#039;&#039;, &#039;Sub-site&#039;, false, null, this.getTagsForStencil(gn, &#039;sub site&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;switch.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Switch&#039;, false, null, this.getTagsForStencil(gn, &#039;switch&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;tablet_pc.svg;&#039;,
+					 d * 0.73, d, &#039;&#039;, &#039;Tablet PC&#039;, false, null, this.getTagsForStencil(gn, &#039;tablet pc&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;tunnel.svg;&#039;,
+					 d, d * 0.2, &#039;&#039;, &#039;Tunnel&#039;, false, null, this.getTagsForStencil(gn, &#039;tunnel&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;user.svg;&#039;,
+					 d * 0.37, d, &#039;&#039;, &#039;User&#039;, false, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;user_accounts.svg;&#039;,
+					 d, d * 0.97, &#039;&#039;, &#039;User Accounts&#039;, false, null, this.getTagsForStencil(gn, &#039;user accounts&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;users.svg;&#039;,
+					 d * 0.66, d, &#039;&#039;, &#039;Users&#039;, false, null, this.getTagsForStencil(gn, &#039;users&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;vista_client.svg;&#039;,
+					 d * 0.76, d, &#039;&#039;, &#039;Vista Client&#039;, false, null, this.getTagsForStencil(gn, &#039;vista client&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;vista_terminal.svg;&#039;,
+					 d * 0.65, d, &#039;&#039;, &#039;Vista Terminal&#039;, false, null, this.getTagsForStencil(gn, &#039;vista terminal&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;web_server.svg;&#039;,
+					 d * 0.8, d, &#039;&#039;, &#039;Web Server&#039;, false, null, this.getTagsForStencil(gn, &#039;web server&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;wiki_site.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Wiki Site&#039;, false, null, this.getTagsForStencil(gn, &#039;wiki site&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;windows_domain.svg;&#039;,
+					 d, d * 0.85, &#039;&#039;, &#039;Windows Domain&#039;, false, null, this.getTagsForStencil(gn, &#039;windows domain&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;windows_router.svg;&#039;,
+					 d * 0.8, d, &#039;&#039;, &#039;Windows Router&#039;, false, null, this.getTagsForStencil(gn, &#039;windows router&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;windows_server.svg;&#039;,
+					 d * 0.82, d, &#039;&#039;, &#039;Windows Server&#039;, false, null, this.getTagsForStencil(gn, &#039;windows server&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;windows_server_2.svg;&#039;,
+					 d * 0.8, d, &#039;&#039;, &#039;Windows Server&#039;, false, null, this.getTagsForStencil(gn, &#039;windows server&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;wiring_hub.svg;&#039;,
+					 d, d * 0.68, &#039;&#039;, &#039;Wiring Hub&#039;, false, null, this.getTagsForStencil(gn, &#039;wiring hub&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;workspace_site.svg;&#039;,
+					 d, d * 0.97, &#039;&#039;, &#039;Workspace Site&#039;, false, null, this.getTagsForStencil(gn, &#039;workspace site&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;workstation_client.svg;&#039;,
+					 d * 0.85, d, &#039;&#039;, &#039;Workstation Client&#039;, false, null, this.getTagsForStencil(gn, &#039;workstation client&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;writer.svg;&#039;,
+					 d * 0.96, d, &#039;&#039;, &#039;Writer&#039;, false, null, this.getTagsForStencil(gn, &#039;writer&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;writing.svg;&#039;,
+					 d * 0.98, d, &#039;&#039;, &#039;Writing&#039;, false, null, this.getTagsForStencil(gn, &#039;writing&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;active_directory&#039;, &#039;Active Directory&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+   		
+   		this.setCurrentSearchEntryLibrary();
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

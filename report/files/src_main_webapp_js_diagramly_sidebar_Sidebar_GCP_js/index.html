@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-GCP.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-GCP.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">70.58</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">45</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">8.89</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">0.31</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds GCP (Google Cloud Platform) shapes
+	Sidebar.prototype.addGoogleCloudPlatformCardsPalette = function()
+	{
+		var sb = this;
+		var n = &#039;dashed=0;html=1;&#039; + mxConstants.STYLE_SHAPE + &#039;=mxgraph.gcp.compute.&#039;;
+		var n1 = &#039;dashed=0;html=1;strokeColor=#dddddd;gradientColor=none;shadow=1;strokeWidth=1;&#039;;
+		var gn = &#039;mxgraph.gcp.product_cards&#039;;
+		var dt = &#039;gcp google cloud platform card&#039;;
+		var s = 0.3; //scale
+		this.setCurrentSearchEntryLibrary(&#039;gcp&#039;, &#039;gcpCards&#039;);
+
+		var fns =
+		[
+			this.addDataEntry(dt + &#039;product&#039;, 170, 55, &#039;Product Card&#039;,
+				&#039;rZRdb4MgFIZ/DZczKq11l539uFqyZBe7XIgclQzFIG3tfv1AsNXpsi4dxggv5+DxeQWEk7LdS1IXz4ICR3iLcCKFULZXtglwjkKfUYQ3KAx9faNw98Ns0M36NZFQqVsSQptwJPwAVrFCo87cCZQ0BZhwH+GnQpW6xk2gu42S4gMSwYXsAjHtmp7JGOfpVc+6pvVcEsp0YX1OJSowCxWEitNo1TdGVeEUVyFIBe2PX9lJ7hP3IEpQ8qxDTm4dE7GyJPwCWF64tOXSaqSx4/ySemWmOw7bPEJ8B8KC1CakbHPzB3h5WnupKOuDgv75DlXOOkyG6oD2Aser3WaGqpmLYrxdTzxyvDU39Re24a9scexFj8MWTVHjhedgS+BEsSOMXjjngHvni2C6lNDvK3Q+nsfDfgGRZQ2oiYGXwm/ydDHxNLF2aHFrDfnusSaojEuiUq/s04gBduOBM7FvLq0TzvJKaxwyk2YsYCnhayeXjFL+j2Y5WH7vwXBjBDMbwx0b93oVjb16CML7zdLD6/low4fH5xc=&#039;),
+			this.addDataEntry(dt + &#039;product&#039;, 190, 55, &#039;Product Card&#039;,
+				&#039;5ZVdb4MgFIZ/jZczVlpnLzv7cbVkyS52uRA5KimKQdrqfv1AsNVos27droYxwss5eHwfUQdFeb0TuMyeOQHmoI2DIsG5NL28joAxx/cocdDa8X1PnY6/vTI7a2e9Egso5C0Jvkk4YnYAoxihkg2zAsFVBjrcc9BTJnNV43qmupUUfA8RZ1y0gYi0Tc0klLH4oidtU3oqMKGqsC6n4AXohTJM+Gmw6hslMrOKrRCEhPrqU7aSfcQd8BykaFTIya6jI5bGCS8DmmY2bbEwGq7MOD2nXjxTHWvbtIXoDgszXOqQvE71G+CmcenGPC8PErrrOxQpbW3SrvbcnqPwcbuecFXPBSHarEaMrN/KN/kdb/0vvUWhGyz7LRhbjeauNVsAw5IeYXDDKQL2ni+cqlJ8r6vQcmyGw24BniQVyBHAc+E3MZ2PmK4KzBpJ40rJTzjeQ0FGmJWJUoPihXylH1qcITvuw2mb0jGjaaE0BolO0xRojNnKyjklhP0iL+uX12Ho7w00sTfsl+NeXMEQ14P/F7wWI16R2T5K3JgN9DNYoaePfwfrHjhqePl/mfD+7+0T&#039;),
+			this.addDataEntry(dt + &#039;product&#039;, 190, 110, &#039;Product Card&#039;,
+				&#039;5ZddT4MwFIZ/DZcujG7ILif7uDIx8cJL09ADNBZKSlXw19vS4iCwOJ0at3VZ1r49p5T3oTvBQWFWbQUu0ltOgDlo7aBQcC5NL6tCYMzxXEoctHI8z1Vfx9vsmZ02s26BBeTykATPJLxg9gxGMUIpa2YFgssUdLjroJtUZmqPq6nqllLwJwg546IJRKRpaiamjEU7PW6a0hOBCVUba3NynoNeKMWEv/ZWfaBEplaxOwQhodp7l41kb3ELPAMpahXyatfREQvjhJsCTVKbNp8bDZdmnHyk7jxTHWvbuIXoCAtTXOiQrEr0EzBJomIS8ax4ltD+PkKe0MYm7WrH7RkKrjerEVf1nB+g9XLAyPqtfJNf8db71FsUTPxFt/lDq9FsYs0WwLCkL9C74BgBe807TtVWPLfdoeVY94ftAjyOS5ADgB8bP4jpbMB0mWNWSxqVSr7B0RPkZIBZmSg1KJ7Le/qmxSmy4y6cpikdM5rkSmMQ6zRNgUaYLa2cUULYD/Kyfrkthu7ZQCNnw/5zHIvL7+O68n6D13zAKzTHR4lrc4C+Bytw9efiYP0oHP+8a0zdLyV/UXKuz73k+JdXcoJTLjl7eJ1zyVmcbMn5n7COgaOGu1cmE959o3oH&#039;),
+			this.addDataEntry(dt + &#039;expanded product&#039;, 190, 80, &#039;Expanded Product Card&#039;,
+				&#039;5ZZdb4MgFIZ/jbdGpbXusrMf2UWTJbvY5ULkKGQIBunW7tcPBPsR26zZ5s1G0xRezkF8Xjw1QHm9Wyvc0I0kwAO0DFCupNSuV+9y4DxIIkYCtAiSJDLfIFldmY272ajBCoS+JSFxCW+Yb8EpTmj1nnuB4JaCDY8CdE91bfa4iE231Uq+Qi65VF0gIl0zMyXjvDjqZdeMXilMmNlYnyOkALsQxUS+n636zIimXvE7BKVhd/UuO8nf4hpkDVrtTci7X8dG3DkSEQVWUZ+WeQ23blwdUo/MTMdju4wQ/QAhxY0NqXeVPQFhVTRhIetmq6H/fQFRsQ6TpXpCe4Ky2WpxgaqdSzO0nA888rxvApp8CRRlYXp32tIhXzQJp05VwLFmb3B2wUvY/TUfJTNbSaJ+h96o/fmwX0CWZQt64Nph4zcZORkYeY91QY30qGQBbctENbDWMNTWHCn0E/uwYoz8+NSQrhkdc1YJo3EobZo1gRWYz71cM0L4L3oUowuH3peEn1qSnluSjeDIdOBI7p4KIy7dc/E9P7LIfv60H6MYkn5d6/qaxl3Vuv4vMSbSeBSkkzGQzgZIN1uuWcPtIX8QrcbC1J5bznnyL+vO9BdMMcPjK5cLP30j+wQ=&#039;),
+			this.addDataEntry(dt + &#039;expanded product&#039;, 150, 100, &#039;Expanded Product Card&#039;,
+				&#039;7Zhfb6sgGMY/jbdGxM728syuvTrJknNxLhsiqGQoBunWnk9/QHDV6jaXlWZJR9MUHvnz+vzAt9GDSXnYClQXvzkmzIMPHkwE59LUykNCGPPCgGIPrr0wDNTXCzdvXAXt1aBGglRyzoDQDHhGbE+MYoRGHpkVMGoKorsHHrwvZKliXANVbaTgTyThjIu2I8RtUVcyylh60rO2KD0XCFMVWDem4hXRExUI85fBrH8ploVVbIRESHJ48y5byd7ilvCSSHFUXV7sPLrHwjgRFITmRTcssCJqjJC/jj2ZpirWt2kP4Rc8LFCtu5SHXG8BP09rP+VlvZek+92RKqetT9rWnt3xQn/esXXAx4rKM/kZX8OPfV35iwljYz8yqiAMSfpMBktM2W1XeeRULR4GXUwW0HHY7CbgWdYQOaL1GuosgNEIYGK8V+KDcf8cqPJMaiS8kn/oPy0CaNs9RFFblI4YzSulMZLpYdp0miL2y8olxZg5wgMmtr19KHyVTTRks3SAZvHx2erOEKMT277/WLqSucCJuU7cvRu5C4KtMid4XM/Z8eF4xy/bcis7HrqAEl82ndSC430qdykSuPEbiSqsarsSpcW3TivxVFK5CEQ4hHjnIqUsXULEtHm6RXDxFcCtXIJLGW9u8sgBcAV03Ro9dtFseGoqWk/Bgat4tQGfhHOWFTdtOcuewXtpsalRSqvcxmlb91xKXtqAHfCPJvhf5l98d4o6/C7yJgAj/PPP7g9+l/ija+Afv8oAP/i/Bf7l5fGr5uklmenef4f2Hw==&#039;),
+			this.addDataEntry(dt + &#039;service&#039;, 110, 50, &#039;Service Card&#039;,
+				&#039;tVTRboMgFP0aXo1K23WPm936siVL9rDHhchVyVAM0tbu63cR2upsu27NIEbu4Vy4nCMSmpTtUrO6eFYcJKEPhCZaKeNGZZuAlCQOBSd0QeI4xIfEjydmo242rJmGylySELuENZMrcIgDGrOVHuCsKcDSQ0LvC1NijYsIh43R6gMSJZXuiJR3DWcyIWV6wLOuIZ5rxgUWtsupVAV2oYJxtRms+ia4KTziKwRtoD15yg7yR1yCKsHoLVI2fh3LiJwSYQEiL3za1GOscXG+Tz1ohgMv23EJ6RUSFqy2lLLN7RcQ5GkdpKqsVwZ273eoctHJZFXtqX0ztf2MqgN7PIiSmd/IGv8oK50Hs9t+m41VppNg6lANkhmxhsGGx8T3e74ogaXE4a5Cb9fWhfNhvsqyBszIun3dF7k5Gbn5pFKGDDwXjax/iTNmZDLqaKxNqjKv4tOCEfVxz7Z5aDviTIq8QkxCZtOsEQI3uvNwKTiX/2PZ7MxFuNKg7/fpL5ZgePj/OXr/9/gF&#039;)
+		];
+
+		this.addPalette(&#039;gcpCards&#039;, &#039;GCP / Cards&#039;, false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

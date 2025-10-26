@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Cisco19.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Cisco19.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">59.86</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">579</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">23.12</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">17.54</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds Cisco stencils
+	Sidebar.prototype.addCisco19Palette = function()
+	{
+		var sc = &quot;sketch=0;points=[[0.015,0.015,0],[0.985,0.015,0],[0.985,0.985,0],[0.015,0.985,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];&quot;;
+		var s = sc + mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;aspect=fixed;align=center;&#039; + 
+			&#039;pointerEvents=1;shape=mxgraph.cisco19.&#039;;
+		var s2 = &quot;sketch=0;points=[[0.5,0,0],[1,0.5,0],[0.5,1,0],[0,0.5,0],[0.145,0.145,0],[0.8555,0.145,0],[0.855,0.8555,0],[0.145,0.855,0]];&quot; + 
+			mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;aspect=fixed;align=center;&#039; + 
+			&#039;pointerEvents=1;shape=mxgraph.cisco19.&#039;;
+		var s3 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;sketch=0;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;aspect=fixed;align=center;&#039; + 
+			&#039;pointerEvents=1;shape=mxgraph.cisco19.&#039;;
+		
+		this.setCurrentSearchEntryLibrary(&#039;cisco19&#039;, &#039;cisco19LAN Switching&#039;);
+		this.addCisco19LANSwitchingPalette(s, s2, s3);
+		this.setCurrentSearchEntryLibrary(&#039;cisco19&#039;, &#039;cisco19Routing WAN&#039;);
+		this.addCisco19RoutingWANPalette(s, s2, s3);
+		this.setCurrentSearchEntryLibrary(&#039;cisco19&#039;, &#039;cisco19Network Management&#039;);
+		this.addCisco19NetworkManagementPalette(s, s2, s3);
+		this.setCurrentSearchEntryLibrary(&#039;cisco19&#039;, &#039;cisco19Data Center&#039;);
+		this.addCisco19DataCenterPalette(s, s2, s3);
+		this.setCurrentSearchEntryLibrary(&#039;cisco19&#039;, &#039;cisco19Wireless LAN&#039;);
+		this.addCisco19WirelessLANPalette(s, s2, s3);
+		this.setCurrentSearchEntryLibrary(&#039;cisco19&#039;, &#039;cisco19Collaboration&#039;);
+		this.addCisco19CollaborationPalette(s, s2, s3);
+		this.setCurrentSearchEntryLibrary(&#039;cisco19&#039;, &#039;cisco19Security Clouds Connectors&#039;);
+		this.addCisco19SecurityCloudsAndConnectorsPalette(s, s2, s3);
+		this.setCurrentSearchEntryLibrary(&#039;cisco19&#039;, &#039;cisco19Endpoint Client Device Icons&#039;);
+		this.addCisco19EndpointClientDeviceIconsPalette(s, s2, s3);
+		this.setCurrentSearchEntryLibrary(&#039;cisco19&#039;, &#039;cisco19DNA SD Access&#039;);
+		this.addCisco19DNASDAccessPalette(s, s2, s3);
+		this.setCurrentSearchEntryLibrary(&#039;cisco19&#039;, &#039;cisco19SD WAN Viptela&#039;);
+		this.addCisco19SDWANViptelaPalette(s, s2, s3);
+		this.setCurrentSearchEntryLibrary(&#039;cisco19&#039;, &#039;cisco19ETA Stealthwatch&#039;);
+		this.addCisco19StealthwatchPalette(s, s2, s3);
+		this.setCurrentSearchEntryLibrary(&#039;cisco19&#039;, &#039;cisco19SAFE&#039;);
+		this.addCisco19SafePalette(s, s2, s3);
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+	Sidebar.prototype.addCisco19LANSwitchingPalette = function(s, s2, s3)
+	{
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cisco19&#039;;
+		var dt = &#039;cisco lan switching local area network&#039;;
+
+		this.addPaletteFunctions(&#039;cisco19LAN Switching&#039;, &#039;Cisco 19 / LAN Switching&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=l2_switch;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;L2 Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;l2 switch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=l3_switch;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;L3 Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;l3 switch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=l2_modular;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.46, &#039;&#039;, &#039;L2 Modular&#039;, null, null, this.getTagsForStencil(gn, &#039;l2 modular&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=l3_modular;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.46, &#039;&#039;, &#039;L3 Modular&#039;, null, null, this.getTagsForStencil(gn, &#039;l3 modular&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=6500_vss;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.46, &#039;&#039;, &#039;6500 VSS&#039;, null, null, this.getTagsForStencil(gn, &#039;6500 vss&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=l2_switch_with_dual_supervisor;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.9, &#039;&#039;, &#039;L2 Switch with Dual Supervisor&#039;, null, null, this.getTagsForStencil(gn, &#039;l2 switch with dual supervisor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=l3_switch_with_dual_supervisor;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.9, &#039;&#039;, &#039;L3 Switch with Dual Supervisor&#039;, null, null, this.getTagsForStencil(gn, &#039;l3 switch with dual supervisor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=l2_modular2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 2.05, &#039;&#039;, &#039;L2 Modular&#039;, null, null, this.getTagsForStencil(gn, &#039;l2 modular&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=l3_modular2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.3, &#039;&#039;, &#039;L3 Modular&#039;, null, null, this.getTagsForStencil(gn, &#039;l3 modular&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=6500_vss2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.3, &#039;&#039;, &#039;L3 Modular&#039;, null, null, this.getTagsForStencil(gn, &#039;l3 modular&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=secure_catalyst_switch_color;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Secure Catalyst Switch (color)&#039;, null, null, this.getTagsForStencil(gn, &#039;secure catalyst switch color&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=secure_catalyst_switch_subdued;fillColor=#FAFAFA;strokeColor=#6696AB;&#039;, 
+					w, h, &#039;&#039;, &#039;Secure Catalyst Switch (subdued)&#039;, null, null, this.getTagsForStencil(gn, &#039;secure catalyst switch subdued&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=secure_switch;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Secure Switch (color)&#039;, null, null, this.getTagsForStencil(gn, &#039;secure switch color&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=secure_switch;fillColor=#FAFAFA;strokeColor=#6696AB;&#039;, 
+					w, h, &#039;&#039;, &#039;Secure Switch (subdued)&#039;, null, null, this.getTagsForStencil(gn, &#039;secure switch subdued&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=workgroup_switch;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Workgroup Switch (color)&#039;, null, null, this.getTagsForStencil(gn, &#039;workgroup switch color&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=workgroup_switch;fillColor=#FAFAFA;strokeColor=#6696AB;&#039;, 
+					w, h, &#039;&#039;, &#039;Workgroup Switch (subdued)&#039;, null, null, this.getTagsForStencil(gn, &#039;workgroup switch subdued&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=secure_catalyst_switch_color3;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Secure Catalyst Switch (color)&#039;, null, null, this.getTagsForStencil(gn, &#039;secure catalyst switch color&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=secure_catalyst_switch_color2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Secure Catalyst Switch (color)&#039;, null, null, this.getTagsForStencil(gn, &#039;secure catalyst switch color&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=secure_catalyst_switch_subdued2;fillColor=#FAFAFA;strokeColor=#6696AB;&#039;, 
+					w, h, &#039;&#039;, &#039;Secure Catalyst Switch (subdued)&#039;, null, null, this.getTagsForStencil(gn, &#039;secure catalyst switch subdued&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCisco19RoutingWANPalette = function(s, s2, s3)
+	{
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cisco19&#039;;
+		var dt = &#039;cisco routing wan wide area network&#039;;
+
+		this.addPaletteFunctions(&#039;cisco19Routing WAN&#039;, &#039;Cisco 19 / Routing WAN&#039;, false,
+		[
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=router;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Router&#039;, null, null, this.getTagsForStencil(gn, &#039;router&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=csr_1000v;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;CSR1000v&#039;, null, null, this.getTagsForStencil(gn, &#039;csr1000v&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=wireless_router;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.2, &#039;&#039;, &#039;Wireless Router&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless router&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=l3_modular3;fillColor=#FAFAFA;strokeColor=#C1272D;&#039;, 
+					w, h, &#039;&#039;, &#039;L3 Modular&#039;, null, null, this.getTagsForStencil(gn, &#039;l3 modular&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=ucs_express;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;UCS Express&#039;, null, null, this.getTagsForStencil(gn, &#039;ucs express&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=router_with_voice;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Router with Voice&#039;, null, null, this.getTagsForStencil(gn, &#039;router with voice&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=router_with_firewall;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Router with Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;router with firewall&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=netflow_router;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;NetFlow Router&#039;, null, null, this.getTagsForStencil(gn, &#039;netflow router&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=secure_router;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Secure Router (color)&#039;, null, null, this.getTagsForStencil(gn, &#039;secure router color&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=secure_router;fillColor=#FAFAFA;strokeColor=#6696AB;&#039;, 
+					w, h, &#039;&#039;, &#039;Secure Router (subdued)&#039;, null, null, this.getTagsForStencil(gn, &#039;secure router subdued&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=ip_telephone_router;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;IP Telephone Router&#039;, null, null, this.getTagsForStencil(gn, &#039;ip telephone router internet protocol&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=content_router;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Content Router&#039;, null, null, this.getTagsForStencil(gn, &#039;content router&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=service_ready_engine;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Cisco Service Ready Engine&#039;, null, null, this.getTagsForStencil(gn, &#039;service ready engine&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=cisco_15800;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Cisco 15800&#039;, null, null, this.getTagsForStencil(gn, &#039;15800&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=appnav;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;AppNav&#039;, null, null, this.getTagsForStencil(gn, &#039;appnav&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=router_with_firewall2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Router with Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;router with firewall&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=netflow_router2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;NetFlow Router&#039;, null, null, this.getTagsForStencil(gn, &#039;netflow router&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.5,0,0],[1,0.5,0],[0.5,1,0],[0,0.5,0],[0.25,0,0],[0.75,0,0],[0.25,1,0],[0.75,1,0],[0.125,0.25,0],[0.875,0.25,0],[0.875,0.75,0],[0.125,0.75,0]];&#039; + s3 + &#039;rect;prIcon=asr_1000;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.14, h, &#039;&#039;, &#039;ASR 1000&#039;, null, null, this.getTagsForStencil(gn, &#039;asr 1000&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=asr_9000;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;ASR 9000&#039;, null, null, this.getTagsForStencil(gn, &#039;asr 9000&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCisco19NetworkManagementPalette = function(s, s2, s3)
+	{
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cisco19&#039;;
+		var dt = &#039;cisco network management&#039;;
+
+		this.addPaletteFunctions(&#039;cisco19Network Management&#039;, &#039;Cisco 19 / Network Management&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=net_mgmt_appliance;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Net Mgmt. Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;net management appliance mgmt&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nam_virtual_service_blade;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;NAM Virtual Service Blade&#039;, null, null, this.getTagsForStencil(gn, &#039;nam virtual service blade&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCisco19DataCenterPalette = function(s, s2, s3)
+	{
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cisco19&#039;;
+		var dt = &#039;cisco data center&#039;;
+
+		this.addPaletteFunctions(&#039;cisco19Data Center&#039;, &#039;Cisco 19 / Data Center&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nexus_9300;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Nexus 9300&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 9300&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.015,0.015,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[0.985,0.015,0],[1,0.22,0],[1,0.44,0],[1,0.67,0],[0.985,0.89,0],[0,0.22,0],[0,0.44,0],[0,0.67,0],[0.015,0.89,0],[0.25,0.91,0],[0.5,0.91,0],[0.785,0.955,0]];&#039; + s3 + &#039;x509_certificate;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.95, &#039;&#039;, &#039;x.509 Certificate&#039;, null, null, this.getTagsForStencil(gn, &#039;x509 certificate&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=hypervisor;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.3, &#039;&#039;, &#039;Hypervisor&#039;, null, null, this.getTagsForStencil(gn, &#039;hypervisor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nexus_9500;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.46, &#039;&#039;, &#039;Nexus 9500&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 9500&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=fabric_interconnect;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Fabric Interconnect&#039;, null, null, this.getTagsForStencil(gn, &#039;fabric interconnect&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=fibre_channel_director_mds_9000;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.46, &#039;&#039;, &#039;Fibre Channel Director MDS 9000&#039;, null, null, this.getTagsForStencil(gn, &#039;fibre channel director mds 9000&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=virtual_matrix_switch;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Virtual Matrix Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual matrix switch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=ucs_c_series_server;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.2, h * 0.5, &#039;&#039;, &#039;UCS C-Series Server&#039;, null, null, this.getTagsForStencil(gn, &#039;ucs c series server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nexus_5k_with_integrated_vsm;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Nexus 5K with Integrated VSM&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 5k with integrated vsm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.5,0,0],[1,0.5,0],[0.5,1,0],[0,0.5,0],[0.305,0.305,0],[0.695,0.305,0],[0.7,0.7,0],[0.3,0.7,0]];&#039; + s3 + &#039;rect;prIcon=aci;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;ACI&#039;, null, null, this.getTagsForStencil(gn, &#039;aci&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;vts;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h, &#039;&#039;, &#039;VTS&#039;, null, null, this.getTagsForStencil(gn, &#039;vts&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=ucs_5108_blade_chassis;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;UCS 5108 Blade Chassis&#039;, null, null, this.getTagsForStencil(gn, &#039;ucs 5108 blade chassis&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=storage;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=ups;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;UPS&#039;, null, null, this.getTagsForStencil(gn, &#039;ups&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=rps;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;RPS&#039;, null, null, this.getTagsForStencil(gn, &#039;rps&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nexus_2000_10ge;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Nexus 2000 10GE&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 2000 10ge&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=blade_server;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Blade Server (color)&#039;, null, null, this.getTagsForStencil(gn, &#039;blade server color&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=blade_server;fillColor=#FAFAFA;strokeColor=#6696AB;&#039;, 
+					w, h, &#039;&#039;, &#039;Blade Server (subdued)&#039;, null, null, this.getTagsForStencil(gn, &#039;blade server subdued&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nexus_5k;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Nexus 5k&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 5k&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nexus_4k;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Nexus 4k&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 4k&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nexus_3k;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Nexus 3k&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 3k&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nexus_2k;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Nexus 2k&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 2k&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nexus_1kv_vsm;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Nexus 1KV VSM&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 1kv vsm&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nexus_1k;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Nexus 1k&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 1k&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=layer3_nexus_5k_switch;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Layer 3 Nexus 5k Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;layer3 nexus 5k switch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nexus_1010;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Nexus 1010&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 1010&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nexus_7k;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.46, &#039;&#039;, &#039;Nexus 7k&#039;, null, null, this.getTagsForStencil(gn, &#039;nexus 7k&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=fibre_channel_fabric_switch;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.46, &#039;&#039;, &#039;Fibre Channel Fabric Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;fibre channel fabric switch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=database_relational;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Database Relational&#039;, null, null, this.getTagsForStencil(gn, &#039;database relational&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;server;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 0.55, h, &#039;&#039;, &#039;Server&#039;, null, null, this.getTagsForStencil(gn, &#039;server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dns_server;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 0.55, h, &#039;&#039;, &#039;DNS Server&#039;, null, null, this.getTagsForStencil(gn, &#039;dns domain name server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;secure_server;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 0.55, h, &#039;&#039;, &#039;Secure Server&#039;, null, null, this.getTagsForStencil(gn, &#039;secure server&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCisco19WirelessLANPalette = function(s, s2, s3)
+	{
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cisco19&#039;;
+		var dt = &#039;cisco wireless lan local area network&#039;;
+
+		this.addPaletteFunctions(&#039;cisco19Wireless LAN&#039;, &#039;Cisco 19 / Wireless LAN&#039;, false,
+		[
+			this.createVertexTemplateEntry(&#039;points=[[0,0.58,0],[0.09,0.58,0],[0.36,0.39,0],[0.64,0.195,0],[0.91,0,0],[1,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[1,1,0],[0,1,0],[0.09,1,0],[0.36,1,0],[0.64,1,0],[0.91,1,0],[0,0.79,0]];&#039; + s3 + &#039;wifi_indicator;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h, &#039;&#039;, &#039;WiFi Indicator&#039;, null, null, this.getTagsForStencil(gn, &#039;wifi indicator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.005,0.09,0],[0.08,0,0],[0.76,0.25,0],[1,0.92,0],[0.91,0.995,0],[0.57,0.995,0],[0.045,0.955,0],[0.005,0.43,0]];&#039; + s3 + &#039;3g_4g_indicator;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h, &#039;&#039;, &#039;3G/4G Indicator&#039;, null, null, this.getTagsForStencil(gn, &#039;3g 4g indicator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=dual_mode_access_point;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Dual Mode Access Point&#039;, null, null, this.getTagsForStencil(gn, &#039;dual mode access point&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.03,0.36,0],[0.18,0,0],[0.5,0.34,0],[0.82,0,0],[0.97,0.36,0],[1,0.67,0],[0.975,0.975,0],[0.5,1,0],[0.025,0.975,0],[0,0.67,0]];&#039; + s3 + &#039;wireless_access_point;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h, &#039;&#039;, &#039;Wireless Acess Point&#039;, null, null, this.getTagsForStencil(gn, &#039;access point&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=wireless_location_appliance;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Wireless Location Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;location appliance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=wireless_lan_controller;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Wireless LAN Controller&#039;, null, null, this.getTagsForStencil(gn, &#039;controller&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;wireless_bridge;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Wireless Bridge&#039;, null, null, this.getTagsForStencil(gn, &#039;bridge&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=mesh_access_point;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Mesh Access Point&#039;, null, null, this.getTagsForStencil(gn, &#039;mesh access point&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCisco19CollaborationPalette = function(s, s2, s3)
+	{
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cisco19&#039;;
+		var dt = &#039;cisco collaboration&#039;;
+
+		this.addPaletteFunctions(&#039;cisco19Collaboration&#039;, &#039;Cisco 19 / Collaboration&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=video_call_server;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Video Call Server&#039;, null, null, this.getTagsForStencil(gn, &#039;video call server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=primary_codec;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Primary Codec&#039;, null, null, this.getTagsForStencil(gn, &#039;primary codec&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=secondary_codec;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Secondary Codec&#039;, null, null, this.getTagsForStencil(gn, &#039;secondary codec&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.13,0.225,0],[0.5,0,0],[0.87,0.225,0],[0.885,0.5,0],[0.985,0.99,0],[0.5,1,0],[0.015,0.99,0],[0.115,0.5,0]];&#039; + s3 + &#039;laptop_video_client;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.85, &#039;&#039;, &#039;Laptop Video Client&#039;, null, null, this.getTagsForStencil(gn, &#039;laptop video client&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=immersive_telepresence_endpoint;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 2.3, h, &#039;&#039;, &#039;Immersive Telepresence Endpoint&#039;, null, null, this.getTagsForStencil(gn, &#039;immersive telepresence endpoint&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[1,0.4,0],[1,0.8,0],[0.815,1,0],[0.5,1,0],[0.185,1,0],[0,0.8,0],[0,0.4,0]];&#039; + s3 + &#039;hdtv;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 1.2, h, &#039;&#039;, &#039;HDTV&#039;, null, null, this.getTagsForStencil(gn, &#039;hdtv&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=virtual_desktop_service;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Virtual Desktop Service&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual desktop service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=video_gateway;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Video Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;video gateway&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=telepresence_endpoint;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Telepresence Endpoint&#039;, null, null, this.getTagsForStencil(gn, &#039;telepresence endpoint&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=collab1;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h * 1.3, &#039;&#039;, &#039;Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=video_analytics;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Video Analytics&#039;, null, null, this.getTagsForStencil(gn, &#039;video analytics&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=telepresence_exchange;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Telepresence Exchange&#039;, null, null, this.getTagsForStencil(gn, &#039;telepresence exchange&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=meeting_scheduling_and_management_server;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Meeting Scheduling and Management Server&#039;, null, null, this.getTagsForStencil(gn, &#039;meeting scheduling and management server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=multipoint_meeting_server;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Multipoint Meeting Server&#039;, null, null, this.getTagsForStencil(gn, &#039;multipoint meeting server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=content_recording_streaming_server;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Content Recording / Streaming Server&#039;, null, null, this.getTagsForStencil(gn, &#039;content recording streaming server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=communications_manager;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Communications Manager&#039;, null, null, this.getTagsForStencil(gn, &#039;communications manager&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=cisco_unified_presence_service;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Cisco Unified Presence Service&#039;, null, null, this.getTagsForStencil(gn, &#039;cisco unified presence service&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=cisco_unified_contact_center_enterprise_and_hosted;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Cisco Unified Contact Center Enterprise and Hosted&#039;, null, null, this.getTagsForStencil(gn, &#039;cisco unified contact center enterprise and hosted&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=h323;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;H.323&#039;, null, null, this.getTagsForStencil(gn, &#039;h323&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.015,0.015,0],[0.5,0,0],[0.985,0.015,0],[1,0.22,0],[0.985,0.43,0],[0.73,0.85,0],[0.5,1,0],[0.285,0.85,0],[0.015,0.43,0],[0,0.22,0]];&#039; + s3 + &#039;surveillance_camera;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Surveillance Camera&#039;, null, null, this.getTagsForStencil(gn, &#039;surveillance camera&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=monitor;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Monitor&#039;, null, null, this.getTagsForStencil(gn, &#039;monitor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.13,0.225,0],[0.5,0,0],[0.87,0.225,0],[0.885,0.5,0],[0.985,0.99,0],[0.5,1,0],[0.015,0.99,0],[0.115,0.5,0]];&#039; + s3 + &#039;upc_unified_personal_communicator;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.85, &#039;&#039;, &#039;UPC Unified Personal Communicator&#039;, null, null, this.getTagsForStencil(gn, &#039;upc unified personal communicator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=telepresence_endpoint_twin_data_display;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Telepresence Endpoint (twin data display)&#039;, null, null, this.getTagsForStencil(gn, &#039;telepresence endpoint twin data display&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=operations_manager;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Operations Manager&#039;, null, null, this.getTagsForStencil(gn, &#039;operations manager&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=transcoder;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Transcoder&#039;, null, null, this.getTagsForStencil(gn, &#039;transcoder&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=contact_center_express;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Contact Center Express&#039;, null, null, this.getTagsForStencil(gn, &#039;contact center express&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=media_server;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Media Server&#039;, null, null, this.getTagsForStencil(gn, &#039;media server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=ip_ip_gateway;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;IP IP Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;ip gateway&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;webex&#039;, 
+					w, h, &#039;&#039;, &#039;WebEx&#039;, null, null, this.getTagsForStencil(gn, &#039;webex&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=clock;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Clock&#039;, null, null, this.getTagsForStencil(gn, &#039;clock&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.5,0,0],[0.75,0.37,0],[0.96,0.735,0],[0.5,1,0],[0.045,0.73,0],[0.25,0.37,0]];&#039; + s3 + &#039;phone_polycom;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 0.95, h, &#039;&#039;, &#039;Phone Polycom&#039;, null, null, this.getTagsForStencil(gn, &#039;phone polycom&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=unity;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Unity&#039;, null, null, this.getTagsForStencil(gn, &#039;unity&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=shield;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Shield&#039;, null, null, this.getTagsForStencil(gn, &#039;shield&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=cisco_meetingplace_express;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Cisco MeetingPlace Express&#039;, null, null, this.getTagsForStencil(gn, &#039;meetingplace express&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=set_top;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Set Top&#039;, null, null, this.getTagsForStencil(gn, &#039;set top&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.59,0,0],[0.87,0.015,0],[0.88,0.3,0],[0.99,0.99,0],[0.5,1,0],[0.01,0.99,0],[0.075,0.5,0],[0.17,0.115,0]];&#039; + s3 + &#039;ip_phone;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 1.15, h, &#039;&#039;, &#039;IP Phone&#039;, null, null, this.getTagsForStencil(gn, &#039;ip phone internet protocol&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0,0.5,0],[0.19,0.02,0],[0.59,0,0],[0.985,0.02,0],[1,0.5,0],[0.985,0.98,0],[0.59,1,0],[0.19,0.98,0]];&#039; + s3 + &#039;camera;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 1.8, h, &#039;&#039;, &#039;Camera&#039;, null, null, this.getTagsForStencil(gn, &#039;camera&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=da_encoder;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;DA Encoder&#039;, null, null, this.getTagsForStencil(gn, &#039;da encoder analog digital&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=ad_encoder;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;AD Encoder&#039;, null, null, this.getTagsForStencil(gn, &#039;ad encoder analog digital&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=da_decoder;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;DA Decoder&#039;, null, null, this.getTagsForStencil(gn, &#039;da decoder analog digital&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=ad_decoder;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;AD Decoder&#039;, null, null, this.getTagsForStencil(gn, &#039;ad decoder analog digital&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.13,0.24,0],[0.5,0.2,0],[0.62,0,0],[0.87,0.24,0],[0.95,0.55,0],[0.96,0.95,0],[0.5,1,0],[0.04,0.95,0],[0.05,0.55,0]];&#039; + s3 + &#039;joystick_keyboard;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 1.8, h, &#039;&#039;, &#039;Joystick Keyboard&#039;, null, null, this.getTagsForStencil(gn, &#039;joystick keyboard&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=collab2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;collaboration&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=collab3;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;collaboration&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=collab4;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Collaboration&#039;, null, null, this.getTagsForStencil(gn, &#039;collaboration&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCisco19SecurityCloudsAndConnectorsPalette = function(s, s2, s3)
+	{
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cisco19&#039;;
+		var dt = &#039;cisco security clouds connectors&#039;;
+		var sCloud = &#039;points=[[0,0.64,0],[0.2,0.15,0],[0.4,0.01,0],[0.79,0.25,0],[1,0.65,0],[0.8,0.86,0],[0.41,1,0],[0.16,0.86,0]];&#039;;
+		
+		this.addPaletteFunctions(&#039;cisco19Security Clouds Connectors&#039;, &#039;Cisco 19 / Security, Clouds and Connectors&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=acs;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;ACS&#039;, null, null, this.getTagsForStencil(gn, &#039;acs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=ise;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;ISE&#039;, null, null, this.getTagsForStencil(gn, &#039;ise&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=email_security;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Email Security&#039;, null, null, this.getTagsForStencil(gn, &#039;email security&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=vpn_concentrator;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;VPN Concentrator&#039;, null, null, this.getTagsForStencil(gn, &#039;vpn concentrator virtual private network&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=ssl_terminator;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;SSL Terminator&#039;, null, null, this.getTagsForStencil(gn, &#039;ssl terminator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=cisco_security_manager;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Cisco Security Manager&#039;, null, null, this.getTagsForStencil(gn, &#039;cisco security manager&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=web_security;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Web Security&#039;, null, null, this.getTagsForStencil(gn, &#039;web security&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=nac_appliance;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;NAC Appliance&#039;, null, null, this.getTagsForStencil(gn, &#039;nac appliance&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=ironport;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Ironport&#039;, null, null, this.getTagsForStencil(gn, &#039;ironport&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=ips_ids;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;IPS/IDS&#039;, null, null, this.getTagsForStencil(gn, &#039;ips ids&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=firewall;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;firewall&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=asa_5500;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;ASA 5500&#039;, null, null, this.getTagsForStencil(gn, &#039;asa 5500&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.5,0,0],[0.765,0.48,0],[0.99,0.98,0],[0.5,1,0],[0.01,0.98,0],[0.235,0.48,0]];&#039; + s3 + &#039;ldap;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.85, &#039;&#039;, &#039;LDAP&#039;, null, null, this.getTagsForStencil(gn, &#039;ldap&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0,0.5,0],[0.24,0,0],[0.5,0.28,0],[0.995,0.475,0],[0.5,0.72,0],[0.24,1,0]];&#039; + s3 + &#039;key;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.45, &#039;&#039;, &#039;Key&#039;, null, null, this.getTagsForStencil(gn, &#039;key&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;lock;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h, &#039;&#039;, &#039;Lock&#039;, null, null, this.getTagsForStencil(gn, &#039;lock&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sCloud + s3 + &#039;cloud;fillColor=#6B6B6B;strokeColor=none;&#039;, 
+					w, h * 0.6, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sCloud + s3 + &#039;cloud;fillColor=#A6A6A6;strokeColor=none;&#039;, 
+					w, h * 0.6, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sCloud + s3 + &#039;cloud;fillColor=#FABD66;strokeColor=none;&#039;, 
+					w, h * 0.6, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sCloud + s3 + &#039;cloud;fillColor=#186180;strokeColor=none;&#039;, 
+					w, h * 0.6, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(sCloud + s3 + &#039;cloud2;fillColor=#FFE9AA;strokeColor=none;&#039;, 
+					w, h * 0.6, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=security_management;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Security Management (color)&#039;, null, null, this.getTagsForStencil(gn, &#039;security management color&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=security_management;fillColor=#FAFAFA;strokeColor=#6696AB;&#039;, 
+					w, h, &#039;&#039;, &#039;Security Management (subdued)&#039;, null, null, this.getTagsForStencil(gn, &#039;security management subdued&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.13,0.02,0],[0.5,0,0],[0.87,0.02,0],[0.885,0.4,0],[0.985,0.985,0],[0.5,1,0],[0.015,0.985,0],[0.115,0.4,0]];&#039; + s3 + &#039;secure_endpoints;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.7, &#039;&#039;, &#039;Secure Endpoint (laptop)&#039;, null, null, this.getTagsForStencil(gn, &#039;secure endpoints laptop&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCisco19EndpointClientDeviceIconsPalette = function(s, s2, s3)
+	{
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cisco19&#039;;
+		var dt = &#039;cisco endpoint client device icons&#039;;
+
+		this.addPaletteFunctions(&#039;cisco19Endpoint Client Device Icons&#039;, &#039;Cisco 19 / Endpoint Client and Device Icons&#039;, false,
+		[
+			this.createVertexTemplateEntry(&#039;points=[[0.03,0.03,0],[0.5,0,0],[0.97,0.03,0],[1,0.4,0],[0.97,0.745,0],[0.5,1,0],[0.03,0.745,0],[0,0.4,0]];&#039; + s3 + &#039;workstation;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.8, &#039;&#039;, &#039;Workstation&#039;, null, null, this.getTagsForStencil(gn, &#039;workstation&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.13,0.02,0],[0.5,0,0],[0.87,0.02,0],[0.885,0.4,0],[0.985,0.985,0],[0.5,1,0],[0.015,0.985,0],[0.115,0.4,0]];&#039; + s3 + &#039;laptop;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.7, &#039;&#039;, &#039;Laptop&#039;, null, null, this.getTagsForStencil(gn, &#039;laptop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;handheld;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 0.75, h, &#039;&#039;, &#039;Handheld&#039;, null, null, this.getTagsForStencil(gn, &#039;handheld&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cell_phone;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 0.5, h, &#039;&#039;, &#039;Cell Phone&#039;, null, null, this.getTagsForStencil(gn, &#039;cell phone&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.015,0.14,0],[0.5,0,0],[0.985,0.14,0],[1,0.57,0],[0.99,0.98,0],[0.5,1,0],[0.01,0.98,0],[0,0.57,0]];&#039; + s3 + &#039;tablet;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.8, &#039;&#039;, &#039;Tablet&#039;, null, null, this.getTagsForStencil(gn, &#039;tablet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.22,0.185,0],[0.5,0,0],[0.78,0.185,0],[0.975,0.49,0],[1,0.73,0],[0.975,0.97,0],[0.5,1,0],[0.025,0.97,0],[0,0.73,0],[0.025,0.49,0]];&#039; + s3 + &#039;printer;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.9, &#039;&#039;, &#039;Printer&#039;, null, null, this.getTagsForStencil(gn, &#039;printer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;pos;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;POS&#039;, null, null, this.getTagsForStencil(gn, &#039;pos&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.115,0.05,0],[0.335,0,0],[0.98,0.52,0],[1,0.71,0],[0.68,1,0],[0.065,0.76,0],[0,0.33,0],[0.68,0.33,0]];&#039; + s3 + &#039;home_office;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h, &#039;&#039;, &#039;Home Office&#039;, null, null, this.getTagsForStencil(gn, &#039;home office&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.35,0,0],[0.98,0.51,0],[1,0.71,0],[0.67,1,0],[0,0.795,0],[0,0.65,0]];&#039; + s3 + &#039;user;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h, &#039;&#039;, &#039;User&#039;, null, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.02,0.015,0],[0.5,0,0],[0.98,0.015,0],[1,0.38,0],[0.895,0.98,0],[0.5,1,0],[0.105,0.98,0],[0,0.38,0]];&#039; + s3 + &#039;secure_endpoint_pc;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.8, &#039;&#039;, &#039;Secure Endpoint (PC)&#039;, null, null, this.getTagsForStencil(gn, &#039;secure endpoints pc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.13,0.02,0],[0.5,0,0],[0.87,0.02,0],[0.885,0.4,0],[0.985,0.985,0],[0.5,1,0],[0.015,0.985,0],[0.115,0.4,0]];&#039; + s3 + &#039;secure_endpoints;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.7, &#039;&#039;, &#039;Secure Endpoint (laptop)&#039;, null, null, this.getTagsForStencil(gn, &#039;secure endpoints laptop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.5,0,0],[1,0.34,0],[1,1],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,1,0],[0,0.34,0],[1,0.67,0],[0,0.67,0],[0.325,0,0],[0.675,0,0]];&#039; + s3 + &#039;data_center;fillColor=#005073;strokeColor=none;&#039;, 
+					w * 2, h * 1.4, &#039;&#039;, &#039;Data Center&#039;, null, null, this.getTagsForStencil(gn, &#039;data center&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[1,1,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];&#039; + s3 + &#039;branch;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h, &#039;&#039;, &#039;Branch&#039;, null, null, this.getTagsForStencil(gn, &#039;branch&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCisco19DNASDAccessPalette = function(s, s2, s3)
+	{
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cisco19&#039;;
+		var dt = &#039;cisco dna sd access&#039;;
+
+		this.addPaletteFunctions(&#039;cisco19DNA SD Access&#039;, &#039;Cisco 19 / DNA/SD-Access&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=cisco_dna_center;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Cisco DNA Center&#039;, null, null, this.getTagsForStencil(gn, &#039;dna center&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.5,0.37,0],[1,0.09,0],[1,0.9,0],[0,0.08,0],[0,0.91,0],[0.5,0.61,0],[0.045,0.5,0],[0.96,0.5,0]];&#039; + s3 + &#039;cisco_dna;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.6, &#039;&#039;, &#039;Cisco DNA&#039;, null, null, this.getTagsForStencil(gn, &#039;dna&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCisco19SDWANViptelaPalette = function(s, s2, s3)
+	{
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cisco19&#039;;
+		var dt = &#039;cisco sd wan viptela wide area network&#039;;
+
+		this.addPaletteFunctions(&#039;cisco19SD WAN Viptela&#039;, &#039;Cisco 19 / SD-WAN and Viptela&#039;, false,
+		[
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=vbond;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;vBond&#039;, null, null, this.getTagsForStencil(gn, &#039;vbond&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=vmanage;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;vManage&#039;, null, null, this.getTagsForStencil(gn, &#039;vmanage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s2 + &#039;rect;prIcon=vsmart;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;vSmart&#039;, null, null, this.getTagsForStencil(gn, &#039;vsmart&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCisco19StealthwatchPalette = function(s, s2, s3)
+	{
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cisco19&#039;;
+		var dt = &#039;cisco stealthwatch&#039;;
+
+		this.addPaletteFunctions(&#039;cisco19ETA Stealthwatch&#039;, &#039;Cisco 19 / ETA/Stealthwatch&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=flow_collector;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Flow Collector&#039;, null, null, this.getTagsForStencil(gn, &#039;flow collector&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(&#039;points=[[0.03,0.03,0],[0.5,0,0],[0.97,0.03,0],[1,0.4,0],[0.97,0.745,0],[0.5,1,0],[0.03,0.745,0],[0,0.4,0]];&#039; + s3 + &#039;stealthwatch_management_console_smc;fillColor=#005073;strokeColor=none;&#039;, 
+					w, h * 0.8, &#039;&#039;, &#039;Stealthwatch Management Console (SMC)&#039;, null, null, this.getTagsForStencil(gn, &#039;stealthwatch management console smc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=cognitive;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Cognitive&#039;, null, null, this.getTagsForStencil(gn, &#039;cognitive&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+	Sidebar.prototype.addCisco19SafePalette = function(s, s2, s3)
+	{
+		var w = 50;
+		var h = 50;
+		var gn = &#039;mxgraph.cisco19&#039;;
+		var dt = &#039;cisco stealthwatch&#039;;
+
+		this.addPaletteFunctions(&#039;cisco19SAFE&#039;, &#039;Cisco 19 / SAFE&#039;, false,
+		[
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=next_generation_intrusion_prevention_system;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Next Generation Intrusion Prevention System&#039;, null, null, this.getTagsForStencil(gn, &#039;next generation prevention system&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=access_control_and_trustsec;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Access Control and TrustSec&#039;, null, null, this.getTagsForStencil(gn, &#039;access control and trustsec&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=load_balancer;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Load Balancer&#039;, null, null, this.getTagsForStencil(gn, &#039;load balancer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=anomaly_detection;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Anomaly Detection&#039;, null, null, this.getTagsForStencil(gn, &#039;anomaly detection&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=web_reputation_filtering;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Web Reputation / Filtering&#039;, null, null, this.getTagsForStencil(gn, &#039;web reputation filtering&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=avc_application_visibility_control;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;AVC-Application Visibility Control&#039;, null, null, this.getTagsForStencil(gn, &#039;avc application visibility control&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=anti_malware2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Anti-Malware&#039;, null, null, this.getTagsForStencil(gn, &#039;anti malware&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=web_application_firewall;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Web Application Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;web application firewall&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=policy_configuration;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Policy / Configuration&#039;, null, null, this.getTagsForStencil(gn, &#039;policy configuration&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=analysis_correlation;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Analysis / Correlation&#039;, null, null, this.getTagsForStencil(gn, &#039;analysis correlation&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=flow_analytics;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Flow Analytics&#039;, null, null, this.getTagsForStencil(gn, &#039;flow analytics&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=virtual_private_network;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Virtual Private Network&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual private network vpn&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=web_reputation_filtering_2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Web Reputation / Filtering&#039;, null, null, this.getTagsForStencil(gn, &#039;web reputation filtering&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=avc_application_visibility_control2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;AVC-Application Visibility Control&#039;, null, null, this.getTagsForStencil(gn, &#039;avc application visibility control&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=flow_analytics2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Flow Analytics&#039;, null, null, this.getTagsForStencil(gn, &#039;flow analytics&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=virtual_private_network2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Virtual Private Network&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual private network&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=web_security_services;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Web Security Services&#039;, null, null, this.getTagsForStencil(gn, &#039;web security services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=web_security_services2;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Web Security Services&#039;, null, null, this.getTagsForStencil(gn, &#039;web security services&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=posture_assessment;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Posture Assessment&#039;, null, null, this.getTagsForStencil(gn, &#039;posture assessment&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=anti_malware;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Anti-Malware&#039;, null, null, this.getTagsForStencil(gn, &#039;anti malware&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=wireless_intrusion_prevention;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Wireless Intrusion Prevention&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless intrusion prevention&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=host_based_security;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Host Based Security&#039;, null, null, this.getTagsForStencil(gn, &#039;host based security&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=monitoring;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w, h, &#039;&#039;, &#039;Monitoring&#039;, null, null, this.getTagsForStencil(gn, &#039;monitoring&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=virtual_private_network_connector;fillColor=#FAFAFA;strokeColor=#005073;&#039;, 
+					w * 1.28, h, &#039;&#039;, &#039;Virtual Private Network Connector&#039;, null, null, this.getTagsForStencil(gn, &#039;connector&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;rect;prIcon=threat_intelligence;fillColor=#FAFAFA;strokeColor=#005073;&#039;,
+					w, h, &#039;&#039;, &#039;Monitoring&#039;, null, null, this.getTagsForStencil(gn, &#039;monitoring&#039;, dt).join(&#039; &#039;))
+		]);
+	};
+	
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

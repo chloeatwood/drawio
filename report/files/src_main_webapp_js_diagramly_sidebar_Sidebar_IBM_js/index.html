@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-IBM.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-IBM.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">65.50</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">670</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">34.24</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">17.05</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addIBMPalette = function()
+	{
+		var d = 60;
+		var dt = &#039;ibm &#039;;
+		var sb = this;
+		var s = &#039;image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=default;fontSize=12;spacingTop=3;image=img/lib/ibm/&#039;;
+		
+		// Adds IBM shapes
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmAnalytics&#039;);
+		this.addIBMAnalyticsPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmApplications&#039;);
+		this.addIBMApplicationsPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmBlockchain&#039;);
+		this.addIBMBlockchainPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmData&#039;);
+		this.addIBMDataPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmDevOps&#039;);
+		this.addIBMDevOpsPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmInfrastructure&#039;);
+		this.addIBMInfrastructurePalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmManagement&#039;);
+		this.addIBMManagementPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmMiscellaneous&#039;);
+		this.addIBMMiscPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmSecurity&#039;);
+		this.addIBMSecurityPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmSocial&#039;);
+		this.addIBMSocialPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmUsers&#039;);
+		this.addIBMUsersPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmVPC&#039;);
+		this.addIBMVPCPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmBoxes&#039;);
+		this.addIBMBoxesPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;ibm&#039;, &#039;ibmConnectors&#039;);
+		this.addIBMConnectorsPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary();
+	};
+
+	Sidebar.prototype.addIBMAnalyticsPalette = function(d, dt, sb, s)
+	{
+		s += &#039;analytics/&#039;;
+		var gn = &#039;analytics &#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;analytics.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Analytics&#039;, false, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;data_integration.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Data Integration&#039;, false, null, this.getTagsForStencil(gn, &#039;data integration&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;data_repositories.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Data Repositories&#039;, false, null, this.getTagsForStencil(gn, &#039;data repositories&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;device_analytics.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Device Analytics&#039;, false, null, this.getTagsForStencil(gn, &#039;device analytics&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;streaming_computing.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Streaming Computing&#039;, false, null, this.getTagsForStencil(gn, &#039;streaming computing&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmAnalytics&#039;, &#039;IBM / Analytics&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMApplicationsPalette = function(d, dt, sb, s)
+	{
+		s += &#039;applications/&#039;;
+		var gn = &#039;applications &#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;actionable_insight.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Actionable Insight&#039;, false, null, this.getTagsForStencil(gn, &#039;actionable insight&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;annotate.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Annotate&#039;, false, null, this.getTagsForStencil(gn, &#039;annotate&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;api_developer_portal.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;API Developer Portal&#039;, false, null, this.getTagsForStencil(gn, &#039;api developer portal&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;api_polyglot_runtimes.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;API Polyglot Runtimes&#039;, false, null, this.getTagsForStencil(gn, &#039;api polyglot runtimes&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;app_server.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;App Server&#039;, false, null, this.getTagsForStencil(gn, &#039;app server&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;application_logic.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Application Logic&#039;, false, null, this.getTagsForStencil(gn, &#039;application logic&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;automation_tools.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Automation Tools&#039;, false, null, this.getTagsForStencil(gn, &#039;automation tools&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;enterprise_applications.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Enterprise Applications&#039;, false, null, this.getTagsForStencil(gn, &#039;enterprise applications&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;index.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Index&#039;, false, null, this.getTagsForStencil(gn, &#039;index&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;iot_application.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;IoT Application&#039;, false, null, this.getTagsForStencil(gn, &#039;iot application&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;microservice.svg;&#039;,
+					 d * 1.37, d, &#039;&#039;, &#039;Microservice&#039;, false, null, this.getTagsForStencil(gn, &#039;microservice&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;mobile_app.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Mobile App&#039;, false, null, this.getTagsForStencil(gn, &#039;mobile app&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;ontology.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Ontology&#039;, false, null, this.getTagsForStencil(gn, &#039;ontology&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;open_source_tools.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Open Source Tools&#039;, false, null, this.getTagsForStencil(gn, &#039;open source tools&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;runtime_services.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Runtime Services&#039;, false, null, this.getTagsForStencil(gn, &#039;runtime services&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;saas_applications.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;SaaS Applications&#039;, false, null, this.getTagsForStencil(gn, &#039;saas applications&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;service_broker.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Service Broker&#039;, false, null, this.getTagsForStencil(gn, &#039;service broker&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;speech_to_text.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Speech to Text&#039;, false, null, this.getTagsForStencil(gn, &#039;speech to text&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;visual_recognition.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Visual Recognition&#039;, false, null, this.getTagsForStencil(gn, &#039;visual recognition&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;visualization.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Visualization&#039;, false, null, this.getTagsForStencil(gn, &#039;visualization&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmApplications&#039;, &#039;IBM / Applications&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMBlockchainPalette = function(d, dt, sb, s)
+	{
+		s += &#039;blockchain/&#039;;
+		var gn = &#039;blockchain&#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;blockchain.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Blockchain&#039;, false, null, this.getTagsForStencil(gn, &#039;&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;blockchain_developer.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Blockchain Developer&#039;, false, null, this.getTagsForStencil(gn, &#039;developer&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;certificate_authority.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Certificate Authority&#039;, false, null, this.getTagsForStencil(gn, &#039;certificate authority&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;client_application.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Client Application&#039;, false, null, this.getTagsForStencil(gn, &#039;client application&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;communication.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Communication&#039;, false, null, this.getTagsForStencil(gn, &#039;communication&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;consensus.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Consensus&#039;, false, null, this.getTagsForStencil(gn, &#039;communication&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;e_cert.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;E-Cert&#039;, false, null, this.getTagsForStencil(gn, &#039;ecert e-cert&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;event.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Event&#039;, false, null, this.getTagsForStencil(gn, &#039;event&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;event_listener.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Event Listener&#039;, false, null, this.getTagsForStencil(gn, &#039;event listener&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;existing_enterprise_systems.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Existing Enterprise Systems&#039;, false, null, this.getTagsForStencil(gn, &#039;existing enterprise systems&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;hyperledger_fabric.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Hyperledger Fabric&#039;, false, null, this.getTagsForStencil(gn, &#039;hyperledger fabric&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;identity_access_manager.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Identity &amp; Access Manager&#039;, false, null, this.getTagsForStencil(gn, &#039;identity access manager&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;key_management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Key Management&#039;, false, null, this.getTagsForStencil(gn, &#039;key management&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;ledger.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Ledger&#039;, false, null, this.getTagsForStencil(gn, &#039;ledger&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;membership.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Membership&#039;, false, null, this.getTagsForStencil(gn, &#039;membership&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;membership_services_provider_api.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Membership Services Provider API&#039;, false, null, this.getTagsForStencil(gn, &#039;membership services provider api&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;message_bus.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Message Bus&#039;, false, null, this.getTagsForStencil(gn, &#039;message bus&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;node.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Node&#039;, false, null, this.getTagsForStencil(gn, &#039;node&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;services.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Services&#039;, false, null, this.getTagsForStencil(gn, &#039;services&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;smart_contract.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Smart Contract&#039;, false, null, this.getTagsForStencil(gn, &#039;smart contract&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;transaction_manager.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Transaction Manager&#039;, false, null, this.getTagsForStencil(gn, &#039;transaction manager&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;wallet.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Wallet&#039;, false, null, this.getTagsForStencil(gn, &#039;wallet&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmBlockchain&#039;, &#039;IBM / Blockchain&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMDataPalette = function(d, dt, sb, s)
+	{
+		s += &#039;data/&#039;;
+		var gn = &#039;data &#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;caches.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Caches&#039;, false, null, this.getTagsForStencil(gn, &#039;caches&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;conversation_trained_deployed.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Conversation (Trained \&amp; Deployed)&#039;, false, null, this.getTagsForStencil(gn, &#039;conversation trained deployed&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;cloud.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Cloud&#039;, false, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;data_services.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Data Services&#039;, false, null, this.getTagsForStencil(gn, &#039;data services&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;data_sources.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Data Sources&#039;, false, null, this.getTagsForStencil(gn, &#039;data sources&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;device_identity_service.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Device Identity Service&#039;, false, null, this.getTagsForStencil(gn, &#039;device identity service&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;device_registry.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Device Registry&#039;, false, null, this.getTagsForStencil(gn, &#039;device registry&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;enterprise_data.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Enterprise Data&#039;, false, null, this.getTagsForStencil(gn, &#039;enterprise data&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;enterprise_user_directory.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Enterprise User Directory&#039;, false, null, this.getTagsForStencil(gn, &#039;enterprise user directory&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;file_repository.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;File Repository&#039;, false, null, this.getTagsForStencil(gn, &#039;file repository&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;ground_truth.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Ground Truth&#039;, false, null, this.getTagsForStencil(gn, &#039;ground truth&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;model.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Model&#039;, false, null, this.getTagsForStencil(gn, &#039;model&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;tms_data_interface.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;TMS Data Interface&#039;, false, null, this.getTagsForStencil(gn, &#039;tms data interface&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmData&#039;, &#039;IBM / Data&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMDevOpsPalette = function(d, dt, sb, s)
+	{
+		s += &#039;devops/&#039;;
+		var gn = &#039;devops &#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;artifact_management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Artifact Management&#039;, false, null, this.getTagsForStencil(gn, &#039;artifact management&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;build_test.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Build \&amp; Test&#039;, false, null, this.getTagsForStencil(gn, &#039;build test&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;code_editor.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Code Editor&#039;, false, null, this.getTagsForStencil(gn, &#039;code editor&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;collaborative_development.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Collaborative Development&#039;, false, null, this.getTagsForStencil(gn, &#039;collaborative development&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;configuration_management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Configuration Management&#039;, false, null, this.getTagsForStencil(gn, &#039;configuration management&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;continuous_deploy.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Continuous Deploy&#039;, false, null, this.getTagsForStencil(gn, &#039;continuous deploy&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;continuous_testing.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Continuous Testing&#039;, false, null, this.getTagsForStencil(gn, &#039;continuous testing&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;devops.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;DevOps&#039;, false, null, this.getTagsForStencil(gn, &#039;devops&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;provision.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Provision&#039;, false, null, this.getTagsForStencil(gn, &#039;provision&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;release_management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Release Management&#039;, false, null, this.getTagsForStencil(gn, &#039;release management&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmDevOps&#039;, &#039;IBM / DevOps&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMInfrastructurePalette = function(d, dt, sb, s)
+	{
+		s += &#039;infrastructure/&#039;;
+		var gn = &#039;infrastructure &#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;channels.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Channels&#039;, false, null, this.getTagsForStencil(gn, &#039;channels&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;cloud_messaging.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Cloud Messaging&#039;, false, null, this.getTagsForStencil(gn, &#039;cloud messaging&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;dashboard.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Dashboard&#039;, false, null, this.getTagsForStencil(gn, &#039;dashboard&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;diagnostics.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Diagnostics&#039;, false, null, this.getTagsForStencil(gn, &#039;diagnostics&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;edge_services.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Edge Services&#039;, false, null, this.getTagsForStencil(gn, &#039;edge services&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;enterprise_messaging.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Enterprise Messaging&#039;, false, null, this.getTagsForStencil(gn, &#039;enterprise messaging&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;event_feed.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Event Feed&#039;, false, null, this.getTagsForStencil(gn, &#039;event feed&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;infrastructure_services.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Infrastructure Services&#039;, false, null, this.getTagsForStencil(gn, &#039;infrastructure services&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;interservice_communication.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Interservice Communication&#039;, false, null, this.getTagsForStencil(gn, &#039;interservice communication&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;load_balancing_routing.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Load Balancing / Routing&#039;, false, null, this.getTagsForStencil(gn, &#039;load balancing routing&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;microservices_mesh.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Microservices Mesh&#039;, false, null, this.getTagsForStencil(gn, &#039;microservices mesh&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;mobile_backend.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Mobile Backend&#039;, false, null, this.getTagsForStencil(gn, &#039;mobile backend&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;mobile_provider_network.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Mobile Provider Network&#039;, false, null, this.getTagsForStencil(gn, &#039;mobile provider network&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;monitoring.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Monitoring&#039;, false, null, this.getTagsForStencil(gn, &#039;monitoring&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;monitoring_logging.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Monitoring \&amp; Logging&#039;, false, null, this.getTagsForStencil(gn, &#039;monitoring logging&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;peer_services.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Peer Services&#039;, false, null, this.getTagsForStencil(gn, &#039;peer services&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;service_discovery_configuration.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Service Discovery \&amp; Configuration&#039;, false, null, this.getTagsForStencil(gn, &#039;service discovery configuration&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;transformation_connectivity.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Transformation \&amp; Connectivity&#039;, false, null, this.getTagsForStencil(gn, &#039;transformation connectivity&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmInfrastructure&#039;, &#039;IBM / Infrastructure&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMManagementPalette = function(d, dt, sb, s)
+	{
+		s += &#039;management/&#039;;
+		var gn = &#039;management &#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;alert_notification.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Alert Notification&#039;, false, null, this.getTagsForStencil(gn, &#039;alert notification&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;api_management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;API Management&#039;, false, null, this.getTagsForStencil(gn, &#039;api management&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;cloud_management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Cloud Management&#039;, false, null, this.getTagsForStencil(gn, &#039;cloud management&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;cluster_management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Cluster Management&#039;, false, null, this.getTagsForStencil(gn, &#039;cluster management&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;content_management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Content Management&#039;, false, null, this.getTagsForStencil(gn, &#039;content management&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;data_services.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Data Services&#039;, false, null, this.getTagsForStencil(gn, &#039;data services&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;device_management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Device Management&#039;, false, null, this.getTagsForStencil(gn, &#039;device management&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;information_governance.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Information Governance&#039;, false, null, this.getTagsForStencil(gn, &#039;information governance&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;it_service_management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;IT Service Management&#039;, false, null, this.getTagsForStencil(gn, &#039;it service management information technology&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Management&#039;, false, null, this.getTagsForStencil(gn, &#039;management&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;monitoring_metrics.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Monitoring \&amp; Metrics&#039;, false, null, this.getTagsForStencil(gn, &#039;monitoring metrics&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;process_management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Process Management&#039;, false, null, this.getTagsForStencil(gn, &#039;process management&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;provider_cloud_portal_service.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Provider Cloud Portal Service&#039;, false, null, this.getTagsForStencil(gn, &#039;provider cloud portal service&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;push_notifications.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Push Notifications&#039;, false, null, this.getTagsForStencil(gn, &#039;push notifications&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;service_management_tools.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Service Management Tools&#039;, false, null, this.getTagsForStencil(gn, &#039;service management tools&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmManagement&#039;, &#039;IBM / Management&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMMiscPalette = function(d, dt, sb, s)
+	{
+		s += &#039;miscellaneous/&#039;;
+		var gn = &#039;miscellaneous &#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;bluemix.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Bluemix&#039;, false, null, this.getTagsForStencil(gn, &#039;bluemix&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;cloudant.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Cloudant&#039;, false, null, this.getTagsForStencil(gn, &#039;cloudant&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;cognitive_services.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Cognitive Services&#039;, false, null, this.getTagsForStencil(gn, &#039;cognitive services&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;ibm_containers.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;IBM Containers&#039;, false, null, this.getTagsForStencil(gn, &#039;ibm containers&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;ibm_public_cloud.svg;&#039;,
+					 d, d * 0.77, &#039;&#039;, &#039;IBM Public Cloud&#039;, false, null, this.getTagsForStencil(gn, &#039;ibm public cloud&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;iot_cloud.svg;&#039;,
+					 d, d * 0.77, &#039;&#039;, &#039;IoT Cloud&#039;, false, null, this.getTagsForStencil(gn, &#039;iot cloud internet of things&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;microservices_application.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Microservices Application&#039;, false, null, this.getTagsForStencil(gn, &#039;microservices application&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;object_storage.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Object Storage&#039;, false, null, this.getTagsForStencil(gn, &#039;object storage&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;offline_capabilities.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Offline Capabilities&#039;, false, null, this.getTagsForStencil(gn, &#039;offline capabilities&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;openwhisk.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Openwhisk&#039;, false, null, this.getTagsForStencil(gn, &#039;openwhisk&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;peer_cloud.svg;&#039;,
+					 d, d * 0.77, &#039;&#039;, &#039;Peer Cloud&#039;, false, null, this.getTagsForStencil(gn, &#039;peer cloud&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;retrieve_rank.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Retrieve Rank&#039;, false, null, this.getTagsForStencil(gn, &#039;retrieve rank&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;scalable.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Scalable&#039;, false, null, this.getTagsForStencil(gn, &#039;scalable&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;text_to_speech.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Text to Speech&#039;, false, null, this.getTagsForStencil(gn, &#039;text to speech&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmMiscellaneous&#039;, &#039;IBM / Miscellaneous&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMSecurityPalette = function(d, dt, sb, s)
+	{
+		s += &#039;security/&#039;;
+		var gn = &#039;security &#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;api_security.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;API Security&#039;, false, null, this.getTagsForStencil(gn, &#039;api security&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;blockchain_security_service.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Blockchain Security Service&#039;, false, null, this.getTagsForStencil(gn, &#039;blockchain security service&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;data_security.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Data Security&#039;, false, null, this.getTagsForStencil(gn, &#039;data security&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;firewall.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Firewall&#039;, false, null, this.getTagsForStencil(gn, &#039;firewall&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;gateway.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Gateway&#039;, false, null, this.getTagsForStencil(gn, &#039;gateway&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;governance_risk_compliance.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Governance, Risk \&amp; Compliance&#039;, false, null, this.getTagsForStencil(gn, &#039;governance risk compliance&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;identity_access_management.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Identity \&amp; Access Management&#039;, false, null, this.getTagsForStencil(gn, &#039;identity access management&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;identity_provider.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Identity Provider&#039;, false, null, this.getTagsForStencil(gn, &#039;identity provider&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;infrastructure_security.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Infrastructure Security&#039;, false, null, this.getTagsForStencil(gn, &#039;infrastructure security&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;physical_security.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Physical Security&#039;, false, null, this.getTagsForStencil(gn, &#039;physical security&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;security_monitoring_intelligence.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Security Monitoring \&amp; Intelligence&#039;, false, null, this.getTagsForStencil(gn, &#039;security monitoring intelligence&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;security_services.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Security Services&#039;, false, null, this.getTagsForStencil(gn, &#039;security services&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;trustend_computing.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Trustend Computing&#039;, false, null, this.getTagsForStencil(gn, &#039;trustend computing&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;vpn.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;VPN&#039;, false, null, this.getTagsForStencil(gn, &#039;vpn virtual private network&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmSecurity&#039;, &#039;IBM / Security&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMSocialPalette = function(d, dt, sb, s)
+	{
+		s += &#039;social/&#039;;
+		var gn = &#039;social &#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;communities.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Communities&#039;, false, null, this.getTagsForStencil(gn, &#039;communities&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;file_sync.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;File Sync&#039;, false, null, this.getTagsForStencil(gn, &#039;file sync&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;live_collaboration.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Live Collaboration&#039;, false, null, this.getTagsForStencil(gn, &#039;live collaboration&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;messaging.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Messaging&#039;, false, null, this.getTagsForStencil(gn, &#039;messaging&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;networking.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Networking&#039;, false, null, this.getTagsForStencil(gn, &#039;networking&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmSocial&#039;, &#039;IBM / Social&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMUsersPalette = function(d, dt, sb, s)
+	{
+		s += &#039;users/&#039;;
+		var gn = &#039;users &#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;browser.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Browser&#039;, false, null, this.getTagsForStencil(gn, &#039;browser&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;device.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Device&#039;, false, null, this.getTagsForStencil(gn, &#039;device&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;integrated_digital_experiences.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Integrated Digital Experiences&#039;, false, null, this.getTagsForStencil(gn, &#039;integrated digital experiences&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;physical_entity.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Physical Entity&#039;, false, null, this.getTagsForStencil(gn, &#039;physical entity&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;sensor.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Sensor&#039;, false, null, this.getTagsForStencil(gn, &#039;sensor&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;user.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;User&#039;, false, null, this.getTagsForStencil(gn, &#039;user&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmUsers&#039;, &#039;IBM / Users&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMVPCPalette = function(d, dt, sb, s)
+	{
+		s += &#039;vpc/&#039;;
+		var gn = &#039;vpc virtual private cloud &#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;Instance.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Instance&#039;, false, null, this.getTagsForStencil(gn, &#039;instance&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;LoadBalancer.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Load Balancer&#039;, false, null, this.getTagsForStencil(gn, &#039;load balancer&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;BlockStorage.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Block Storage&#039;, false, null, this.getTagsForStencil(gn, &#039;block storage&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;FloatingIP.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Floating IP&#039;, false, null, this.getTagsForStencil(gn, &#039;floating ip internet protocol&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;PublicGateway.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Public Gateway&#039;, false, null, this.getTagsForStencil(gn, &#039;public gateway&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;ObjectStorage.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Object Storage&#039;, false, null, this.getTagsForStencil(gn, &#039;object storage&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;VPNConnection.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;VPN Connection&#039;, false, null, this.getTagsForStencil(gn, &#039;connection&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;VPNGateway.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;VPN Gateway&#039;, false, null, this.getTagsForStencil(gn, &#039;gateway&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;DirectLink.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Direct Link&#039;, false, null, this.getTagsForStencil(gn, &#039;direct link&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;InternetServices2.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Internet Services&#039;, false, null, this.getTagsForStencil(gn, &#039;internet services&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;LoadBalancerPool.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Load Balancer Pool&#039;, false, null, this.getTagsForStencil(gn, &#039;load balancer pool&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;LoadBalancerListener.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Load Balancer Listener&#039;, false, null, this.getTagsForStencil(gn, &#039;load balancer listener&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Rules.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Rules&#039;, false, null, this.getTagsForStencil(gn, &#039;load balancer listener&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;ImageService.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Image Service&#039;, false, null, this.getTagsForStencil(gn, &#039;image service&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Key.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Key&#039;, false, null, this.getTagsForStencil(gn, &#039;key&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;VPNPolicy.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;VPN Policy&#039;, false, null, this.getTagsForStencil(gn, &#039;policy&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Router.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Router&#039;, false, null, this.getTagsForStencil(gn, &#039;router&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Bridge.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Bridge&#039;, false, null, this.getTagsForStencil(gn, &#039;bridge&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;CloudServices.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Cloud Services&#039;, false, null, this.getTagsForStencil(gn, &#039;cloud services&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Internet.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Internet&#039;, false, null, this.getTagsForStencil(gn, &#039;internet&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Enterprise.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Data Center&#039;, false, null, this.getTagsForStencil(gn, &#039;dat acenter&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Enterprise2.svg;&#039;,
+					 d, d * 0.8, &#039;&#039;, &#039;Enterprise&#039;, false, null, this.getTagsForStencil(gn, &#039;enterprise&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;PowerInstance.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Power Instance&#039;, false, null, this.getTagsForStencil(gn, &#039;power instance&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;TransitGateway.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Transit Gateway&#039;, false, null, this.getTagsForStencil(gn, &#039;transit gateway&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;BareMetalServer.svg;&#039;,
+					 d, d, &#039;&#039;, &#039;Bare Metal Server&#039;, false, null, this.getTagsForStencil(gn, &#039;bare metal server&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmVPC&#039;, &#039;IBM / VPC&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMBoxesPalette = function(d, dt, sb, s)
+	{
+		s += &#039;boxes/&#039;;
+		var gn = &#039;boxes box &#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(
+					 &#039;shape=mxgraph.ibm.box;prType=cloud;fontStyle=0;verticalAlign=top;align=left;spacingLeft=32;spacingTop=4;fillColor=none;rounded=0;whiteSpace=wrap;html=1;strokeColor=#4376BB;strokeWidth=3;dashed=0;container=1;spacing=-4;collapsible=0;expand=0;recursiveResize=0;&#039;,
+					 200, 200, &#039;IBM Cloud&#039;, &#039;IBM Cloud&#039;, true, null, this.getTagsForStencil(gn, &#039;ibm cloud&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(
+					 &#039;shape=mxgraph.ibm.box;prType=vpc;fontStyle=0;verticalAlign=top;align=left;spacingLeft=32;spacingTop=4;fillColor=none;rounded=0;whiteSpace=wrap;html=1;strokeColor=#4376BB;strokeWidth=2;dashed=0;container=1;spacing=-4;collapsible=0;expand=0;recursiveResize=0;&#039;,
+					 200, 200, &#039;VPC&#039;, &#039;VPC&#039;, true, null, this.getTagsForStencil(gn, &#039;vpc virtual private cloud&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(
+					 &#039;shape=mxgraph.ibm.box;prType=region;fontStyle=0;verticalAlign=top;align=left;spacingLeft=32;spacingTop=4;fillColor=none;rounded=0;whiteSpace=wrap;html=1;strokeColor=#919191;strokeWidth=2;dashed=0;container=1;spacing=-4;collapsible=0;expand=0;recursiveResize=0;&#039;,
+					 200, 200, &#039;Region&#039;, &#039;Region&#039;, true, null, this.getTagsForStencil(gn, &#039;region&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(
+					 &#039;shape=mxgraph.ibm.box;prType=zone;fontStyle=0;verticalAlign=top;align=left;spacingLeft=32;spacingTop=4;fillColor=#E0E0E0;rounded=0;whiteSpace=wrap;html=1;strokeColor=#919191;strokeWidth=1;dashed=0;container=1;spacing=-4;collapsible=0;expand=0;recursiveResize=0;&#039;,
+					 200, 200, &#039;Zone&#039;, &#039;Zone&#039;, true, null, this.getTagsForStencil(gn, &#039;zone&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(
+					 &#039;shape=mxgraph.ibm.box;prType=subnet;fontStyle=0;verticalAlign=top;align=left;spacingLeft=32;spacingTop=4;fillColor=#E6F0E2;rounded=0;whiteSpace=wrap;html=1;strokeColor=#00882B;strokeWidth=1;dashed=0;container=1;spacing=-4;collapsible=0;expand=0;recursiveResize=0;&#039;,
+					 200, 200, &#039;Subnet:ACL&#039;, &#039;Subnet:ACL&#039;, true, null, this.getTagsForStencil(gn, &#039;subnet acl&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(
+					 &#039;fontStyle=0;verticalAlign=top;align=center;spacingTop=-2;fillColor=none;rounded=0;whiteSpace=wrap;html=1;strokeColor=#FF0000;strokeWidth=2;dashed=1;container=1;collapsible=0;expand=0;recursiveResize=0;&#039;,
+					 200, 200, &#039;Security Group&#039;, &#039;Security Group&#039;, true, null, this.getTagsForStencil(gn, &#039;security group&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(
+					 &#039;fontStyle=0;verticalAlign=top;align=center;spacingTop=-2;fillColor=none;rounded=0;whiteSpace=wrap;html=1;strokeColor=#00882B;strokeWidth=2;dashed=1;container=1;collapsible=0;expand=0;recursiveResize=0;&#039;,
+					 200, 200, &#039;Instance Group&#039;, &#039;Instance Group&#039;, true, null, this.getTagsForStencil(gn, &#039;instance group&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(
+					 &#039;fontStyle=0;verticalAlign=top;align=center;spacingTop=-2;fillColor=none;rounded=0;whiteSpace=wrap;html=1;strokeColor=#919191;strokeWidth=2;dashed=1;container=1;collapsible=0;expand=0;recursiveResize=0;&#039;,
+					 200, 200, &#039;Resource Group&#039;, &#039;Resource Group&#039;, true, null, this.getTagsForStencil(gn, &#039;resource group&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(
+					 &#039;shape=mxgraph.ibm.box;prType=public;fontStyle=0;verticalAlign=top;align=left;spacingLeft=32;spacingTop=4;fillColor=none;rounded=0;whiteSpace=wrap;html=1;strokeColor=#4376BB;strokeWidth=3;dashed=0;container=1;spacing=-4;collapsible=0;expand=0;recursiveResize=0;&#039;,
+					 200, 200, &#039;Public Network&#039;, &#039;Public Network&#039;, true, null, this.getTagsForStencil(gn, &#039;public network&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(
+					 &#039;shape=mxgraph.ibm.box;prType=enterprise;fontStyle=0;verticalAlign=top;align=left;spacingLeft=32;spacingTop=4;fillColor=none;rounded=0;whiteSpace=wrap;html=1;strokeColor=#4376BB;strokeWidth=3;dashed=0;container=1;spacing=-4;collapsible=0;expand=0;recursiveResize=0;&#039;,
+					 200, 200, &#039;Enterprise Network&#039;, &#039;Enterprise Network&#039;, true, null, this.getTagsForStencil(gn, &#039;enterprise network&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(
+					 &#039;shape=mxgraph.ibm.box;prType=classic;fontStyle=0;verticalAlign=top;align=left;spacingLeft=32;spacingTop=4;fillColor=none;rounded=0;whiteSpace=wrap;html=1;strokeColor=#4376BB;strokeWidth=2;dashed=0;container=1;spacing=-4;collapsible=0;expand=0;recursiveResize=0;&#039;,
+					 200, 200, &#039;Classic Infrastructure&#039;, &#039;Classic Infrastructure&#039;, true, null, this.getTagsForStencil(gn, &#039;classic infrastructure&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(
+					 &#039;fontStyle=0;verticalAlign=top;align=center;spacingTop=-2;fillColor=none;rounded=0;whiteSpace=wrap;html=1;strokeColor=#4376BB;strokeWidth=1;dashed=0;container=1;collapsible=0;expand=0;recursiveResize=0;&#039;,
+					 200, 200, &#039;Cloud Services&#039;, &#039;Cloud Services&#039;, true, null, this.getTagsForStencil(gn, &#039;cloud services&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;ibmBoxes&#039;, &#039;IBM / Boxes&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addIBMConnectorsPalette = function(d, dt, sb, s)
+	{
+		var gn = &#039;connectors &#039;;
+		
+		var fns = [
+		 	 this.createEdgeTemplateEntry(&#039;html=1;labelBackgroundColor=#ffffff;jettySize=auto;orthogonalLoop=1;strokeWidth=1;fontSize=14;endArrow=none;endFill=0;&#039;, 
+					 d, d, &#039;&#039;, &#039;Connector&#039;, null, dt + &#039;connector&#039;),
+		 	 this.createEdgeTemplateEntry(&#039;html=1;labelBackgroundColor=#ffffff;endArrow=classic;endFill=1;endSize=6;jettySize=auto;orthogonalLoop=1;strokeWidth=1;fontSize=14;&#039;, 
+					 d, d, &#039;&#039;, &#039;Connector (Single Arrow)&#039;, null, dt + &#039;connector single arrow&#039;),
+		 	 this.createEdgeTemplateEntry(&#039;html=1;labelBackgroundColor=#ffffff;startArrow=classic;startFill=1;startSize=6;endArrow=classic;endFill=1;endSize=6;jettySize=auto;orthogonalLoop=1;strokeWidth=1;fontSize=14;&#039;, 
+					 d, d, &#039;&#039;, &#039;Connector (Double Arrow)&#039;, null, dt + &#039;connector double arrow&#039;),
+		 	 this.createEdgeTemplateEntry(&#039;html=1;labelBackgroundColor=#ffffff;endArrow=none;endFill=0;jettySize=auto;orthogonalLoop=1;strokeWidth=1;dashed=1;fontSize=14;&#039;, 
+					 d, d, &#039;&#039;, &#039;Dashed Connector&#039;, null, dt + &#039;dashed connector&#039;),
+		 	 this.createEdgeTemplateEntry(&#039;html=1;labelBackgroundColor=#ffffff;startArrow=none;startFill=0;startSize=6;endArrow=classic;endFill=1;endSize=6;jettySize=auto;orthogonalLoop=1;strokeWidth=1;dashed=1;fontSize=14;&#039;, 
+					 d, d, &#039;&#039;, &#039;Dashed Connector (Single Arrow)&#039;, null, dt + &#039;dashed connector single arrow&#039;),
+		 	 this.createEdgeTemplateEntry(&#039;html=1;labelBackgroundColor=#ffffff;startArrow=classic;startFill=1;startSize=6;endArrow=classic;endFill=1;endSize=6;jettySize=auto;orthogonalLoop=1;strokeWidth=1;dashed=1;fontSize=14;&#039;, 
+					 d, d, &#039;&#039;, &#039;Dashed Connector (Double Arrow)&#039;, null, dt + &#039;dashed connector double arrow&#039;),
+		 	 this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;rounded=0;elbow=vertical;html=1;labelBackgroundColor=#ffffff;jettySize=auto;orthogonalLoop=1;strokeWidth=1;fontSize=14;endArrow=none;endFill=0;&#039;, 
+					 d, d, &#039;&#039;, &#039;Elbow Connector&#039;, null, dt + &#039;elbow connector&#039;),
+		 	 this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;rounded=0;elbow=vertical;html=1;labelBackgroundColor=#ffffff;endArrow=classic;endFill=1;endSize=6;jettySize=auto;orthogonalLoop=1;strokeWidth=1;fontSize=14;&#039;, 
+					 d, d, &#039;&#039;, &#039;Elbow Connector (Single Arrow)&#039;, null, dt + &#039;elbow connector single arrow&#039;),
+		 	 this.createEdgeTemplateEntry(&#039;edgeStyle=elbowEdgeStyle;rounded=0;elbow=vertical;html=1;labelBackgroundColor=#ffffff;startArrow=classic;startFill=1;startSize=6;endArrow=classic;endFill=1;endSize=6;jettySize=auto;orthogonalLoop=1;strokeWidth=1;fontSize=14;&#039;, 
+		 			 d, d, &#039;&#039;, &#039;Elbow Connector (Double Arrow)&#039;, null, dt + &#039;elbow connector double arrow&#039;)
+		];
+			   	
+   		this.addPalette(&#039;ibmConnectors&#039;, &#039;IBM / Connectors&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

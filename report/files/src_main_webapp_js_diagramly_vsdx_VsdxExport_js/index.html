@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\vsdx\VsdxExport.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\vsdx\VsdxExport.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">50.28</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">993</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">85.44</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">12.61</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Export mxFile as Vsdx file
+ */
+function VsdxExport(editorUi)
+{
+	var that = this;
+	
+	var vsdxCanvas = new mxVsdxCanvas2D();
+	
+	var idsMap = {};
+	var idsCounter = 1;
+	/**
+	 * Fill the required files in vsdx format which are constants in our exporter
+	 * @param zip JSZip of vsdx file
+	 * @param pageCount The number of pages in the mxFile
+	 */
+	function createVsdxSkeleton(zip, pageCount)
+	{
+		var files = {
+			&quot;[Content_Types].xml&quot;: &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot; standalone=\&quot;yes\&quot;?&gt;&lt;Types xmlns=&#039;http://schemas.openxmlformats.org/package/2006/content-types&#039;&gt;&lt;Default Extension=&#039;png&#039; ContentType=&#039;image/png&#039;/&gt;&lt;Default Extension=&#039;jpg&#039; ContentType=&#039;image/jpeg&#039;/&gt;&lt;Default Extension=&#039;jpeg&#039; ContentType=&#039;image/jpeg&#039;/&gt;&lt;Default Extension=&#039;svg&#039; ContentType=&#039;image/svg+xml&#039;/&gt;&lt;Default Extension=&#039;bmp&#039; ContentType=&#039;image/bmp&#039;/&gt;&lt;Default Extension=&#039;gif&#039; ContentType=&#039;image/gif&#039;/&gt;&lt;Default Extension=&#039;emf&#039; ContentType=&#039;image/x-emf&#039; /&gt;&lt;Default Extension=&#039;rels&#039; ContentType=&#039;application/vnd.openxmlformats-package.relationships+xml&#039; /&gt;&lt;Default Extension=&#039;xml&#039; ContentType=&#039;application/xml&#039; /&gt;&lt;Override PartName=&#039;/docProps/app.xml&#039; ContentType=&#039;application/vnd.openxmlformats-officedocument.extended-properties+xml&#039; /&gt;&lt;Override PartName=&#039;/docProps/core.xml&#039; ContentType=&#039;application/vnd.openxmlformats-package.core-properties+xml&#039; /&gt;&lt;Override PartName=&#039;/docProps/custom.xml&#039; ContentType=&#039;application/vnd.openxmlformats-officedocument.custom-properties+xml&#039; /&gt;&lt;Override PartName=&#039;/visio/document.xml&#039; ContentType=&#039;application/vnd.ms-visio.drawing.main+xml&#039; /&gt;&lt;Override PartName=&#039;/visio/masters/masters.xml&#039; ContentType=&#039;application/vnd.ms-visio.masters+xml&#039; /&gt;&lt;Override PartName=&#039;/visio/masters/master1.xml&#039; ContentType=&#039;application/vnd.ms-visio.master+xml&#039;/&gt;&lt;Override PartName=&#039;/visio/pages/page1.xml&#039; ContentType=&#039;application/vnd.ms-visio.page+xml&#039; /&gt;&lt;Override PartName=&#039;/visio/pages/pages.xml&#039; ContentType=&#039;application/vnd.ms-visio.pages+xml&#039; /&gt;&lt;Override PartName=&#039;/visio/windows.xml&#039; ContentType=&#039;application/vnd.ms-visio.windows+xml&#039; /&gt;&lt;/Types&gt;&quot;,
+			&quot;_rels/.rels&quot; : &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot; standalone=\&quot;yes\&quot;?&gt;&lt;Relationships xmlns=&#039;http://schemas.openxmlformats.org/package/2006/relationships&#039;&gt;&lt;Relationship Id=&#039;rId1&#039; Type=&#039;http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties&#039; Target=&#039;docProps/core.xml&#039; /&gt;&lt;Relationship Id=&#039;rId2&#039; Type=&#039;http://schemas.microsoft.com/visio/2010/relationships/document&#039; Target=&#039;visio/document.xml&#039; /&gt;&lt;Relationship Id=&#039;rId3&#039; Type=&#039;http://schemas.openxmlformats.org/officeDocument/2006/relationships/custom-properties&#039; Target=&#039;docProps/custom.xml&#039; /&gt;&lt;Relationship Id=&#039;rId4&#039; Type=&#039;http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties&#039; Target=&#039;docProps/app.xml&#039; /&gt;&lt;/Relationships&gt;&quot;,
+			&quot;docProps/app.xml&quot; :  &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot; standalone=\&quot;yes\&quot;?&gt;&lt;Properties xmlns=&#039;http://schemas.openxmlformats.org/officeDocument/2006/extended-properties&#039; xmlns:vt=&#039;http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes&#039;&gt;&lt;Application&gt;Microsoft Visio&lt;/Application&gt;&lt;AppVersion&gt;15.0000&lt;/AppVersion&gt;&lt;Template /&gt;&lt;Manager /&gt;&lt;Company /&gt;&lt;HyperlinkBase /&gt;&lt;/Properties&gt;&quot;,
+			&quot;docProps/core.xml&quot; : &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot; standalone=\&quot;yes\&quot;?&gt;&lt;cp:coreProperties xmlns:cp=&#039;http://schemas.openxmlformats.org/package/2006/metadata/core-properties&#039; xmlns:dc=&#039;http://purl.org/dc/elements/1.1/&#039; xmlns:dcterms=&#039;http://purl.org/dc/terms/&#039; xmlns:dcmitype=&#039;http://purl.org/dc/dcmitype/&#039; xmlns:xsi=&#039;http://www.w3.org/2001/XMLSchema-instance&#039;&gt;&lt;dc:title /&gt;&lt;dc:subject /&gt;&lt;dc:creator /&gt;&lt;cp:keywords /&gt;&lt;dc:description /&gt;&lt;cp:category /&gt;&lt;dc:language&gt;en-US&lt;/dc:language&gt;&lt;/cp:coreProperties&gt;&quot;,
+			&quot;docProps/custom.xml&quot; : &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot; standalone=\&quot;yes\&quot;?&gt;&lt;Properties xmlns=&#039;http://schemas.openxmlformats.org/officeDocument/2006/custom-properties&#039; xmlns:vt=&#039;http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes&#039; /&gt;&quot;,
+			&quot;visio/document.xml&quot;: &quot;&lt;?xml version=&#039;1.0&#039; encoding=&#039;utf-8&#039; ?&gt;&lt;VisioDocument xmlns=&#039;http://schemas.microsoft.com/office/visio/2012/main&#039; xmlns:r=&#039;http://schemas.openxmlformats.org/officeDocument/2006/relationships&#039; xml:space=&#039;preserve&#039;&gt;&lt;DocumentSettings TopPage=&#039;0&#039; DefaultTextStyle=&#039;3&#039; DefaultLineStyle=&#039;3&#039; DefaultFillStyle=&#039;3&#039; DefaultGuideStyle=&#039;4&#039;&gt;&lt;GlueSettings&gt;9&lt;/GlueSettings&gt;&lt;SnapSettings&gt;65847&lt;/SnapSettings&gt;&lt;SnapExtensions&gt;34&lt;/SnapExtensions&gt;&lt;SnapAngles/&gt;&lt;DynamicGridEnabled&gt;1&lt;/DynamicGridEnabled&gt;&lt;ProtectStyles&gt;0&lt;/ProtectStyles&gt;&lt;ProtectShapes&gt;0&lt;/ProtectShapes&gt;&lt;ProtectMasters&gt;0&lt;/ProtectMasters&gt;&lt;ProtectBkgnds&gt;0&lt;/ProtectBkgnds&gt;&lt;/DocumentSettings&gt;&lt;Colors&gt;&lt;ColorEntry IX=&#039;24&#039; RGB=&#039;#000000&#039;/&gt;&lt;ColorEntry IX=&#039;25&#039; RGB=&#039;#FFFFFF&#039;/&gt;&lt;ColorEntry IX=&#039;26&#039; RGB=&#039;#FF0000&#039;/&gt;&lt;ColorEntry IX=&#039;27&#039; RGB=&#039;#00FF00&#039;/&gt;&lt;ColorEntry IX=&#039;28&#039; RGB=&#039;#0000FF&#039;/&gt;&lt;ColorEntry IX=&#039;29&#039; RGB=&#039;#FFFF00&#039;/&gt;&lt;ColorEntry IX=&#039;30&#039; RGB=&#039;#FF00FF&#039;/&gt;&lt;ColorEntry IX=&#039;31&#039; RGB=&#039;#00FFFF&#039;/&gt;&lt;ColorEntry IX=&#039;32&#039; RGB=&#039;#800000&#039;/&gt;&lt;ColorEntry IX=&#039;33&#039; RGB=&#039;#008000&#039;/&gt;&lt;ColorEntry IX=&#039;34&#039; RGB=&#039;#000080&#039;/&gt;&lt;ColorEntry IX=&#039;35&#039; RGB=&#039;#808000&#039;/&gt;&lt;ColorEntry IX=&#039;36&#039; RGB=&#039;#800080&#039;/&gt;&lt;ColorEntry IX=&#039;37&#039; RGB=&#039;#008080&#039;/&gt;&lt;ColorEntry IX=&#039;38&#039; RGB=&#039;#C0C0C0&#039;/&gt;&lt;ColorEntry IX=&#039;39&#039; RGB=&#039;#E6E6E6&#039;/&gt;&lt;ColorEntry IX=&#039;40&#039; RGB=&#039;#CDCDCD&#039;/&gt;&lt;ColorEntry IX=&#039;41&#039; RGB=&#039;#B3B3B3&#039;/&gt;&lt;ColorEntry IX=&#039;42&#039; RGB=&#039;#9A9A9A&#039;/&gt;&lt;ColorEntry IX=&#039;43&#039; RGB=&#039;#808080&#039;/&gt;&lt;ColorEntry IX=&#039;44&#039; RGB=&#039;#666666&#039;/&gt;&lt;ColorEntry IX=&#039;45&#039; RGB=&#039;#4D4D4D&#039;/&gt;&lt;ColorEntry IX=&#039;46&#039; RGB=&#039;#333333&#039;/&gt;&lt;ColorEntry IX=&#039;47&#039; RGB=&#039;#1A1A1A&#039;/&gt;&lt;ColorEntry IX=&#039;48&#039; RGB=&#039;#7F7F7F&#039;/&gt;&lt;ColorEntry IX=&#039;49&#039; RGB=&#039;#99004D&#039;/&gt;&lt;ColorEntry IX=&#039;50&#039; RGB=&#039;#FF0080&#039;/&gt;&lt;ColorEntry IX=&#039;51&#039; RGB=&#039;#CC0066&#039;/&gt;&lt;/Colors&gt;&lt;FaceNames&gt;&lt;FaceName NameU=&#039;Calibri&#039; UnicodeRanges=&#039;-536859905 -1073732485 9 0&#039; CharSets=&#039;536871423 0&#039; Panose=&#039;2 15 5 2 2 2 4 3 2 4&#039; Flags=&#039;325&#039;/&gt;&lt;/FaceNames&gt;&lt;StyleSheets&gt;&lt;StyleSheet ID=&#039;0&#039; NameU=&#039;No Style&#039; IsCustomNameU=&#039;1&#039; Name=&#039;No Style&#039; IsCustomName=&#039;1&#039;&gt;&lt;Cell N=&#039;EnableLineProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableFillProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableTextProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;HideForApply&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineWeight&#039; V=&#039;0.01041666666666667&#039;/&gt;&lt;Cell N=&#039;LineColor&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LinePattern&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;Rounding&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;EndArrowSize&#039; V=&#039;2&#039;/&gt;&lt;Cell N=&#039;BeginArrow&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;EndArrow&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineCap&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BeginArrowSize&#039; V=&#039;2&#039;/&gt;&lt;Cell N=&#039;LineColorTrans&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;CompoundType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;FillForegnd&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;FillBkgnd&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;FillPattern&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;ShdwForegnd&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShdwPattern&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;FillForegndTrans&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;FillBkgndTrans&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShdwForegndTrans&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapeShdwType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapeShdwOffsetX&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapeShdwOffsetY&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapeShdwObliqueAngle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapeShdwScaleFactor&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;ShapeShdwBlur&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapeShdwShow&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LeftMargin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;RightMargin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;TopMargin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BottomMargin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;VerticalAlign&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;TextBkgnd&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;DefaultTabStop&#039; V=&#039;0.5&#039;/&gt;&lt;Cell N=&#039;TextDirection&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;TextBkgndTrans&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockWidth&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockHeight&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockMoveX&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockMoveY&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockAspect&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockDelete&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockBegin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockEnd&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockRotate&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockCrop&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockVtxEdit&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockTextEdit&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockFormat&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockGroup&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockCalcWH&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockSelect&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockCustProp&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockFromGroupFormat&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockThemeColors&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockThemeEffects&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockThemeConnectors&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockThemeFonts&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockThemeIndex&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockReplace&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockVariation&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;NoObjHandles&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;NonPrinting&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;NoCtlHandles&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;NoAlignBox&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;UpdateAlignBox&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;HideText&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;DynFeedback&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;GlueType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;WalkPreference&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BegTrigger&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;EndTrigger&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;ObjType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Comment&#039; V=&#039;&#039;/&gt;&lt;Cell N=&#039;IsDropSource&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;NoLiveDynamics&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LocalizeMerge&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;NoProofing&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Calendar&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LangID&#039; V=&#039;en-US&#039;/&gt;&lt;Cell N=&#039;ShapeKeywords&#039; V=&#039;&#039;/&gt;&lt;Cell N=&#039;DropOnPageScale&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;TheData&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;TheText&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;EventDblClick&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;EventXFMod&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;EventDrop&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;EventMultiDrop&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;HelpTopic&#039; V=&#039;&#039;/&gt;&lt;Cell N=&#039;Copyright&#039; V=&#039;&#039;/&gt;&lt;Cell N=&#039;LayerMember&#039; V=&#039;&#039;/&gt;&lt;Cell N=&#039;XRulerDensity&#039; V=&#039;32&#039;/&gt;&lt;Cell N=&#039;YRulerDensity&#039; V=&#039;32&#039;/&gt;&lt;Cell N=&#039;XRulerOrigin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;YRulerOrigin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;XGridDensity&#039; V=&#039;8&#039;/&gt;&lt;Cell N=&#039;YGridDensity&#039; V=&#039;8&#039;/&gt;&lt;Cell N=&#039;XGridSpacing&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;YGridSpacing&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;XGridOrigin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;YGridOrigin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Gamma&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;Contrast&#039; V=&#039;0.5&#039;/&gt;&lt;Cell N=&#039;Brightness&#039; V=&#039;0.5&#039;/&gt;&lt;Cell N=&#039;Sharpen&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Blur&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Denoise&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Transparency&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;SelectMode&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;DisplayMode&#039; V=&#039;2&#039;/&gt;&lt;Cell N=&#039;IsDropTarget&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;IsSnapTarget&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;IsTextEditTarget&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;DontMoveChildren&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapePermeableX&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapePermeableY&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapePermeablePlace&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Relationships&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapeFixedCode&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapePlowCode&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapeRouteStyle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapePlaceStyle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ConFixedCode&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ConLineJumpCode&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ConLineJumpStyle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ConLineJumpDirX&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ConLineJumpDirY&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapePlaceFlip&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ConLineRouteExt&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapeSplit&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShapeSplittable&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;DisplayLevel&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ResizePage&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;EnableGrid&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;DynamicsOff&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;CtrlAsInput&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;AvoidPageBreaks&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;PlaceStyle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;RouteStyle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;PlaceDepth&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;PlowCode&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineJumpCode&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;LineJumpStyle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;PageLineJumpDirX&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;PageLineJumpDirY&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineToNodeX&#039; V=&#039;0.125&#039;/&gt;&lt;Cell N=&#039;LineToNodeY&#039; V=&#039;0.125&#039;/&gt;&lt;Cell N=&#039;BlockSizeX&#039; V=&#039;0.25&#039;/&gt;&lt;Cell N=&#039;BlockSizeY&#039; V=&#039;0.25&#039;/&gt;&lt;Cell N=&#039;AvenueSizeX&#039; V=&#039;0.375&#039;/&gt;&lt;Cell N=&#039;AvenueSizeY&#039; V=&#039;0.375&#039;/&gt;&lt;Cell N=&#039;LineToLineX&#039; V=&#039;0.125&#039;/&gt;&lt;Cell N=&#039;LineToLineY&#039; V=&#039;0.125&#039;/&gt;&lt;Cell N=&#039;LineJumpFactorX&#039; V=&#039;0.66666666666667&#039;/&gt;&lt;Cell N=&#039;LineJumpFactorY&#039; V=&#039;0.66666666666667&#039;/&gt;&lt;Cell N=&#039;LineAdjustFrom&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineAdjustTo&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;PlaceFlip&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineRouteExt&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;PageShapeSplit&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;PageLeftMargin&#039; V=&#039;0.25&#039;/&gt;&lt;Cell N=&#039;PageRightMargin&#039; V=&#039;0.25&#039;/&gt;&lt;Cell N=&#039;PageTopMargin&#039; V=&#039;0.25&#039;/&gt;&lt;Cell N=&#039;PageBottomMargin&#039; V=&#039;0.25&#039;/&gt;&lt;Cell N=&#039;ScaleX&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;ScaleY&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;PagesX&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;PagesY&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;CenterX&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;CenterY&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;OnPage&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;PrintGrid&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;PrintPageOrientation&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;PaperKind&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;PaperSource&#039; V=&#039;7&#039;/&gt;&lt;Cell N=&#039;QuickStyleLineColor&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleFillColor&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleShadowColor&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleFontColor&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleLineMatrix&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleFillMatrix&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleEffectsMatrix&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleFontMatrix&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;QuickStyleVariation&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineGradientDir&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineGradientAngle&#039; V=&#039;1.5707963267949&#039;/&gt;&lt;Cell N=&#039;FillGradientDir&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;FillGradientAngle&#039; V=&#039;1.5707963267949&#039;/&gt;&lt;Cell N=&#039;LineGradientEnabled&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;FillGradientEnabled&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;RotateGradientWithShape&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;UseGroupGradient&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BevelTopType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BevelTopWidth&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BevelTopHeight&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BevelBottomType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BevelBottomWidth&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BevelBottomHeight&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BevelDepthColor&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;BevelDepthSize&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BevelContourColor&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BevelContourSize&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BevelMaterialType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BevelLightingType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BevelLightingAngle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;RotationXAngle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;RotationYAngle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;RotationZAngle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;RotationType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Perspective&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;DistanceFromGround&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;KeepTextFlat&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ReflectionTrans&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ReflectionSize&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ReflectionDist&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ReflectionBlur&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;GlowColor&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;GlowColorTrans&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;GlowSize&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;SoftEdgesSize&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;SketchSeed&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;SketchEnabled&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;SketchAmount&#039; V=&#039;5&#039;/&gt;&lt;Cell N=&#039;SketchLineWeight&#039; V=&#039;0.04166666666666666&#039; U=&#039;PT&#039;/&gt;&lt;Cell N=&#039;SketchLineChange&#039; V=&#039;0.14&#039;/&gt;&lt;Cell N=&#039;SketchFillChange&#039; V=&#039;0.1&#039;/&gt;&lt;Cell N=&#039;ColorSchemeIndex&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;EffectSchemeIndex&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ConnectorSchemeIndex&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;FontSchemeIndex&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ThemeIndex&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;VariationColorIndex&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;VariationStyleIndex&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;EmbellishmentIndex&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ReplaceLockShapeData&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ReplaceLockText&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ReplaceLockFormat&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ReplaceCopyCells&#039; V=&#039;0&#039; U=&#039;BOOL&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;PageWidth&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;PageHeight&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;ShdwOffsetX&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;ShdwOffsetY&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;PageScale&#039; V=&#039;0&#039; U=&#039;IN_F&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;DrawingScale&#039; V=&#039;0&#039; U=&#039;IN_F&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;DrawingSizeType&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;DrawingScaleType&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;InhibitSnap&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;PageLockReplace&#039; V=&#039;0&#039; U=&#039;BOOL&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;PageLockDuplicate&#039; V=&#039;0&#039; U=&#039;BOOL&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;UIVisibility&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;ShdwType&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;ShdwObliqueAngle&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;ShdwScaleFactor&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;DrawingResizeType&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Section N=&#039;Character&#039;&gt;&lt;Row IX=&#039;0&#039;&gt;&lt;Cell N=&#039;Font&#039; V=&#039;Calibri&#039;/&gt;&lt;Cell N=&#039;Color&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Style&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Case&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Pos&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;FontScale&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;Size&#039; V=&#039;0.1666666666666667&#039;/&gt;&lt;Cell N=&#039;DblUnderline&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Overline&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Strikethru&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;DoubleStrikethrough&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Letterspace&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ColorTrans&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;AsianFont&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ComplexScriptFont&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ComplexScriptSize&#039; V=&#039;-1&#039;/&gt;&lt;Cell N=&#039;LangID&#039; V=&#039;en-US&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;Section N=&#039;Paragraph&#039;&gt;&lt;Row IX=&#039;0&#039;&gt;&lt;Cell N=&#039;IndFirst&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;IndLeft&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;IndRight&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;SpLine&#039; V=&#039;-1.2&#039;/&gt;&lt;Cell N=&#039;SpBefore&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;SpAfter&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;HorzAlign&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;Bullet&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BulletStr&#039; V=&#039;&#039;/&gt;&lt;Cell N=&#039;BulletFont&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BulletFontSize&#039; V=&#039;-1&#039;/&gt;&lt;Cell N=&#039;TextPosAfterBullet&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Flags&#039; V=&#039;0&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;Section N=&#039;Tabs&#039;&gt;&lt;Row IX=&#039;0&#039;/&gt;&lt;/Section&gt;&lt;Section N=&#039;LineGradient&#039;&gt;&lt;Row IX=&#039;0&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;0&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;Section N=&#039;FillGradient&#039;&gt;&lt;Row IX=&#039;0&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;0&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;/StyleSheet&gt;&lt;StyleSheet ID=&#039;1&#039; NameU=&#039;Text Only&#039; IsCustomNameU=&#039;1&#039; Name=&#039;Text Only&#039; IsCustomName=&#039;1&#039; LineStyle=&#039;3&#039; FillStyle=&#039;3&#039; TextStyle=&#039;3&#039;&gt;&lt;Cell N=&#039;EnableLineProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableFillProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableTextProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;HideForApply&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineWeight&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineColor&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LinePattern&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Rounding&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;EndArrowSize&#039; V=&#039;2&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BeginArrow&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;EndArrow&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineCap&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BeginArrowSize&#039; V=&#039;2&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineColorTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;CompoundType&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillForegnd&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillBkgnd&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillPattern&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShdwForegnd&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShdwPattern&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillForegndTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillBkgndTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShdwForegndTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwType&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwOffsetX&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwOffsetY&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwObliqueAngle&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwScaleFactor&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwBlur&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwShow&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LeftMargin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;RightMargin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;TopMargin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BottomMargin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;VerticalAlign&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;TextBkgnd&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;DefaultTabStop&#039; V=&#039;0.5&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TextDirection&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TextBkgndTrans&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineGradientDir&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineGradientAngle&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillGradientDir&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillGradientAngle&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineGradientEnabled&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillGradientEnabled&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;RotateGradientWithShape&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;UseGroupGradient&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Section N=&#039;Paragraph&#039;&gt;&lt;Row IX=&#039;0&#039;&gt;&lt;Cell N=&#039;IndFirst&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;IndLeft&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;IndRight&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;SpLine&#039; V=&#039;-1.2&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;SpBefore&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;SpAfter&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;HorzAlign&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Bullet&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BulletStr&#039; V=&#039;&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BulletFont&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BulletFontSize&#039; V=&#039;-1&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TextPosAfterBullet&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Flags&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;/StyleSheet&gt;&lt;StyleSheet ID=&#039;2&#039; NameU=&#039;None&#039; IsCustomNameU=&#039;1&#039; Name=&#039;None&#039; IsCustomName=&#039;1&#039; LineStyle=&#039;3&#039; FillStyle=&#039;3&#039; TextStyle=&#039;3&#039;&gt;&lt;Cell N=&#039;EnableLineProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableFillProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableTextProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;HideForApply&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineWeight&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineColor&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LinePattern&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Rounding&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;EndArrowSize&#039; V=&#039;2&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BeginArrow&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;EndArrow&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineCap&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BeginArrowSize&#039; V=&#039;2&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineColorTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;CompoundType&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillForegnd&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillBkgnd&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillPattern&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShdwForegnd&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShdwPattern&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillForegndTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillBkgndTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShdwForegndTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwType&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwOffsetX&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwOffsetY&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwObliqueAngle&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwScaleFactor&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwBlur&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwShow&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineGradientDir&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineGradientAngle&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillGradientDir&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillGradientAngle&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineGradientEnabled&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;FillGradientEnabled&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;RotateGradientWithShape&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;UseGroupGradient&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;QuickStyleLineColor&#039; V=&#039;100&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;QuickStyleFillColor&#039; V=&#039;100&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;QuickStyleShadowColor&#039; V=&#039;100&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;QuickStyleFontColor&#039; V=&#039;100&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;QuickStyleLineMatrix&#039; V=&#039;100&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;QuickStyleFillMatrix&#039; V=&#039;100&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;QuickStyleEffectsMatrix&#039; V=&#039;0&#039; F=&#039;GUARD(0)&#039;/&gt;&lt;Cell N=&#039;QuickStyleFontMatrix&#039; V=&#039;100&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;QuickStyleType&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;QuickStyleVariation&#039; V=&#039;2&#039;/&gt;&lt;/StyleSheet&gt;&lt;StyleSheet ID=&#039;3&#039; NameU=&#039;Normal&#039; IsCustomNameU=&#039;1&#039; Name=&#039;Normal&#039; IsCustomName=&#039;1&#039; LineStyle=&#039;6&#039; FillStyle=&#039;6&#039; TextStyle=&#039;6&#039;&gt;&lt;Cell N=&#039;EnableLineProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableFillProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableTextProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;HideForApply&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LeftMargin&#039; V=&#039;0.05555555555555555&#039; U=&#039;PT&#039;/&gt;&lt;Cell N=&#039;RightMargin&#039; V=&#039;0.05555555555555555&#039; U=&#039;PT&#039;/&gt;&lt;Cell N=&#039;TopMargin&#039; V=&#039;0.05555555555555555&#039; U=&#039;PT&#039;/&gt;&lt;Cell N=&#039;BottomMargin&#039; V=&#039;0.05555555555555555&#039; U=&#039;PT&#039;/&gt;&lt;Cell N=&#039;VerticalAlign&#039; V=&#039;1&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TextBkgnd&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;DefaultTabStop&#039; V=&#039;0.5&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TextDirection&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TextBkgndTrans&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;/StyleSheet&gt;&lt;StyleSheet ID=&#039;4&#039; NameU=&#039;Guide&#039; IsCustomNameU=&#039;1&#039; Name=&#039;Guide&#039; IsCustomName=&#039;1&#039; LineStyle=&#039;3&#039; FillStyle=&#039;3&#039; TextStyle=&#039;3&#039;&gt;&lt;Cell N=&#039;EnableLineProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableFillProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableTextProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;HideForApply&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineWeight&#039; V=&#039;0&#039; U=&#039;PT&#039;/&gt;&lt;Cell N=&#039;LineColor&#039; V=&#039;#7f7f7f&#039;/&gt;&lt;Cell N=&#039;LinePattern&#039; V=&#039;23&#039;/&gt;&lt;Cell N=&#039;Rounding&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;EndArrowSize&#039; V=&#039;2&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BeginArrow&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;EndArrow&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineCap&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BeginArrowSize&#039; V=&#039;2&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineColorTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;CompoundType&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillForegnd&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillBkgnd&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillPattern&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShdwForegnd&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShdwPattern&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillForegndTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillBkgndTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShdwForegndTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwType&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwOffsetX&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwOffsetY&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwObliqueAngle&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwScaleFactor&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwBlur&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeShdwShow&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineGradientDir&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineGradientAngle&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillGradientDir&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FillGradientAngle&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineGradientEnabled&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;FillGradientEnabled&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;RotateGradientWithShape&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;UseGroupGradient&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LeftMargin&#039; V=&#039;0.05555555555555555&#039; U=&#039;PT&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;RightMargin&#039; V=&#039;0.05555555555555555&#039; U=&#039;PT&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TopMargin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BottomMargin&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;VerticalAlign&#039; V=&#039;2&#039;/&gt;&lt;Cell N=&#039;TextBkgnd&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;DefaultTabStop&#039; V=&#039;0.5&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TextDirection&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TextBkgndTrans&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;NoObjHandles&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;NonPrinting&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;NoCtlHandles&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;NoAlignBox&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;UpdateAlignBox&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;HideText&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;DynFeedback&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;GlueType&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;WalkPreference&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BegTrigger&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;EndTrigger&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;ObjType&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Comment&#039; V=&#039;&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;IsDropSource&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;NoLiveDynamics&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LocalizeMerge&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;NoProofing&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Calendar&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LangID&#039; V=&#039;en-US&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeKeywords&#039; V=&#039;&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;DropOnPageScale&#039; V=&#039;1&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapePermeableX&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;ShapePermeableY&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;ShapePermeablePlace&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;Relationships&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeFixedCode&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapePlowCode&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeRouteStyle&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapePlaceStyle&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ConFixedCode&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ConLineJumpCode&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ConLineJumpStyle&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ConLineJumpDirX&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ConLineJumpDirY&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapePlaceFlip&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ConLineRouteExt&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeSplit&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeSplittable&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;DisplayLevel&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Section N=&#039;Character&#039;&gt;&lt;Row IX=&#039;0&#039;&gt;&lt;Cell N=&#039;Font&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Color&#039; V=&#039;4&#039;/&gt;&lt;Cell N=&#039;Style&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Case&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Pos&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FontScale&#039; V=&#039;1&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Size&#039; V=&#039;0.125&#039;/&gt;&lt;Cell N=&#039;DblUnderline&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Overline&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Strikethru&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;DoubleStrikethrough&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Letterspace&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ColorTrans&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;AsianFont&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ComplexScriptFont&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ComplexScriptSize&#039; V=&#039;-1&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LangID&#039; V=&#039;en-US&#039; F=&#039;Inh&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;/StyleSheet&gt;&lt;StyleSheet ID=&#039;6&#039; NameU=&#039;Theme&#039; IsCustomNameU=&#039;1&#039; Name=&#039;Theme&#039; IsCustomName=&#039;1&#039; LineStyle=&#039;0&#039; FillStyle=&#039;0&#039; TextStyle=&#039;0&#039;&gt;&lt;Cell N=&#039;EnableLineProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableFillProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableTextProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;HideForApply&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineWeight&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;LineColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;LinePattern&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;Rounding&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;EndArrowSize&#039; V=&#039;2&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BeginArrow&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;EndArrow&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineCap&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;BeginArrowSize&#039; V=&#039;2&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;CompoundType&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;FillForegnd&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;FillBkgnd&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;FillPattern&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ShdwForegnd&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ShdwPattern&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;FillForegndTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;FillBkgndTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ShdwForegndTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ShapeShdwType&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ShapeShdwOffsetX&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ShapeShdwOffsetY&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ShapeShdwObliqueAngle&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ShapeShdwScaleFactor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ShapeShdwBlur&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ShapeShdwShow&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineGradientDir&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;LineGradientAngle&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;FillGradientDir&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;FillGradientAngle&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;LineGradientEnabled&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;FillGradientEnabled&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;RotateGradientWithShape&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;UseGroupGradient&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;BevelTopType&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;BevelTopWidth&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;BevelTopHeight&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;BevelBottomType&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BevelBottomWidth&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BevelBottomHeight&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BevelDepthColor&#039; V=&#039;1&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BevelDepthSize&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BevelContourColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;BevelContourSize&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;BevelMaterialType&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;BevelLightingType&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;BevelLightingAngle&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ReflectionTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ReflectionSize&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ReflectionDist&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ReflectionBlur&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GlowColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GlowColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GlowSize&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;SoftEdgesSize&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;SketchSeed&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;SketchEnabled&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;SketchAmount&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;SketchLineWeight&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;SketchLineChange&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;SketchFillChange&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;QuickStyleLineColor&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleFillColor&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleShadowColor&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleFontColor&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleLineMatrix&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleFillMatrix&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleEffectsMatrix&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleFontMatrix&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleType&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;QuickStyleVariation&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ColorSchemeIndex&#039; V=&#039;65534&#039;/&gt;&lt;Cell N=&#039;EffectSchemeIndex&#039; V=&#039;65534&#039;/&gt;&lt;Cell N=&#039;ConnectorSchemeIndex&#039; V=&#039;65534&#039;/&gt;&lt;Cell N=&#039;FontSchemeIndex&#039; V=&#039;65534&#039;/&gt;&lt;Cell N=&#039;ThemeIndex&#039; V=&#039;65534&#039;/&gt;&lt;Cell N=&#039;VariationColorIndex&#039; V=&#039;65534&#039;/&gt;&lt;Cell N=&#039;VariationStyleIndex&#039; V=&#039;65534&#039;/&gt;&lt;Cell N=&#039;EmbellishmentIndex&#039; V=&#039;65534&#039;/&gt;&lt;Section N=&#039;Character&#039;&gt;&lt;Row IX=&#039;0&#039;&gt;&lt;Cell N=&#039;Font&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;Color&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;Style&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;Case&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Pos&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FontScale&#039; V=&#039;1&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Size&#039; V=&#039;0.1666666666666667&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;DblUnderline&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Overline&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Strikethru&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;DoubleStrikethrough&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Letterspace&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ColorTrans&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;AsianFont&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ComplexScriptFont&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;ComplexScriptSize&#039; V=&#039;-1&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LangID&#039; V=&#039;en-US&#039; F=&#039;Inh&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;Section N=&#039;FillGradient&#039;&gt;&lt;Row IX=&#039;0&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;1&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;2&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;3&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;4&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;5&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;6&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;7&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;8&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;9&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;Section N=&#039;LineGradient&#039;&gt;&lt;Row IX=&#039;0&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;1&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;2&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;3&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;4&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;5&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;6&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;7&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;8&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;Row IX=&#039;9&#039;&gt;&lt;Cell N=&#039;GradientStopColor&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopColorTrans&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;GradientStopPosition&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;/StyleSheet&gt;&lt;StyleSheet ID=&#039;7&#039; NameU=&#039;Connector&#039; IsCustomNameU=&#039;1&#039; Name=&#039;Connector&#039; IsCustomName=&#039;1&#039; LineStyle=&#039;3&#039; FillStyle=&#039;3&#039; TextStyle=&#039;3&#039;&gt;&lt;Cell N=&#039;EnableLineProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableFillProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;EnableTextProps&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;HideForApply&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LeftMargin&#039; V=&#039;0.05555555555555555&#039; U=&#039;PT&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;RightMargin&#039; V=&#039;0.05555555555555555&#039; U=&#039;PT&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TopMargin&#039; V=&#039;0.05555555555555555&#039; U=&#039;PT&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BottomMargin&#039; V=&#039;0.05555555555555555&#039; U=&#039;PT&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;VerticalAlign&#039; V=&#039;1&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TextBkgnd&#039; V=&#039;#ffffff&#039; F=&#039;THEMEGUARD(THEMEVAL(\&quot;BackgroundColor\&quot;)+1)&#039;/&gt;&lt;Cell N=&#039;DefaultTabStop&#039; V=&#039;0.5&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TextDirection&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;TextBkgndTrans&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;NoObjHandles&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;NonPrinting&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;NoCtlHandles&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;NoAlignBox&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;UpdateAlignBox&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;HideText&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;DynFeedback&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;GlueType&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;WalkPreference&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BegTrigger&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;EndTrigger&#039; V=&#039;0&#039; F=&#039;No Formula&#039;/&gt;&lt;Cell N=&#039;ObjType&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Comment&#039; V=&#039;&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;IsDropSource&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;NoLiveDynamics&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LocalizeMerge&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;NoProofing&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Calendar&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LangID&#039; V=&#039;en-US&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ShapeKeywords&#039; V=&#039;&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;DropOnPageScale&#039; V=&#039;1&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;QuickStyleLineColor&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleFillColor&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleShadowColor&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleFontColor&#039; V=&#039;100&#039;/&gt;&lt;Cell N=&#039;QuickStyleLineMatrix&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;QuickStyleFillMatrix&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;QuickStyleEffectsMatrix&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;QuickStyleFontMatrix&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;QuickStyleType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;QuickStyleVariation&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LineWeight&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LineColor&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LinePattern&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Rounding&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;EndArrowSize&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;BeginArrow&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;EndArrow&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;LineCap&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;BeginArrowSize&#039; V=&#039;Themed&#039; F=&#039;THEMEVAL()&#039;/&gt;&lt;Cell N=&#039;LineColorTrans&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;CompoundType&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Section N=&#039;Character&#039;&gt;&lt;Row IX=&#039;0&#039;&gt;&lt;Cell N=&#039;Font&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Color&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Style&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Case&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Pos&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;FontScale&#039; V=&#039;1&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Size&#039; V=&#039;0.1111111111111111&#039;/&gt;&lt;Cell N=&#039;DblUnderline&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Overline&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Strikethru&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;DoubleStrikethrough&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;Letterspace&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ColorTrans&#039; V=&#039;0&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;AsianFont&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ComplexScriptFont&#039; V=&#039;Themed&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;ComplexScriptSize&#039; V=&#039;-1&#039; F=&#039;Inh&#039;/&gt;&lt;Cell N=&#039;LangID&#039; V=&#039;en-US&#039; F=&#039;Inh&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;/StyleSheet&gt;&lt;/StyleSheets&gt;&lt;DocumentSheet NameU=&#039;TheDoc&#039; IsCustomNameU=&#039;1&#039; Name=&#039;TheDoc&#039; IsCustomName=&#039;1&#039; LineStyle=&#039;0&#039; FillStyle=&#039;0&#039; TextStyle=&#039;0&#039;&gt;&lt;Cell N=&#039;OutputFormat&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockPreview&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;AddMarkup&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ViewMarkup&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;DocLockReplace&#039; V=&#039;0&#039; U=&#039;BOOL&#039;/&gt;&lt;Cell N=&#039;NoCoauth&#039; V=&#039;0&#039; U=&#039;BOOL&#039;/&gt;&lt;Cell N=&#039;DocLockDuplicatePage&#039; V=&#039;0&#039; U=&#039;BOOL&#039;/&gt;&lt;Cell N=&#039;PreviewQuality&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;PreviewScope&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;DocLangID&#039; V=&#039;en-US&#039;/&gt;&lt;Section N=&#039;User&#039;&gt;&lt;Row N=&#039;msvNoAutoConnect&#039;&gt;&lt;Cell N=&#039;Value&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;Prompt&#039; V=&#039;&#039; F=&#039;No Formula&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;/DocumentSheet&gt;&lt;/VisioDocument&gt;&quot;,
+			&quot;visio/windows.xml&quot; : &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot; standalone=\&quot;yes\&quot;?&gt;&lt;Windows ClientWidth=&#039;0&#039; ClientHeight=&#039;0&#039; xmlns=&#039;http://schemas.microsoft.com/office/visio/2012/main&#039; xmlns:r=&#039;http://schemas.openxmlformats.org/officeDocument/2006/relationships&#039; xml:space=&#039;preserve&#039; /&gt;&quot;,
+			&quot;visio/_rels/document.xml.rels&quot; : &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot; standalone=\&quot;yes\&quot;?&gt;&lt;Relationships xmlns=&#039;http://schemas.openxmlformats.org/package/2006/relationships&#039;&gt;&lt;Relationship Id=&#039;rId1&#039; Type=&#039;http://schemas.microsoft.com/visio/2010/relationships/masters&#039; Target=&#039;masters/masters.xml&#039; /&gt;&lt;Relationship Id=&#039;rId2&#039; Type=&#039;http://schemas.microsoft.com/visio/2010/relationships/pages&#039; Target=&#039;pages/pages.xml&#039; /&gt;&lt;Relationship Id=&#039;rId3&#039; Type=&#039;http://schemas.microsoft.com/visio/2010/relationships/windows&#039; Target=&#039;windows.xml&#039; /&gt;&lt;/Relationships&gt;&quot;,
+			&quot;visio/masters/_rels/masters.xml.rels&quot; : &#039;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;&lt;Relationships xmlns=&quot;http://schemas.openxmlformats.org/package/2006/relationships&quot;&gt;&lt;Relationship Id=&quot;rId1&quot; Type=&quot;http://schemas.microsoft.com/visio/2010/relationships/master&quot; Target=&quot;master1.xml&quot;/&gt;&lt;/Relationships&gt;&#039;,
+			&quot;visio/masters/masters.xml&quot; : &quot;&lt;?xml version=&#039;1.0&#039; encoding=&#039;utf-8&#039; ?&gt;&lt;Masters xmlns=&#039;http://schemas.microsoft.com/office/visio/2012/main&#039; xmlns:r=&#039;http://schemas.openxmlformats.org/officeDocument/2006/relationships&#039; xml:space=&#039;preserve&#039;&gt;&lt;Master ID=&#039;4&#039; NameU=&#039;Dynamic connector&#039; IsCustomNameU=&#039;1&#039; Name=&#039;Dynamic connector&#039; IsCustomName=&#039;1&#039; Prompt=&#039;This connector automatically routes between the shapes it connects.&#039; IconSize=&#039;1&#039; AlignName=&#039;2&#039; MatchByName=&#039;1&#039; IconUpdate=&#039;0&#039; UniqueID=&#039;{002A9108-0000-0000-8E40-00608CF305B2}&#039; BaseID=&#039;{F7290A45-E3AD-11D2-AE4F-006008C9F5A9}&#039; PatternFlags=&#039;0&#039; Hidden=&#039;0&#039; MasterType=&#039;0&#039;&gt;&lt;PageSheet LineStyle=&#039;0&#039; FillStyle=&#039;0&#039; TextStyle=&#039;0&#039;&gt;&lt;Cell N=&#039;PageWidth&#039; V=&#039;3&#039;/&gt;&lt;Cell N=&#039;PageHeight&#039; V=&#039;3&#039;/&gt;&lt;Cell N=&#039;ShdwOffsetX&#039; V=&#039;0.125&#039;/&gt;&lt;Cell N=&#039;ShdwOffsetY&#039; V=&#039;-0.125&#039;/&gt;&lt;Cell N=&#039;PageScale&#039; V=&#039;1&#039; U=&#039;IN_F&#039;/&gt;&lt;Cell N=&#039;DrawingScale&#039; V=&#039;1&#039; U=&#039;IN_F&#039;/&gt;&lt;Cell N=&#039;DrawingSizeType&#039; V=&#039;4&#039;/&gt;&lt;Cell N=&#039;DrawingScaleType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;InhibitSnap&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;PageLockReplace&#039; V=&#039;0&#039; U=&#039;BOOL&#039;/&gt;&lt;Cell N=&#039;PageLockDuplicate&#039; V=&#039;0&#039; U=&#039;BOOL&#039;/&gt;&lt;Cell N=&#039;UIVisibility&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShdwType&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShdwObliqueAngle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;ShdwScaleFactor&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;DrawingResizeType&#039; V=&#039;0&#039;/&gt;&lt;Section N=&#039;Layer&#039;&gt;&lt;Row IX=&#039;0&#039;&gt;&lt;Cell N=&#039;Name&#039; V=&#039;Connector&#039;/&gt;&lt;Cell N=&#039;Color&#039; V=&#039;255&#039;/&gt;&lt;Cell N=&#039;Status&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Visible&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;Print&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;Active&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Lock&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Snap&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;Glue&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;NameUniv&#039; V=&#039;Connector&#039;/&gt;&lt;Cell N=&#039;ColorTrans&#039; V=&#039;0&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;/PageSheet&gt;&lt;Rel r:id=&#039;rId1&#039;/&gt;&lt;/Master&gt;&lt;/Masters&gt;&quot;,
+			&quot;visio/masters/master1.xml&quot; : &quot;&lt;?xml version=&#039;1.0&#039; encoding=&#039;utf-8&#039; ?&gt;&lt;MasterContents xmlns=&#039;http://schemas.microsoft.com/office/visio/2012/main&#039; xmlns:r=&#039;http://schemas.openxmlformats.org/officeDocument/2006/relationships&#039; xml:space=&#039;preserve&#039;&gt;&lt;Shapes&gt;&lt;Shape ID=&#039;5&#039; OriginalID=&#039;0&#039; Type=&#039;Shape&#039; LineStyle=&#039;7&#039; FillStyle=&#039;7&#039; TextStyle=&#039;7&#039;&gt;&lt;Cell N=&#039;PinX&#039; V=&#039;1.5&#039; F=&#039;GUARD((BeginX+EndX)/2)&#039;/&gt;&lt;Cell N=&#039;PinY&#039; V=&#039;1.5&#039; F=&#039;GUARD((BeginY+EndY)/2)&#039;/&gt;&lt;Cell N=&#039;Width&#039; V=&#039;1&#039; F=&#039;GUARD(EndX-BeginX)&#039;/&gt;&lt;Cell N=&#039;Height&#039; V=&#039;-1&#039; F=&#039;GUARD(EndY-BeginY)&#039;/&gt;&lt;Cell N=&#039;LocPinX&#039; V=&#039;0.5&#039; F=&#039;GUARD(Width*0.5)&#039;/&gt;&lt;Cell N=&#039;LocPinY&#039; V=&#039;-0.5&#039; F=&#039;GUARD(Height*0.5)&#039;/&gt;&lt;Cell N=&#039;Angle&#039; V=&#039;0&#039; F=&#039;GUARD(0DA)&#039;/&gt;&lt;Cell N=&#039;FlipX&#039; V=&#039;0&#039; F=&#039;GUARD(FALSE)&#039;/&gt;&lt;Cell N=&#039;FlipY&#039; V=&#039;0&#039; F=&#039;GUARD(FALSE)&#039;/&gt;&lt;Cell N=&#039;ResizeMode&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;BeginX&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;BeginY&#039; V=&#039;2&#039;/&gt;&lt;Cell N=&#039;EndX&#039; V=&#039;2&#039;/&gt;&lt;Cell N=&#039;EndY&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;TxtPinX&#039; V=&#039;0&#039; F=&#039;SETATREF(Controls.TextPosition)&#039;/&gt;&lt;Cell N=&#039;TxtPinY&#039; V=&#039;-1&#039; F=&#039;SETATREF(Controls.TextPosition.Y)&#039;/&gt;&lt;Cell N=&#039;TxtWidth&#039; V=&#039;0.5555555555555556&#039; F=&#039;MAX(TEXTWIDTH(TheText),5*Char.Size)&#039;/&gt;&lt;Cell N=&#039;TxtHeight&#039; V=&#039;0.2444444444444444&#039; F=&#039;TEXTHEIGHT(TheText,TxtWidth)&#039;/&gt;&lt;Cell N=&#039;TxtLocPinX&#039; V=&#039;0.2777777777777778&#039; F=&#039;TxtWidth*0.5&#039;/&gt;&lt;Cell N=&#039;TxtLocPinY&#039; V=&#039;0.1222222222222222&#039; F=&#039;TxtHeight*0.5&#039;/&gt;&lt;Cell N=&#039;TxtAngle&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;LockHeight&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;LockCalcWH&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;HelpTopic&#039; V=&#039;Vis_SE.chm!#20000&#039;/&gt;&lt;Cell N=&#039;Copyright&#039; V=&#039;Copyright 2001 Microsoft Corporation.  All rights reserved.&#039;/&gt;&lt;Cell N=&#039;NoAlignBox&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;DynFeedback&#039; V=&#039;2&#039;/&gt;&lt;Cell N=&#039;GlueType&#039; V=&#039;2&#039;/&gt;&lt;Cell N=&#039;ObjType&#039; V=&#039;2&#039;/&gt;&lt;Cell N=&#039;NoLiveDynamics&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;ShapeSplittable&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;LayerMember&#039; V=&#039;0&#039;/&gt;&lt;Section N=&#039;Control&#039;&gt;&lt;Row N=&#039;TextPosition&#039;&gt;&lt;Cell N=&#039;X&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Y&#039; V=&#039;-1&#039;/&gt;&lt;Cell N=&#039;XDyn&#039; V=&#039;0&#039; F=&#039;Controls.TextPosition&#039;/&gt;&lt;Cell N=&#039;YDyn&#039; V=&#039;-1&#039; F=&#039;Controls.TextPosition.Y&#039;/&gt;&lt;Cell N=&#039;XCon&#039; V=&#039;5&#039; F=&#039;IF(OR(STRSAME(SHAPETEXT(TheText),\&quot;\&quot;),HideText),5,0)&#039;/&gt;&lt;Cell N=&#039;YCon&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;CanGlue&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Prompt&#039; V=&#039;Reposition Text&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;Section N=&#039;Geometry&#039; IX=&#039;0&#039;&gt;&lt;Cell N=&#039;NoFill&#039; V=&#039;1&#039;/&gt;&lt;Cell N=&#039;NoLine&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;NoShow&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;NoSnap&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;NoQuickDrag&#039; V=&#039;0&#039;/&gt;&lt;Row T=&#039;MoveTo&#039; IX=&#039;1&#039;&gt;&lt;Cell N=&#039;X&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Y&#039; V=&#039;0&#039;/&gt;&lt;/Row&gt;&lt;Row T=&#039;LineTo&#039; IX=&#039;2&#039;&gt;&lt;Cell N=&#039;X&#039; V=&#039;0&#039;/&gt;&lt;Cell N=&#039;Y&#039; V=&#039;-1&#039;/&gt;&lt;/Row&gt;&lt;/Section&gt;&lt;/Shape&gt;&lt;/Shapes&gt;&lt;/MasterContents&gt;&quot;
+		};
+		  
+		for (var id in files) 
+		{
+			if (pageCount &gt; 1 &amp;&amp; id == that.CONTENT_TYPES_XML) 
+			{
+				//Add the remaining pages
+				var doc = mxUtils.parseXml(files[id]);
+				var root = doc.documentElement;
+				
+				var children = root.children;
+				var page1 = null;
+		
+				for (var i = 0; i &lt; children.length; i++)
+				{
+					var child = children[i];
+					if (&quot;/visio/pages/page1.xml&quot; == child.getAttribute(that.PART_NAME))
+					{
+						page1 = child;
+					}
+				}
+				
+				for (var i = 2; i &lt;= pageCount; i++)
+				{
+					var newPage = page1.cloneNode();
+		    		newPage.setAttribute(that.PART_NAME, &quot;/visio/pages/page&quot; + i + &quot;.xml&quot;);
+		    		root.appendChild(newPage);
+		    	}
+			    	
+		    	writeXmlDoc2Zip(zip, id, doc, true);
+		    }
+		    else 
+		    {
+			    zip.file(id, files[id]);
+		    }
+	    }
+	};
+	
+	function createElt(doc, ns, name)
+	{
+		return (doc.createElementNS != null) ? doc.createElementNS(ns, name) : doc.createElement(name);
+	};
+
+	function getCellVsdxId(cellId)
+	{
+		var vsdxId = idsMap[cellId];
+		
+		if (vsdxId == null)
+		{
+			vsdxId = idsCounter++;
+			idsMap[cellId] = vsdxId;
+		}
+		return vsdxId;
+	};
+	
+	function getGraphAttributes(graph) 
+	{
+		var attr = {};
+		
+		try
+		{
+			//This doesn&#039;t work when pageView is off
+//			// Computes the horizontal and vertical page count
+//			var bounds = graph.getGraphBounds();
+//			var sc = graph.view.scale;
+//			var bgBounds = graph.view.getBackgroundPageBounds();
+//			
+//			var x0 = Math.round((bounds.x - bgBounds.x) / sc);
+//			var y0 = Math.round((bounds.y - bgBounds.y) / sc);
+//			
+//			var hpages = Math.max(1, Math.ceil((bounds.width / sc  + x0) / graph.pageFormat.width));
+//			var vpages = Math.max(1, Math.ceil((bounds.height / sc + y0) / graph.pageFormat.height));
+			
+			// Computes the horizontal and vertical page count
+			var bounds = graph.getGraphBounds().clone();
+			var sc = graph.view.scale;
+			var tr = graph.view.translate;
+
+			var x0 = Math.round(bounds.x / sc) - tr.x;
+			var y0 = Math.round(bounds.y / sc) - tr.y;
+			
+			// Store the available page area
+			var availableWidth = graph.pageFormat.width;
+			var availableHeight = graph.pageFormat.height;
+
+			if (x0 &lt; 0) 
+			{
+				x0 += Math.ceil((tr.x - bounds.x / sc) / availableWidth) * availableWidth;
+			}
+
+			if (y0 &lt; 0) 
+			{
+				y0 += Math.ceil((tr.y - bounds.y / sc) / availableHeight) * availableHeight;
+			}
+
+			var hpages = Math.max(1, Math.ceil((bounds.width / sc  + x0) / availableWidth));
+			var vpages = Math.max(1, Math.ceil((bounds.height / sc + y0) / availableHeight));
+			
+			attr[&#039;gridEnabled&#039;] = graph.gridEnabled;
+			attr[&#039;gridSize&#039;] = graph.gridSize;
+			attr[&#039;guidesEnabled&#039;] = graph.graphHandler.guidesEnabled
+			attr[&#039;pageVisible&#039;] = graph.pageVisible;
+			attr[&#039;pageScale&#039;] = graph.pageScale;
+			attr[&#039;pageWidth&#039;] = graph.pageFormat.width * hpages;
+			attr[&#039;pageHeight&#039;] = graph.pageFormat.height * vpages;
+			attr[&#039;backgroundClr&#039;] = graph.background;
+			attr[&#039;mathEnabled&#039;] = graph.mathEnabled;
+			attr[&#039;shadowVisible&#039;] = graph.shadowVisible;
+		}
+		catch(e)
+		{
+			//nothing
+		}
+		return attr;
+	};
+
+	function createCellElemScaled(name, val, xmlDoc, formula)
+	{
+		return createCellElem(name, val / that.CONVERSION_FACTOR, xmlDoc, formula);
+	};
+
+	function createCellElem(name, val, xmlDoc, formula)
+	{
+		var cell = createElt(xmlDoc, that.XMLNS, &quot;Cell&quot;);
+		cell.setAttribute(&quot;N&quot;, name);
+		cell.setAttribute(&quot;V&quot;, val);
+		
+		if (formula) cell.setAttribute(&quot;F&quot;, formula);
+		
+		return cell;
+	};
+
+	function createRow(type, index, x, y, xmlDoc) 
+	{
+		var row = createElt(xmlDoc, that.XMLNS, &quot;Row&quot;);
+		row.setAttribute(&quot;T&quot;, type);
+		row.setAttribute(&quot;IX&quot;, index);
+		row.appendChild(createCellElemScaled(&quot;X&quot;, x, xmlDoc));
+		row.appendChild(createCellElemScaled(&quot;Y&quot;, y, xmlDoc));
+		return row;
+	};
+	
+	function getStyleColor(color)
+	{
+		if (mxUtils.isLightDarkColor(color))
+		{
+			color = mxUtils.parseLightDarkColor(color).light;
+		}
+
+		return mxUtils.rgba2hex(color);
+	}
+
+	function applyMxCellStyle(state, shape, xmlDoc)
+	{
+		var fillClr = getStyleColor(state.style[mxConstants.STYLE_FILLCOLOR]);
+		
+		if (!fillClr || fillClr == &quot;none&quot;)
+		{
+			shape.appendChild(createCellElem(&quot;FillPattern&quot;, 0, xmlDoc));
+		}
+		else
+		{
+			shape.appendChild(createCellElem(&quot;FillForegnd&quot;, fillClr, xmlDoc));
+			var gradClr = getStyleColor(state.style[mxConstants.STYLE_GRADIENTCOLOR]);
+
+			if (gradClr &amp;&amp; gradClr != &quot;none&quot;)
+			{
+				shape.appendChild(createCellElem(&quot;FillBkgnd&quot;, gradClr, xmlDoc));
+				
+				var gradDir = state.style[mxConstants.STYLE_GRADIENT_DIRECTION];
+				var dir = 28;
+				
+				if (gradDir)
+				{
+					switch(gradDir)
+					{
+						case mxConstants.DIRECTION_EAST:
+							dir = 25;
+						break
+						case mxConstants.DIRECTION_WEST:
+							dir = 27;
+						break
+						case mxConstants.DIRECTION_NORTH:
+							dir = 30;
+						break
+					}
+				}
+				shape.appendChild(createCellElem(&quot;FillPattern&quot;, dir, xmlDoc));
+			}
+		}
+
+		var strokeClr = getStyleColor(state.style[mxConstants.STYLE_STROKECOLOR]);
+		
+		if (!strokeClr || strokeClr == &quot;none&quot;)
+			shape.appendChild(createCellElem(&quot;LinePattern&quot;, 0, xmlDoc));
+		else
+			shape.appendChild(createCellElem(&quot;LineColor&quot;, strokeClr, xmlDoc));
+
+		var strokeW = state.style[mxConstants.STYLE_STROKEWIDTH];
+		if (strokeW) shape.appendChild(createCellElemScaled(&quot;LineWeight&quot;, strokeW, xmlDoc));
+		
+		
+		var opacity = state.style[mxConstants.STYLE_OPACITY];
+		var fillOpaq; 
+		var strkOpaq; 	
+		
+		if (opacity)
+		{
+			fillOpaq = opacity;
+			strkOpaq = opacity;
+		}
+		else
+		{
+			fillOpaq = state.style[mxConstants.STYLE_FILL_OPACITY];
+			strkOpaq = state.style[mxConstants.STYLE_STROKE_OPACITY];
+		}
+			
+		if (fillOpaq) shape.appendChild(createCellElem(&quot;FillForegndTrans&quot;, 1 - parseInt(fillOpaq)/100.0, xmlDoc));
+		if (strkOpaq) shape.appendChild(createCellElem(&quot;LineColorTrans&quot;, 1 - parseInt(strkOpaq)/100.0, xmlDoc));
+		
+		var isDashed = state.style[mxConstants.STYLE_DASHED];
+		
+		if (isDashed == 1) 
+		{
+			var dashPatrn = state.style[mxConstants.STYLE_DASH_PATTERN];
+			var pattern = 9
+				
+			if (dashPatrn)
+			{
+				//We only support the patterns of draw.io UI
+				switch(dashPatrn) 
+				{
+					case &quot;1 1&quot;:
+						pattern = 10; 
+					break;
+					case &quot;1 2&quot;:
+						pattern = 3; 
+					break;
+					case &quot;1 4&quot;:
+						pattern = 17; 
+					break;
+				} 
+			}
+			
+			shape.appendChild(createCellElem(&quot;LinePattern&quot;, pattern, xmlDoc));
+		}
+		
+		var hasShadow = state.style[mxConstants.STYLE_SHADOW];
+		
+		if (hasShadow == 1)
+		{
+			shape.appendChild(createCellElem(&quot;ShdwPattern&quot;, 1, xmlDoc));
+			shape.appendChild(createCellElem(&quot;ShdwForegnd&quot;, &#039;#000000&#039;, xmlDoc));
+			shape.appendChild(createCellElem(&quot;ShdwForegndTrans&quot;, 0.6, xmlDoc));
+			shape.appendChild(createCellElem(&quot;ShapeShdwType&quot;, 1, xmlDoc));
+			shape.appendChild(createCellElem(&quot;ShapeShdwOffsetX&quot;, &#039;0.02946278254943948&#039;, xmlDoc));
+			shape.appendChild(createCellElem(&quot;ShapeShdwOffsetY&quot;, &#039;-0.02946278254943948&#039;, xmlDoc));
+			shape.appendChild(createCellElem(&quot;ShapeShdwScaleFactor&quot;, &#039;1&#039;, xmlDoc));
+			shape.appendChild(createCellElem(&quot;ShapeShdwBlur&quot;, &#039;0.05555555555555555&#039;, xmlDoc));
+			shape.appendChild(createCellElem(&quot;ShapeShdwShow&quot;, 2, xmlDoc));
+		}
+		
+		//Probably we don&#039;t need margins as the canvas get the modified position?
+	/*	
+		var topMargin = state.style[mxConstants.STYLE_SPACING_TOP];
+		if (topMargin) shape.appendChild(createCellElemScaled(&quot;TopMargin&quot;, parseFloat(topMargin) * 2 + 2.8 , xmlDoc));
+
+/*		//Defines label bottom spacing
+		double bottomMargin = getBottomSpacing() * 100/100;
+
+		if (bottomMargin != 0)
+		{
+			styleMap.put(mxConstants.STYLE_SPACING_BOTTOM, Double.toString(bottomMargin));
+		}
+
+		//Defines label left spacing
+		double leftMargin = getLeftSpacing() * 100/100;
+
+		if (leftMargin != 0)
+		{
+			styleMap.put(mxConstants.STYLE_SPACING_LEFT, Double.toString(leftMargin));
+		}
+
+		//Defines label right spacing
+		double rightMargin = getRightSpacing() * 100/100;
+
+		if(rightMargin !=0)
+		{
+			styleMap.put(mxConstants.STYLE_SPACING_RIGHT, Double.toString(rightMargin));
+		}*/
+
+		//Direction is not clear that we need it
+		/*
+		var direction = state.style[mxConstants.STYLE_DIRECTION];
+
+		if (direction != mxConstants.DIRECTION_EAST)
+		{
+			styleMap.put(mxConstants.STYLE_DIRECTION, direction);
+		}
+		*/
+
+		var flibX = state.style[mxConstants.STYLE_FLIPH];
+		if (flibX == 1) shape.appendChild(createCellElem(&quot;FlipX&quot;, 1, xmlDoc));
+
+		var flibY = state.style[mxConstants.STYLE_FLIPV];
+		if (flibY == 1) shape.appendChild(createCellElem(&quot;FlipY&quot;, 1, xmlDoc));
+
+		var rounded = state.style[mxConstants.STYLE_ROUNDED];
+		if (rounded == 1) shape.appendChild(createCellElemScaled(&quot;Rounding&quot;, state.cell.geometry.width*0.1, xmlDoc));
+
+		//TODO for some reason, visio doesn&#039;t show the label (text) background color!
+		//May be we need mxSvgCanvas2D.prototype.addTextBackground = function(node, str, x, y, w, h, align, valign, overflow)
+		var lbkgnd = getStyleColor(state.style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR]);
+		if (lbkgnd) shape.appendChild(createCellElem(&quot;TextBkgnd&quot;, lbkgnd, xmlDoc));
+	};
+
+	function createShape(id, geo, layerIndex, xmlDoc, parentHeight, isChild)
+	{
+		var shape = createElt(xmlDoc, that.XMLNS, &quot;Shape&quot;);
+		
+		shape.setAttribute(&quot;ID&quot;, id);
+		shape.setAttribute(&quot;NameU&quot;, &quot;Shape&quot; + id);
+		shape.setAttribute(&quot;LineStyle&quot;, &quot;0&quot;);
+		shape.setAttribute(&quot;FillStyle&quot;, &quot;0&quot;);
+		shape.setAttribute(&quot;TextStyle&quot;, &quot;0&quot;);
+		
+		var hw = geo.width/2, hh = geo.height/2;
+		
+		shape.appendChild(createCellElemScaled(&quot;PinX&quot;, geo.x + hw + (isChild? 0 : vsdxCanvas.shiftX), xmlDoc));
+		shape.appendChild(createCellElemScaled(&quot;PinY&quot;, parentHeight - geo.y - hh - (isChild? 0 : vsdxCanvas.shiftY), xmlDoc));
+		shape.appendChild(createCellElemScaled(&quot;Width&quot;, geo.width, xmlDoc));
+		shape.appendChild(createCellElemScaled(&quot;Height&quot;, geo.height, xmlDoc));
+		shape.appendChild(createCellElemScaled(&quot;LocPinX&quot;, hw, xmlDoc));
+		shape.appendChild(createCellElemScaled(&quot;LocPinY&quot;, hh, xmlDoc));
+		shape.appendChild(createCellElem(&quot;LayerMember&quot;, layerIndex + &quot;&quot;, xmlDoc));
+		
+		return shape;
+	};
+
+	function getArrowType(arrow, isFilled)
+	{
+		isFilled = isFilled == null? &quot;1&quot; : isFilled;
+		arrow = arrow == null? &quot;none&quot; : arrow;
+		var key = arrow + &quot;|&quot; + isFilled;
+		var type = that.ARROWS_MAP[key];
+		if (type != null)
+			return type;
+		else
+			return 1;
+	};
+	
+	function getArrowSize(size)
+	{
+		if (size == null) return 2;
+		
+		if (size &lt;=2)
+			return 0;
+		else if (size &lt;= 3)
+			return 1;
+		else if (size &lt;= 5)
+			return 2;
+		else if (size &lt;= 7)
+			return 3;
+		else if (size &lt;= 9)
+			return 4;
+		else if (size &lt;= 22)
+			return 5;
+		else
+			return 6;
+	};
+
+	function createEdge(cell, layerIndex, graph, xmlDoc, parentHeight, isChild)
+	{
+		var state = graph.view.getState(cell, true);
+		
+		if (state == null || state.absolutePoints == null || state.cellBounds == null)
+		{
+			return null;
+		}
+		
+		var shape = createElt(xmlDoc, that.XMLNS, &quot;Shape&quot;);
+		var vsdxId = getCellVsdxId(cell.id);
+		shape.setAttribute(&quot;ID&quot;, vsdxId);
+		shape.setAttribute(&quot;NameU&quot;, &quot;Dynamic connector.&quot; + vsdxId);
+		shape.setAttribute(&quot;Name&quot;, &quot;Dynamic connector.&quot; + vsdxId);
+		shape.setAttribute(&quot;Type&quot;, &quot;Shape&quot;);
+		shape.setAttribute(&quot;Master&quot;, &quot;4&quot;); //Dynamic Connector Master
+			
+		var s = vsdxCanvas.state;
+		var points = state.absolutePoints;
+		var bounds = state.cellBounds;
+		
+		var hw = bounds.width/2, hh = bounds.height/2;
+		
+		shape.appendChild(createCellElemScaled(&quot;PinX&quot;, bounds.x + hw + (isChild? 0 : vsdxCanvas.shiftX), xmlDoc));
+		shape.appendChild(createCellElemScaled(&quot;PinY&quot;, parentHeight - bounds.y - hh - (isChild? 0 : vsdxCanvas.shiftY), xmlDoc));
+		shape.appendChild(createCellElemScaled(&quot;Width&quot;, bounds.width, xmlDoc));
+		shape.appendChild(createCellElemScaled(&quot;Height&quot;, bounds.height, xmlDoc));
+		shape.appendChild(createCellElemScaled(&quot;LocPinX&quot;, hw, xmlDoc));
+		shape.appendChild(createCellElemScaled(&quot;LocPinY&quot;, hh, xmlDoc));
+
+		vsdxCanvas.newEdge(shape, state, xmlDoc);
+		
+		var calcVsdxPoint = function(p, noHeight, withoutShift) 
+		{
+			var x = p.x, y = p.y;
+			x = x * s.scale - bounds.x + s.dx + (withoutShift || isChild? 0 : vsdxCanvas.shiftX);
+			y = (noHeight? 0 : bounds.height) - y * s.scale + bounds.y - s.dy - (withoutShift || isChild? 0 : vsdxCanvas.shiftY);
+			return {x: x, y: y};
+		};
+
+		var p0 = calcVsdxPoint(points[0], true);
+		
+		//Formula is used to make the edge dynamic 
+		shape.appendChild(createCellElemScaled(&quot;BeginX&quot;, bounds.x + p0.x, xmlDoc, &quot;_WALKGLUE(BegTrigger,EndTrigger,WalkPreference)&quot;));
+		shape.appendChild(createCellElemScaled(&quot;BeginY&quot;, parentHeight - bounds.y + p0.y, xmlDoc, &quot;_WALKGLUE(BegTrigger,EndTrigger,WalkPreference)&quot;));
+
+		var pe = calcVsdxPoint(points[points.length - 1], true);
+		
+		//Formula is used to make the edge dynamic 
+		shape.appendChild(createCellElemScaled(&quot;EndX&quot;, bounds.x + pe.x, xmlDoc, &quot;_WALKGLUE(EndTrigger,BegTrigger,WalkPreference)&quot;));
+		shape.appendChild(createCellElemScaled(&quot;EndY&quot;, parentHeight - bounds.y + pe.y, xmlDoc, &quot;_WALKGLUE(EndTrigger,BegTrigger,WalkPreference)&quot;));
+
+		//Formula is used to make the edge dynamic (specify source id and target id)
+		shape.appendChild(createCellElem(&quot;BegTrigger&quot;, &quot;2&quot;, xmlDoc, cell.source? &quot;_XFTRIGGER(Sheet.&quot;+ getCellVsdxId(cell.source.id) +&quot;!EventXFMod)&quot; : null));
+		shape.appendChild(createCellElem(&quot;EndTrigger&quot;, &quot;2&quot;, xmlDoc, cell.target? &quot;_XFTRIGGER(Sheet.&quot;+ getCellVsdxId(cell.target.id) +&quot;!EventXFMod)&quot; : null));
+		shape.appendChild(createCellElem(&quot;ConFixedCode&quot;, &quot;6&quot;, xmlDoc));
+		shape.appendChild(createCellElem(&quot;LayerMember&quot;, layerIndex + &quot;&quot;, xmlDoc));
+
+		applyMxCellStyle(state, shape, xmlDoc);
+		
+		//Edge special styles
+		var startFill =  state.style[mxConstants.STYLE_STARTFILL];
+		var startArrow = state.style[mxConstants.STYLE_STARTARROW];
+		var startSize =  state.style[mxConstants.STYLE_STARTSIZE];
+		
+		var type = getArrowType(startArrow, startFill);
+		shape.appendChild(createCellElem(&quot;BeginArrow&quot;, type, xmlDoc));
+		shape.appendChild(createCellElem(&quot;BeginArrowSize&quot;, getArrowSize(startSize), xmlDoc));
+		
+		var endFill =  state.style[mxConstants.STYLE_ENDFILL];
+		var endArrow = state.style[mxConstants.STYLE_ENDARROW];
+		var endSize =  state.style[mxConstants.STYLE_ENDSIZE];
+		
+		var type = getArrowType(endArrow, endFill);
+		shape.appendChild(createCellElem(&quot;EndArrow&quot;, type, xmlDoc));
+		shape.appendChild(createCellElem(&quot;EndArrowSize&quot;, getArrowSize(endSize), xmlDoc));
+		
+		//Draw text first to have its shape cell elements before visio geo.
+		if (state.text != null &amp;&amp; state.text.checkBounds())
+		{
+			vsdxCanvas.save();
+			state.text.paint(vsdxCanvas);
+			vsdxCanvas.restore();
+		}
+		
+		var geoSec = createElt(xmlDoc, that.XMLNS, &quot;Section&quot;);
+		
+		geoSec.setAttribute(&quot;N&quot;, &quot;Geometry&quot;);
+		geoSec.setAttribute(&quot;IX&quot;, &quot;0&quot;);
+
+		for (var i = 0; i &lt; points.length; i++)
+		{
+			var p = calcVsdxPoint(points[i], false, true);
+			geoSec.appendChild(createRow(i==0 ? &quot;MoveTo&quot; : &quot;LineTo&quot;, (i + 1), p.x, p.y, xmlDoc));
+		}
+		
+		geoSec.appendChild(createCellElem(&quot;NoFill&quot;, &quot;1&quot;, xmlDoc));
+		geoSec.appendChild(createCellElem(&quot;NoLine&quot;, &quot;0&quot;, xmlDoc));
+		shape.appendChild(geoSec);
+		
+		return shape;
+	};
+	
+	function convertMxCell2Shape(cell, layerIndex, graph, xmlDoc, parentHeight, parentGeo, isChild)
+	{
+		var geo = cell.geometry, origGeo = geo;
+		
+		if (geo != null)
+		{
+		  try
+		  {
+			//fix relative geo coordinates
+			if (geo.relative &amp;&amp; parentGeo)
+			{
+				origGeo = geo.clone();
+				geo.x *= parentGeo.width;
+				geo.y *= parentGeo.height;
+				
+				if (cell.vertex &amp;&amp; geo.offset != null)
+				{
+					geo.x += geo.offset.x;
+					geo.y += geo.offset.y;
+				}
+				
+				geo.relative = 0;
+			}
+			
+			var vsdxId = getCellVsdxId(cell.id);
+			
+			if (!cell.treatAsSingle &amp;&amp; cell.getChildCount() &gt; 0) //Group 
+			{
+				//Create group shape as an empty shape with no geo
+				var shape = createShape(vsdxId + &quot;10000&quot;, geo, layerIndex, xmlDoc, parentHeight, isChild);
+				shape.setAttribute(&quot;Type&quot;, &quot;Group&quot;);
+				
+				//Create group shape
+				var gShapes = createElt(xmlDoc, that.XMLNS, &quot;Shapes&quot;);
+
+				//translate the canvas using the group coordinates
+				vsdxCanvas.save();
+				vsdxCanvas.translate(-geo.x, -geo.y);
+
+				//Draw the actual group shape as a child (so change its geo coord to 0,0). 
+				//	In mxGraph group shape can have styles and stencil
+				var newGeo = geo.clone();
+				newGeo.x = 0;
+				newGeo.y = 0;
+				cell.setGeometry(newGeo);
+				cell.treatAsSingle = true;
+				var subShape = convertMxCell2Shape(cell, layerIndex, graph, xmlDoc, geo.height, geo, true);
+				delete cell.treatAsSingle;
+				cell.setGeometry(geo);
+				
+				if (subShape != null)
+				{
+					gShapes.appendChild(subShape);
+				}
+				
+				//add group children
+				for (var i = 0; i &lt; cell.getChildCount(); i++)
+				{
+					var child = cell.children[i];
+					
+					var subShape = convertMxCell2Shape(child, layerIndex, graph, xmlDoc, geo.height, geo, true);
+					
+					if (subShape != null)
+					{
+						gShapes.appendChild(subShape);
+					}
+				}
+				
+				shape.appendChild(gShapes);
+				
+				//restore the canvas to before group translation 
+				vsdxCanvas.restore();
+				
+				return shape;
+			}
+			else if (cell.vertex)
+			{
+				var shape = createShape(vsdxId, geo, layerIndex, xmlDoc, parentHeight, isChild);
+				var state = graph.view.getState(cell, true);
+
+				if (state != null)
+				{
+					applyMxCellStyle(state, shape, xmlDoc);
+					vsdxCanvas.newShape(shape, state, xmlDoc);
+
+					//Draw text first to have its shape cell elements before visio geo.
+					if (state.text != null &amp;&amp; state.text.checkBounds())
+					{
+						vsdxCanvas.save();
+						state.text.paint(vsdxCanvas);
+						vsdxCanvas.restore();
+					}
+					if (state.shape != null &amp;&amp; state.shape.checkBounds())
+					{
+						vsdxCanvas.save();
+						state.shape.paint(vsdxCanvas);
+						vsdxCanvas.restore();
+					}
+					
+					shape.appendChild(vsdxCanvas.getShapeGeo());
+					vsdxCanvas.endShape();
+					shape.setAttribute(&quot;Type&quot;, vsdxCanvas.getShapeType());
+				}
+
+				return shape;
+			}
+			else
+			{
+				return createEdge(cell, layerIndex, graph, xmlDoc, parentHeight, isChild);
+			}
+		  }
+		  finally
+		  {
+			cell.geometry = origGeo;	
+		  }
+		}
+		else
+		{
+			return null;
+		}
+	};
+
+	
+	function convertMxModel2Page(graph, modelAttrib)
+	{
+        var xmlDoc = mxUtils.createXmlDocument();
+
+        var root = createElt(xmlDoc, that.XMLNS, &quot;PageContents&quot;);
+        
+        root.setAttributeNS(&#039;http://www.w3.org/2000/xmlns/&#039;, &#039;xmlns&#039;, that.XMLNS);
+        root.setAttributeNS(&#039;http://www.w3.org/2000/xmlns/&#039;, &quot;xmlns:r&quot;, that.XMLNS_R);
+        
+        var shapes = createElt(xmlDoc, that.XMLNS, &quot;Shapes&quot;);
+        root.appendChild(shapes);
+
+        var model = graph.model;
+        
+		var t = graph.view.translate;
+		var s = graph.view.scale;
+		var bounds = graph.getGraphBounds();
+
+		vsdxCanvas.shiftX = 0; vsdxCanvas.shiftY = 0;
+		//-ve pages
+		if (bounds.x / s &lt; t.x || bounds.y / s &lt; t.y) 
+		{
+			vsdxCanvas.shiftX = Math.ceil((t.x - bounds.x / s) / graph.pageFormat.width) * graph.pageFormat.width;
+			vsdxCanvas.shiftY = Math.ceil((t.y - bounds.y / s) / graph.pageFormat.height) * graph.pageFormat.height;
+		}
+		
+		vsdxCanvas.save();
+		vsdxCanvas.translate(-t.x, -t.y);
+		vsdxCanvas.scale(1 / s);
+		vsdxCanvas.newPage();
+		
+		var layers = graph.model.getChildCells(graph.model.root);
+		var layerIdsMaps = {};
+		
+		for (var k = 0; k &lt; layers.length; k++)
+		{
+			layerIdsMaps[layers[k].id] = k;
+		}
+		
+		for (var id in model.cells) 
+		{
+			var cell = model.cells[id];
+			//top-most cells
+			var layerIndex = cell.parent != null? layerIdsMaps[cell.parent.id] : null;
+			
+			if (layerIndex != null)
+			{
+				var shape = convertMxCell2Shape(cell, layerIndex, graph, xmlDoc, modelAttrib.pageHeight);
+				
+				if (shape != null)
+					shapes.appendChild(shape);
+			}
+		}
+		
+        var connects = createElt(xmlDoc, that.XMLNS, &quot;Connects&quot;);
+        root.appendChild(connects);
+
+        //Second pass to add edges (connections)
+		for (var id in model.cells) 
+		{
+			var cell = model.cells[id];
+
+			if (cell.edge)
+			{
+				if (cell.source)
+				{
+					var connect = createElt(xmlDoc, that.XMLNS, &quot;Connect&quot;);
+					connect.setAttribute(&quot;FromSheet&quot;, getCellVsdxId(cell.id));
+					connect.setAttribute(&quot;FromCell&quot;, &quot;BeginX&quot;);
+					connect.setAttribute(&quot;ToSheet&quot;, getCellVsdxId(cell.source.id));
+					connects.appendChild(connect);
+				}
+				
+				if (cell.target)
+				{
+					var connect = createElt(xmlDoc, that.XMLNS, &quot;Connect&quot;);
+					connect.setAttribute(&quot;FromSheet&quot;, getCellVsdxId(cell.id));
+					connect.setAttribute(&quot;FromCell&quot;, &quot;EndX&quot;);
+					connect.setAttribute(&quot;ToSheet&quot;, getCellVsdxId(cell.target.id));
+					connects.appendChild(connect);
+				}
+			}
+		}
+
+		xmlDoc.appendChild(root);
+
+		vsdxCanvas.restore();
+
+		return xmlDoc;
+	};
+
+	function writeXmlDoc2Zip(zip, name, xmlDoc, noHeader)
+	{
+		zip.file(name, (noHeader? &quot;&quot; : &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot; standalone=\&quot;yes\&quot;?&gt;&quot;) + mxUtils.getXml(xmlDoc, &#039;\n&#039;));
+	};
+	
+	function addPagesXML(zip, pages, pageLayers, modelsAttr) 
+	{
+		var pagesXmlDoc = mxUtils.createXmlDocument();
+		var pagesRelsXmlDoc = mxUtils.createXmlDocument();
+	
+		var pagesRoot = createElt(pagesXmlDoc, that.XMLNS, &quot;Pages&quot;);
+		pagesRoot.setAttributeNS(&#039;http://www.w3.org/2000/xmlns/&#039;, &#039;xmlns&#039;, that.XMLNS);
+		pagesRoot.setAttributeNS(&#039;http://www.w3.org/2000/xmlns/&#039;, &quot;xmlns:r&quot;, that.XMLNS_R);
+
+		var pagesRelsRoot = createElt(pagesRelsXmlDoc, that.RELS_XMLNS, &quot;Relationships&quot;);
+		
+		var i = 1;
+		for (var name in pages) 
+		{
+			var pageName = &quot;page&quot; + i + &quot;.xml&quot;;
+			
+			var pageE = createElt(pagesXmlDoc, that.XMLNS, &quot;Page&quot;);
+			pageE.setAttribute(&quot;ID&quot;, i-1);
+			pageE.setAttribute(&quot;NameU&quot;, name);
+			pageE.setAttribute(&quot;Name&quot;, name);
+		
+			var pageSheet = createElt(pagesXmlDoc, that.XMLNS, &quot;PageSheet&quot;);
+			var modelAttr = modelsAttr[name];
+			
+			pageSheet.appendChild(createCellElemScaled(&quot;PageWidth&quot;, modelAttr[&#039;pageWidth&#039;], pagesXmlDoc));
+			pageSheet.appendChild(createCellElemScaled(&quot;PageHeight&quot;, modelAttr[&#039;pageHeight&#039;], pagesXmlDoc));
+			pageSheet.appendChild(createCellElem(&quot;PageScale&quot;, modelAttr[&#039;pageScale&#039;], pagesXmlDoc));
+			pageSheet.appendChild(createCellElem(&quot;DrawingScale&quot;, 1, pagesXmlDoc));
+		
+			var relE = createElt(pagesXmlDoc, that.XMLNS,&quot;Rel&quot;);
+			relE.setAttributeNS(that.XMLNS_R, &quot;r:id&quot;, &quot;rId&quot; + i);
+
+			//Add Layers
+			var layerSec = createElt(pagesXmlDoc, that.XMLNS, &quot;Section&quot;);
+			layerSec.setAttribute(&quot;N&quot;, &quot;Layer&quot;);
+
+			var layers = pageLayers[name];
+			
+			for (var k = 0; k &lt; layers.length; k++)
+			{
+				var layerRow = createElt(pagesXmlDoc, that.XMLNS, &quot;Row&quot;);
+				layerRow.setAttribute(&quot;IX&quot;, k + &quot;&quot;);
+	
+				layerSec.appendChild(layerRow)
+				
+				layerRow.appendChild(createCellElem(&quot;Name&quot;, layers[k].name, pagesXmlDoc));
+				layerRow.appendChild(createCellElem(&quot;Color&quot;, &#039;255&#039;, pagesXmlDoc));
+				layerRow.appendChild(createCellElem(&quot;Status&quot;, &#039;0&#039;, pagesXmlDoc));
+				layerRow.appendChild(createCellElem(&quot;Visible&quot;, layers[k].visible? &#039;1&#039; : &#039;0&#039;, pagesXmlDoc));
+				layerRow.appendChild(createCellElem(&quot;Print&quot;, &#039;1&#039;, pagesXmlDoc));
+				layerRow.appendChild(createCellElem(&quot;Active&quot;, &#039;0&#039;, pagesXmlDoc));
+				layerRow.appendChild(createCellElem(&quot;Lock&quot;, layers[k].locked? &#039;1&#039; : &#039;0&#039;, pagesXmlDoc));
+				layerRow.appendChild(createCellElem(&quot;Snap&quot;, &#039;1&#039;, pagesXmlDoc));
+				layerRow.appendChild(createCellElem(&quot;Glue&quot;, &#039;1&#039;, pagesXmlDoc));
+				layerRow.appendChild(createCellElem(&quot;NameUniv&quot;, layers[k].name, pagesXmlDoc));
+				layerRow.appendChild(createCellElem(&quot;ColorTrans&quot;, &#039;0&#039;, pagesXmlDoc));
+			}
+			
+			pageSheet.appendChild(layerSec);
+			
+			pageE.appendChild(pageSheet);
+			pageE.appendChild(relE);
+			pagesRoot.appendChild(pageE);
+			
+			var relationship = createElt(pagesRelsXmlDoc, that.RELS_XMLNS, &quot;Relationship&quot;);
+			relationship.setAttribute(&quot;Id&quot;, &quot;rId&quot; + i);
+			relationship.setAttribute(&quot;Type&quot;, that.PAGES_TYPE);
+			relationship.setAttribute(&quot;Target&quot;, pageName);
+			pagesRelsRoot.appendChild(relationship);
+			
+			//Note:Each page rels is created with the skeleton as they are constants
+			
+			//write the page docs
+			var xmlDoc = pages[name];
+			writeXmlDoc2Zip(zip, that.VISIO_PAGES + pageName, xmlDoc);
+			i++;
+		}
+		
+		pagesXmlDoc.appendChild(pagesRoot);
+		pagesRelsXmlDoc.appendChild(pagesRelsRoot);
+		writeXmlDoc2Zip(zip, that.VISIO_PAGES + &quot;pages.xml&quot;, pagesXmlDoc);
+		writeXmlDoc2Zip(zip, that.VISIO_PAGES + &quot;_rels/pages.xml.rels&quot;, pagesRelsXmlDoc);
+	}
+
+	function addImagesRels(zip, pIndex)
+	{
+		//create a new page rels file
+		var fId = that.VISIO_PAGES_RELS + &quot;page&quot; + pIndex + &quot;.xml.rels&quot;;
+		var pageRelDoc = mxUtils.createXmlDocument();
+
+		var relationships = createElt(pageRelDoc, that.RELS_XMLNS, &quot;Relationships&quot;);
+
+		//Add master relationship (rId1)
+		var relationship = createElt(pageRelDoc, that.RELS_XMLNS, &quot;Relationship&quot;);
+        relationship.setAttribute(&quot;Type&quot;, &quot;http://schemas.microsoft.com/visio/2010/relationships/master&quot;);
+        relationship.setAttribute(&quot;Id&quot;, &quot;rId1&quot;);
+        relationship.setAttribute(&quot;Target&quot;, &quot;../masters/master1.xml&quot;);
+        relationships.appendChild(relationship);
+		
+		var imgs = vsdxCanvas.images;
+
+		//create rels of image files
+		if (imgs.length &gt; 0)
+		{
+    		for (var i = 0; i &lt; imgs.length; i++)
+			{
+    			var relationship = createElt(pageRelDoc, that.RELS_XMLNS, &quot;Relationship&quot;);
+    	        relationship.setAttribute(&quot;Type&quot;, that.XMLNS_R + &quot;/image&quot;);
+    	        relationship.setAttribute(&quot;Id&quot;, &quot;rId&quot; + (i+2));
+    	        relationship.setAttribute(&quot;Target&quot;, &quot;../media/&quot; + imgs[i]);
+    	        
+    	        relationships.appendChild(relationship);
+			}
+    	}
+		pageRelDoc.appendChild(relationships);
+    	writeXmlDoc2Zip(zip, fId, pageRelDoc);
+	};
+	/**
+	 * 
+	 * Convert current Editor UI pages into a vdsx file
+	 * @return true if successful, false otherwise 
+	 */
+	this.exportCurrentDiagrams = function (currentPageOnly)
+	{
+		try 
+		{
+			if (editorUi.spinner.spin(document.body, mxResources.get(&#039;exporting&#039;)))
+			{
+				var zip = new JSZip();
+			    
+				//init class global variables
+				vsdxCanvas.init(zip);
+				idsMap = {};
+				idsCounter = 1;
+				
+				var pages = {};
+				var pageLayers = {};
+				var modelsAttr = {};
+				
+				var pagesCount = editorUi.pages != null? editorUi.pages.length : 1;
+				
+				function collectLayers(graph, diagramName)
+				{
+					var layers = graph.model.getChildCells(graph.model.root);
+					pageLayers[diagramName] = [];
+					
+					for (var k = 0; k &lt; layers.length; k++)
+					{
+						//KNOWN We don&#039;t export invisible layers, we may support it later but we need to have a full cell state for invisible cells
+						if (layers[k].visible)
+						{
+							pageLayers[diagramName].push({
+								name: layers[k].value || &#039;Background&#039;,
+								visible: layers[k].visible,
+								locked: layers[k].style &amp;&amp; layers[k].style.indexOf(&#039;locked=1&#039;) &gt;= 0 
+							});
+						}
+					}
+				};
+				
+				if (editorUi.pages != null) 
+				{
+					function exportPage(page)
+					{
+						var diagramName = page.getName();
+						var graph = editorUi.editor.graph;
+						var modelAttrib = getGraphAttributes(graph);
+						pages[diagramName] = convertMxModel2Page(graph, modelAttrib);
+						collectLayers(graph, diagramName);
+						addImagesRels(zip, i+1);
+						modelsAttr[diagramName] = modelAttrib;
+					};
+					
+					var selectedCells = editorUi.editor.graph.getSelectionCells();
+					var currentPage = editorUi.currentPage;
+					
+					if (currentPageOnly)
+					{
+						exportPage(currentPage);
+					}
+					else
+					{
+						for (var i=0; i &lt; editorUi.pages.length; i++)
+						{
+							var page = editorUi.pages[i];
+							
+							if (editorUi.currentPage != page)
+							{
+								editorUi.selectPage(page, true);
+							}
+							
+							exportPage(page);
+						}
+						
+						if (currentPage != editorUi.currentPage)
+						{
+							editorUi.selectPage(currentPage, true);
+						}
+						
+						editorUi.editor.graph.setSelectionCells(selectedCells);
+					}
+				}
+				else
+				{
+					var graph = editorUi.editor.graph;
+					var modelAttrib = getGraphAttributes(graph);
+					var diagramName = &quot;Page1&quot;;
+					pages[diagramName] = convertMxModel2Page(graph, modelAttrib);
+					collectLayers(graph, diagramName);
+					addImagesRels(zip, 1);
+					modelsAttr[diagramName] = modelAttrib;
+				}
+				
+				createVsdxSkeleton(zip, pagesCount);
+				
+				addPagesXML(zip, pages, pageLayers, modelsAttr);
+
+				var createZipFile = function() 
+				{
+					zip.generateAsync({type:&quot;base64&quot;}).then(
+						function(content) 
+						{
+							editorUi.spinner.stop();
+							var basename = editorUi.getBaseFilename();
+						    editorUi.saveData(basename + &quot;.vsdx&quot;, &#039;vsdx&#039;, content,
+						    	&#039;application/vnd.visio2013&#039;, true);
+						}
+					);
+				};
+				
+				if (vsdxCanvas.filesLoading &gt; 0)
+				{
+					// wait until all media files are loaded
+					vsdxCanvas.onFilesLoaded = createZipFile;
+				}
+				else
+				{
+					createZipFile();
+				}
+			}
+			
+			return true;
+		}
+		catch(e) 
+		{
+			console.log(e);
+			editorUi.spinner.stop();
+			return false;
+		}
+	};	
+}
+
+VsdxExport.prototype.CONVERSION_FACTOR = 40 * 2.54; //screenCoordinatesPerCm (40) x CENTIMETERS_PER_INCHES (2.54)
+VsdxExport.prototype.PAGES_TYPE = &quot;http://schemas.microsoft.com/visio/2010/relationships/page&quot;;
+VsdxExport.prototype.RELS_XMLNS = &quot;http://schemas.openxmlformats.org/package/2006/relationships&quot;;
+VsdxExport.prototype.XML_SPACE = &quot;preserve&quot;;
+VsdxExport.prototype.XMLNS_R = &quot;http://schemas.openxmlformats.org/officeDocument/2006/relationships&quot;;
+VsdxExport.prototype.XMLNS = &quot;http://schemas.microsoft.com/office/visio/2012/main&quot;;
+VsdxExport.prototype.VISIO_PAGES = &quot;visio/pages/&quot;;
+VsdxExport.prototype.PREFEX = &quot;com/mxgraph/io/vsdx/resources/export/&quot;;
+VsdxExport.prototype.VSDX_ENC = &quot;ISO-8859-1&quot;;
+VsdxExport.prototype.PART_NAME = &quot;PartName&quot;;
+VsdxExport.prototype.CONTENT_TYPES_XML = &quot;[Content_Types].xml&quot;;
+VsdxExport.prototype.VISIO_PAGES_RELS = &quot;visio/pages/_rels/&quot;;
+VsdxExport.prototype.ARROWS_MAP = {
+	&quot;none|1&quot;: 0, &quot;none|0&quot;: 0, &quot;open|1&quot;: 1, &quot;open|0&quot;: 1, &quot;block|1&quot;: 4, &quot;block|0&quot;: 14, &quot;classic|1&quot;: 5, &quot;classic|0&quot;: 17,
+	&quot;oval|1&quot;: 10, &quot;oval|0&quot;: 20, &quot;diamond|1&quot;: 11, &quot;diamond|0&quot;: 22, &quot;blockThin|1&quot;: 2, &quot;blockThin|0&quot;: 15, &quot;dash|1&quot;: 23, &quot;dash|0&quot;: 23,
+	&quot;ERone|1&quot;: 24, &quot;ERone|0&quot;: 24, &quot;ERmandOne|1&quot;: 25, &quot;ERmandOne|0&quot;: 25, &quot;ERmany|1&quot;: 27, &quot;ERmany|0&quot;: 27, &quot;ERoneToMany|1&quot;: 28, &quot;ERoneToMany|0&quot;: 28,
+	&quot;ERzeroToMany|1&quot;: 29, &quot;ERzeroToMany|0&quot;: 29, &quot;ERzeroToOne|1&quot;: 30, &quot;ERzeroToOne|0&quot;: 30, &quot;openAsync|1&quot;: 9, &quot;openAsync|0&quot;: 9
+};</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

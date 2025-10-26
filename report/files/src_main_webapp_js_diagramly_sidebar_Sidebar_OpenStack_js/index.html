@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-OpenStack.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-OpenStack.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">64.58</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">79</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">20.00</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.40</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addOpenStackPalette = function()
+	{
+		var w = 50.0;
+		var h = 50.0;
+		var s = &#039;aspect=fixed;sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;outlineConnect=0;verticalAlign=top;align=center;shape=mxgraph.openstack.&#039;;
+		var gn = &#039;mxgraph.openstack&#039;;
+		var dt = &#039;openstack open stack &#039;;
+
+		this.setCurrentSearchEntryLibrary(&#039;openstack&#039;, &#039;openstackBlue&#039;);
+		this.addOpenStackGenericPalette(w, h, s, gn, dt, &#039;3F51B5&#039;, &#039;Blue&#039;);
+		this.setCurrentSearchEntryLibrary(&#039;openstack&#039;, &#039;openstackGrey&#039;);
+		this.addOpenStackGenericPalette(w, h, s, gn, dt, &#039;808080&#039;, &#039;Grey&#039;);
+		this.setCurrentSearchEntryLibrary(&#039;openstack&#039;, &#039;openstackGreen&#039;);
+		this.addOpenStackGenericPalette(w, h, s, gn, dt, &#039;008000&#039;, &#039;Green&#039;);
+		this.setCurrentSearchEntryLibrary(&#039;openstack&#039;, &#039;openstackRed&#039;);
+		this.addOpenStackGenericPalette(w, h, s, gn, dt, &#039;C82128&#039;, &#039;Red&#039;);
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+	Sidebar.prototype.addOpenStackGenericPalette = function(w, h, s, gn, dt, fillColor, fillString)
+	{
+		s = &#039;fillColor=#&#039; + fillColor + &#039;;&#039; + s;
+		dt = dt + fillString.toLowerCase() + &#039; &#039;;
+
+		var fns =
+		[
+			this.createVertexTemplateEntry(s + &#039;cinder_volume;&#039;,
+				w, h, &#039;&#039;, &#039;Cinder Volume&#039;, null, null, this.getTagsForStencil(gn, &#039;cinder volume&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cinder_volumeattachment;&#039;,
+				w, h, &#039;&#039;, &#039;Cinder VolumeAttachment&#039;, null, null, this.getTagsForStencil(gn, &#039;cinder volumeattachment volume attachment&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;designate_recordset;&#039;,
+				w, h, &#039;&#039;, &#039;Designate RecordSet&#039;, null, null, this.getTagsForStencil(gn, &#039;designate recordset record set&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;designate_zone;&#039;,
+				w, h, &#039;&#039;, &#039;Designate Zone&#039;, null, null, this.getTagsForStencil(gn, &#039;designate zone&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;heat_autoscalinggroup;&#039;,
+				w, h, &#039;&#039;, &#039;Heat AutoScalingGroup&#039;, null, null, this.getTagsForStencil(gn, &#039;heat autoscalinggroup auto scaling group autoscaling&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;heat_resourcegroup;&#039;,
+				w, h, &#039;&#039;, &#039;Heat ResourceGroup&#039;, null, null, this.getTagsForStencil(gn, &#039;heat resourcegroup resource group&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;heat_scalingpolicy;&#039;,
+				w, h, &#039;&#039;, &#039;Heat ScalingPolicy&#039;, null, null, this.getTagsForStencil(gn, &#039;heat scalingpolicy scaling policy&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;neutron_floatingip;&#039;,
+				w, h, &#039;&#039;, &#039;Neutron FloatingIP&#039;, null, null, this.getTagsForStencil(gn, &#039;neutron floatingip floating ip&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;neutron_floatingipassociation;&#039;,
+				w, h, &#039;&#039;, &#039;Neutron FloatingIPAssociation&#039;, null, null, this.getTagsForStencil(gn, &#039;neutron floatingipassociation floatingip floating ip association&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;neutron_net;&#039;,
+				w, h, &#039;&#039;, &#039;Neutron Net&#039;, null, null, this.getTagsForStencil(gn, &#039;neutron net&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;neutron_port;&#039;,
+				w, h, &#039;&#039;, &#039;Neutron Port&#039;, null, null, this.getTagsForStencil(gn, &#039;neutron port&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;neutron_router;&#039;,
+				w, h, &#039;&#039;, &#039;Neutron Router&#039;, null, null, this.getTagsForStencil(gn, &#039;neutron router&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;neutron_routerinterface;&#039;,
+				w, h, &#039;&#039;, &#039;Neutron RouterInterface&#039;, null, null, this.getTagsForStencil(gn, &#039;neutron routerinterface router interface&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;neutron_securitygroup;&#039;,
+				w, h, &#039;&#039;, &#039;Neutron SecurityGroup&#039;, null, null, this.getTagsForStencil(gn, &#039;neutron securitygroup security group&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;neutron_subnet;&#039;,
+				w, h, &#039;&#039;, &#039;Neutron Subnet&#039;, null, null, this.getTagsForStencil(gn, &#039;neutron subnet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;nova_keypair;&#039;,
+				w, h, &#039;&#039;, &#039;Nova Keypair&#039;, null, null, this.getTagsForStencil(gn, &#039;nova keypair&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;nova_server;&#039;,
+				w, h, &#039;&#039;, &#039;Nova Server&#039;, null, null, this.getTagsForStencil(gn, &#039;nova server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;swift_container;&#039;,
+				w, h, &#039;&#039;, &#039;Swift Container&#039;, null, null, this.getTagsForStencil(gn, &#039;swift container&#039;, dt).join(&#039; &#039;))
+		];
+			
+		this.addPalette(&#039;openstack&#039; + fillString, &#039;OpenStack / &#039; + fillString, false, mxUtils.bind(this, function(content)
+				{
+					for (var i = 0; i &lt; fns.length; i++)
+					{
+						content.appendChild(fns[i](content));
+					}
+		}));
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

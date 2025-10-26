@@ -1,0 +1,2367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\ElectronApp.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\ElectronApp.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">65.85</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">2250</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">113.97</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">24.62</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+window.PLUGINS_BASE_PATH = &#039;.&#039;;
+window.TEMPLATE_PATH = &#039;templates&#039;;
+window.DRAW_MATH_URL = &#039;math/es5&#039;;
+window.DRAWIO_BASE_URL = &#039;.&#039;; //Prevent access to online website since it is not allowed
+window.DRAWIO_SERVER_URL = &#039;.&#039;;
+EditorUi.draftSaveDelay = 5000;
+//Disables eval for JS (uses shapes-14-6-5.min.js)
+mxStencilRegistry.allowEval = false;
+
+(async function()
+{
+	let requestSync = async function(msg)
+	{
+		if (typeof msg === &#039;string&#039;)
+		{
+			msg = {
+				action: msg
+			};
+		}
+
+		async function doRequest()
+		{
+			return new Promise((resolve, reject) =&gt; {
+				electron.request(msg, function(data)
+				{
+					resolve(data);
+				}, function(errMsg, e)
+				{
+					reject(e || errMsg);
+				});
+			});
+		};
+
+		return await doRequest();
+	};
+	
+	// Overrides default mode
+	App.mode = App.MODE_DEVICE;
+	
+	// Automatic sync on conflicts
+	Editor.desktopAutoSync = false;
+	
+	// Disables all external transmission functionality
+	App.prototype.isExternalDataComms = function()
+	{
+		return false;
+	};
+	
+	// Disables preview option in embed dialog
+	EmbedDialog.showPreviewOption = false;
+
+	// Disables new window option in edit diagram dialog
+	EditDiagramDialog.showNewWindowOption = false;
+
+	PrintDialog.previewEnabled = false;
+	
+	PrintDialog.electronPrint = function(editorUi, args)
+	{
+		var graph = editorUi.editor.graph;
+		var file = editorUi.getCurrentFile();
+
+		if (file)
+		{
+			file.updateFileData();
+		}
+
+		var xml = editorUi.getFileData(true, null, null, null,
+			!args.selection, false, null, null, null, false, true);
+		
+		var extras = {globalVars: graph.getExportVariables()};
+
+		if (Graph.translateDiagram)
+		{
+			extras.diagramLanguage = Graph.diagramLanguage;
+		}
+
+		if (args.grid)
+		{
+			extras.grid = {
+				size: graph.gridSize,
+				steps: graph.view.gridSteps,
+				color: graph.view.gridColor
+			};
+		}
+		
+		new mxElectronRequest(&#039;export&#039;, {
+			fileTitle: editorUi.getBaseFilename(true),
+			print: true,
+			format: &#039;pdf&#039;,
+			xml: xml,
+			from: args.pagesFrom - 1,
+			to: args.pagesTo - 1,
+			allPages: args.allPages ? &#039;1&#039; : &#039;0&#039;,
+			pageWidth: graph.pageFormat.width,
+			pageHeight: graph.pageFormat.height,
+			pageScale: 1,
+			fit: args.fit ? &#039;1&#039; : &#039;0&#039;,
+			sheetsAcross: args.sheetsAcross,
+			sheetsDown: args.sheetsDown,
+			scale: args.scale,
+			extras: JSON.stringify(extras),
+			border: null,
+			pageMargin: args.border,
+			crop: args.crop ? &#039;1&#039; : &#039;0&#039;
+		}).send(function(){}, function(){});
+	};
+	
+	var oldWindowOpen = window.open;
+	window.open = async function(url)
+	{
+		// Only open a native electron window when url is empty. We use this in our code in several places.
+		if (url == null)
+		{
+			return oldWindowOpen(url);
+		}
+		else
+		{
+			// Open external will filter urls based on their protocol
+			await requestSync({action: &#039;openExternal&#039;, url: url});
+		}
+	}
+
+	var origAppMain = App.main;
+	
+	App.main = async function()
+	{
+		// Set AutoSave delay
+		var draftSaveDelay = mxSettings.getDraftSaveDelay();
+		
+		if (draftSaveDelay != null)
+		{
+			EditorUi.draftSaveDelay = draftSaveDelay * 1000;
+			EditorUi.enableDrafts = draftSaveDelay &gt; 0;
+		}
+
+		//Load desktop plugins
+		var plugins = (mxSettings.settings != null) ? mxSettings.getPlugins() : null;
+		App.initPluginCallback();
+
+		if (plugins != null &amp;&amp; plugins.length &gt; 0)
+		{
+			// Workaround for body not defined if plugins are used in dev mode
+			if (urlParams[&#039;dev&#039;] == &#039;1&#039;)
+			{
+				EditorUi.debug(&#039;App.main&#039;, &#039;Skipped plugins&#039;, plugins);
+			}
+			else
+			{
+				for (var i = 0; i &lt; plugins.length; i++)
+				{
+					try
+					{
+						if (plugins[i].indexOf(&#039;..&#039;) &gt;= 0)
+						{
+							continue;
+						}
+						else if (plugins[i].startsWith(&#039;/plugins/&#039;))
+						{
+							plugins[i] = &#039;.&#039; + plugins[i];
+						}
+						else if (plugins[i].startsWith(&#039;plugins/&#039;))
+						{
+							plugins[i] = &#039;./&#039; + plugins[i];
+						}
+
+						// External plugins in App Data folder (Needs enabling plugins)
+						if (!plugins[i].startsWith(&#039;./plugins/&#039;))
+						{
+							let pluginFile = await requestSync({
+								action: &#039;getPluginFile&#039;,
+								plugin: plugins[i]
+							});
+							
+							if (pluginFile != null)
+							{
+								plugins[i] = &#039;file://&#039; + pluginFile;
+							}
+							else
+							{
+								continue; //skip not found files
+							}
+						}
+
+						try
+						{
+							mxscript(plugins[i]);
+						}
+						catch (e)
+						{
+							// ignore
+						}
+					}
+					catch (e)
+					{
+						// ignore
+					}
+				}
+			}
+		}
+		
+		//Remove old relaxed CSP and add strict one
+		var allMeta = document.getElementsByTagName(&#039;meta&#039;);
+
+		for (var i = 0; i &lt; allMeta.length; i++)
+		{
+			if (allMeta[i].getAttribute(&#039;http-equiv&#039;) == &#039;Content-Security-Policy&#039;)
+			{
+				allMeta[i].parentNode.removeChild(allMeta[i]);
+			}
+
+			break;
+		}
+
+		mxmeta(null, &#039;default-src \&#039;self\&#039;; connect-src \&#039;self\&#039; https://fonts.googleapis.com https://fonts.gstatic.com; img-src * data:; media-src *; font-src *; style-src \&#039;self\&#039; \&#039;unsafe-inline\&#039; https://fonts.googleapis.com&#039;, &#039;Content-Security-Policy&#039;);
+
+		//Disable web plugins loading
+		urlParams[&#039;plugins&#039;] = &#039;0&#039;;
+		origAppMain.apply(this, arguments);
+	};
+
+	var editorCongigure = Editor.configure;
+	Editor.configure = function(config)
+	{
+		editorCongigure.apply(this, arguments);
+
+		if (config != null)
+		{
+			if (config.desktopAutoSync != null)
+			{
+				Editor.desktopAutoSync = config.desktopAutoSync;
+			}
+		}
+	};
+	
+	var menusInit = Menus.prototype.init;
+	Menus.prototype.init = function()
+	{
+		menusInit.apply(this, arguments);
+
+		var editorUi = this.editorUi;
+		
+		this.put(&#039;openRecent&#039;, new Menu(function(menu, parent)
+		{
+			var recent = editorUi.getRecent();
+
+			if (recent != null)
+			{
+				for (var i = 0; i &lt; recent.length; i++)
+				{
+					(function(entry)
+					{
+						menu.addItem(entry.title, null, function()
+						{
+							function doOpenRecent()
+							{
+								//Simulate opening a file via args
+								editorUi.loadArgs({args: [entry.id]});
+							};
+							
+							var file = editorUi.getCurrentFile();
+							
+							if (file != null &amp;&amp; file.isModified())
+							{
+								editorUi.confirm(mxResources.get(&#039;allChangesLost&#039;), null, doOpenRecent,
+									mxResources.get(&#039;cancel&#039;), mxResources.get(&#039;discardChanges&#039;));
+							}
+							else
+							{
+								doOpenRecent();
+							}
+						}, parent);
+					})(recent[i]);
+				}
+
+				menu.addSeparator(parent);
+			}
+
+			menu.addItem(mxResources.get(&#039;reset&#039;), null, function()
+			{
+				editorUi.resetRecent();
+			}, parent);
+		}));
+		
+		// Replaces file menu to replace openFrom menu with open and rename downloadAs to export
+		this.put(&#039;file&#039;, new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			this.addMenuItems(menu, [&#039;new&#039;, &#039;open&#039;], parent);
+			this.addSubmenu(&#039;openRecent&#039;, menu, parent);
+			this.addMenuItems(menu, [&#039;-&#039;, &#039;synchronize&#039;, &#039;-&#039;, &#039;save&#039;, &#039;saveAs&#039;, &#039;-&#039;, &#039;import&#039;], parent);
+			this.addSubmenu(&#039;exportAs&#039;, menu, parent);
+			menu.addSeparator(parent);
+			this.addSubmenu(&#039;embed&#039;, menu, parent);
+			menu.addSeparator(parent);
+			this.addMenuItems(menu, [&#039;newLibrary&#039;, &#039;openLibrary&#039;], parent);
+
+			var file = editorUi.getCurrentFile();
+			
+			if (file != null &amp;&amp; editorUi.fileNode != null)
+			{
+				var filename = (file.getTitle() != null) ?
+					file.getTitle() : editorUi.defaultFilename;
+				
+				if (!/(\.html)$/i.test(filename) &amp;&amp;
+					!/(\.svg)$/i.test(filename))
+				{
+					this.addMenuItems(menu, [&#039;-&#039;, &#039;properties&#039;]);
+				}
+			}
+			
+			this.addMenuItems(menu, [&#039;-&#039;, &#039;pageSetup&#039;, &#039;print&#039;, &#039;-&#039;, &#039;close&#039;, &#039;-&#039;, &#039;exit&#039;], parent);
+		})));
+	};
+
+	var graphCreateLinkForHint = Graph.prototype.createLinkForHint;
+	
+	Graph.prototype.createLinkForHint = function(href, label, associatedCell)
+	{
+		var a = graphCreateLinkForHint.call(this, href, label, associatedCell);
+		
+		if (href != null &amp;&amp; !this.isCustomLink(href))
+		{
+			// KNOWN: Event with gesture handler mouseUp the middle click opens a framed window
+			mxEvent.addListener(a, &#039;click&#039;, mxUtils.bind(this, function(evt)
+			{
+				this.openLink(a.getAttribute(&#039;href&#039;), a.getAttribute(&#039;target&#039;));
+				mxEvent.consume(evt);
+			}));
+		}
+		
+		return a;
+	};
+	
+	Graph.prototype.openLink = async function(url, target)
+	{
+		await requestSync({action: &#039;openExternal&#039;, url: url});
+	};
+
+	// Initializes the user interface
+	var editorUiInit = EditorUi.prototype.init;
+	EditorUi.prototype.init = async function()
+	{
+		editorUiInit.apply(this, arguments);
+
+		var editorUi = this;
+		var graph = this.editor.graph;
+		
+		electron.registerMsgListener(&#039;isModified&#039;, (uniqueId) =&gt;
+		{
+			const currentFile = editorUi.getCurrentFile();
+			let reply = {isModified: false, draftPath: null, uniqueId: uniqueId};
+
+			if (currentFile != null)
+			{
+				if (editorUi.editor.graph.isEditing())
+				{
+					editorUi.editor.graph.stopEditing();
+				}
+
+				reply.isModified = currentFile.isModified();
+				reply.draftPath = EditorUi.enableDrafts &amp;&amp; currentFile.fileObject? currentFile.fileObject.draftFileName : null;
+			}
+
+			electron.sendMessage(&#039;isModified-result&#039;, reply);
+		});
+
+		electron.registerMsgListener(&#039;removeDraft&#039;, () =&gt;
+		{
+			editorUi.getCurrentFile().removeDraft();
+			electron.sendMessage(&#039;draftRemoved&#039;, {});
+		});
+
+		// Adds support for libraries
+		this.actions.addAction(&#039;newLibrary...&#039;, mxUtils.bind(this, function()
+		{
+			editorUi.showLibraryDialog(null, null, null, null, App.MODE_DEVICE);
+		}));
+		
+		this.actions.addAction(&#039;openLibrary...&#039;, mxUtils.bind(this, function()
+		{
+			editorUi.pickLibrary(App.MODE_DEVICE);
+		}));
+
+		// Replaces import action
+		this.actions.addAction(&#039;import...&#039;, mxUtils.bind(this, async function()
+		{
+			if (editorUi.getCurrentFile() != null)
+			{
+				var lastDir = localStorage.getItem(&#039;.lastImpDir&#039;);
+				
+				var paths = await requestSync({
+					action: &#039;showOpenDialog&#039;,
+					defaultPath: lastDir || (await requestSync(&#039;getDocumentsFolder&#039;)),
+					properties: [&#039;openFile&#039;]
+				});
+			           
+		        if (paths !== undefined &amp;&amp; paths[0] != null)
+		        {
+		        	var path = paths[0];
+		        	localStorage.setItem(&#039;.lastImpDir&#039;, await requestSync({action: &#039;dirname&#039;, path: path}));
+		        	var asImage = /\.png$/i.test(path) || /\.gif$/i.test(path) || /\.jpe?g$/i.test(path);
+		        	var encoding = (asImage || /\.pdf$/i.test(path) || /\.vsdx$/i.test(path) || /\.vssx$/i.test(path)) ?
+		        		&#039;base64&#039; : &#039;utf-8&#039;;
+
+					if (editorUi.spinner.spin(document.body, mxResources.get(&#039;loading&#039;)))
+					{
+						electron.request({action: &#039;readFile&#039;, filename: path, encoding: encoding} , mxUtils.bind(this, function (data)
+				        {
+							try
+							{
+								if (editorUi.isLucidChartData(data))
+								{
+									editorUi.convertLucidChart(data, function(xml)
+									{
+										editorUi.spinner.stop();
+										graph.setSelectionCells(editorUi.importXml(xml));
+									}, function(e)
+									{
+										editorUi.spinner.stop();
+										editorUi.handleError(e);
+									});
+								}
+								else if  (/(\.vsdx)($|\?)/i.test(path))
+								{
+									editorUi.importVisio(editorUi.base64ToBlob(data, &#039;application/octet-stream&#039;), function(xml)
+									{
+										editorUi.spinner.stop();
+										graph.setSelectionCells(editorUi.importXml(xml));
+									});
+								}
+								else if (editorUi.isRemoteFileFormat(data, path))
+								{
+									editorUi.spinner.stop();
+									editorUi.showError(mxResources.get(&#039;error&#039;), mxResources.get(&#039;notInDesktop&#039;));
+								}
+								else
+								{
+									if (/\.pdf$/i.test(path))
+									{
+										var tmp = Editor.extractGraphModelFromPdf(data);
+										
+										if (tmp != null)
+										{
+											data = tmp;
+										}
+									}
+									else if (/\.png$/i.test(path))
+									{
+										var tmp = editorUi.extractGraphModelFromPng(data);
+										
+										if (tmp != null)
+										{
+											asImage = false;
+											data = tmp;
+										}
+									}
+									else if (/\.svg$/i.test(path))
+									{
+										// LATER: Use importXml without throwing exception if no data
+										// Checks if SVG contains content attribute
+										var root = mxUtils.parseXml(data);
+										var svgs = root.getElementsByTagName(&#039;svg&#039;);
+										
+										if (svgs.length &gt; 0)
+										{
+											var svgRoot = svgs[0];
+											var cont = svgRoot.getAttribute(&#039;content&#039;);
+
+											if (cont != null &amp;&amp; cont.charAt(0) != &#039;&lt;&#039; &amp;&amp; cont.charAt(0) != &#039;%&#039;)
+											{
+												cont = unescape((window.atob) ? atob(cont) : Base64.decode(cont, true));
+											}
+											
+											if (cont != null &amp;&amp; cont.charAt(0) == &#039;%&#039;)
+											{
+												cont = decodeURIComponent(cont);
+											}
+
+											if (cont != null &amp;&amp; (cont.substring(0, 8) === &#039;&lt;mxfile &#039; ||
+												cont.substring(0, 14) === &#039;&lt;mxGraphModel &#039;))
+											{
+												asImage = false;
+												data = cont;
+											}
+											else
+											{
+												asImage = true;
+											}
+										}
+									}
+									
+									if (asImage)
+									{
+										var img = new Image();
+										img.onload = function()
+										{
+											editorUi.resizeImage(img, img.src, function(data2, w, h)
+											{
+												editorUi.spinner.stop();
+												var pt = graph.getInsertPoint();
+												graph.setSelectionCell(graph.insertVertex(null, null, &#039;&#039;, pt.x, pt.y, w, h,
+													&#039;shape=image;aspect=fixed;image=&#039; + editorUi.convertDataUri(data2) + &#039;;&#039;));
+											}, true);
+										};
+										
+										img.onerror = function(e)
+										{
+											editorUi.spinner.stop();
+											editorUi.handleError();
+										};
+										
+										var format = path.substring(path.lastIndexOf(&#039;.&#039;) + 1);
+										img.src = (format == &#039;svg&#039;) ? Editor.createSvgDataUri(data) :
+											&#039;data:image/&#039; + format + &#039;;base64,&#039; + data;
+									}
+									else
+									{
+										editorUi.spinner.stop();
+										
+										if (data != null)
+										{
+											graph.setSelectionCells(editorUi.importXml(data));
+										}
+									}
+								}
+							}
+							catch(e)
+							{
+								editorUi.spinner.stop();
+								editorUi.handleError(e);
+							}
+			        	}), function(e)
+						{
+							editorUi.spinner.stop();
+							editorUi.handleError(e);
+						});
+					}
+		        }
+			}
+		}));
+		
+		// Replaces new action
+		var oldNew = this.actions.get(&#039;new&#039;).funct;
+		
+		this.actions.addAction(&#039;new...&#039;, mxUtils.bind(this, function()
+		{
+			if (this.getCurrentFile() == null)
+			{
+				oldNew();
+			}
+			else
+			{
+				electron.sendMessage(&#039;newfile&#039;, {width: 1600});
+			}
+		}), null, null, Editor.ctrlKey + &#039;+N&#039;);
+		
+		this.actions.get(&#039;open&#039;).shortcut = Editor.ctrlKey + &#039;+O&#039;;
+		
+		// Adds shortcut keys for file operations
+		editorUi.keyHandler.bindAction(78, true, &#039;new&#039;); // Ctrl+N
+		editorUi.keyHandler.bindAction(79, true, &#039;open&#039;); // Ctrl+O
+
+		var isFullScreen = await requestSync(&#039;isFullscreen&#039;);
+
+		var fullscreenAction = editorUi.actions.addAction(&#039;fullscreen&#039;, async function()
+		{
+			electron.sendMessage(&#039;toggleFullscreen&#039;);
+			isFullScreen = await requestSync(&#039;isFullscreen&#039;);
+		});
+
+		fullscreenAction.visible = true;
+		fullscreenAction.setToggleAction(true);
+		
+		fullscreenAction.setSelectedCallback(function()
+		{
+			return isFullScreen;
+		});
+		
+		function createGraph()
+		{
+			var graph = new Graph();
+	        graph.setExtendParents(false);
+	        graph.setExtendParentsOnAdd(false);
+	        graph.setConstrainChildren(false);
+	        graph.setHtmlLabels(true);
+	        graph.getModel().maintainEdgeParent = false;
+	        return graph;
+		};
+		
+		async function cloneMxCLipboardToSys()
+		{
+			var cells = mxClipboard.getCells();
+			
+			if (cells &amp;&amp; cells.length &gt; 0)
+			{
+				try
+				{
+					var tmpGraph = createGraph();
+					tmpGraph.importCells(cells, 0, 0, tmpGraph.getDefaultParent());
+					var codec = new mxCodec();
+		            var node = codec.encode(tmpGraph.getModel());
+		            var modelString = mxUtils.getXml(node);
+					await requestSync({
+						action: &#039;clipboardAction&#039;, 
+						method: &#039;writeText&#039;,
+						data: encodeURIComponent(modelString)
+					});
+				}
+				catch(e)
+				{
+					//Ignore
+				} 
+			}
+		};
+		
+		async function cloneSysCLipboardToMx()
+		{
+			try
+			{
+				var modelString = await requestSync({
+					action: &#039;clipboardAction&#039;, 
+					method: &#039;readText&#039;,
+				});
+				
+				if (modelString)
+				{
+					modelString = decodeURIComponent(modelString);
+					var xmlDoc = mxUtils.parseXml(modelString);
+					var tmpGraph = createGraph();
+					var codec = new mxCodec(xmlDoc);
+					var model = tmpGraph.getModel();
+					codec.decode(xmlDoc.documentElement, model);
+					mxClipboard.setCells(model.root.children[0].children);
+				}
+			}
+			catch(e)
+			{
+				//Ignore, the contents of mxClipboard will be used
+			}
+		};
+		
+		//Set system clipboard on menu copy/cut
+		var origCut = this.actions.get(&#039;cut&#039;).funct;
+		
+		editorUi.actions.addAction(&#039;cut&#039;, function()
+		{
+			origCut();
+			cloneMxCLipboardToSys();
+		}, null, &#039;&#039;, Editor.ctrlKey + &#039;+X&#039;);
+		
+		var origCopy = this.actions.get(&#039;copy&#039;).funct;
+		
+		editorUi.actions.addAction(&#039;copy&#039;, function()
+		{
+			origCopy();
+			cloneMxCLipboardToSys();
+		}, null, &#039;&#039;, Editor.ctrlKey + &#039;+C&#039;);
+		
+		//Get data from system clipboard for pase/pasteHere
+		var origPaste = this.actions.get(&#039;paste&#039;).funct;
+		
+		editorUi.actions.addAction(&#039;paste&#039;, function()
+		{
+			cloneSysCLipboardToMx();
+			origPaste();
+		}, false, &#039;&#039;, Editor.ctrlKey + &#039;+V&#039;);
+	
+		var origPasteHere = this.actions.get(&#039;pasteHere&#039;).funct;
+
+		editorUi.actions.addAction(&#039;pasteHere&#039;, function()
+		{
+			cloneSysCLipboardToMx();
+			origPasteHere();
+		});
+		
+		//Enable paste action even if mxClipboard is empty! TODO Is this OK?
+		editorUi.updatePasteActionStates = function()
+		{
+			var graph = this.editor.graph;
+			var paste = this.actions.get(&#039;paste&#039;);
+			var pasteHere = this.actions.get(&#039;pasteHere&#039;);
+			
+			paste.setEnabled(this.editor.graph.cellEditor.isContentEditing() || 
+				(graph.isEnabled() &amp;&amp; !graph.isCellLocked(graph.getDefaultParent())));
+			pasteHere.setEnabled(paste.isEnabled());
+		};
+		
+		editorUi.actions.addAction(&#039;plugins...&#039;, function()
+		{
+			var pluginsMap = {};
+			//Initialize it with plugins in settings
+			var plugins = (mxSettings.settings != null) ? mxSettings.getPlugins() : null;
+
+			if (plugins != null)
+			{
+				for (var i = 0; i &lt; plugins.length; i++)
+				{
+					pluginsMap[plugins[i]] = true;
+				}
+			}
+
+			editorUi.showDialog(new PluginsDialog(editorUi, async function(callback)
+			{
+				var div = document.createElement(&#039;div&#039;);
+				
+				var title = document.createElement(&#039;span&#039;);
+				title.style.marginTop = &#039;6px&#039;;
+				mxUtils.write(title, mxResources.get(&#039;builtinPlugins&#039;) + &#039;: &#039;);
+				div.appendChild(title);
+				
+				var pluginsSelect = document.createElement(&#039;select&#039;);
+				pluginsSelect.style.width = &#039;150px&#039;;
+				
+				for (var i = 0; i &lt; App.publicPlugin.length; i++)
+				{
+					var p = App.publicPlugin[i];
+
+					if  (pluginsMap[App.pluginRegistry[p]]) continue;
+
+					var option = document.createElement(&#039;option&#039;);
+					mxUtils.write(option, p);
+					option.value = p;
+					pluginsSelect.appendChild(option);
+				}
+				
+				div.appendChild(pluginsSelect);
+				mxUtils.br(div);
+				mxUtils.br(div);
+				
+				title = document.createElement(&#039;span&#039;);
+				mxUtils.write(title, mxResources.get(&#039;extPlugins&#039;) + &#039;: &#039;);
+				div.appendChild(title);
+				
+				if (await requestSync(&#039;isPluginsEnabled&#039;))
+				{
+					var extPluginsBtn = mxUtils.button(mxResources.get(&#039;selectFile&#039;) + &#039;...&#039;, async function()
+					{
+						var warningMsgs = mxResources.get(&#039;pluginWarning&#039;).split(&#039;\\n&#039;);
+						var warningMsg = warningMsgs.pop(); //Last line in the message
+
+						if (!warningMsg) 
+						{
+							warningMsg = warningMsgs.pop();
+						}
+
+						if (!confirm(warningMsg)) 
+						{
+							return;
+						}
+						
+						var lastDir = localStorage.getItem(&#039;.lastPluginDir&#039;);
+						
+						var paths = await requestSync({
+							action: &#039;showOpenDialog&#039;,
+							defaultPath: lastDir || (await requestSync(&#039;getDocumentsFolder&#039;)),
+							filters: [
+								{ name: &#039;draw.io Plugins&#039;, extensions: [&#039;js&#039;] },
+								{ name: &#039;All Files&#039;, extensions: [&#039;*&#039;] }
+							],
+							properties: [&#039;openFile&#039;]
+						});
+							
+						if (paths !== undefined &amp;&amp; paths[0] != null)
+						{
+							try
+							{
+								let ret = await requestSync({
+									action: &#039;installPlugin&#039;,
+									filePath: paths[0]
+								});
+
+								localStorage.setItem(&#039;.lastPluginDir&#039;, ret.selDir);
+								callback(ret.pluginName);
+								editorUi.hideDialog();
+							}
+							catch (e)
+							{
+								if (e.message == &#039;fileExists&#039;)
+								{
+									alert(mxResources.get(&#039;fileExists&#039;));
+								}
+								else
+								{
+									alert(&#039;Adding plugin failed.&#039;);
+								}
+							}
+						}
+					});
+					
+					extPluginsBtn.className = &#039;geBtn&#039;;
+					div.appendChild(extPluginsBtn);
+				}
+				else
+				{
+					title = document.createElement(&#039;span&#039;);
+					mxUtils.write(title, mxResources.get(&#039;pluginsDisabled&#039;));
+					div.appendChild(title);
+				}
+							
+				var dlg = new CustomDialog(editorUi, div, mxUtils.bind(this, function()
+				{
+					var newP = App.pluginRegistry[pluginsSelect.value];
+					pluginsMap[newP] = true;
+	        		callback(newP);
+				}));
+				editorUi.showDialog(dlg.container, 300, 125, true, true);
+			},
+			async function(plugin)
+			{
+				delete pluginsMap[plugin];
+				
+				await requestSync({
+					action: &#039;uninstallPlugin&#039;,
+					plugin: plugin
+				});
+			}, true).container, 360, 225, true, false);
+		});
+
+		editorUi.actions.addAction(&#039;exit&#039;, function()
+		{
+			electron.request({
+				action: &#039;exit&#039;
+			});
+		});
+	}
+	
+	var appLoad = App.prototype.load;
+
+	App.prototype.load = function()
+	{
+		appLoad.apply(this, arguments);
+		
+		electron.registerMsgListener(&#039;args-obj&#039;, (argsObj) =&gt;
+		{
+			this.loadArgs(argsObj)
+		})
+
+		//We do some async stuff during app loading so we need to know exactly when loading is finished (it is not when onload is finished)
+		electron.sendMessage(&#039;app-load-finished&#039;, null);
+
+		//Change offline translation
+		mxResources.parse(&#039;notInOffline=&#039; + mxResources.get(&#039;notInDesktop&#039;));
+	}
+	
+	App.prototype.loadArgs = function(argsObj)
+	{
+		var paths = argsObj.args;
+		
+		// If a file is passed, and it is not an argument (has a leading -) 
+		if (paths !== undefined &amp;&amp; paths[0] != null &amp;&amp; paths[0].indexOf(&#039;-&#039;) != 0 &amp;&amp; this.spinner.spin(document.body, mxResources.get(&#039;loading&#039;)))
+		{
+			var path = paths[0];
+			this.hideDialog();
+			
+			var success = mxUtils.bind(this, function(fileEntry, data, stat, name, isModified)
+			{
+				this.spinner.stop();
+				
+				if (data != null)
+				{
+					var file = new LocalFile(this, data, name || &#039;&#039;);
+					file.fileObject = fileEntry;
+					file.stat = stat;
+					file.setModified(isModified? true : false);
+					this.fileLoaded(file);
+				}
+			});
+			
+			var error = mxUtils.bind(this, function(e)
+			{
+				this.spinner.stop();
+				
+				if (e.code === &#039;ENOENT&#039;)
+				{
+					var title = path.replace(/^.*[\\\/]/, &#039;&#039;);
+					var data = this.emptyDiagramXml;
+					var file = new LocalFile(this, data, title, null);
+					
+					file.fileObject = new Object();
+					file.fileObject.path = path;
+					file.fileObject.name = title;
+					file.fileObject.type = &#039;utf-8&#039;;
+					this.fileCreated(file, null, null, null);					
+					this.saveFile();
+				}
+				else
+				{
+					this.handleError(e);
+				}
+				
+			});
+			
+			// Tries to open the file
+			this.readGraphFile(success, error, path);
+		}
+		// If no file is passed, but there is the &quot;create-if-not-exists&quot; flag
+		else if (argsObj.create != null)
+		{
+			var title = &#039;Untitled document&#039;;
+			var data = this.emptyDiagramXml;
+			var file = new LocalFile(this, data, title, null);
+			this.fileCreated(file, null, null, null);
+		}
+		else
+		{
+			this.checkDrafts();
+		}
+	}
+
+	var origFileLoaded = EditorUi.prototype.fileLoaded;
+	
+	EditorUi.prototype.fileLoaded = async function(file)
+	{
+		var oldFile = this.getCurrentFile();
+
+		if (oldFile != null)
+		{
+			//TODO This assumes the user confirmed discarding the file changes to get to this function?
+			if (EditorUi.enableDrafts)
+			{
+				oldFile.removeDraft();
+			}
+		}
+		
+		if (file != null)
+		{
+			if (file.fileObject == null)
+			{
+				var fname = file.getTitle();
+				
+				var fileInfo = openFilesMap[fname];
+				
+				if (fileInfo != null)
+				{
+					file.fileObject = {
+						name: fileInfo.name,
+						path: fileInfo.path,
+						type: fileInfo.type || &#039;utf-8&#039;
+					};
+					//delete it such that it is not used again incorrectly
+					delete openFilesMap[fname];
+				}
+			}
+			
+			if (file.fileObject != null)
+			{
+				file.addToRecent();
+			}
+		}
+
+		this.watchFile(file);
+		origFileLoaded.apply(this, arguments);
+	};
+
+	var origSetCurrentFile = EditorUi.prototype.setCurrentFile;
+
+	EditorUi.prototype.setCurrentFile = function(file)
+	{
+		origSetCurrentFile.apply(this, arguments);
+		this.watchFile(file);
+	};
+
+	// Monitor the given file for changes
+	EditorUi.prototype.watchFile = async function(file)
+	{
+		var newPath = (file != null &amp;&amp; file.fileObject != null &amp;&amp;
+			file == this.getCurrentFile()) ? file.fileObject.path : null;
+		
+		if (this.watchedPath != newPath)
+		{
+			this.unwatchPath(this.watchedPath);
+		}
+
+		if (newPath != null)
+		{
+			this.watchedPath = newPath;
+			this.watchPath(newPath);
+		}
+	};
+	
+	// Unwatches the given path
+	EditorUi.prototype.unwatchPath = async function(path)
+	{
+		if (path != null)
+		{
+			EditorUi.debug(&#039;EditorUi.unwatchPath&#039;, [this], &#039;path&#039;, [path]);
+
+			await requestSync({action: &#039;unwatchFile&#039;, path: path});
+		};
+	};
+
+	// Watches the path for changes
+	EditorUi.prototype.watchPath = async function(path)
+	{
+		if (path != null)
+		{
+			EditorUi.debug(&#039;EditorUi.watchPath&#039;, [this], &#039;path&#039;, [path]);
+
+			await requestSync({
+				action: &#039;watchFile&#039;, 
+				path: path,
+				listener: mxUtils.bind(this, function(curr, prev) 
+				{
+					var file = this.getCurrentFile();
+
+					if (file != null &amp;&amp; file.fileObject != null &amp;&amp;
+						file.fileObject.path == path)
+					{
+						this.handleFileChange(curr, prev, file);
+					}
+				})
+			});
+		}
+	};
+
+	// Uses local picker
+	EditorUi.prototype.handleFileChange = function(curr, prev, file)
+	{
+		// File not deleted, changed (not just accessed) and not already in conflict state
+		if (curr.mtimeMs != 0 &amp;&amp; curr.mtimeMs != prev.mtimeMs &amp;&amp; !file.inConflictState)
+		{
+			//Ignore our own changes
+			if (file.unwatchedSaves || (file.stat != null &amp;&amp; file.stat.mtimeMs == curr.mtimeMs))
+			{
+				file.unwatchedSaves = false;
+				return;
+			}
+
+			EditorUi.debug(&#039;EditorUi.handleFileChange&#039;, [this],
+				&#039;file&#039;, [file], &#039;stat&#039;, [file.stat],
+				&#039;curr&#039;, [curr], &#039;prev&#039;, [prev],
+				&#039;unwatchedSaves&#039;, file.unwatchedSaves);
+			file.inConflictState = true;
+
+			file.addConflictStatus(null, mxUtils.bind(this, function()
+			{
+				file.ui.updateStatus(mxUtils.bind(this, function()
+				{
+					file.ui.editor.setStatus(mxUtils.htmlEntities(
+						mxResources.get(&#039;updatingDocument&#039;)));
+				}));
+
+				file.synchronizeFile(mxUtils.bind(this, function()
+				{
+					file.handleFileSuccess(false);
+				}), mxUtils.bind(this, function(err)
+				{
+					file.handleFileError(err, true);
+				}));
+			}));
+		}
+	};
+
+	// Uses local picker
+	App.prototype.pickFile = function()
+	{
+		var doPickFile = mxUtils.bind(this, function()
+		{
+			this.chooseFileEntry(mxUtils.bind(this, function(fileEntry, data, stat, name, isModified)
+			{
+				var file = new LocalFile(this, data, &#039;&#039;);
+				file.fileObject = fileEntry;
+				file.stat = stat;
+				file.setModified(isModified? true : false);
+				this.fileLoaded(file);
+			}));
+		});
+
+		var file = this.getCurrentFile();
+		
+		if (file != null &amp;&amp; file.isModified())
+		{
+			this.confirm(mxResources.get(&#039;allChangesLost&#039;), null, doPickFile,
+				mxResources.get(&#039;cancel&#039;), mxResources.get(&#039;discardChanges&#039;));
+		}
+		else
+		{
+			doPickFile();
+		}
+	};
+	
+	/**
+	 * Selects a library to load from a picker
+	 * 
+	 * @param mode the device mode, ignored in this case
+	 */
+	App.prototype.pickLibrary = function(mode)
+	{
+		this.chooseFileEntry(mxUtils.bind(this, function(fileEntry, data, stat)
+		{
+			try
+			{
+				var library = new DesktopLibrary(this, data, fileEntry);
+				this.loadLibrary(library);
+				this.showSidebar();
+			}
+			catch (e)
+			{
+				this.handleError(e, mxResources.get(&#039;errorLoadingFile&#039;));
+			}
+		}));
+	};
+	
+	// Uses local picker
+	App.prototype.chooseFileEntry = async function(fn)
+	{
+		var lastDir = localStorage.getItem(&#039;.lastOpenDir&#039;);
+		
+		var paths = await requestSync({
+			action: &#039;showOpenDialog&#039;,
+			defaultPath: lastDir || (await requestSync(&#039;getDocumentsFolder&#039;)),
+			filters: [
+				{ name: &#039;draw.io Diagrams&#039;, extensions: [&#039;drawio&#039;, &#039;xml&#039;, &#039;png&#039;, &#039;svg&#039;, &#039;html&#039;] },
+        	    { name: &#039;VSDX Documents&#039;, extensions: [&#039;vsdx&#039;] },
+        	    { name: &#039;All Files&#039;, extensions: [&#039;*&#039;] }
+			],
+			properties: [&#039;openFile&#039;]
+		});
+	           
+        if (paths !== undefined &amp;&amp; paths[0] != null)
+        {
+        	localStorage.setItem(&#039;.lastOpenDir&#039;, await requestSync({action: &#039;dirname&#039;, path: paths[0]}));
+
+			this.readGraphFile(fn, mxUtils.bind(this, function(err)
+			{
+				this.handleError(err);
+			}), paths[0]);
+        }
+        else
+        {
+        	this.spinner.stop();
+        }
+	};
+	
+	EditorUi.prototype.normalizeFilename = function(title, defaultExtension)
+	{
+		if (!title || typeof title !== &#039;string&#039;)
+		{
+			title = mxResources.get(&#039;untitledDiagram&#039;);
+		}
+
+		var tokens = title.split(&#039;.&#039;);
+		var ext = (tokens.length &gt; 1) ? tokens[tokens.length - 1] : &#039;&#039;;
+		defaultExtension = (defaultExtension != null) ? defaultExtension : &#039;drawio&#039;;
+
+		if (tokens.length == 1 || mxUtils.indexOf([&#039;xml&#039;,
+			&#039;html&#039;, &#039;drawio&#039;, &#039;png&#039;, &#039;svg&#039;], ext) &lt; 0)
+		{
+			tokens.push(defaultExtension);
+		}
+
+		return tokens.join(&#039;.&#039;);
+	};
+
+	//In order not to repeat the logic for opening a file, we collect files information here and use them in openLocalFile
+	var origOpenFiles = EditorUi.prototype.openFiles;
+	var openFilesMap = {};
+	
+	EditorUi.prototype.openFiles = function(files, temp)
+	{
+		openFilesMap = {};
+
+		for (var i = 0; i &lt; files.length; i++)
+		{
+			openFilesMap[files[i].name] = files[i];
+		}
+		
+		origOpenFiles.apply(this, arguments);
+	};
+	
+	App.prototype.readGraphFile = function(fn, fnErr, path, noDraftCheck)
+	{
+		var index = path.lastIndexOf(&#039;.png&#039;);
+		var isPng = index &gt; -1 &amp;&amp; index == path.length - 4;
+		var isVsdx = /\.vsdx$/i.test(path) || /\.vssx$/i.test(path);
+		var encoding = isVsdx? null : ((isPng || /\.pdf$/i.test(path)) ? &#039;base64&#039; : &#039;utf-8&#039;);
+		var fileEntry = new Object(), stat = null;
+		fileEntry.path = path;
+		fileEntry.name = path.replace(/^.*[\\\/]/, &#039;&#039;);
+		fileEntry.type = encoding;
+
+		var checkDrafts = mxUtils.bind(this, function()
+		{
+			if (noDraftCheck) return;
+
+			electron.request({
+				action: &#039;getFileDrafts&#039;,
+				fileObject: fileEntry
+			}, mxUtils.bind(this, function(drafts)
+			{
+				if (drafts.length &gt; 0)
+				{
+					var dlg = new DraftDialog(this, mxResources.get(&#039;unsavedChanges&#039;),
+								(drafts.length &gt; 1) ? null : drafts[0].data, mxUtils.bind(this, async function(index)
+					{
+						index = index || 0;
+						this.hideDialog();
+						fn(fileEntry, drafts[index].data, stat, null, true);
+						await requestSync({action: &#039;deleteFile&#039;, file: drafts[index].path});
+					}), mxUtils.bind(this, async function(index)
+					{
+						index = index || 0;
+						await requestSync({action: &#039;deleteFile&#039;, file: drafts[index].path});
+						this.hideDialog();
+					}), null, null, null, (drafts.length &gt; 1) ? drafts : null);
+					
+					this.showDialog(dlg.container, 640, 480, true, false);
+					
+					dlg.init();
+				}
+			}),
+			mxUtils.bind(this, function(errMsg, err)
+			{
+				//TODO Currently ignored, maybe we should retry?
+			}));
+		});
+
+		var readData = mxUtils.bind(this, function (data)
+		{
+			// VSDX and PDF files are imported instead of being opened
+			if (isVsdx)
+			{
+				var name = fileEntry.name;
+
+				this.importVisio(data, mxUtils.bind(this, function(xml)
+				{
+					var dot = name.lastIndexOf(&#039;.&#039;);
+					
+					if (dot &gt;= 0)
+					{
+						name = name.substring(0, name.lastIndexOf(&#039;.&#039;)) + &#039;.drawio&#039;;
+					}
+					else
+					{
+						name = name + &#039;.drawio&#039;;
+					}
+					
+					if (xml.substring(0, 10) == &#039;&lt;mxlibrary&#039;)
+					{
+						// Creates new temporary file if library is dropped in splash screen
+						if (this.getCurrentFile() == null &amp;&amp; urlParams[&#039;embed&#039;] != &#039;1&#039;)
+						{
+							this.openLocalFile(this.emptyDiagramXml, this.defaultFilename);
+						}
+					
+						try
+						{
+							this.loadLibrary(new LocalLibrary(this, xml, name));
+							this.showSidebar();
+						}
+						catch (e)
+						{
+							this.handleError(e, mxResources.get(&#039;errorLoadingFile&#039;));
+						}
+						
+						fn();
+					}
+					else
+					{
+						fn(null, xml, null, name, false);
+					}
+
+					checkDrafts();
+				}), null, name);
+				
+				return;
+			}
+			else if (/\.pdf$/i.test(path))
+			{
+				var tmp = Editor.extractGraphModelFromPdf(&#039;data:application/pdf;base64,&#039; + data);
+				
+				if (tmp != null)
+				{
+					var name = fileEntry.name;
+
+					if (name.substring(name.length - 4) == &#039;.pdf&#039;)
+					{
+						name = name.substring(0, name.length - 4);
+					}
+
+					name = name.substring(0, name.lastIndexOf(&#039;.&#039;)) + &#039;.drawio&#039;;
+					
+					fn(null, tmp, null, name, false);
+
+					// Fixes ignore filename in above callback
+					var file = this.getCurrentFile();
+
+					if (file != null)
+					{
+						file.rename(name);
+					}
+
+					checkDrafts();
+					return;
+				}
+			}
+			else if (isPng)
+			{
+				// Detecting png by extension. Would need https://github.com/mscdex/mmmagic
+				// to do it by inspection
+				data = this.extractGraphModelFromPng(&#039;data:image/png;base64,&#039; + data);
+			}
+
+			electron.request({action: &#039;fileStat&#039;, file: path}, mxUtils.bind(this, function(stat_p)
+			{
+				stat = stat_p;
+				fn(fileEntry, data, stat, null, false);
+
+				electron.request({action: &#039;isFileWritable&#039;, file: path}, mxUtils.bind(this, function(isWritable)
+				{
+					if (!isWritable)
+					{
+						var file = this.getCurrentFile();
+
+						if (file != null &amp;&amp; file.fileObject != null &amp;&amp; file.fileObject.path == path)
+						{
+							file.setEditable(false);
+							this.updateStatus(mxUtils.bind(this, function()
+							{
+								this.editor.setStatus(&#039;&lt;div class=&quot;geStatusBox&quot; title=&quot;&#039; +
+									mxUtils.htmlEntities(mxResources.get(&#039;readOnly&#039;)) + &#039;&quot;&gt;&#039; +
+									mxUtils.htmlEntities(mxResources.get(&#039;readOnly&#039;)) + &#039;&lt;/div&gt;&#039;);
+							}));						
+						}
+					}
+				}));
+
+				checkDrafts();
+			}), function(errMsg, err)
+			{
+				fnErr(err);
+			});
+		});
+ 
+		electron.request({
+			action: &#039;readFile&#039;,
+			filename: path,
+			encoding: encoding
+		}, readData, function(errMsg, err)
+		{
+			fnErr(err);
+			checkDrafts();
+		});
+	};
+
+	// Disables temp files in Electron
+	var LocalFileCtor = LocalFile;
+	
+	LocalFile = function(ui, data, title, temp)
+	{
+		LocalFileCtor.call(this, ui, data, title, false);
+	};
+
+	mxUtils.extend(LocalFile, LocalFileCtor);
+
+	LocalFile.prototype.getLatestVersion = function(success, error)
+	{
+		if (this.fileObject == null)
+		{
+			if (error != null)
+			{
+				error({message: mxResources.get(&#039;fileNotFound&#039;)});
+			}
+		}
+		else
+		{
+			this.ui.readGraphFile(mxUtils.bind(this, function(fileEntry, data, stat, name, isModified)
+			{
+				var file = new LocalFile(this.ui, data, &#039;&#039;);
+				file.stat = stat;
+				file.setModified(isModified? true : false);
+				success(file);
+			}), error, this.fileObject.path, true);
+		}
+	};
+	
+	// Call save as for copy
+	LocalFile.prototype.copyFile = function(success, error)
+	{
+		this.saveAs(this.ui.getCopyFilename(this), success, error);
+	};
+	
+	/**
+	 * Adds all listeners.
+	 */
+	LocalFile.prototype.getDescriptor = function()
+	{
+		return this.stat;
+	};
+
+	/**
+	* Updates the descriptor of this file with the one from the given file.
+	*/
+	LocalFile.prototype.setDescriptor = function(stat)
+	{
+		this.stat = stat;
+	};
+	
+	LocalFile.prototype.isAutosave = function()
+	{
+		return this.fileObject != null &amp;&amp; DrawioFile.prototype.isAutosave.apply(this, arguments);
+	};
+	
+	LocalFile.prototype.isAutosaveOptional = function()
+	{
+		return this.fileObject != null;
+	};
+	
+	LocalFile.prototype.getTitle = function()
+	{
+		return (this.fileObject != null) ? this.fileObject.name : this.title;
+	};
+
+	LocalFile.prototype.isRenamable = function()
+	{
+		return false;
+	};
+	
+	var autoSaveEnabled = false;
+
+	LocalFile.prototype.save = function(revision, success, error, unloading, overwrite)
+	{
+		if (!this.isEditable())
+		{
+			this.saveAs(this.title, success, error);
+			return;
+		}
+
+		DrawioFile.prototype.save.apply(this, [revision, mxUtils.bind(this, function()
+		{
+			this.saveFile(revision, mxUtils.bind(this, function() 
+			{
+				//Only for first save after auto save is enabled (excluding the save as [overwrite]) 
+				if (autoSaveEnabled &amp;&amp; !overwrite &amp;&amp; EditorUi.enableDrafts)
+				{
+					this.removeDraft();
+				}
+
+				autoSaveEnabled = false;
+				success.apply(this, arguments);
+			}), error, unloading, overwrite);
+		}), error, unloading, overwrite]);
+	};
+
+	LocalFile.prototype.isConflict = function(stat)
+	{
+		return stat != null &amp;&amp; this.stat != null &amp;&amp; stat.mtimeMs != this.stat.mtimeMs;
+	};
+	
+	LocalFile.prototype.saveFile = async function(revision, success, error, unloading, overwrite)
+	{
+		//Safeguard in case saveFile is called from online code in the future
+		if (typeof success !== &#039;function&#039;)
+		{
+			if (typeof unloading === &#039;function&#039;)
+			{
+				//Call error
+				unloading({message: &#039;This is a bug, please report!&#039;}); //Original draw.io function parameters are (title, revision, success, error, useCurrentData)
+			}
+			return;
+		}
+		
+		if (!this.savingFile)
+		{
+			var fn = mxUtils.bind(this, function(fileSavedFn)
+			{
+				var doSave = mxUtils.bind(this, function(data, enc)
+				{
+					var savedData = this.data;
+					
+					// Makes sure no changes get lost while the file is saved
+					this.setShadowModified(false);
+					this.savingFile = true;
+					
+					var errorWrapper = mxUtils.bind(this, function(e)
+					{
+						this.savingFile = false;
+						
+						if (error != null)
+						{
+	        				error(e);
+						}
+					});
+
+					this.unwatchedSaves = true; //Multiple saves doesn&#039;t call watch the same number, so use a boolean and check for changes
+					
+					electron.request({
+						action: &#039;saveFile&#039;,
+						fileObject: this.fileObject,
+						defEnc: enc,
+						data: data,
+						origStat: this.stat,
+						overwrite: overwrite
+					}, mxUtils.bind(this, function(stat)
+					{
+						//No changes during the saving process?
+						this.setModified(this.getShadowModified());
+						this.savingFile = false;
+						var lastDesc = this.stat;
+						this.stat = stat;
+						
+						this.fileSaved(savedData, lastDesc, mxUtils.bind(this, function()
+						{
+							this.ui.watchFile(this);
+							this.contentChanged();
+							
+							if (fileSavedFn != null)
+							{
+								fileSavedFn();
+							}
+
+							if (success != null)
+							{
+								success();
+							}
+						}), error);
+					}), 
+					mxUtils.bind(this, function(errMsg, err)
+					{
+						if (errMsg == &#039;empty data&#039;)
+						{
+							this.ui.handleError({message: mxResources.get(&#039;errorSavingFile&#039;)});
+							errorWrapper();
+						}
+						else if (errMsg == &#039;conflict&#039;)
+						{
+							this.inConflictState = true;
+							errorWrapper();
+						}
+						else
+						{
+							errorWrapper(err || errMsg);
+						}
+					}));
+				});
+	
+				if (!/(\.png)$/i.test(this.fileObject.name))
+				{
+					doSave(this.getData());
+				}
+				else
+				{
+					var p = this.ui.getPngFileProperties(this.ui.fileNode);
+
+					this.ui.getEmbeddedPng(function(data)
+					{
+						doSave(atob(data), &#039;binary&#039;);
+					}, error, null, p.scale, p.border);
+				}
+			});
+			
+			try
+			{
+				if (this.fileObject == null)
+				{
+					var lastDir = localStorage.getItem(&#039;.lastSaveDir&#039;);
+					var name = this.ui.normalizeFilename(this.getTitle(),
+						this.constructor == LocalLibrary ? &#039;xml&#039; : null);
+					var ext = null;
+					
+					if (name != null)
+					{
+						var idx = name.lastIndexOf(&#039;.&#039;);
+						
+						if (idx &gt; 0)
+						{
+							ext = name.substring(idx + 1);
+						}
+					}
+					
+					var path = await requestSync({
+						action: &#039;showSaveDialog&#039;,
+						defaultPath: (lastDir || (await requestSync(&#039;getDocumentsFolder&#039;))) + &#039;/&#039; + name,
+						filters: this.ui.createFileSystemFilters(ext)
+					});
+
+					if (path != null)
+					{
+						localStorage.setItem(&#039;.lastSaveDir&#039;, await requestSync({action: &#039;dirname&#039;, path: path}));
+						this.fileObject = new Object();
+						this.fileObject.path = path;
+						this.fileObject.name = path.replace(/^.*[\\\/]/, &#039;&#039;);
+						this.fileObject.type = &#039;utf-8&#039;;
+						this.title = this.fileObject.name;
+						this.addToRecent();
+						fn(mxUtils.bind(this, function()
+						{
+							if (EditorUi.enableDrafts)
+							{
+								this.removeDraft(true);
+							}
+						}));
+
+						// Updates format panel to show autosave option
+						var editor = this.ui.editor;
+						editor.setAutosave(editor.autosave);
+					}
+					else
+					{
+						this.ui.spinner.stop();
+					}
+				}
+				else
+				{
+					fn();
+				}
+			}
+			catch (e)
+			{
+				error(e);
+			}
+		}
+	};
+
+
+	var origAddConflictStatus = LocalFile.prototype.addConflictStatus;
+
+	LocalFile.prototype.addConflictStatus = function(message, fn)
+	{
+		if (Editor.desktopAutoSync &amp;&amp; this.ui.editor.autosave)
+		{
+			fn();
+		}
+		else
+		{
+			origAddConflictStatus.apply(this, arguments);
+		}
+	};
+
+	LocalFile.prototype.addToRecent = function()
+	{
+		if (this.fileObject == null) return;
+
+		var title = this.fileObject.path;
+				
+		if (title.length &gt; 100)
+		{
+			title = &#039;...&#039; + title.substr(title.length - 97);
+		}
+
+		this.ui.addRecent({id: this.fileObject.path, title: title});
+	};
+
+	LocalFile.prototype.saveAs = async function(title, success, error)
+	{
+		try
+		{
+			var lastDir = (this.fileObject != null &amp;&amp; this.fileObject.path != null) ?
+				await requestSync({action: &#039;dirname&#039;, path: this.fileObject.path}) :
+				localStorage.getItem(&#039;.lastSaveDir&#039;);
+			var name = this.ui.normalizeFilename(this.getTitle(),
+				this.constructor == LocalLibrary ? &#039;xml&#039; : null);
+			var ext = null;
+			
+			if (name != null)
+			{
+				var idx = name.lastIndexOf(&#039;.&#039;);
+				
+				if (idx &gt; 0)
+				{
+					ext = name.substring(idx + 1);
+				}
+			}
+			
+			var path = await requestSync({
+				action: &#039;showSaveDialog&#039;,
+				defaultPath: (lastDir || (await requestSync(&#039;getDocumentsFolder&#039;))) + &#039;/&#039; + name,
+				filters: this.ui.createFileSystemFilters(ext)
+			});
+
+			if (path != null)
+			{
+				localStorage.setItem(&#039;.lastSaveDir&#039;, await requestSync({action: &#039;dirname&#039;, path: path}));
+				this.fileObject = new Object();
+				this.fileObject.path = path;
+				this.fileObject.name = path.replace(/^.*[\\\/]/, &#039;&#039;);
+				this.fileObject.type = &#039;utf-8&#039;;
+				this.title = this.fileObject.name;
+				this.addToRecent();
+				this.setEditable(true); //In case original file is read only
+				this.save(false, mxUtils.bind(this, function()
+				{
+					this.ui.watchFile(this);
+					success();
+				}), error, null, true);
+			}
+		}
+		catch (e)
+		{
+			error(e);
+		}
+	};
+	
+	LocalFile.prototype.saveDraft = function(data)
+	{
+		// Save draft only if file is not saved (prevents creating draft file after actual file is saved)
+		if (!this.isModified()) return;
+
+		if (this.fileObject == null)
+		{
+			//Use indexed db for unsaved files
+			DrawioFile.prototype.saveDraft.apply(this, arguments);
+		}
+		else
+		{
+			EditorUi.debug(&#039;LocalFile.saveDraft&#039;, [this],
+				&#039;fileObject&#039;, [this.fileObject]);
+			
+			electron.request({
+				action: &#039;saveDraft&#039;,
+				fileObject: this.fileObject,
+				data: (data != null) ? data : this.ui.getFileData()
+			}, mxUtils.bind(this, function(draftFileName)
+			{
+				this.fileObject.draftFileName = draftFileName;
+			}), mxUtils.bind(this, function(msg, e)
+			{
+				//TODO Currently ignored, maybe we should retry?
+			}));
+		}
+	};
+
+	LocalFile.prototype.removeDraft = async function(ignoreFileObject)
+	{
+		try
+		{
+			if (ignoreFileObject || this.fileObject == null)
+			{
+				//Use indexed db for unsaved files
+				DrawioFile.prototype.removeDraft.apply(this, arguments);
+			}
+			else if (this.fileObject.draftFileName != null)
+			{
+				EditorUi.debug(&#039;LocalFile.removeDraft&#039;, [this],
+					&#039;draftFileName&#039;, [this.fileObject.draftFileName]);
+				
+				await requestSync({action: &#039;deleteFile&#039;, file: this.fileObject.draftFileName});
+			}
+		}
+		catch (e)
+		{
+			// ignore
+		}
+	};
+
+	LocalLibrary.prototype.addToRecent = function()
+	{
+		// do nothing
+	};
+	
+	/**
+	 * Loads the given file handle as a local file.
+	 */
+	App.prototype.createFileSystemFilters = function(defaultExt)
+	{
+		var ext = [];
+		
+		for (var i = 0; i &lt; this.editor.diagramFileTypes.length; i++)
+		{
+			var obj = {name: mxResources.get(this.editor.diagramFileTypes[i].description) +
+				&#039; (.&#039; + this.editor.diagramFileTypes[i].extension + &#039;)&#039;,
+				extensions: [this.editor.diagramFileTypes[i].extension]};
+			
+			if (this.editor.diagramFileTypes[i].extension == defaultExt)
+			{
+				ext.splice(0, 0, obj);
+			}
+			else
+			{
+				ext.push(obj);
+			}
+		}
+		
+		return ext;
+	};
+	
+	/**
+	 * Loads the given file handle as a local file.
+	 */
+	App.prototype.saveFile = function(forceDialog)
+	{
+		var file = this.getCurrentFile();
+		
+		if (file != null)
+		{
+			if (!forceDialog &amp;&amp; file.getTitle() != null)
+			{
+				file.save(true, mxUtils.bind(this, function()
+				{
+					if (EditorUi.enableDrafts)
+					{
+						file.removeDraft();
+					}
+					
+					file.handleFileSuccess(true);
+				}), mxUtils.bind(this, function(err)
+				{
+					file.handleFileError(err, true);
+				}));
+			}
+			else
+			{
+				let oldFileObject = file.fileObject;
+
+				file.saveAs(null, mxUtils.bind(this, function()
+				{
+					if (EditorUi.enableDrafts)
+					{
+						//Workaround to delete the correct draft as the file object is updated in place
+						let curFileObject = file.fileObject;
+						file.fileObject = oldFileObject;
+						file.removeDraft();
+						file.fileObject = curFileObject;
+					}
+					
+					file.handleFileSuccess(true);
+				}), mxUtils.bind(this, function(err)
+				{
+					file.handleFileError(err, true);
+				}));
+			}
+		}
+	};
+	
+	/**
+	 * Translates this point by the given vector.
+	 */
+	App.prototype.saveLibrary = function(name, images, file, mode, noSpin, noReload, fn)
+	{
+		mode = (mode != null) ? mode : this.mode;
+		noSpin = (noSpin != null) ? noSpin : false;
+		noReload = (noReload != null) ? noReload : false;
+		var xml = this.createLibraryDataFromImages(images);
+		
+		var error = mxUtils.bind(this, function(resp)
+		{
+			this.spinner.stop();
+			
+			if (fn != null)
+			{
+				fn();
+			}
+			
+			// Null means cancel by user and is ignored
+			if (resp != null)
+			{
+				this.handleError(resp, mxResources.get(&#039;errorSavingFile&#039;));
+			}
+		});
+	
+		// Handles special case for local libraries
+		if (file == null)
+		{
+			file = new LocalLibrary(this, xml, name);
+		}
+		
+		if (noSpin || this.spinner.spin(document.body, mxResources.get(&#039;saving&#039;)))
+		{
+			file.setData(xml);
+			
+			var doSave = mxUtils.bind(this, function()
+			{
+				file.save(true, mxUtils.bind(this, function(resp)
+				{
+					this.spinner.stop();
+					this.hideDialog(true);
+					
+					if (!noReload)
+					{
+						this.libraryLoaded(file, images)
+					}
+					
+					if (fn != null)
+					{
+						fn();
+					}
+				}), error);
+			});
+			
+			if (name != file.getTitle())
+			{
+				var oldHash = file.getHash();
+				
+				file.rename(name, mxUtils.bind(this, function(resp)
+				{
+					// Change hash in stored settings
+					if (file.constructor != LocalLibrary &amp;&amp; oldHash != file.getHash())
+					{
+						mxSettings.removeCustomLibrary(oldHash);
+						mxSettings.addCustomLibrary(file.getHash());
+					}
+	
+					// Workaround for library files changing hash so
+					// the old library cannot be removed from the
+					// sidebar using the updated file in libraryLoaded
+					this.removeLibrarySidebar(oldHash);
+	
+					doSave();
+				}), error)
+			}
+			else
+			{
+				doSave();
+			}
+		}
+	};
+	
+	App.prototype.checkForUpdates = function()
+	{
+		electron.sendMessage(&#039;checkForUpdates&#039;);
+	};
+	
+	App.prototype.toggleSpellCheck = function()
+	{
+		electron.sendMessage(&#039;toggleSpellCheck&#039;);
+	};
+
+	App.prototype.toggleStoreBkp = function()
+	{
+		electron.sendMessage(&#039;toggleStoreBkp&#039;);
+	};
+	
+	App.prototype.toggleGoogleFonts = function()
+	{
+		electron.sendMessage(&#039;toggleGoogleFonts&#039;);
+	};
+
+	App.prototype.openDevTools = function()
+	{
+		electron.sendMessage(&#039;openDevTools&#039;);
+	};
+		
+	App.prototype.desktopZoomIn = function()
+	{
+		electron.sendMessage(&#039;zoomIn&#039;);
+	};
+
+	App.prototype.desktopZoomOut = function()
+	{
+		electron.sendMessage(&#039;zoomOut&#039;);
+	};
+
+	App.prototype.desktopResetZoom = function()
+	{
+		electron.sendMessage(&#039;resetZoom&#039;);
+	};
+
+	/**
+	 * Copies the given cells and XML to the clipboard as an embedded image.
+	 */
+	EditorUi.prototype.writeImageToClipboard = async function(dataUrl, w, h, type, success, error)
+	{
+		try
+		{
+			await requestSync({
+				action: &#039;clipboardAction&#039;, 
+				method: &#039;writeImage&#039;,
+				data: {dataUrl: dataUrl, w: w, h: h}
+			});
+
+			if (success != null)
+			{
+				success();
+			}
+		}
+		catch (e)
+		{
+			if (error != null)
+			{
+				error(e);
+			}
+		}
+	};
+
+	/**
+	 * Updates action states depending on the selection.
+	 */
+	var editorUiUpdateActionStates = EditorUi.prototype.updateActionStates;
+	EditorUi.prototype.updateActionStates = function()
+	{
+		editorUiUpdateActionStates.apply(this, arguments);
+
+		var file = this.getCurrentFile();
+		var syncEnabled = file != null &amp;&amp; file.fileObject != null;
+		this.actions.get(&#039;synchronize&#039;).setEnabled(syncEnabled);
+	};
+	
+	EditorUi.prototype.saveLocalFile = function(data, filename, mimeType, base64Encoded, format, allowBrowser)
+	{
+		this.saveData(filename, format, data, mimeType, base64Encoded);
+	};
+	
+	EditorUi.prototype.saveRequest = function(filename, format, fn, data, base64Encoded, mimeType)
+	{
+		var xhr = fn(filename, &#039;1&#039;);
+		
+		if (xhr != null &amp;&amp; this.spinner.spin(document.body, mxResources.get(&#039;saving&#039;)))
+		{
+			xhr.send(mxUtils.bind(this, function()
+			{
+				this.spinner.stop();
+				
+				if (xhr.getStatus() &gt;= 200 &amp;&amp; xhr.getStatus() &lt;= 299)
+				{
+					this.saveData(filename, format, xhr.getText(), mimeType, true);
+				}
+				else
+				{
+					this.handleError({message: mxResources.get(&#039;errorSavingFile&#039;)});
+				}
+			}), mxUtils.bind(this, function(resp)
+			{
+				this.spinner.stop();
+				this.handleError(resp);
+			}));
+		}
+	};
+
+	function mxElectronRequest(reqType, reqObj)
+	{
+		this.reqType = reqType;
+		this.reqObj = reqObj;
+	};
+
+	//Extends mxXmlRequest
+	mxUtils.extend(mxElectronRequest, mxXmlRequest);
+	
+	mxElectronRequest.prototype.send = function(callback, error)
+	{
+		electron.sendMessage(this.reqType, this.reqObj);
+		
+		electron.listenOnce(this.reqType + &#039;-success&#039;, (data) =&gt; 
+		{
+			this.response = data;
+			callback();
+			electron.sendMessage(this.reqType + &#039;-finalize&#039;);
+		})
+
+		electron.listenOnce(this.reqType + &#039;-error&#039;, (err) =&gt; 
+		{
+			this.hasError = true;
+			error(err);
+			electron.sendMessage(this.reqType + &#039;-finalize&#039;);
+		})
+	};
+	
+	mxElectronRequest.prototype.getStatus = function()
+	{
+		return this.hasError? 500 : 200; 
+	}
+	
+	mxElectronRequest.prototype.getText = function()
+	{
+		return this.response;
+	}
+	
+	// Direct export to pdf
+	EditorUi.prototype.createDownloadRequest = function(filename, format, ignoreSelection, base64,
+		transparent, currentPage, scale, border, grid, includeXml, pageRange, w, h, crop, margin,
+		fit, sheetsAcross, sheetsDown, shadows)
+	{
+		var params = this.downloadRequestBuilder(filename, format, ignoreSelection, base64,
+			transparent, currentPage, scale, border, grid, includeXml, pageRange, w, h, crop,
+			margin, fit, sheetsAcross, sheetsDown, shadows);
+		
+		return new mxElectronRequest(&#039;export&#039;, params);
+	};
+	
+	var origSetAutosave = Editor.prototype.setAutosave;
+
+	Editor.prototype.setAutosave = function(value)
+	{
+		autoSaveEnabled = value;
+		return origSetAutosave.apply(this, arguments);
+	}
+
+	//Export Dialog Pdf case
+	var origExportFile = ExportDialog.exportFile;
+	
+	ExportDialog.exportFile = function(editorUi, name, format, bg, s, b, dpi)
+	{
+		var graph = editorUi.editor.graph;
+		
+		if (format == &#039;xml&#039; || format == &#039;svg&#039;)
+		{
+			return origExportFile.apply(this, arguments);
+		}
+		else
+		{
+			var data = editorUi.getFileData(true, null, null, null, null, true);
+    		var bounds = graph.getGraphBounds();
+			var w = Math.floor(bounds.width * s / graph.view.scale);
+			var h = Math.floor(bounds.height * s / graph.view.scale);
+			
+			editorUi.hideDialog();
+			
+			if ((format == &#039;png&#039; || format == &#039;jpg&#039; || format == &#039;jpeg&#039;) &amp;&amp;
+				editorUi.editor.isExportToCanvas())
+			{
+				if (format == &#039;png&#039;)
+				{
+					editorUi.exportImage(s, bg == null || bg == &#039;none&#039;, true,
+				   		false, false, b, true, false, null, null, dpi);
+				}
+				else 
+				{
+					editorUi.exportImage(s, false, true, false,
+						false, b, true, false, &#039;jpeg&#039;);
+				}
+			}
+			else 
+			{
+				var extras = {globalVars: graph.getExportVariables()};
+				
+				if (Graph.translateDiagram)
+				{
+					extras.diagramLanguage = Graph.diagramLanguage;
+				}
+
+				editorUi.saveRequest(name, format,
+					function(newTitle, base64)
+					{
+						return new mxElectronRequest(&#039;export&#039;, {
+							format: format,
+							xml: data,
+							bg: (bg != null) ? bg : mxConstants.NONE,
+							filename: (newTitle != null) ? newTitle : null,
+							w: w,
+							h: h,
+							border: b,
+							base64: (base64 || &#039;0&#039;),
+							extras: JSON.stringify(extras),
+							dpi: dpi &gt; 0? dpi : null
+						}); 
+					});
+			}
+		}
+	};
+	
+	EditorUi.prototype.saveData = async function(filename, format, data, mimeType, base64Encoded)
+	{
+		var resume = (this.spinner != null &amp;&amp; this.spinner.pause != null) ? this.spinner.pause() : function() {};
+		var lastDir = localStorage.getItem(&#039;.lastExpDir&#039;);
+		
+		// Spinner.stop is asynchronous so we must invoke save dialog asynchronously
+		// to give the spinner some time to stop spinning
+		window.setTimeout(mxUtils.bind(this, async function()
+		{
+			var dlgConfig = {
+				action: &#039;showSaveDialog&#039;,
+				defaultPath: (lastDir || (await requestSync(&#039;getDocumentsFolder&#039;))) + &#039;/&#039; + filename
+			};
+			var filters = null;
+			
+			switch (format)
+			{
+				case &#039;xmlpng&#039;:
+				case &#039;png&#039;:
+					filters = [
+				          { name: &#039;PNG Images&#039;, extensions: [&#039;png&#039;] }
+				       ];
+				break;
+				case &#039;jpg&#039;:
+				case &#039;jpeg&#039;:
+					filters = [
+				          { name: &#039;JPEG Images&#039;, extensions: [&#039;jpg&#039;, &#039;jpeg&#039;] }
+				       ];
+				break;
+				case &#039;svg&#039;:
+					filters = [
+				          { name: &#039;SVG Images&#039;, extensions: [&#039;svg&#039;] }
+				       ];
+				break;
+				case &#039;pdf&#039;:
+					filters = [
+				          { name: &#039;PDF Documents&#039;, extensions: [&#039;pdf&#039;] }
+				       ];
+				break;
+				case &#039;vsdx&#039;:
+					filters = [
+				          { name: &#039;VSDX Documents&#039;, extensions: [&#039;vsdx&#039;] }
+				       ];
+				break;
+				case &#039;html&#039;:
+					filters = [
+				          { name: &#039;HTML Documents&#039;, extensions: [&#039;html&#039;] }
+				       ];
+				break;
+				case &#039;xml&#039;:
+					filters = [
+				          { name: &#039;XML Documents&#039;, extensions: [&#039;xml&#039;] }
+				       ];
+				break;
+				case &#039;txt&#039;:
+					filters = [
+				          { name: &#039;Plain Text&#039;, extensions: [&#039;txt&#039;] }
+				       ];
+				break;
+			};
+			
+			dlgConfig[&#039;filters&#039;] = filters;
+			//showSaveDialog
+			var path = await requestSync(dlgConfig);
+
+	        if (path != null)
+	        {
+	        	localStorage.setItem(&#039;.lastExpDir&#039;, await requestSync({action: &#039;dirname&#039;, path: path}));
+
+	        	if (data == null || data.length == 0)
+				{
+					this.handleError({message: mxResources.get(&#039;errorSavingFile&#039;)});
+				}
+				else
+				{
+					resume();
+					
+					electron.request({
+						action: &#039;writeFile&#039;,
+						path: path,
+						data: data,
+						enc: (base64Encoded) ? &#039;base64&#039; : &#039;utf-8&#039;
+					}, mxUtils.bind(this, function ()
+				    {
+						this.spinner.stop();
+		        	}), mxUtils.bind(this, function (e)
+				    {
+						this.spinner.stop();
+						this.handleError(e, mxResources.get(&#039;errorSavingFile&#039;));
+		        	}));
+				}
+			}
+		}), 50);
+	};
+
+	EditorUi.prototype.addBeforeUnloadListener = function() {};
+	
+	EditorUi.prototype.loadDesktopLib = function(libPath, success, error)
+	{
+		this.readGraphFile(mxUtils.bind(this, function(fileEntry, data, stat)
+		{
+			var library = new DesktopLibrary(this, data, fileEntry);
+			this.loadLibrary(library);
+			this.showSidebar();
+			success(library);
+		}), error, libPath);
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

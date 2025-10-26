@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\Minimal.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\Minimal.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">62.64</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">797</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">58.99</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">8.80</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+/**
+ * Installing theme.
+ */
+Editor.themes.push(&#039;min&#039;);
+
+/**
+ * Testing dockable windows.
+ */
+EditorUi.windowed = urlParams[&#039;windows&#039;] != &#039;0&#039;;
+
+/**
+ * Code for the minimal UI theme.
+ */
+EditorUi.initMinimalTheme = function()
+{
+	// Disabled in lightbox and chromeless mode
+	if (urlParams[&#039;lightbox&#039;] == &#039;1&#039; || urlParams[&#039;chrome&#039;] == &#039;0&#039; || typeof window.Format === &#039;undefined&#039; || typeof window.Menus === &#039;undefined&#039;)
+	{
+		window.uiTheme = null;
+		
+		return;
+	}
+	
+	var iw = 0;
+
+	try
+	{
+		iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+	}
+	catch (e)
+	{
+		// ignore
+	}
+
+	Menus.prototype.autoPopup = false;
+
+	function toggleFormat(ui, visible)
+	{
+		if (EditorUi.windowed)
+		{
+			var graph = ui.editor.graph;
+			graph.popupMenuHandler.hideMenu();
+			
+			if (ui.formatWindow == null)
+			{
+				var x = Math.max(10, ui.diagramContainer.clientWidth - 248);
+				var y = 60;
+				var h = Math.min(566, graph.container.clientHeight - 10);
+
+				ui.formatWindow = new WrapperWindow(ui, &#039;&#039;, x, y, 240, h,
+					function(container)
+				{
+					container.className = &#039;geSidebarContainer geFormatContainer&#039;;
+					var format = ui.createFormat(container);
+					format.init();
+				});
+
+				ui.dependsOnLanguage(mxUtils.bind(this, function()
+				{
+					ui.formatWindow.window.setTitle(mxResources.get(&#039;format&#039;));
+				}));
+
+				ui.formatWindow.window.addListener(mxEvent.SHOW, mxUtils.bind(this, function()
+				{
+					ui.formatWindow.window.fit();
+				}));
+				
+				ui.formatWindow.window.minimumSize = new mxRectangle(0, 0, 240, 80);
+			}
+			else
+			{
+				ui.formatWindow.window.setVisible((visible != null) ?
+					visible : !ui.formatWindow.window.isVisible());
+			}
+		}
+		else
+		{
+			if (ui.formatElt == null)
+			{
+				ui.formatElt = ui.createSidebarContainer();
+				var format = ui.createFormat(ui.formatElt);
+				format.init();
+				ui.formatElt.style.border = &#039;none&#039;;
+				ui.formatElt.style.width = &#039;240px&#039;;
+				ui.formatElt.style.borderLeftWidth = &#039;1px&#039;;
+				ui.formatElt.style.borderLeftStyle = &#039;solid&#039;;
+				ui.formatElt.style.right = &#039;0px&#039;;
+			}
+
+			var wrapper = ui.diagramContainer.parentNode;
+
+			if (ui.formatElt.parentNode != null)
+			{
+				ui.formatElt.parentNode.removeChild(ui.formatElt);
+				wrapper.style.right = &#039;0px&#039;;
+			}
+			else
+			{
+				wrapper.parentNode.appendChild(ui.formatElt);
+				wrapper.style.right = ui.formatElt.style.width;
+			}
+		}
+	};
+
+	function toggleShapes(ui, visible)
+	{
+		if (EditorUi.windowed)
+		{
+			var graph = ui.editor.graph;
+			graph.popupMenuHandler.hideMenu();
+	
+			if (ui.sidebarWindow == null)
+			{
+				var w = Math.min(graph.container.clientWidth - 10, 218);
+				var h = Math.min(graph.container.clientHeight - 40, 650);
+				
+				ui.sidebarWindow = new WrapperWindow(ui, &#039;&#039;, 10, 56, w - 6, h - 6,
+					function(container)
+				{
+					ui.createShapesPanel(container);
+				});
+
+				ui.dependsOnLanguage(mxUtils.bind(this, function()
+				{
+					ui.sidebarWindow.window.setTitle(mxResources.get(&#039;shapes&#039;));
+				}));
+				
+				ui.sidebarWindow.window.addListener(mxEvent.SHOW, mxUtils.bind(this, function()
+				{
+					ui.sidebarWindow.window.fit();
+				}));
+	
+				ui.sidebarWindow.window.minimumSize = new mxRectangle(0, 0, 90, 90);
+				ui.sidebarWindow.window.setVisible(true);
+
+				if (isLocalStorage)
+				{
+					ui.getLocalData(&#039;sidebar&#039;, function(value)
+					{
+						ui.sidebar.showEntries(value, null, true);
+					});
+				}
+				
+				ui.restoreLibraries();
+			}
+			else
+			{
+				ui.sidebarWindow.window.setVisible((visible != null) ?
+					visible : !ui.sidebarWindow.window.isVisible());
+			}
+		}
+		else
+		{
+			if (ui.sidebarElt == null)
+			{
+				ui.sidebarElt = ui.createSidebarContainer();
+				ui.createShapesPanel(ui.sidebarElt);
+				ui.sidebarElt.style.border = &#039;none&#039;;
+				ui.sidebarElt.style.width = &#039;210px&#039;;
+				ui.sidebarElt.style.borderRight = &#039;1px solid gray&#039;;
+			}
+
+			var wrapper = ui.diagramContainer.parentNode;
+
+			if (ui.sidebarElt.parentNode != null)
+			{
+				ui.sidebarElt.parentNode.removeChild(ui.sidebarElt);
+				wrapper.style.left = &#039;0px&#039;;
+			}
+			else
+			{
+				wrapper.parentNode.appendChild(ui.sidebarElt);
+				wrapper.style.left = ui.sidebarElt.style.width;
+			}
+		}
+	};
+	
+    // Changes colors for some UI elements
+	var fill = &#039;#29b6f2&#039;;
+	mxConstraintHandler.prototype.pointImage = Graph.createSvgImage(5, 5,
+		&#039;&lt;path d=&quot;m 0 0 L 5 5 M 0 5 L 5 0&quot; stroke-width=&quot;2&quot; style=&quot;stroke-opacity:0.4&quot; stroke=&quot;#ffffff&quot;/&gt;&#039; +
+		&#039;&lt;path d=&quot;m 0 0 L 5 5 M 0 5 L 5 0&quot; stroke=&quot;&#039; + fill + &#039;&quot;/&gt;&#039;);
+	mxOutline.prototype.sizerImage = null;
+	
+	mxConstants.VERTEX_SELECTION_COLOR = &#039;#C0C0C0&#039;;
+	mxConstants.EDGE_SELECTION_COLOR = &#039;#C0C0C0&#039;;
+	mxConstants.CONNECT_HANDLE_FILLCOLOR = &#039;#cee7ff&#039;;
+	mxConstants.DEFAULT_VALID_COLOR = fill;
+	mxConstants.GUIDE_COLOR = &#039;#C0C0C0&#039;;
+	mxConstants.OUTLINE_COLOR = &#039;#29b6f2&#039;;
+	mxConstants.OUTLINE_HANDLE_FILLCOLOR = &#039;#29b6f2&#039;;
+	mxConstants.OUTLINE_HANDLE_STROKECOLOR = &#039;#fff&#039;;
+
+	Graph.prototype.svgShadowColor = &#039;#3D4574&#039;;
+	Graph.prototype.svgShadowOpacity = &#039;0.4&#039;;
+	Graph.prototype.svgShadowSize = &#039;0.6&#039;;
+	Graph.prototype.svgShadowBlur = &#039;1.2&#039;;
+	
+	mxRubberband.prototype.defaultOpacity = 50;
+	HoverIcons.prototype.inactiveOpacity = 25;
+	EditorUi.prototype.closableScratchpad = false;
+	Graph.prototype.editAfterInsert = !mxClient.IS_IOS &amp;&amp; !mxClient.IS_ANDROID;
+	
+	/**
+     * Sets the XML node for the current diagram.
+     */
+    Editor.prototype.isChromelessView = function()
+    {
+    	return false;
+    };
+
+    /**
+     * Sets the XML node for the current diagram.
+     */
+    Graph.prototype.isLightboxView = function()
+    {
+    	return false;
+    };
+	
+    // Overridden to update save menu state
+	/**
+	 * Updates action states depending on the selection.
+	 */
+	var editorUiUpdateActionStates = EditorUi.prototype.updateActionStates;
+	
+	EditorUi.prototype.updateActionStates = function()
+	{
+		editorUiUpdateActionStates.apply(this, arguments);
+
+		this.menus.get(&#039;save&#039;).setEnabled(this.getCurrentFile() != null || urlParams[&#039;embed&#039;] == &#039;1&#039;);
+	};
+
+    // Hides keyboard shortcuts in menus
+    var menusAddShortcut = Menus.prototype.addShortcut; 
+    
+    Menus.prototype.addShortcut = function(item, action)
+    {
+        if (action.shortcut != null &amp;&amp; iw &lt; 900 &amp;&amp; !mxClient.IS_IOS)
+        {
+            var td = item.firstChild.nextSibling;
+            td.setAttribute(&#039;title&#039;, action.shortcut);
+        }
+        else
+        {
+        	menusAddShortcut.apply(this, arguments);
+        }
+    };
+	
+    // Overridden to toggle window instead
+    EditorUi.prototype.toggleFormatPanel = function(visible)
+    {
+        if (this.formatWindow != null)
+        {
+        	this.formatWindow.window.setVisible((visible != null) ?
+        		visible : !this.formatWindow.window.isVisible());
+        }
+        else
+        {
+        	toggleFormat(this);
+        }
+    };
+	
+    EditorUi.prototype.isFormatPanelVisible = function()
+    {
+		return (this.formatWindow != null &amp;&amp; this.formatWindow.window.isVisible()) ||
+			(this.formatWindow == null &amp;&amp; this.formatWidth &gt; 0);
+    };
+	
+	// Initializes the user interface
+	var editorUiDestroy = EditorUi.prototype.destroy;
+	EditorUi.prototype.destroy = function()
+	{
+		this.destroyWindows();
+		editorUiDestroy.apply(this, arguments);
+	};
+	
+	// Hides windows when a file is closed
+	var editorUiSetGraphEnabled = EditorUi.prototype.setGraphEnabled;
+	
+	EditorUi.prototype.setGraphEnabled = function(enabled)
+	{
+		editorUiSetGraphEnabled.apply(this, arguments);
+		
+		if (!enabled)
+		{
+			if (this.sidebarWindow != null)
+            {
+            	this.sidebarWindow.window.setVisible(false);
+            }
+
+            if (this.formatWindow != null)
+            {
+            	this.formatWindow.window.setVisible(false);
+            }
+		}
+		else
+		{
+			var iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+			if (iw &gt;= 1000 &amp;&amp; this.sidebarWindow != null)
+            {
+                this.sidebarWindow.window.setVisible(true);
+            }
+            
+            if (this.formatWindow != null &amp;&amp; iw &gt;= 1000)
+            {
+            	this.formatWindow.window.setVisible(true);
+            }
+		}
+	};
+	
+    // Disables centering of graph after iframe resize
+	EditorUi.prototype.chromelessWindowResize = function() {};
+	
+	// Installs the format toolbar
+	EditorUi.prototype.installFormatToolbar = function(container)
+	{
+		var graph = this.editor.graph;
+		var div = document.createElement(&#039;div&#039;);
+		
+		div.style.cssText = &#039;position:absolute;top:10px;z-index:1;border-radius:4px;&#039; +
+			&#039;box-shadow:0px 0px 3px 1px #d1d1d1;padding:6px;white-space:nowrap;background-color:#fff;&#039; +
+			&#039;transform:translate(-50%, 0);left:50%;&#039;;
+		
+		graph.getSelectionModel().addListener(mxEvent.CHANGE, mxUtils.bind(this, function(sender, evt)
+		{
+			if (graph.getSelectionCount() &gt; 0)
+			{
+				container.appendChild(div);
+				div.innerHTML = &#039;Selected: &#039; + graph.getSelectionCount();
+			}
+			else if (div.parentNode != null)
+			{
+				div.parentNode.removeChild(div);
+			}
+		}));
+	};
+
+	var formatWindowInitialized = false;
+
+	EditorUi.prototype.initFormatWindow = function()
+	{
+		if (!formatWindowInitialized &amp;&amp; this.formatWindow != null)
+		{
+			formatWindowInitialized = true;
+
+			var toggleMinimized = this.formatWindow.window.toggleMinimized;
+			var w = 240;
+			
+			this.formatWindow.window.toggleMinimized = function()
+			{
+				toggleMinimized.apply(this, arguments);
+				
+				if (this.minimized)
+				{
+					w = parseInt(this.div.style.width);
+					this.div.style.width = &#039;140px&#039;;
+					this.table.style.width = &#039;140px&#039;;
+					this.div.style.left = (parseInt(this.div.style.left) + w - 140) + &#039;px&#039;;
+				}
+				else
+				{
+					this.div.style.width = w + &#039;px&#039;;
+					this.table.style.width = this.div.style.width;
+					this.div.style.left = (Math.max(0, parseInt(this.div.style.left) - w + 140)) + &#039;px&#039;;
+				}
+				
+				this.fit();
+			};
+			
+			mxEvent.addListener(this.formatWindow.window.title, &#039;dblclick&#039;, mxUtils.bind(this, function(evt)
+			{
+				if (mxEvent.getSource(evt) == this.formatWindow.window.title)
+				{
+					this.formatWindow.window.toggleMinimized();
+				}
+			}));
+		}
+	};
+	
+	// Initializes the user interface
+	var editorUiInit = EditorUi.prototype.init;
+
+	EditorUi.prototype.init = function()
+	{
+		editorUiInit.apply(this, arguments);
+
+		var node = (mxUtils.isAncestorNode(document.body, this.container)) ?
+			this.container : this.editor.graph.container;
+		
+		if (node != null)
+		{
+			node.classList.add(&#039;geSimple&#039;);
+			node.classList.add(&#039;geMinimal&#039;);
+			node.classList.remove(&#039;geClassic&#039;);
+		}
+		
+		this.sidebar = this.createSidebar(this.sidebarContainer);
+		
+		if (iw &gt;= 1000 || urlParams[&#039;clibs&#039;] != null || urlParams[&#039;libs&#039;] != null ||
+			urlParams[&#039;search-shapes&#039;] != null)
+		{
+			toggleShapes(this, true);
+			
+			if (this.sidebar != null &amp;&amp; urlParams[&#039;search-shapes&#039;] != null &amp;&amp; this.sidebar.searchShapes != null)
+			{
+				this.sidebar.searchShapes(urlParams[&#039;search-shapes&#039;]);
+				this.sidebar.showEntries(&#039;search&#039;);
+			}
+		}
+		
+		if (EditorUi.windowed &amp;&amp; iw &gt;= 1000)
+		{
+			toggleFormat(this, true);
+			this.formatWindow.window.setVisible(true);
+		}
+        
+		// Needed for creating elements in Format panel
+		var ui = this;
+		var graph = ui.editor.graph;
+		ui.toolbar = this.createToolbar(ui.createDiv(&#039;geToolbar&#039;));
+		var menubar = document.createElement(&#039;div&#039;);
+		menubar.className = &#039;geMenubarContainer&#039;;
+		var menuObj = new Menubar(ui, menubar);
+
+		function addMenu(id, small, img)
+		{
+			var menu = ui.menus.get(id);
+
+			var elt = menuObj.addMenu(mxResources.get(id), mxUtils.bind(this, function()
+			{
+				menu.funct.apply(this, arguments);
+			}));
+            
+			elt.className = &#039;geButton&#039;;
+			elt.setAttribute(&#039;title&#039;, mxResources.get(id));
+			ui.menus.menuCreated(menu, elt, &#039;geButton&#039;);
+            
+			if (img != null)
+			{
+				elt.style.backgroundImage = &#039;url(&#039; + img + &#039;)&#039;;
+				elt.innerText = &#039;&#039;;
+			}
+
+			return elt;
+		};
+        
+		function addMenuItem(label, fn, small, tooltip, action, img)
+		{
+			var btn = document.createElement(&#039;a&#039;);
+			btn.className = &#039;geButton&#039;;
+			menubar.appendChild(btn);
+            
+			if (img != null)
+			{
+				btn.style.backgroundImage = &#039;url(&#039; + img + &#039;)&#039;;
+			}
+			else
+			{
+				mxUtils.write(btn, label);
+			}
+            
+            mxEvent.addListener(btn, &#039;click&#039;, function(evt)
+            {
+            	if (btn.getAttribute(&#039;disabled&#039;) != &#039;disabled&#039;)
+            	{
+            		fn(evt);
+            	}
+            	
+                mxEvent.consume(evt);
+            });
+
+			mxEvent.preventDefault(btn);
+            
+            if (tooltip != null)
+            {
+                btn.setAttribute(&#039;title&#039;, tooltip);
+            }
+
+            if (action != null)
+            {
+                function updateState()
+                {
+                    if (action.isEnabled())
+                    {
+                        btn.removeAttribute(&#039;disabled&#039;);
+                    }
+                    else
+                    {
+                        btn.setAttribute(&#039;disabled&#039;, &#039;disabled&#039;);
+                    }
+                };
+                
+                action.addListener(&#039;stateChanged&#039;, updateState);
+				graph.addListener(&#039;enabledChanged&#039;, updateState);
+                updateState();
+            }
+           
+            return btn;
+        };
+        
+        function createGroup(btns, op, container)
+        {
+            var btnGroup = document.createElement(&#039;div&#039;);
+            btnGroup.className = &#039;geButtonGroup&#039;;
+
+            for (var i = 0; i &lt; btns.length; i++)
+            {
+            	if (btns[i] != null)
+            	{
+	                btnGroup.appendChild(btns[i]);
+            	}
+            }
+            
+			menubar.appendChild(btnGroup);
+            
+            return btnGroup;
+        };
+		
+		function updateTitle()
+		{
+			var file = ui.getCurrentFile();
+			
+			if (file != null &amp;&amp; file.getTitle() != null)
+			{
+				var mode = file.getMode();
+				
+				if (mode == &#039;google&#039;)
+				{
+					mode = &#039;googleDrive&#039;;
+				}
+				else if (mode == &#039;github&#039;)
+				{
+					mode = &#039;gitHub&#039;;
+				}
+				else if (mode == &#039;gitlab&#039;)
+				{
+					mode = &#039;gitLab&#039;;
+				}
+				else if (mode == &#039;onedrive&#039;)
+				{
+					mode = &#039;oneDrive&#039;;
+				}
+				
+				mode = mxResources.get(mode);
+				menubar.setAttribute(&#039;title&#039;, file.getTitle() + ((mode != null) ? &#039; (&#039; + mode + &#039;)&#039; : &#039;&#039;));
+			}
+			else
+			{
+				menubar.removeAttribute(&#039;title&#039;);
+			}
+		};
+		
+		// Hides popup menus
+		var uiHideCurrentMenu = ui.hideCurrentMenu;
+		
+		ui.hideCurrentMenu = function()
+		{
+			uiHideCurrentMenu.apply(this, arguments);
+			this.editor.graph.popupMenuHandler.hideMenu();
+		};
+
+		// Connects the status bar to the editor status
+		var uiDescriptorChanged = ui.descriptorChanged;
+		
+		ui.descriptorChanged = function()
+		{
+			uiDescriptorChanged.apply(this, arguments);
+			updateTitle();
+		};
+		
+		ui.setStatusText(ui.editor.getStatus());
+		menubar.appendChild(ui.statusContainer);
+
+		ui.buttonContainer = this.createButtonContainer();
+		menubar.appendChild(ui.buttonContainer);
+		
+		// Container for the user element
+		ui.menubarContainer = ui.buttonContainer;
+		ui.tabContainer = this.createTabContainer();
+
+		// Overrides tab container to append zoom input
+		var zoomElt = this.createZoomInput(true);
+
+		var updateTabContainer = ui.updateTabContainer;
+
+		ui.updateTabContainer = function()
+		{
+			updateTabContainer.apply(this, arguments);
+			ui.tabContainer.appendChild(zoomElt);
+		};
+
+		var insertImage = Editor.addBoxImage;
+		
+		// Hides hover icons if freehand is active
+		if (ui.hoverIcons != null)
+		{
+			var hoverIconsUpdate = ui.hoverIcons.update;
+			
+			ui.hoverIcons.update = function()
+			{
+				if (!graph.freehand.isDrawing())
+				{
+					hoverIconsUpdate.apply(this, arguments);
+				}
+			};
+		}
+	
+		// Removes sketch style from freehand shapes
+		if (graph.freehand != null)
+		{
+			var freehandCreateStyle = graph.freehand.createStyle;
+			
+			graph.freehand.createStyle = function(stencil)
+			{
+				return freehandCreateStyle.apply(this, arguments) + &#039;sketch=0;&#039;;
+			};
+		}
+		
+		// Connects the status bar to the editor status
+		ui.editor.addListener(&#039;statusChanged&#039;, mxUtils.bind(this, function()
+		{
+			ui.setStatusText(ui.editor.getStatus());
+		}));
+		
+		ui.setStatusText(ui.editor.getStatus());
+
+		var fitFunction = function(evt)
+		{
+			if (mxEvent.isAltDown(evt))
+			{
+				ui.hideCurrentMenu();
+				ui.actions.get(&#039;customZoom&#039;).funct();
+				mxEvent.consume(evt);
+			}
+			else
+			{
+				ui.hideCurrentMenu();
+				ui.actions.get(&#039;smartFit&#039;).funct();
+				mxEvent.consume(evt);
+			}
+		};
+
+		var zoomInAction = ui.actions.get(&#039;zoomIn&#039;);
+		var zoomOutAction = ui.actions.get(&#039;zoomOut&#039;);
+		var resetViewAction = ui.actions.get(&#039;resetView&#039;);
+		var undoAction = ui.actions.get(&#039;undo&#039;);
+		var redoAction = ui.actions.get(&#039;redo&#039;);
+		var undoElt = addMenuItem(&#039;&#039;, undoAction.funct, null, &#039;&#039;, undoAction, Editor.undoImage);
+		var redoElt = addMenuItem(&#039;&#039;, redoAction.funct, null, &#039;&#039;, redoAction, Editor.redoImage);
+		var fitElt = addMenuItem(&#039;&#039;, fitFunction, true, &#039;&#039;, resetViewAction, Editor.zoomFitImage);
+		
+		ui.actions.get(&#039;toggleShapes&#039;).funct = mxUtils.bind(this, function()
+		{
+			toggleShapes(ui, null);
+		});
+		
+		ui.container.appendChild(ui.tabContainer);
+		ui.container.appendChild(menubar);
+		ui.updateTabContainer();
+
+		if (!EditorUi.windowed &amp;&amp; iw &gt;= 1000)
+		{
+			toggleFormat(this, true);
+		}
+		
+        function refreshMenu()
+        {
+			iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+			menubar.innerHTML = &#039;&#039;;
+			var small = iw &lt; 1000;
+			var appElt = addMenu(&#039;diagram&#039;, null, (small) ? Editor.menuImage : null);
+
+			createGroup([appElt, addMenuItem(mxResources.get(&#039;shapes&#039;), ui.actions.get(&#039;toggleShapes&#039;).funct, null,
+				mxResources.get(&#039;shapes&#039;), ui.actions.get(&#039;image&#039;), (small) ? Editor.shapesImage : null),
+				addMenuItem(mxResources.get(&#039;format&#039;), ui.actions.get(&#039;format&#039;).funct, null,
+				mxResources.get(&#039;format&#039;) + &#039; (&#039; + ui.actions.get(&#039;format&#039;).shortcut + &#039;)&#039;, ui.actions.get(&#039;image&#039;),
+				(small) ? Editor.formatImage : null)]);
+		
+			var insertElt = addMenu(&#039;insert&#039;, true, (small) ? insertImage : null);
+			createGroup([insertElt, addMenuItem(mxResources.get(&#039;delete&#039;), ui.actions.get(&#039;delete&#039;).funct,
+				null, mxResources.get(&#039;delete&#039;), ui.actions.get(&#039;delete&#039;),
+				(small) ? Editor.trashImage : null)]);
+
+			if (!graph.isEnabled())
+			{
+				insertElt.setAttribute(&#039;disabled&#039;, &#039;disabled&#039;);
+			}
+			
+			undoElt.setAttribute(&#039;title&#039;, mxResources.get(&#039;undo&#039;) +
+				&#039; (&#039; + undoAction.shortcut + &#039;)&#039;);
+			redoElt.setAttribute(&#039;title&#039;, mxResources.get(&#039;redo&#039;) +
+				&#039; (&#039; + redoAction.shortcut + &#039;)&#039;);
+			fitElt.setAttribute(&#039;title&#039;, mxResources.get(&#039;fit&#039;) +
+				&#039; (&#039; + Editor.ctrlKey + &#039;+H)&#039;);
+
+			if (iw &gt;= 411)
+			{
+				createGroup([undoElt, redoElt]);
+	
+				if (iw &gt;= 520)
+				{
+					createGroup([fitElt,
+						(iw &gt;= 640) ? addMenuItem(&#039;&#039;, zoomInAction.funct, true,
+							mxResources.get(&#039;zoomIn&#039;) + &#039; (&#039; + Editor.ctrlKey + &#039; +)&#039;,
+							zoomInAction, Editor.zoomInImage) : null,
+						(iw &gt;= 640) ? addMenuItem(&#039;&#039;, zoomOutAction.funct, true,
+							mxResources.get(&#039;zoomOut&#039;) + &#039; (&#039; + Editor.ctrlKey + &#039; -)&#039;,
+							zoomOutAction, Editor.zoomOutImage) : null]);
+				}
+			}
+
+			menubar.appendChild(ui.statusContainer);
+			menubar.appendChild(ui.buttonContainer);
+        };
+        
+        refreshMenu();
+		ui.addListener(&#039;lockedChanged&#039;, refreshMenu);
+		ui.addListener(&#039;languageChanged&#039;, refreshMenu);
+		ui.editor.graph.addListener(&#039;enabledChanged&#039;, refreshMenu);
+        
+        mxEvent.addListener(window, &#039;resize&#039;, function()
+		{
+        	refreshMenu();
+        	
+            if (ui.sidebarWindow != null)
+            {
+                ui.sidebarWindow.window.fit();
+            }
+            
+            if (ui.formatWindow != null)
+            {
+            	ui.formatWindow.window.fit();
+            }
+
+            if (ui.actions.outlineWindow != null)
+            {
+            	ui.actions.outlineWindow.window.fit();
+            }
+
+            if (ui.actions.layersWindow != null)
+            {
+            	ui.actions.layersWindow.window.fit();
+            }
+
+            if (ui.menus.chatWindow != null)
+            {
+            	ui.menus.chatWindow.window.fit();
+            }
+
+            if (ui.menus.tagsWindow != null)
+            {
+            	ui.menus.tagsWindow.window.fit();
+            }
+
+            if (ui.menus.findWindow != null)
+            {
+            	ui.menus.findWindow.window.fit();
+            }
+
+            if (ui.menus.findReplaceWindow != null)
+            {
+            	ui.menus.findReplaceWindow.window.fit();
+            }
+		});
+	};
+};
+
+(function()
+{
+	var initialized = false;
+	
+	// ChromeApp has async local storage
+	if (uiTheme == &#039;min&#039; &amp;&amp; !initialized &amp;&amp; !mxClient.IS_CHROMEAPP)
+	{
+		EditorUi.initMinimalTheme();
+		initialized = true;
+	}
+	
+	var uiInitTheme = EditorUi.initTheme;
+	
+	// For async startup like chromeos
+	EditorUi.initTheme = function()
+	{
+		uiInitTheme.apply(this, arguments);
+		
+		if (uiTheme == &#039;min&#039; &amp;&amp; !initialized)
+		{
+			this.initMinimalTheme();
+			initialized = true;
+		}
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

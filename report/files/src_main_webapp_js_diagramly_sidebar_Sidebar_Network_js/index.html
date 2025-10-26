@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Network.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Network.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">60.17</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">88</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">16.83</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">4.24</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addNetworkPalette = function()
+	{
+		var w = 50;
+		var h = 50;
+		var sb = this;
+		var s0 = &#039;fontColor=#0066CC;verticalAlign=top;verticalLabelPosition=bottom;labelPosition=center;align=center;&#039;;
+		var s = &#039;html=1;outlineConnect=0;fillColor=#CCCCCC;strokeColor=#6881B3;gradientColor=none;gradientDirection=north;strokeWidth=2;shape=mxgraph.networks.&#039;;
+		var s1 = &#039;fontColor=#0066CC;&#039;;
+		var gn = &#039;mxgraph.networks&#039;;
+		var dt = &#039;computer network &#039;;
+		this.setCurrentSearchEntryLibrary(&#039;network&#039;);
+		
+		this.addPaletteFunctions(&#039;network&#039;, &#039;Network 2018&#039;, false,
+		[
+			this.addDataEntry(dt + &#039;ring bus&#039;, 100, 100, &#039;Ring Bus&#039;,
+				&#039;7VfJboMwEP0arpWBkNJjgTanSpF66NmKJ2DVYDQ429/XYIclKi2Nkp5AQrLfrLzHsDh+nB9XSMvsTTIQjv/i+DFKqcwqP8YghOMRzhw/cTyP6NPxXkesbmMlJUUo1JQAzwTsqdiBQQxQqZOwQKZy3VbiOn605ULEUkhsLH7cHBqvFMpP6FmWYehGfm3JaFnn0VV5WelVVALyHBRgh647KEqRMq6bPycrZAE9OOEIG8Vl0ZhQZXVXsnPXtbfN0Xb1wVntlXgasRcLqOA4SlgDWbZWIHVjeNIuNsALTMRpuD3YKnoXGMZJBjzN1BCjldmnbd5OG72w8nwvlf+7VOM6AEvh3TpaSlHuCgZ1clI7FOwZUR46O6NV1pp7N8EYrXWJAamKYgpqcJ9N4BlBUMX3w1Tf8WZD15LrjK0+l0xXcocbsE4XZLdVJ/G/mPmfwH8YPAwnxF2cgdtLEsySTJDEJWSgyP1GZDnrcc2IdMDtJXmcJfnDW+P8zCJ3G5Fw1mPKI2vxjyPyNEvykyR3f2u4ZBbgmpm44ZeV3nb/nMa9/0v6BQ==&#039;),
+			this.addDataEntry(dt + &#039;bus backbone&#039;, 260, 140, &#039;Bus&#039;,
+				&#039;7ZdNj4IwEIZ/DVcD1HXd4wK7njYx8bDnKiM0FmqGori/fltaBb8Ws5EbJCb0nel0fF4yBIeEWTVDuk2/RAzcIR8OCVEIae6yKgTOHd9lsUMix/dd9XP8zztRr466W4qQy0c2+GbDjvISjGKEQh64FVKZqbYizyHBmnEeCi6wjpCwvpReSBQbaEUm06kXEBVJkMZM9XKM5SKHlhwxhJVkIq9DKNNTsW8W61XkayWlW91MViUa1CgHuRe4KUbLsvjfGWvRpKt21/Wl9C0gy0CC1pd0tVmqUvNGC47agv3ohhRcEliCgBKquy7UkrVgBkLVw4NKOZjoxJjk7u2f1sYctRRYktoq1kyXFmadnCo1Fqsb6/Jtx0m34/fthDiBhU20mFGUeQy6uIYBefyOKPZNvPX4XDtrjtZVz8hJignIsyf0AZgInEq2Oy91C5XdOhdMVfRd69r4Am4hSlyBTbrgezr1IeTjAflt5J7bG/OXgfkd5pPemE8G5reZXw3u5zF/HZj/Pc7tK9brb7xPBws6xnv/HrwNHnSM+/498NzBhI75/3QT1LL5WDTp7W/JXw==&#039;),
+			this.createVertexTemplateEntry(s + &#039;bus;gradientColor=none;gradientDirection=north;fontColor=#ffffff;perimeter=backbonePerimeter;backboneSize=20;&#039;, 200, 20, &#039;&#039;, &#039;Bus&#039;, null, null, this.getTagsForStencil(gn, &#039;bus backbone&#039;, dt).join(&#039; &#039;)),
+		    this.createEdgeTemplateEntry(s + &#039;comm_link_edge;html=1;&#039;, 100, 100, &#039;&#039;, &#039;Comm Link&#039;, null, this.getTagsForStencil(gn, &#039;comm_link_edge&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;biometric_reader;&#039;, 60, 100, &#039;&#039;, &#039;Biometric Reader&#039;, null, null, this.getTagsForStencil(gn, &#039;biometric_reader&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;business_center;&#039;, 90, 100, &#039;&#039;, &#039;Business Center&#039;, null, null, this.getTagsForStencil(gn, &#039;business_center&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;cloud;fontColor=#ffffff;&#039;, 90, 50, &#039;&#039;, &#039;Cloud&#039;, null, null, this.getTagsForStencil(gn, &#039;cloud&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;community;&#039;, 95, 100, &#039;&#039;, &#039;Community&#039;, null, null, this.getTagsForStencil(gn, &#039;community&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;comm_link;&#039;, 30, 100, &#039;&#039;, &#039;Comm Link (Icon)&#039;, null, null, this.getTagsForStencil(gn, &#039;comm_link&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;copier;&#039;, 100, 100, &#039;&#039;, &#039;Copier&#039;, null, null, this.getTagsForStencil(gn, &#039;copier&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;pc;&#039;, 100, 70, &#039;&#039;, &#039;PC&#039;, null, null, this.getTagsForStencil(gn, &#039;pc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;desktop_pc;&#039;, 30, 60, &#039;&#039;, &#039;Desktop PC&#039;, null, null, this.getTagsForStencil(gn, &#039;desktop_pc&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;external_storage;&#039;, 90, 100, &#039;&#039;, &#039;External Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;external_storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;firewall;&#039;, 100, 100, &#039;&#039;, &#039;Firewall&#039;, null, null, this.getTagsForStencil(gn, &#039;firewall&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;gamepad;&#039;, 100, 70, &#039;&#039;, &#039;Gamepad&#039;, null, null, this.getTagsForStencil(gn, &#039;gamepad&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;hub;&#039;, 100, 30, &#039;&#039;, &#039;Hub&#039;, null, null, this.getTagsForStencil(gn, &#039;hub&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;laptop;&#039;, 100, 55, &#039;&#039;, &#039;Laptop&#039;, null, null, this.getTagsForStencil(gn, &#039;laptop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;load_balancer;&#039;, 100, 30, &#039;&#039;, &#039;Load Balancer&#039;, null, null, this.getTagsForStencil(gn, &#039;load_balancer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;mail_server;&#039;, 105, 105, &#039;&#039;, &#039;Mail Server&#039;, null, null, this.getTagsForStencil(gn, &#039;mail_server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;mainframe;&#039;, 80, 100, &#039;&#039;, &#039;Mainframe&#039;, null, null, this.getTagsForStencil(gn, &#039;mainframe&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;mobile;&#039;, 50, 100, &#039;&#039;, &#039;Mobile&#039;, null, null, this.getTagsForStencil(gn, &#039;mobile&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;modem;&#039;, 100, 30, &#039;&#039;, &#039;Modem&#039;, null, null, this.getTagsForStencil(gn, &#039;modem&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;monitor;&#039;, 80, 65, &#039;&#039;, &#039;Monitor&#039;, null, null, this.getTagsForStencil(gn, &#039;monitor&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;nas_filer;&#039;, 100, 35, &#039;&#039;, &#039;NAS Filer&#039;, null, null, this.getTagsForStencil(gn, &#039;NAS Filer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;patch_panel;&#039;, 100, 35, &#039;&#039;, &#039;Patch Panel&#039;, null, null, this.getTagsForStencil(gn, &#039;patch_panel&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;pc;&#039;, 100, 70, &#039;&#039;, &#039;PC&#039;, null, null, this.getTagsForStencil(gn, &#039;pc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;phone_1;&#039;, 100, 70, &#039;&#039;, &#039;Phone&#039;, null, null, this.getTagsForStencil(gn, &#039;phone_1&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;phone_2;&#039;, 100, 90, &#039;&#039;, &#039;Phone&#039;, null, null, this.getTagsForStencil(gn, &#039;phone_2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;printer;&#039;, 100, 100, &#039;&#039;, &#039;Printer&#039;, null, null, this.getTagsForStencil(gn, &#039;printer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;proxy_server;&#039;, 105, 105, &#039;&#039;, &#039;Proxy Server&#039;, null, null, this.getTagsForStencil(gn, &#039;proxy_server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;rack;&#039;, 50, 100, &#039;&#039;, &#039;Rack&#039;, null, null, this.getTagsForStencil(gn, &#039;rack&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;radio_tower;&#039;, 55, 100, &#039;&#039;, &#039;Radio Tower&#039;, null, null, this.getTagsForStencil(gn, &#039;radio_tower&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;router;&#039;, 100, 30, &#039;&#039;, &#039;Router&#039;, null, null, this.getTagsForStencil(gn, &#039;router&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;satellite;&#039;, 100, 100, &#039;&#039;, &#039;Satellite&#039;, null, null, this.getTagsForStencil(gn, &#039;satellite&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;satellite_dish;&#039;, 90, 100, &#039;&#039;, &#039;Satellite Dish&#039;, null, null, this.getTagsForStencil(gn, &#039;satellite_dish&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;scanner;&#039;, 100, 75, &#039;&#039;, &#039;Scanner&#039;, null, null, this.getTagsForStencil(gn, &#039;scanner&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;secured;&#039;, 80, 100, &#039;&#039;, &#039;Secured&#039;, null, null, this.getTagsForStencil(gn, &#039;secured&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;security_camera;&#039;, 100, 75, &#039;&#039;, &#039;Security Camera&#039;, null, null, this.getTagsForStencil(gn, &#039;security_camera&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;server;&#039;, 90, 100, &#039;&#039;, &#039;Server&#039;, null, null, this.getTagsForStencil(gn, &#039;server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;server_storage;&#039;, 105, 105, &#039;&#039;, &#039;Server Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;server_storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;storage;&#039;, 100, 100, &#039;&#039;, &#039;Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;supercomputer;&#039;, 100, 100, &#039;&#039;, &#039;Supercomputer&#039;, null, null, this.getTagsForStencil(gn, &#039;supercomputer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;switch;&#039;, 100, 30, &#039;&#039;, &#039;Switch&#039;, null, null, this.getTagsForStencil(gn, &#039;switch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;tablet;&#039;, 100, 70, &#039;&#039;, &#039;Tablet&#039;, null, null, this.getTagsForStencil(gn, &#039;tablet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;tape_storage;&#039;, 105, 105, &#039;&#039;, &#039;Tape Storage&#039;, null, null, this.getTagsForStencil(gn, &#039;tape_storage&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;terminal;&#039;, 80, 65, &#039;&#039;, &#039;Terminal&#039;, null, null, this.getTagsForStencil(gn, &#039;terminal&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;unsecure;&#039;, 80, 100, &#039;&#039;, &#039;Unsecure&#039;, null, null, this.getTagsForStencil(gn, &#039;unsecure&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;ups_enterprise;&#039;, 100, 100, &#039;&#039;, &#039;UPS Enterprise&#039;, null, null, this.getTagsForStencil(gn, &#039;ups_enterprise&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;ups_small;&#039;, 70, 100, &#039;&#039;, &#039;UPS Small&#039;, null, null, this.getTagsForStencil(gn, &#039;ups_small&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;usb_stick;&#039;, 45, 100, &#039;&#039;, &#039;USB Stick&#039;, null, null, this.getTagsForStencil(gn, &#039;usb_stick&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;users;&#039;, 90, 100, &#039;&#039;, &#039;Users&#039;, null, null, this.getTagsForStencil(gn, &#039;users&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;user_female;&#039;, 40, 100, &#039;&#039;, &#039;User Female&#039;, null, null, this.getTagsForStencil(gn, &#039;user_female&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;user_male;&#039;, 40, 100, &#039;&#039;, &#039;User Male&#039;, null, null, this.getTagsForStencil(gn, &#039;user_male&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;video_projector;&#039;, 100, 35, &#039;&#039;, &#039;Video Projector&#039;, null, null, this.getTagsForStencil(gn, &#039;video_projector&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;video_projector_screen;&#039;, 80, 100, &#039;&#039;, &#039;Video Projector Screen&#039;, null, null, this.getTagsForStencil(gn, &#039;video_projector_screen&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;virtual_pc;&#039;, 115, 85, &#039;&#039;, &#039;Virtual PC&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual_pc&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;virtual_server;&#039;, 110, 120, &#039;&#039;, &#039;Virtual Server&#039;, null, null, this.getTagsForStencil(gn, &#039;virtual_server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;virus;&#039;, 100, 90, &#039;&#039;, &#039;Virus&#039;, null, null, this.getTagsForStencil(gn, &#039;virus&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;web_server;&#039;, 105, 105, &#039;&#039;, &#039;Web Server&#039;, null, null, this.getTagsForStencil(gn, &#039;web_server&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;wireless_hub;&#039;, 100, 85, &#039;&#039;, &#039;Wireless Hub&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless_hub&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s0 + s + &#039;wireless_modem;&#039;, 100, 85, &#039;&#039;, &#039;Wireless Modem&#039;, null, null, this.getTagsForStencil(gn, &#039;wireless_modem&#039;, dt).join(&#039; &#039;))
+		]);
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

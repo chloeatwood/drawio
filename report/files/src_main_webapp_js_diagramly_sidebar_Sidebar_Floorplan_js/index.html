@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-Floorplan.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-Floorplan.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">55.25</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">392</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">41.90</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">10.12</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	// Adds Floorplan shapes
+	Sidebar.prototype.addFloorplanPalette = function()
+	{
+		var w = 100;
+		var h = 100;
+		var s = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=bottom;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;align=center;shape=mxgraph.floorplan.&#039;;
+		var s2 = mxConstants.STYLE_VERTICAL_LABEL_POSITION + &#039;=center;html=1;&#039; + mxConstants.STYLE_VERTICAL_ALIGN + &#039;=top;align=center;shape=mxgraph.floorplan.&#039;;
+		var gn = &#039;mxgraph.floorplan&#039;;
+		var dt = &#039;floorplan &#039;;
+		this.setCurrentSearchEntryLibrary(&#039;floorplan&#039;);
+
+		var fns =
+			[
+			this.createVertexTemplateEntry(s + &#039;wall;fillColor=strokeColor;&#039;, 
+					w, 10, &#039;&#039;, &#039;Wall (Horizontal)&#039;, null, null, this.getTagsForStencil(gn, &#039;wall&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;wall;fillColor=strokeColor;direction=south;&#039;, 
+					10, h, &#039;&#039;, &#039;Wall (Vertical)&#039;, null, null, this.getTagsForStencil(gn, &#039;wall&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;wallCorner;fillColor=strokeColor;&#039;, 
+					w, h, &#039;&#039;, &#039;Wall (Corner NW)&#039;, null, null, this.getTagsForStencil(gn, &#039;wallCorner&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;wallCorner;fillColor=strokeColor;direction=south;&#039;, 
+					w, h, &#039;&#039;, &#039;Wall (Corner NE)&#039;, null, null, this.getTagsForStencil(gn, &#039;wallCorner&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;wallCorner;fillColor=strokeColor;direction=west&#039;, 
+					w, h, &#039;&#039;, &#039;Wall (Corner SE)&#039;, null, null, this.getTagsForStencil(gn, &#039;wallCorner&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;wallCorner;fillColor=strokeColor;direction=north&#039;, 
+					w, h, &#039;&#039;, &#039;Wall (Corner SW)&#039;, null, null, this.getTagsForStencil(gn, &#039;wallCorner&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;wallU;fillColor=strokeColor;&#039;, 
+					w, h, &#039;&#039;, &#039;Wall (U)&#039;, null, null, this.getTagsForStencil(gn, &#039;wallU&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;room;fillColor=strokeColor;&#039;, 
+					w, h, &#039;&#039;, &#039;Room&#039;, null, null, this.getTagsForStencil(gn, &#039;room&#039;, dt).join(&#039; &#039;)),
+		 	this.createVertexTemplateEntry(&#039;shape=dimension;whiteSpace=wrap;html=1;align=center;points=[];verticalAlign=bottom;spacingBottom=3;labelBackgroundColor=none;&#039;, 100, 40, &#039;Label&#039;, &#039;Horizontal Dimension&#039;, null, null, &#039;horizontal dimension measure distance unit&#039;),
+		 	this.createVertexTemplateEntry(&#039;shape=dimension;direction=west;whiteSpace=wrap;html=1;align=center;points=[];verticalAlign=top;spacingTop=-15;labelBackgroundColor=none;&#039;, 100, 40, &#039;Label&#039;, &#039;Horizontal Dimension&#039;, null, null, &#039;horizontal dimension measure distance unit&#039;),
+		 	this.createVertexTemplateEntry(&#039;shape=dimension;direction=north;whiteSpace=wrap;html=1;align=center;points=[];verticalAlign=bottom;labelBackgroundColor=none;horizontal=0;spacingBottom=3;&#039;, 40, 100, &#039;Label&#039;, &#039;Vertical Dimension&#039;, null, null, &#039;vertical dimension measure distance unit&#039;),
+		 	this.createVertexTemplateEntry(&#039;shape=dimension;direction=south;whiteSpace=wrap;html=1;align=center;points=[];verticalAlign=top;labelBackgroundColor=none;horizontal=0;spacingTop=-15;&#039;, 40, 100, &#039;Label&#039;, &#039;Vertical Dimension&#039;, null, null, &#039;vertical dimension measure distance unit&#039;),
+		 	this.createVertexTemplateEntry(s + &#039;window;&#039;, 
+					w, 10, &#039;&#039;, &#039;Window&#039;, null, null, this.getTagsForStencil(gn, &#039;window&#039;, dt).join(&#039; &#039;)),
+		 	this.createVertexTemplateEntry(s + &#039;windowGlider;dx=0.25;&#039;, 
+					100, 10, &#039;&#039;, &#039;Window, Glider&#039;, null, null, this.getTagsForStencil(gn, &#039;windowGlider&#039;, dt).join(&#039; &#039;)),
+		 	this.createVertexTemplateEntry(s + &#039;windowGarden;dx=0.25;&#039;, 
+					100, 20, &#039;&#039;, &#039;Window, Garden&#039;, null, null, this.getTagsForStencil(gn, &#039;windowGarden&#039;, dt).join(&#039; &#039;)),
+		 	this.createVertexTemplateEntry(s + &#039;windowBow;strokeWidth=3;&#039;, 
+					100, 20, &#039;&#039;, &#039;Window, Bow&#039;, null, null, this.getTagsForStencil(gn, &#039;windowBow&#039;, dt).join(&#039; &#039;)),
+		 	this.createVertexTemplateEntry(s + &#039;windowBay;strokeWidth=3;aspect=fixed;&#039;, 
+					100, 40, &#039;&#039;, &#039;Window, Bay&#039;, null, null, this.getTagsForStencil(gn, &#039;windowBay&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;stairs;&#039;, 
+					300, 100, &#039;&#039;, &#039;Stairs&#039;, null, null, this.getTagsForStencil(gn, &#039;stairs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;stairs;direction=south;&#039;, 
+					100, 300, &#039;&#039;, &#039;Stairs&#039;, null, null, this.getTagsForStencil(gn, &#039;stairs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;stairsRest;&#039;, 
+					300, 200, &#039;&#039;, &#039;Stairs&#039;, null, null, this.getTagsForStencil(gn, &#039;stairsRest&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorLeft;aspect=fixed;&#039;, 
+					80, 85, &#039;&#039;, &#039;Door&#039;, null, null, this.getTagsForStencil(gn, &#039;doorLeft&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorRight;aspect=fixed;&#039;, 
+					80, 85, &#039;&#039;, &#039;Door&#039;, null, null, this.getTagsForStencil(gn, &#039;doorRight&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorDouble;aspect=fixed;&#039;, 
+					160, 85, &#039;&#039;, &#039;Door, Double&#039;, null, null, this.getTagsForStencil(gn, &#039;doorDouble&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorUneven;dx=0.5;&#039;, 
+					160, 85, &#039;&#039;, &#039;Door, Uneven&#039;, null, null, this.getTagsForStencil(gn, &#039;doorUneven&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorOpposing;dx=0.5;&#039;, 
+					160, 165, &#039;&#039;, &#039;Door, Opposing&#039;, null, null, this.getTagsForStencil(gn, &#039;doorOpposing&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorRevolving;aspect=fixed;&#039;, 
+					80, 85, &#039;&#039;, &#039;Door, Revolving&#039;, null, null, this.getTagsForStencil(gn, &#039;doorLeft&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorPocket;dx=0.5;&#039;, 
+					104, 10, &#039;&#039;, &#039;Door, Pocket&#039;, null, null, this.getTagsForStencil(gn, &#039;doorPocket&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorDoublePocket;dx=0.25;&#039;, 
+					104, 10, &#039;&#039;, &#039;Door, Double Pocket&#039;, null, null, this.getTagsForStencil(gn, &#039;doorDoublePocket&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorBypass;dx=0.25;&#039;, 
+					104, 10, &#039;&#039;, &#039;Door, By-pass&#039;, null, null, this.getTagsForStencil(gn, &#039;doorBypass&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorBifold;dx=0.3;&#039;, 
+					160, 40, &#039;&#039;, &#039;Door, Bi-fold&#039;, null, null, this.getTagsForStencil(gn, &#039;doorBifold&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorSlidingGlass;dx=0.25;&#039;, 
+					104, 10, &#039;&#039;, &#039;Door, SlidingGlass&#039;, null, null, this.getTagsForStencil(gn, &#039;doorSlidingGlass&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorOverhead;&#039;, 
+					104, 30, &#039;&#039;, &#039;Door, Overhead&#039;, null, null, this.getTagsForStencil(gn, &#039;doorOverhead&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorAccordion;dx=0.6;&#039;, 
+					160, 30, &#039;&#039;, &#039;Door, Accordion&#039;, null, null, this.getTagsForStencil(gn, &#039;accordion&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;doorDoubleAction;aspect=fixed;&#039;, 
+					80, 165, &#039;&#039;, &#039;Door, Double Action&#039;, null, null, this.getTagsForStencil(gn, &#039;doorDoubleAction&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;opening;&#039;, 
+					50, 10, &#039;&#039;, &#039;Opening&#039;, null, null, this.getTagsForStencil(gn, &#039;opening&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;bathtub2;&#039;, 
+					180, 60, &#039;&#039;, &#039;Bathtub&#039;, null, null, this.getTagsForStencil(gn, &#039;bathtub&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;bed_double;&#039;, 
+					200, 180, &#039;&#039;, &#039;Bed, Double&#039;, null, null, this.getTagsForStencil(gn, &#039;bed_double&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;bed_single;&#039;, 
+					100, 180, &#039;&#039;, &#039;Bed Single&#039;, null, null, this.getTagsForStencil(gn, &#039;bed_single&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;bookcase;&#039;, 
+					120, 30, &#039;&#039;, &#039;Bookcase&#039;, null, null, this.getTagsForStencil(gn, &#039;bookcase&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;chair;&#039;, 
+					41, 52, &#039;&#039;, &#039;Chair&#039;, null, null, this.getTagsForStencil(gn, &#039;chair&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;copier;&#039;, 
+					110, 60, &#039;&#039;, &#039;Copier&#039;, null, null, this.getTagsForStencil(gn, &#039;copier&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;couch;&#039;, 
+					150, 80, &#039;&#039;, &#039;Couch&#039;, null, null, this.getTagsForStencil(gn, &#039;couch&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;crt_tv;&#039;, 
+					60, 40, &#039;&#039;, &#039;CRT TV&#039;, null, null, this.getTagsForStencil(gn, &#039;crt_tv&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;desk_corner;&#039;, 
+					150, 150, &#039;&#039;, &#039;Desk Corner&#039;, null, null, this.getTagsForStencil(gn, &#039;desk_corner&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;desk_corner_2;&#039;, 
+					150, 120, &#039;&#039;, &#039;Desk Corner 2&#039;, null, null, this.getTagsForStencil(gn, &#039;desk_corner_2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;dresser;&#039;, 
+					100, 65, &#039;&#039;, &#039;Dresser&#039;, null, null, this.getTagsForStencil(gn, &#039;dresser&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;drying_machine;aspect=fixed;&#039;, 
+					60, 60, &#039;&#039;, &#039;Drying Machine&#039;, null, null, this.getTagsForStencil(gn, &#039;drying machine&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;elevator;&#039;, 
+					100, 100, &#039;&#039;, &#039;Elevator&#039;, null, null, this.getTagsForStencil(gn, &#039;elevator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;fireplace;&#039;, 
+					304, 200, &#039;&#039;, &#039;Fireplace&#039;, null, null, this.getTagsForStencil(gn, &#039;fireplace&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;flat_tv;&#039;, 
+					70, 10, &#039;&#039;, &#039;Flat TV&#039;, null, null, this.getTagsForStencil(gn, &#039;flat_tv&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;floor_lamp;&#039;, 
+					50, 50, &#039;&#039;, &#039;Floor Lamp&#039;, null, null, this.getTagsForStencil(gn, &#039;floor_lamp&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;laptop;&#039;, 
+					40, 35, &#039;&#039;, &#039;Laptop&#039;, null, null, this.getTagsForStencil(gn, &#039;laptop&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;office_chair;&#039;, 
+					40, 43, &#039;&#039;, &#039;Office Chair&#039;, null, null, this.getTagsForStencil(gn, &#039;office_chair&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;piano;&#039;, 
+					135, 143, &#039;&#039;, &#039;Piano&#039;, null, null, this.getTagsForStencil(gn, &#039;piano&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;plant;&#039;, 
+					47, 51, &#039;&#039;, &#039;Plant&#039;, null, null, this.getTagsForStencil(gn, &#039;plant&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;printer;&#039;, 
+					40, 47, &#039;&#039;, &#039;Printer&#039;, null, null, this.getTagsForStencil(gn, &#039;printer&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;range_1;&#039;, 
+					50, 62, &#039;&#039;, &#039;Range 1&#039;, null, null, this.getTagsForStencil(gn, &#039;range_1&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;range_2;&#039;, 
+					75, 62, &#039;&#039;, &#039;Range 2&#039;, null, null, this.getTagsForStencil(gn, &#039;range_2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;refrigerator;&#039;, 
+					60, 62, &#039;&#039;, &#039;Refrigerator&#039;, null, null, this.getTagsForStencil(gn, &#039;refrigerator&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;shower2;&#039;, 
+					100, 100, &#039;&#039;, &#039;Shower&#039;, null, null, this.getTagsForStencil(gn, &#039;shower&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;sink_1;&#039;, 
+					40, 35, &#039;&#039;, &#039;Sink 1&#039;, null, null, this.getTagsForStencil(gn, &#039;sink_1&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;sink_22;&#039;, 
+					40, 35, &#039;&#039;, &#039;Sink 2&#039;, null, null, this.getTagsForStencil(gn, &#039;sink_2&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;sink_double2;&#039;, 
+					80, 35, &#039;&#039;, &#039;Sink Double&#039;, null, null, this.getTagsForStencil(gn, &#039;sink_double&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;sofa;&#039;, 
+					90, 80, &#039;&#039;, &#039;Sofa&#039;, null, null, this.getTagsForStencil(gn, &#039;sofa&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;spiral_stairs;&#039;, 
+					200, 200, &#039;&#039;, &#039;Spiral Stairs&#039;, null, null, this.getTagsForStencil(gn, &#039;spiral_stairs&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;table;&#039;, 
+					90, 50, &#039;&#039;, &#039;Table&#039;, null, null, this.getTagsForStencil(gn, &#039;table&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;toilet;&#039;, 
+					50, 67, &#039;&#039;, &#039;Toilet&#039;, null, null, this.getTagsForStencil(gn, &#039;toilet&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;washing_machine;aspect=fixed;&#039;, 
+					60, 60, &#039;&#039;, &#039;Washing Machine&#039;, null, null, this.getTagsForStencil(gn, &#039;washing machine&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;water_cooler;&#039;, 
+					40, 40, &#039;&#039;, &#039;Water Cooler&#039;, null, null, this.getTagsForStencil(gn, &#039;water_cooler&#039;, dt).join(&#039; &#039;)),
+			this.createVertexTemplateEntry(s + &#039;workstation;&#039;, 
+					50, 40, &#039;&#039;, &#039;Workstation&#039;, null, null, this.getTagsForStencil(gn, &#039;workstation&#039;, dt).join(&#039; &#039;)),
+					
+			this.addEntry(dt + &#039;kitchen table small&#039;, function()
+			{
+			   	var table = new mxCell(&#039;&#039;, new mxGeometry(0, 20, 80, 80), &#039;shape=rect;shadow=0;html=1;&#039;);
+			   	table.vertex = true;
+			   	var chair1 = new mxCell(&#039;&#039;, new mxGeometry(20, 0, 40, 52), s + &#039;chair;shadow=0;&#039;);
+			   	chair1.vertex = true;
+			   	var chair2 = new mxCell(&#039;&#039;, new mxGeometry(20, 68, 40, 52), s + &#039;chair;shadow=0;rotation=180;&#039;);
+			   	chair2.vertex = true;
+
+	   			return sb.createVertexTemplateFromCells([chair1, chair2, table], 80, 120, &#039;Small kitchen table&#039;);
+			}),
+			this.addEntry(dt + &#039;kitchen table&#039;, function()
+			{
+			   	var table = new mxCell(&#039;&#039;, new mxGeometry(20, 20, 100, 100), &#039;shape=rect;shadow=0;html=1;&#039;);
+			   	table.vertex = true;
+			   	var chair1 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 40, 52), s + &#039;chair;shadow=0;&#039;);
+			   	chair1.vertex = true;
+			   	var chair2 = new mxCell(&#039;&#039;, new mxGeometry(50, 88, 40, 52), s + &#039;chair;shadow=0;direction=west;&#039;);
+			   	chair2.vertex = true;
+			   	var chair3 = new mxCell(&#039;&#039;, new mxGeometry(0, 50, 52, 40), s + &#039;chair;shadow=0;direction=north;&#039;);
+			   	chair3.vertex = true;
+			   	var chair4 = new mxCell(&#039;&#039;, new mxGeometry(88, 50, 52, 40), s + &#039;chair;shadow=0;direction=south&#039;);
+			   	chair4.vertex = true;
+
+	   			return sb.createVertexTemplateFromCells([chair1, chair2, chair3, chair4, table], 140, 140, &#039;Kitchen table&#039;);
+			}),
+			
+			this.addEntry(dt + &#039;kitchen table round&#039;, function()
+			{
+			   	var table = new mxCell(&#039;&#039;, new mxGeometry(20, 20, 100, 100), &#039;shape=ellipse;shadow=0;html=1;&#039;);
+			   	table.vertex = true;
+			   	var chair1 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 40, 52), s + &#039;chair;shadow=0;&#039;);
+			   	chair1.vertex = true;
+			   	var chair2 = new mxCell(&#039;&#039;, new mxGeometry(50, 88, 40, 52), s + &#039;chair;shadow=0;direction=west;&#039;);
+			   	chair2.vertex = true;
+			   	var chair3 = new mxCell(&#039;&#039;, new mxGeometry(0, 50, 52, 40), s + &#039;chair;shadow=0;direction=north;&#039;);
+			   	chair3.vertex = true;
+			   	var chair4 = new mxCell(&#039;&#039;, new mxGeometry(88, 50, 52, 40), s + &#039;chair;shadow=0;direction=south&#039;);
+			   	chair4.vertex = true;
+
+	   			return sb.createVertexTemplateFromCells([chair1, chair2, chair3, chair4, table], 140, 140, &#039;Round kitchen table&#039;);
+			}),
+			
+			this.addEntry(dt + &#039;kitchen table large&#039;, function()
+			{
+			   	var table = new mxCell(&#039;&#039;, new mxGeometry(20, 20, 160, 100), &#039;shape=rect;shadow=0;html=1;&#039;);
+			   	table.vertex = true;
+			   	var chair1 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 40, 52), s + &#039;chair;shadow=0;&#039;);
+			   	chair1.vertex = true;
+			   	var chair2 = new mxCell(&#039;&#039;, new mxGeometry(50, 88, 40, 52), s + &#039;chair;shadow=0;direction=west;&#039;);
+			   	chair2.vertex = true;
+			   	var chair3 = new mxCell(&#039;&#039;, new mxGeometry(0, 50, 52, 40), s + &#039;chair;shadow=0;direction=north;&#039;);
+			   	chair3.vertex = true;
+			   	var chair4 = new mxCell(&#039;&#039;, new mxGeometry(148, 50, 52, 40), s + &#039;chair;shadow=0;direction=south&#039;);
+			   	chair4.vertex = true;
+			   	var chair5 = new mxCell(&#039;&#039;, new mxGeometry(110, 0, 40, 52), s + &#039;chair;shadow=0;&#039;);
+			   	chair5.vertex = true;
+			   	var chair6 = new mxCell(&#039;&#039;, new mxGeometry(110, 88, 40, 52), s + &#039;chair;shadow=0;direction=west;&#039;);
+			   	chair6.vertex = true;
+
+	   			return sb.createVertexTemplateFromCells([chair1, chair2, chair3, chair4, chair5, chair6, table], 200, 140, &#039;Large kitchen table&#039;);
+			}),
+			
+			this.addEntry(dt + &#039;kitchen table large oval&#039;, function()
+			{
+			   	var table = new mxCell(&#039;&#039;, new mxGeometry(20, 20, 160, 100), &#039;shape=ellipse;shadow=0;html=1;&#039;);
+			   	table.vertex = true;
+			   	var chair1 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 40, 52), s + &#039;chair;shadow=0;&#039;);
+			   	chair1.vertex = true;
+			   	var chair2 = new mxCell(&#039;&#039;, new mxGeometry(50, 88, 40, 52), s + &#039;chair;shadow=0;direction=west;&#039;);
+			   	chair2.vertex = true;
+			   	var chair3 = new mxCell(&#039;&#039;, new mxGeometry(0, 50, 52, 40), s + &#039;chair;shadow=0;direction=north;&#039;);
+			   	chair3.vertex = true;
+			   	var chair4 = new mxCell(&#039;&#039;, new mxGeometry(148, 50, 52, 40), s + &#039;chair;shadow=0;direction=south&#039;);
+			   	chair4.vertex = true;
+			   	var chair5 = new mxCell(&#039;&#039;, new mxGeometry(110, 0, 40, 52), s + &#039;chair;shadow=0;&#039;);
+			   	chair5.vertex = true;
+			   	var chair6 = new mxCell(&#039;&#039;, new mxGeometry(110, 88, 40, 52), s + &#039;chair;shadow=0;direction=west;&#039;);
+			   	chair6.vertex = true;
+
+	   			return sb.createVertexTemplateFromCells([chair1, chair2, chair3, chair4, chair5, chair6, table], 200, 140, &#039;Large oval kitchen table&#039;);
+			}),
+			
+			this.addEntry(dt + &#039;office table&#039;, function()
+			{
+			   	var table = new mxCell(&#039;&#039;, new mxGeometry(0, 20, 80, 50), &#039;shape=rect;shadow=0;html=1;&#039;);
+			   	table.vertex = true;
+			   	var chair1 = new mxCell(&#039;&#039;, new mxGeometry(20, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair1.vertex = true;
+			   	var item1 = new mxCell(&#039;&#039;, new mxGeometry(15, 30, 50, 40), s + &#039;workstation;shadow=0;flipV=1;&#039;);
+			   	item1.vertex = true;
+
+	   			return sb.createVertexTemplateFromCells([chair1, table, item1], 80, 70, &#039;Office table&#039;);
+			}),
+					
+			this.addEntry(dt + &#039;office table&#039;, function()
+			{
+			   	var table = new mxCell(&#039;&#039;, new mxGeometry(20, 20, 100, 100), &#039;shape=rect;shadow=0;html=1;&#039;);
+			   	table.vertex = true;
+			   	var chair1 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair1.vertex = true;
+			   	var chair2 = new mxCell(&#039;&#039;, new mxGeometry(50, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair2.vertex = true;
+			   	var chair3 = new mxCell(&#039;&#039;, new mxGeometry(0, 50, 43, 40), s + &#039;office_chair;shadow=0;direction=north;&#039;);
+			   	chair3.vertex = true;
+			   	var chair4 = new mxCell(&#039;&#039;, new mxGeometry(97, 50, 43, 40), s + &#039;office_chair;shadow=0;direction=south&#039;);
+			   	chair4.vertex = true;
+
+	   			return sb.createVertexTemplateFromCells([chair1, chair2, chair3, chair4, table], 140, 140, &#039;Office table&#039;);
+			}),
+			
+			this.addEntry(dt + &#039;office table large&#039;, function()
+			{
+			   	var table = new mxCell(&#039;&#039;, new mxGeometry(20, 20, 160, 100), &#039;shape=rect;shadow=0;html=1;&#039;);
+			   	table.vertex = true;
+			   	var chair1 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair1.vertex = true;
+			   	var chair2 = new mxCell(&#039;&#039;, new mxGeometry(50, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair2.vertex = true;
+			   	var chair3 = new mxCell(&#039;&#039;, new mxGeometry(0, 50, 43, 40), s + &#039;office_chair;shadow=0;direction=north;&#039;);
+			   	chair3.vertex = true;
+			   	var chair4 = new mxCell(&#039;&#039;, new mxGeometry(157, 50, 43, 40), s + &#039;office_chair;shadow=0;direction=south&#039;);
+			   	chair4.vertex = true;
+			   	var chair5 = new mxCell(&#039;&#039;, new mxGeometry(110, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair5.vertex = true;
+			   	var chair6 = new mxCell(&#039;&#039;, new mxGeometry(110, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair6.vertex = true;
+
+	   			return sb.createVertexTemplateFromCells([chair1, chair2, chair3, chair4, chair5, chair6, table], 200, 140, &#039;Large office table&#039;);
+			}),
+					
+			this.addEntry(dt + &#039;office table large oval&#039;, function()
+			{
+			   	var table = new mxCell(&#039;&#039;, new mxGeometry(20, 20, 160, 100), &#039;shape=ellipse;shadow=0;html=1;&#039;);
+			   	table.vertex = true;
+			   	var chair1 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair1.vertex = true;
+			   	var chair2 = new mxCell(&#039;&#039;, new mxGeometry(50, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair2.vertex = true;
+			   	var chair3 = new mxCell(&#039;&#039;, new mxGeometry(0, 50, 43, 40), s + &#039;office_chair;shadow=0;direction=north;&#039;);
+			   	chair3.vertex = true;
+			   	var chair4 = new mxCell(&#039;&#039;, new mxGeometry(157, 50, 43, 40), s + &#039;office_chair;shadow=0;direction=south&#039;);
+			   	chair4.vertex = true;
+			   	var chair5 = new mxCell(&#039;&#039;, new mxGeometry(110, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair5.vertex = true;
+			   	var chair6 = new mxCell(&#039;&#039;, new mxGeometry(110, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair6.vertex = true;
+
+	   			return sb.createVertexTemplateFromCells([chair1, chair2, chair3, chair4, chair5, chair6, table], 200, 140, &#039;Large oval office table&#039;);
+			}),
+
+			this.addEntry(dt + &#039;office table large oval&#039;, function()
+			{
+			   	var table = new mxCell(&#039;&#039;, new mxGeometry(20, 20, 280, 100), &#039;shape=ellipse;shadow=0;html=1;&#039;);
+			   	table.vertex = true;
+			   	var chair1 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair1.vertex = true;
+			   	var chair2 = new mxCell(&#039;&#039;, new mxGeometry(50, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair2.vertex = true;
+			   	var chair3 = new mxCell(&#039;&#039;, new mxGeometry(0, 50, 43, 40), s + &#039;office_chair;shadow=0;direction=north;&#039;);
+			   	chair3.vertex = true;
+			   	var chair4 = new mxCell(&#039;&#039;, new mxGeometry(277, 50, 43, 40), s + &#039;office_chair;shadow=0;direction=south&#039;);
+			   	chair4.vertex = true;
+			   	var chair5 = new mxCell(&#039;&#039;, new mxGeometry(110, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair5.vertex = true;
+			   	var chair6 = new mxCell(&#039;&#039;, new mxGeometry(110, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair6.vertex = true;
+			   	var chair7 = new mxCell(&#039;&#039;, new mxGeometry(170, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair7.vertex = true;
+			   	var chair8 = new mxCell(&#039;&#039;, new mxGeometry(170, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair8.vertex = true;
+			   	var chair9 = new mxCell(&#039;&#039;, new mxGeometry(230, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair9.vertex = true;
+			   	var chair10 = new mxCell(&#039;&#039;, new mxGeometry(230, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair10.vertex = true;
+
+	   			return sb.createVertexTemplateFromCells([chair1, chair2, chair3, chair4, chair5, chair6, chair7, chair8, chair9, chair10, table], 320, 140, &#039;Large oval office table&#039;);
+			}),
+
+			this.addEntry(dt + &#039;office table conference large huge&#039;, function()
+			{
+			   	var table = new mxCell(&#039;&#039;, new mxGeometry(20, 20, 520, 100), &#039;shape=ellipse;shadow=0;html=1;&#039;);
+			   	table.vertex = true;
+			   	var chair1 = new mxCell(&#039;&#039;, new mxGeometry(50, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair1.vertex = true;
+			   	var chair2 = new mxCell(&#039;&#039;, new mxGeometry(50, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair2.vertex = true;
+			   	var chair3 = new mxCell(&#039;&#039;, new mxGeometry(0, 50, 43, 40), s + &#039;office_chair;shadow=0;direction=north;&#039;);
+			   	chair3.vertex = true;
+			   	var chair4 = new mxCell(&#039;&#039;, new mxGeometry(517, 50, 43, 40), s + &#039;office_chair;shadow=0;direction=south&#039;);
+			   	chair4.vertex = true;
+			   	var chair5 = new mxCell(&#039;&#039;, new mxGeometry(110, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair5.vertex = true;
+			   	var chair6 = new mxCell(&#039;&#039;, new mxGeometry(110, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair6.vertex = true;
+			   	var chair7 = new mxCell(&#039;&#039;, new mxGeometry(170, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair7.vertex = true;
+			   	var chair8 = new mxCell(&#039;&#039;, new mxGeometry(170, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair8.vertex = true;
+			   	var chair9 = new mxCell(&#039;&#039;, new mxGeometry(230, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair9.vertex = true;
+			   	var chair10 = new mxCell(&#039;&#039;, new mxGeometry(230, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair10.vertex = true;
+			   	var chair11 = new mxCell(&#039;&#039;, new mxGeometry(290, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair11.vertex = true;
+			   	var chair12 = new mxCell(&#039;&#039;, new mxGeometry(290, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair12.vertex = true;
+			   	var chair13 = new mxCell(&#039;&#039;, new mxGeometry(350, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair13.vertex = true;
+			   	var chair14 = new mxCell(&#039;&#039;, new mxGeometry(350, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair14.vertex = true;
+			   	var chair15 = new mxCell(&#039;&#039;, new mxGeometry(410, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair15.vertex = true;
+			   	var chair16 = new mxCell(&#039;&#039;, new mxGeometry(410, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair16.vertex = true;
+			   	var chair17 = new mxCell(&#039;&#039;, new mxGeometry(470, 0, 40, 43), s + &#039;office_chair;shadow=0;&#039;);
+			   	chair17.vertex = true;
+			   	var chair18 = new mxCell(&#039;&#039;, new mxGeometry(470, 97, 40, 43), s + &#039;office_chair;shadow=0;direction=west;&#039;);
+			   	chair18.vertex = true;
+
+	   			return sb.createVertexTemplateFromCells([chair1, chair2, chair3, chair4, chair5, chair6, chair7, chair8, chair9, chair10, chair11, chair12, chair13, chair14, chair15, chair16, chair17, chair18, table], 560, 140, &#039;Conference table&#039;);
+			})
+		];
+
+		this.addPalette(&#039;floorplan&#039;, mxResources.get(&#039;floorplans&#039;), false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+		
+		this.setCurrentSearchEntryLibrary();
+	};
+	
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

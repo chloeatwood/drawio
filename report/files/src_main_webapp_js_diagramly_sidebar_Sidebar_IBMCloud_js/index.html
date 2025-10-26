@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-IBMCloud.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-IBMCloud.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">60.66</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">565</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">53.75</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">13.24</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addIBMCloudPalette = function()
+	{
+		var d = 48;
+		var d2 = 24;
+		var dt = &#039;ibm cloud &#039;;
+
+		this.setCurrentSearchEntryLibrary(&#039;ibm_cloud&#039;, &#039;ibm_cloudGroups&#039;);
+		this.addIBMCloudGroupsPalette(d, d2, dt);
+		this.setCurrentSearchEntryLibrary(&#039;ibm_cloud&#039;, &#039;ibm_cloudActors&#039;);
+		this.addIBMCloudActorsPalette(d, d2, dt);
+		this.setCurrentSearchEntryLibrary(&#039;ibm_cloud&#039;, &#039;ibm_cloudAI&#039;);
+		this.addIBMCloudAIPalette(d, d2, dt);
+		this.setCurrentSearchEntryLibrary(&#039;ibm_cloud&#039;, &#039;ibm_cloudCompute&#039;);
+		this.addIBMCloudComputePalette(d, d2, dt);
+		this.setCurrentSearchEntryLibrary(&#039;ibm_cloud&#039;, &#039;ibm_cloudContainers&#039;);
+		this.addIBMCloudContainersPalette(d, d2, dt);
+		this.setCurrentSearchEntryLibrary(&#039;ibm_cloud&#039;, &#039;ibm_cloudData&#039;);
+		this.addIBMCloudDataPalette(d, d2, dt);
+		this.setCurrentSearchEntryLibrary(&#039;ibm_cloud&#039;, &#039;ibm_cloudDevOps&#039;);
+		this.addIBMCloudDevOpsPalette(d, d2, dt);
+		this.setCurrentSearchEntryLibrary(&#039;ibm_cloud&#039;, &#039;ibm_cloudNetwork&#039;);
+		this.addIBMCloudNetworkPalette(d, d2, dt);
+		this.setCurrentSearchEntryLibrary(&#039;ibm_cloud&#039;, &#039;ibm_cloudObservability&#039;);
+		this.addIBMCloudObservabilityPalette(d, d2, dt);
+		this.setCurrentSearchEntryLibrary(&#039;ibm_cloud&#039;, &#039;ibm_cloudSecurity&#039;);
+		this.addIBMCloudSecurityPalette(d, d2, dt);
+		this.setCurrentSearchEntryLibrary(&#039;ibm_cloud&#039;, &#039;ibm_cloudStorage&#039;);
+		this.addIBMCloudStoragePalette(d, d2, dt);
+		this.setCurrentSearchEntryLibrary(&#039;ibm_cloud&#039;, &#039;ibm_cloudConnectors&#039;);
+		this.addIBMCloudConnectorsPalette(d, d2, dt);
+};
+
+		Sidebar.prototype.addIBMCloudGroupsPalette = function(d, d2, dt)
+		{
+			dt += &#039;groups &#039;;
+			var fns = [];
+
+			this.addIBMCloudPrescribedLocation(&#039;IBM Cloud&#039;, &#039;ibm-cloud&#039;, dt, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;VPC&#039;, &#039;ibm-cloud--vpc&#039;, dt + &#039;vpc virtual private &#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Subnet&#039;, &#039;ibm-cloud--subnets&#039;, dt + &#039;subnet &#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Enterprise Network&#039;, &#039;network--enterprise&#039;, dt + &#039;enterprise network &#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Public Network&#039;, &#039;network--public&#039;, dt + &#039;public network &#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Cloud Services&#039;, &#039;cloud-services&#039;, dt + &#039;services &#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Internet Services&#039;, &#039;ibm-cloud--internet-services&#039;, dt + &#039;internet services &#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Overlay Network&#039;, &#039;network--overlay&#039;, dt + &#039;network overlay &#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Power Workspace&#039;, &#039;ibm--power-vs&#039;, dt + &#039;power workspace &#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Z System&#039;, &#039;z--systems&#039;, dt + &#039;system &#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Internet&#039;, &#039;wikis&#039;, dt + &#039;internet &#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;VLAN&#039;, &#039;vlan&#039;, dt + &#039;vlan virtual lan local area network &#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Classic VLAN&#039;, &#039;vlan--ibm&#039;, dt + &#039;classic vlan virtual lan local area network &#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Classic Infrastructure&#039;, &#039;infrastructure--classic&#039;, dt + &#039;classic infrastructure&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#1192E8&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#1192E8&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;OpenShift&#039;, &#039;logo--openshift&#039;, dt + &#039;openshift&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#198038&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#198038&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Kubernetes Service&#039;, &#039;ibm-cloud--kubernetes-service&#039;, dt + &#039;kubernetes service&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#198038&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#198038&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Z Containers&#039;, &#039;ibm-z-os--containers&#039;, dt + &#039;containers&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#198038&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#198038&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;watsonx&#039;, &#039;watsonx&#039;, dt + &#039;watsonx&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#A56EFF&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;watsonx Code Assistant&#039;, &#039;ibm-watsonx--code-assistant&#039;, dt + &#039;watsonx code assistant&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#A56EFF&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;watsonx Z Code Assistant&#039;, &#039;ibm-watsonx--code-assistant-for-z&#039;, dt + &#039;watsonx code assistant for z&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#A56EFF&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Authorization Boundary&#039;, &#039;flag&#039;, dt + &#039;authorization boundary&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#FA4D56&#039;, false, 2);
+			this.addIBMCloudPrescribedLocation(&#039;Point of Presence&#039;, &#039;point-of-presence&#039;, dt + &#039;point of presence&#039;, fns, d, d2, &#039;#878D96&#039;, &#039;none&#039;, &#039;#878D96&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#878D96&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Region&#039;, &#039;location&#039;, dt + &#039;region&#039;, fns, d, d2, &#039;#878D96&#039;, &#039;none&#039;, &#039;#878D96&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#878D96&#039;, false, 1);
+			this.addIBMCloudPrescribedLocation(&#039;Generic Group&#039;, &#039;&#039;, dt + &#039;generic group&#039;, fns, d, d2, &#039;#878D96&#039;, &#039;none&#039;, &#039;#878D96&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#878D96&#039;, true, 1);
+			this.addIBMCloudZone(&#039;Access Group&#039;, &#039;group--access&#039;, dt + &#039;access group&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#FA4D56&#039;, false, 2);
+			this.addIBMCloudZone(&#039;Account Group&#039;, &#039;group--account&#039;, dt + &#039;account group&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#FA4D56&#039;, false, 2);
+			this.addIBMCloudZone(&#039;Resource Group&#039;, &#039;group--resource&#039;, dt + &#039;resource group&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#FA4D56&#039;, false, 2);
+			this.addIBMCloudZone(&#039;Security Group&#039;, &#039;group--security&#039;, dt + &#039;security group&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#FA4D56&#039;, false, 2);
+			this.addIBMCloudZone(&#039;Instance Group&#039;, &#039;autoscaling&#039;, dt + &#039;instance group&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#198038&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#198038&#039;, false, 2);
+			this.addIBMCloudZone(&#039;Placement Group&#039;, &#039;group-objects&#039;, dt + &#039;placement group&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#198038&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#198038&#039;, false, 2);
+			this.addIBMCloudZone(&#039;Availability Zone&#039;, &#039;data--center&#039;, dt + &#039;availability zone&#039;, fns, d, d2, &#039;#878D96&#039;, &#039;none&#039;, &#039;#878D96&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#878D96&#039;, false, 2);
+			this.addIBMCloudZone(&#039;Generic Zone&#039;, &#039;&#039;, dt + &#039;generic zone&#039;, fns, d, d2, &#039;#878D96&#039;, &#039;none&#039;, &#039;#878D96&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#878D96&#039;, true, 2);
+			this.addIBMCloudPrescribedNodeExpanded(&#039;Expanded Virtual Server&#039;, &#039;ibm-cloud--virtual-server-vpc&#039;, dt + &#039;expanded virtual server&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#198038&#039;);
+			this.addIBMCloudPrescribedNodeExpanded(&#039;Expanded Power Virtual Server&#039;, &#039;ibm--power-vs&#039;, dt + &#039;expanded power virtual server&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#198038&#039;);
+			this.addIBMCloudPrescribedNodeExpanded(&#039;Expanded Classic Virtual\nServer&#039;, &#039;ibm-cloud--virtual-server-classic&#039;, dt + &#039;expanded classic virtual server&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#198038&#039;);
+			this.addIBMCloudPrescribedNodeExpanded(&#039;Expanded Bare Metal\nServer&#039;, &#039;ibm-cloud--bare-metal-servers-vpc&#039;, dt + &#039;expanded bare metal server&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#198038&#039;);
+			this.addIBMCloudPrescribedNodeExpanded(&#039;Expanded Classic Bare\nMetal Server&#039;, &#039;ibm-cloud--bare-metal-server&#039;, dt + &#039;expanded classic bare metal server&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#198038&#039;);
+			this.addIBMCloudPrescribedNodeExpanded(&#039;Expanded Application&#039;, &#039;application&#039;, dt + &#039;expanded application&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#A56EFF&#039;);
+			this.addIBMCloudPrescribedNodeExpanded(&#039;Expanded Microservice&#039;, &#039;microservices--1&#039;, dt + &#039;expanded microservice&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;, &#039;none&#039;, &#039;#A56EFF&#039;);
+
+			this.addPalette(&#039;ibm_cloudGroups&#039;, &#039;IBM / Groups&#039;, false, mxUtils.bind(this, function(content)
+			{
+				for (var i = 0; i &lt; fns.length; i++)
+				{
+					content.appendChild(fns[i](content));
+				}
+			}));
+		};
+		
+		Sidebar.prototype.addIBMCloudActorsPalette = function(d, d2, dt)
+		{
+			dt += &#039;actors &#039;;
+			var fns = [];
+
+			this.addIBMCloudActor(&#039;User&#039;, &#039;user&#039;, dt + &#039;user&#039;, fns, d, d2, &#039;#000000&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudActor(&#039;Users&#039;, &#039;group&#039;, dt + &#039;users&#039;, fns, d, d2, &#039;#000000&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudActor(&#039;Enterprise&#039;, &#039;enterprise&#039;, dt + &#039;enterprise&#039;, fns, d, d2, &#039;#000000&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudActor(&#039;Application&#039;, &#039;application&#039;, dt + &#039;application&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudActor(&#039;Web Application&#039;, &#039;application--web&#039;, dt + &#039;web application&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudActor(&#039;Microservice&#039;, &#039;microservices--1&#039;, dt + &#039;microservice&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+
+			this.addPalette(&#039;ibm_cloudActors&#039;, &#039;IBM / Actors&#039;, false, mxUtils.bind(this, function(content)
+			{
+				for (var i = 0; i &lt; fns.length; i++)
+				{
+					content.appendChild(fns[i](content));
+				}
+			}));
+		};
+		
+		Sidebar.prototype.addIBMCloudAIPalette = function(d, d2, dt)
+		{
+			dt += &#039;ai &#039;;
+			var fns = [];
+					   
+			this.addIBMCloudPrescribedNode(&#039;watsonx&#039;, &#039;watsonx&#039;, dt + &#039;watsonx&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;watsonx.ai&#039;, &#039;watsonx-ai&#039;, dt + &#039;watsonx ai artificial intelligence&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;watsonx.data&#039;, &#039;watsonx-data&#039;, dt + &#039;watsonx data&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;watsonx.governance&#039;, &#039;watsonx-governance&#039;, dt + &#039;watsonx governance&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;watsonx Orchestrate&#039;, &#039;ibm-watsonx--orchestrate&#039;, dt + &#039;watsonx orchestrate&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;watsonx Assistant&#039;, &#039;ibm-watsonx--assistant&#039;, dt + &#039;watsonx assistant&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;watsonx Code Assistant&#039;, &#039;ibm-watsonx--code-assistant&#039;, dt + &#039;watsonx code assistant&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;watsonx Z Code Assistant&#039;, &#039;ibm-watsonx--code-assistant-for-z&#039;, dt + &#039;watsonx code assistant for z&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;watsonx Z Refactor Code Assistant&#039;, &#039;ibm-watsonx--code-assistant-for-z--refactor&#039;, dt + &#039;watsonx code assistant for z refactor&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Watson Discovery&#039;, &#039;ibm-watson--discovery&#039;, dt + &#039;watson discovery&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Watson Machine Learning&#039;, &#039;ibm-watson--machine-learning&#039;, dt + &#039;watson machine learning&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Watson Studio&#039;, &#039;ibm-watson--studio&#039;, dt + &#039;watson studio&#039;, fns, d, d2, &#039;#A56EFF&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+
+			this.addPalette(&#039;ibm_cloudAI&#039;, &#039;IBM / AI&#039;, false, mxUtils.bind(this, function(content)
+			{
+				for (var i = 0; i &lt; fns.length; i++)
+				{
+					content.appendChild(fns[i](content));
+				}
+			}));
+		};
+		
+		Sidebar.prototype.addIBMCloudComputePalette = function(d, d2, dt)
+		{
+			dt += &#039;compute &#039;;
+			var fns = [];
+
+			this.addIBMCloudPrescribedNode(&#039;Virtual Server&#039;, &#039;ibm-cloud--virtual-server-vpc&#039;, dt + &#039;virtual server&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Power Virtual Server&#039;, &#039;ibm--power-vs&#039;, dt + &#039;power virtual server&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Classic Virtual Server&#039;, &#039;ibm-cloud--virtual-server-classic&#039;, dt + &#039;classic virtual server&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Bare Metal Server&#039;, &#039;ibm-cloud--bare-metal-servers-vpc&#039;, dt + &#039;bare metal server&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Classic Bare Metal Server&#039;, &#039;ibm-cloud--bare-metal-server&#039;, dt + &#039;classic bare metal server&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Dedicated Host&#039;, &#039;ibm-cloud--dedicated-host&#039;, dt + &#039;dedicated host&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Image Service&#039;, &#039;image-service&#039;, dt + &#039;image service&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Satellite&#039;, &#039;cloud-satellite&#039;, dt + &#039;cloud satellite&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+
+			this.addPalette(&#039;ibm_cloudCompute&#039;, &#039;IBM / Compute&#039;, false, mxUtils.bind(this, function(content)
+			{
+				for (var i = 0; i &lt; fns.length; i++)
+				{
+					content.appendChild(fns[i](content));
+				}
+			}));
+		};
+		
+		Sidebar.prototype.addIBMCloudContainersPalette = function(d, d2, dt)
+		{
+			dt += &#039;containers &#039;;
+			var fns = [];
+
+			this.addIBMCloudPrescribedNode(&#039;OpenShift&#039;, &#039;logo--openshift&#039;, dt + &#039;openshift open shift&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Kubernetes Service&#039;, &#039;ibm-cloud--kubernetes-service&#039;, dt + &#039;kubernetes service&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Z Containers&#039;, &#039;ibm-z-os--containers&#039;, dt + &#039;z containers&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Container Registry&#039;, &#039;cloud-registry&#039;, dt + &#039;container registry&#039;, fns, d, d2, &#039;#198038&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+
+			this.addPalette(&#039;ibm_cloudContainers&#039;, &#039;IBM / Containers&#039;, false, mxUtils.bind(this, function(content)
+			{
+				for (var i = 0; i &lt; fns.length; i++)
+				{
+					content.appendChild(fns[i](content));
+				}
+			}));
+		};
+		
+		Sidebar.prototype.addIBMCloudDataPalette = function(d, d2, dt)
+		{
+			dt += &#039;data &#039;;
+			var fns = [];
+
+			this.addIBMCloudPrescribedNode(&#039;Db2&#039;, &#039;ibm--db2&#039;, dt + &#039;db2&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Db2 Warehouse&#039;, &#039;ibm--db2-warehouse&#039;, dt + &#039;db2 warehouse&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Cloudant&#039;, &#039;ibm--cloudant&#039;, dt + &#039;cloudant&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;DataStax&#039;, &#039;database--datastax&#039;, dt + &#039;datastax&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Elasticsearch&#039;, &#039;database--elastic&#039;, dt + &#039;elasticsearch&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;EnterpriseDB&#039;, &#039;database--enterprisedb&#039;, dt + &#039;enterprisedb&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;etcd&#039;, &#039;database--etcd&#039;, dt + &#039;etcd&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;MongoDB&#039;, &#039;database--mongodb&#039;, dt + &#039;mongodb&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;MySQL&#039;, &#039;database--mysql&#039;, dt + &#039;mysql my sql&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;PostgreSQL&#039;, &#039;database--postgresql&#039;, dt + &#039;postgresql postgre sql&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Rabbit&#039;, &#039;database--rabbit&#039;, dt + &#039;rabbit&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Redis&#039;, &#039;database--redis&#039;, dt + &#039;redis&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Database&#039;, &#039;data--base&#039;, dt + &#039;database&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Event Streams&#039;, &#039;ibm-cloud--event-streams&#039;, dt + &#039;event streams&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Data Pak&#039;, &#039;ibm-cloud-pak--data&#039;, dt + &#039;data pak&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+
+			this.addPalette(&#039;ibm_cloudData&#039;, &#039;IBM / Data&#039;, false, mxUtils.bind(this, function(content)
+			{
+				for (var i = 0; i &lt; fns.length; i++)
+				{
+					content.appendChild(fns[i](content));
+				}
+			}));
+		};
+		
+		Sidebar.prototype.addIBMCloudDevOpsPalette = function(d, d2, dt)
+		{
+			dt += &#039;devops &#039;;
+			var fns = [];
+
+			this.addIBMCloudPrescribedNode(&#039;Continuous Delivery&#039;, &#039;ibm-cloud--continuous-delivery&#039;, dt + &#039;continuous delivery&#039;, fns, d, d2, &#039;#EE5396&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Continuous Integration&#039;, &#039;continuous-integration&#039;, dt + &#039;continuous integration&#039;, fns, d, d2, &#039;#EE5396&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Source Code Repository&#039;, &#039;repo--source-code&#039;, dt + &#039;source code repository&#039;, fns, d, d2, &#039;#EE5396&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Toolchain&#039;, &#039;ibm--toolchain&#039;, dt + &#039;toolchain&#039;, fns, d, d2, &#039;#EE5396&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;MQ&#039;, &#039;ibm--mq&#039;, dt + &#039;mq&#039;, fns, d, d2, &#039;#EE5396&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Ansible&#039;, &#039;logo--ansible-community&#039;, dt + &#039;ansible&#039;, fns, d, d2, &#039;#EE5396&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;GitLab&#039;, &#039;logo--gitlab&#039;, dt + &#039;gitlab&#039;, fns, d, d2, &#039;#EE5396&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Integration Pak&#039;, &#039;ibm-cloud-pak--integration&#039;, dt + &#039;integration pak&#039;, fns, d, d2, &#039;#EE5396&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+
+			this.addPalette(&#039;ibm_cloudDevOps&#039;, &#039;IBM / DevOps&#039;, false, mxUtils.bind(this, function(content)
+			{
+				for (var i = 0; i &lt; fns.length; i++)
+				{
+					content.appendChild(fns[i](content));
+				}
+			}));
+		};
+		
+		Sidebar.prototype.addIBMCloudNetworkPalette = function(d, d2, dt)
+		{
+			dt += &#039;network &#039;;
+			var fns = [];
+
+			this.addIBMCloudPrescribedNode(&#039;Load Balancer&#039;, &#039;load-balancer--vpc&#039;, dt + &#039;load balancer&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Application Load Balancer&#039;, &#039;load-balancer--application&#039;, dt + &#039;application load balancer&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Network Load Balancer&#039;, &#039;load-balancer--network&#039;, dt + &#039;network load balancer&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Global Load Balancer&#039;, &#039;load-balancer--global&#039;, dt + &#039;network load balancer&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Classic Load Balancer&#039;, &#039;load-balancer--classic&#039;, dt + &#039;network load balancer&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Floating IP&#039;, &#039;floating-ip&#039;, dt + &#039;floating ip&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Network Interface&#039;, &#039;network-interface&#039;, dt + &#039;network interface&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Endpoint Gateway&#039;, &#039;ibm-cloud--vpc-endpoints&#039;, dt + &#039;endpoint gateway&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Public Gateway&#039;, &#039;gateway--public&#039;, dt + &#039;public gateway&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Transit Gateway&#039;, &#039;ibm-cloud--transit-gateway&#039;, dt + &#039;transit gateway&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Direct Link Connect&#039;, &#039;ibm-cloud--direct-link-2--connect&#039;, dt + &#039;direct link connect&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Direct Link Dedicated&#039;, &#039;ibm-cloud--direct-link-2--dedicated&#039;, dt + &#039;direct link dedicated&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;DNS Services&#039;, &#039;dns-services&#039;, dt + &#039;dns services&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Internet Services&#039;, &#039;ibm-cloud--internet-services&#039;, dt + &#039;internet services&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Internet&#039;, &#039;wikis&#039;, dt + &#039;internet&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Bridge&#039;, &#039;arrows--horizontal&#039;, dt + &#039;internet&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Router&#039;, &#039;router&#039;, dt + &#039;router&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;VLAN&#039;, &#039;vlan&#039;, dt + &#039;vlan virtual lan local area network&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Classic VLAN&#039;, &#039;vlan--ibm&#039;, dt + &#039;classic vlan virtual lan local area network&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Proxy Server&#039;, &#039;server--proxy&#039;, dt + &#039;proxy server&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;L2 Switch&#039;, &#039;switch-layer-2&#039;, dt + &#039;l2 layer two switch&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;L3 Switch&#039;, &#039;switch-layer-3&#039;, dt + &#039;l3 layer three switch&#039;, fns, d, d2, &#039;#1192E8&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+					   
+			this.addPalette(&#039;ibm_cloudNetwork&#039;, &#039;IBM / Network&#039;, false, mxUtils.bind(this, function(content)
+			{
+				for (var i = 0; i &lt; fns.length; i++)
+				{
+					content.appendChild(fns[i](content));
+				}
+			}));
+		};
+		
+		Sidebar.prototype.addIBMCloudObservabilityPalette = function(d, d2, dt)
+		{
+			dt += &#039;observability &#039;;
+			var fns = [];
+			
+			this.addIBMCloudPrescribedNode(&#039;Cloud Logs&#039;, &#039;ibm-cloud--logging&#039;, dt + &#039;logs&#039;, fns, d, d2, &#039;#009D9A&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Flow Logs&#039;, &#039;flow-logs-vpc&#039;, dt + &#039;flow logs&#039;, fns, d, d2, &#039;#009D9A&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Monitoring&#039;, &#039;cloud--monitoring&#039;, dt + &#039;monitoring&#039;, fns, d, d2, &#039;#009D9A&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+
+			this.addPalette(&#039;ibm_cloudObservability&#039;, &#039;IBM / Observability&#039;, false, mxUtils.bind(this, function(content)
+			{
+				for (var i = 0; i &lt; fns.length; i++)
+				{
+					content.appendChild(fns[i](content));
+				}
+			}));
+		};
+		
+		Sidebar.prototype.addIBMCloudSecurityPalette = function(d, d2, dt)
+		{
+			dt += &#039;security &#039;;
+			var fns = [];
+			
+			this.addIBMCloudPrescribedNode(&#039;App ID&#039;, &#039;ibm-cloud--app-id&#039;, dt + &#039;app id&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Key Protect&#039;, &#039;ibm-cloud--key-protect&#039;, dt + &#039;key protect&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Secrets Manager&#039;, &#039;ibm-cloud--secrets-manager&#039;, dt + &#039;secrets manager&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Security Compliance Center&#039;, &#039;ibm-cloud--security-compliance-center&#039;, dt + &#039;security compliance center&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;SSH Key&#039;, &#039;password&#039;, dt + &#039;ssh key&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;VPN Gateway&#039;, &#039;ibm--vpn-for-vpc&#039;, dt + &#039;vpn gateway virtual private network&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;VPN Connection&#039;, &#039;vpn--connection&#039;, dt + &#039;vpn connection virtual private network&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Bastion Host&#039;, &#039;bastion-host&#039;, dt + &#039;bastion host&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;ACL Rules&#039;, &#039;subnet-acl-rules&#039;, dt + &#039;acl rules&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Security Pak&#039;, &#039;ibm-cloud-pak--security&#039;, dt + &#039;security pak&#039;, fns, d, d2, &#039;#FA4D56&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+
+			this.addPalette(&#039;ibm_cloudSecurity&#039;, &#039;IBM / Security&#039;, false, mxUtils.bind(this, function(content)
+			{
+				for (var i = 0; i &lt; fns.length; i++)
+				{
+					content.appendChild(fns[i](content));
+				}
+			}));
+		};
+		
+		Sidebar.prototype.addIBMCloudStoragePalette = function(d, d2, dt)
+		{
+			dt += &#039;storage &#039;;
+			var fns = [];
+
+			this.addIBMCloudPrescribedNode(&#039;Block Storage&#039;, &#039;block-storage&#039;, dt + &#039;block storage&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+			this.addIBMCloudPrescribedNode(&#039;Object Storage&#039;, &#039;object-storage&#039;, dt + &#039;object storage&#039;, fns, d, d2, &#039;#0F62FE&#039;, &#039;none&#039;, &#039;#ffffff&#039;, &#039;none&#039;);
+
+			this.addPalette(&#039;ibm_cloudStorage&#039;, &#039;IBM / Storage&#039;, false, mxUtils.bind(this, function(content)
+			{
+				for (var i = 0; i &lt; fns.length; i++)
+				{
+					content.appendChild(fns[i](content));
+				}
+			}));
+		};
+		
+		Sidebar.prototype.addIBMCloudConnectorsPalette = function(d, d2, dt)
+		{
+			var s = &#039;html=1;labelBackgroundColor=#ffffff;jettySize=auto;orthogonalLoop=1;fontSize=14;rounded=0;jumpStyle=gap;edgeStyle=orthogonalEdgeStyle;&#039;;
+			dt += &#039;connectors &#039;;
+			
+			var fns = [
+				this.createEdgeTemplateEntry(s + &#039;startArrow=none;endArrow=none;strokeWidth=2;endFill=0;&#039;, 
+					d, d, &#039;&#039;, &#039;Connector&#039;, null, dt + &#039;connector&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=none;endArrow=block;strokeWidth=2;endFill=1;&#039;, 
+					d, d, &#039;&#039;, &#039;Connector (Arrow)&#039;, null, dt + &#039;connector arrow&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=block;endArrow=block;strokeWidth=2;startFill=1;endFill=1;&#039;, 
+					d, d, &#039;&#039;, &#039;Connector (Arrow, Arrow)&#039;, null, dt + &#039;connector arrow&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=oval;endArrow=oval;strokeWidth=2;startFill=1;endFill=1;sourcePerimeterSpacing=3;targetPerimeterSpacing=3;&#039;, 
+					d, d, &#039;&#039;, &#039;Connector (Circle, Circle)&#039;, null, dt + &#039;connector circle&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=oval;endArrow=block;strokeWidth=2;startFill=1;endFill=1;sourcePerimeterSpacing=3;targetPerimeterSpacing=3;&#039;, 
+					d, d, &#039;&#039;, &#039;Connector (Circle, Arrow)&#039;, null, dt + &#039;connector circle arrow&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=oval;endArrow=oval;strokeWidth=2;startFill=1;endFill=1;sourcePerimeterSpacing=3;targetPerimeterSpacing=3;strokeColor=#198038;&#039;, 
+					d, d, &#039;&#039;, &#039;Private Connector (Circle, Circle)&#039;, null, dt + &#039;connector circle&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=oval;endArrow=block;strokeWidth=2;startFill=1;endFill=1;strokeColor=#198038;&#039;, 
+					d, d, &#039;&#039;, &#039;Private Connector (Circle, Arrow)&#039;, null, dt + &#039;connector circle arrow&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=oval;endArrow=oval;strokeWidth=2;startFill=1;endFill=1;sourcePerimeterSpacing=3;targetPerimeterSpacing=3;strokeColor=#0F62F3;&#039;, 
+					d, d, &#039;&#039;, &#039;Public Connector (Circle, Circle)&#039;, null, dt + &#039;connector circle&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=oval;endArrow=block;strokeWidth=2;startFill=1;endFill=1;strokeColor=#0F62F3;&#039;, 
+					d, d, &#039;&#039;, &#039;Public Connector (Circle, Arrow)&#039;, null, dt + &#039;connector circle arrow&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=none;endArrow=none;strokeWidth=2;dashed=1;&#039;, 
+					d, d, &#039;&#039;, &#039;Logical Connector&#039;, null, dt + &#039; logical connector&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=none;endArrow=block;endFill=1;strokeWidth=2;dashed=1;&#039;, 
+					d, d, &#039;&#039;, &#039;Logical Connector (Arrow)&#039;, null, dt + &#039; logical connector arrow&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=block;endArrow=block;startFill=1;endFill=1;strokeWidth=2;dashed=1;&#039;, 
+					d, d, &#039;&#039;, &#039;Logical Connector (Arrow, Arrow)&#039;, null, dt + &#039; logical connector arrow&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=oval;endArrow=oval;startFill=1;endFill=1;strokeWidth=2;dashed=1;sourcePerimeterSpacing=3;targetPerimeterSpacing=3;&#039;, 
+					d, d, &#039;&#039;, &#039;Logical Connector (Circle, Circle)&#039;, null, dt + &#039; logical connector circle&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=oval;endArrow=block;startFill=1;endFill=1;strokeWidth=2;dashed=1;sourcePerimeterSpacing=3;targetPerimeterSpacing=3;&#039;, 
+					d, d, &#039;&#039;, &#039;Logical Connector (Circle, Arrow)&#039;, null, dt + &#039; logical connector circle arrow&#039;),
+				this.createEdgeTemplateEntry(s + &#039;shape=link;startArrow=none;endArrow=none;strokeWidth=2;&#039;, 
+					d, d, &#039;&#039;, &#039;Physical Connector&#039;, null, dt + &#039;physical connector&#039;),
+				this.createEdgeTemplateEntry(s + &#039;shape=flexArrow;startArrow=none;endArrow=none;fillColor=#FFCCCC;strokeColor=none;&#039;, 
+					d, d, &#039;&#039;, &#039;Tunnel Connector&#039;, null, dt + &#039;tunnel connector&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=none;endArrow=open;strokeWidth=1;&#039;, 
+					d, d, &#039;&#039;, &#039;Association&#039;, null, dt + &#039;association&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=none;endArrow=block;endFill=0;strokeWidth=1;&#039;, 
+					d, d, &#039;&#039;, &#039;Extends&#039;, null, dt + &#039;extends&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=diamond;startFill=1;endArrow=open;strokeWidth=1;&#039;, 
+					d, d, &#039;&#039;, &#039;Composition&#039;, null, dt + &#039;composition&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=diamond;startFill=0;endArrow=open;strokeWidth=1;&#039;, 
+					d, d, &#039;&#039;, &#039;Aggregation&#039;, null, dt + &#039;aggregation&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=none;endArrow=open;dashed=1;strokeWidth=1;&#039;, 
+					d, d, &#039;&#039;, &#039;Dependency&#039;, null, dt + &#039;dependency&#039;),
+				this.createEdgeTemplateEntry(s + &#039;startArrow=none;endArrow=block;endFill=0;dashed=1;strokeWidth=1;&#039;, 
+					d, d, &#039;&#039;, &#039;Implementation&#039;, null, dt + &#039;implementation&#039;)
+			];
+
+		   	this.addPalette(&#039;ibm_cloudConnectors&#039;, &#039;IBM / Connectors&#039;, false, mxUtils.bind(this, function(content)
+			{
+				for (var i = 0; i &lt; fns.length; i++)
+				{
+					content.appendChild(fns[i](content));
+				}
+			}));
+		};
+
+	Sidebar.prototype.addIBMCloudActor = function(label, icon, dt, fns, d, d2, bgFillColor, bgStrokeColor, iconFillColor, iconStrokeColor)
+	{
+		var sb = this;
+		var label1 = label.replace(&#039;\n&#039;, &#039; &#039;);
+		var label1 = label1.replace(&#039;- &#039;, &#039;-&#039;);
+
+		fns.push(
+			this.addEntry(dt, function()
+			{
+				var bg = new mxCell(label1, new mxGeometry(0, 0, d, d), 
+						&#039;shape=ellipse;fillColor=&#039; + bgFillColor + &#039;;aspect=fixed;resizable=0;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;strokeColor=&#039; + bgStrokeColor + &#039;;fontSize=14;&#039;);
+				bg.vertex = true;
+				
+				var icon1 = new mxCell(&#039;&#039;, 
+						new mxGeometry(0, 0, d2, d2), 
+						&#039;fillColor=&#039; + iconFillColor + &#039;;strokeColor=&#039; + iconStrokeColor + &#039;;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;shape=mxgraph.ibm_cloud.&#039; + icon);
+				icon1.geometry.relative = true;
+				icon1.geometry.offset = new mxPoint((d - d2) * 0.5, (d - d2) * 0.5);
+				icon1.vertex = true;
+				bg.insert(icon1);
+
+				return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, label, false);
+			})
+		);
+	};
+
+	Sidebar.prototype.addIBMCloudPrescribedNode = function(label, icon, dt, fns, d, d2, bgFillColor, bgStrokeColor, iconFillColor, iconStrokeColor)
+	{
+		var sb = this;
+		var label1 = label.replace(&#039;\n&#039;, &#039; &#039;);
+		var label1 = label1.replace(&#039;- &#039;, &#039;-&#039;);
+
+		fns.push(
+			this.addEntry(dt, function()
+			{
+				var bg = new mxCell(label1, new mxGeometry(0, 0, d, d), 
+						&#039;shape=rect;fillColor=&#039; + bgFillColor + &#039;;aspect=fixed;resizable=0;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;strokeColor=&#039; + bgStrokeColor + &#039;;fontSize=14;&#039;);
+				bg.vertex = true;
+				
+				var icon1 = new mxCell(&#039;&#039;, 
+						new mxGeometry(0, 0, d2, d2), 
+						&#039;fillColor=&#039; + iconFillColor + &#039;;strokeColor=&#039; + iconStrokeColor + &#039;;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;shape=mxgraph.ibm_cloud.&#039; + icon);
+				icon1.geometry.relative = true;
+				icon1.geometry.offset = new mxPoint((d - d2) * 0.5, (d - d2) * 0.5);
+				icon1.vertex = true;
+				bg.insert(icon1);
+
+				return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, label, false);
+			})
+		);
+	};
+
+	Sidebar.prototype.addIBMCloudPrescribedNodeExpanded = function(label, icon, dt, fns, d, d2, bgFillColor, bgStrokeColor, iconFillColor, iconStrokeColor, containerFillColor, containerStrokeColor)
+	{
+		var sb = this;
+		var label1 = label.replace(&#039;\n&#039;, &#039; &#039;);
+		var label1 = label1.replace(&#039;- &#039;, &#039;-&#039;);
+
+		fns.push(
+			this.addEntry(dt, function()
+			{
+				var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 220, 140), 
+						&#039;container=1;collapsible=0;expand=0;recursiveResize=0;html=1;whiteSpace=wrap;strokeColor=&#039; + containerStrokeColor + &#039;;fillColor=&#039; + containerFillColor + &#039;;&#039;);
+				bg.vertex = true;
+
+				var iconBg = new mxCell(label, new mxGeometry(0, 0, d, d), 
+						&#039;shape=rect;fillColor=&#039; + bgFillColor + &#039;;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=&#039; + bgStrokeColor + &#039;;part=1;spacingLeft=5;fontSize=14;&#039;);
+				iconBg.vertex = true;
+				iconBg.geometry.relative = true;
+				bg.insert(iconBg);
+				
+				var icon1 = new mxCell(&#039;&#039;, 
+						new mxGeometry(0, 0, d2, d2), 
+						&#039;fillColor=&#039; + iconFillColor + &#039;;shape=mxgraph.ibm_cloud.&#039; + icon + &#039;;strokeColor=&#039; + iconStrokeColor + &#039;;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;&#039;);
+				icon1.geometry.relative = true;
+				icon1.geometry.offset = new mxPoint((d - d2) * 0.5, (d - d2) * 0.5);
+				icon1.vertex = true;
+				iconBg.insert(icon1);
+
+				return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, label);
+			})
+		);
+	};
+
+	Sidebar.prototype.addIBMCloudPrescribedLocation = function(label, icon, dt, fns, d, d2, bgFillColor, bgStrokeColor, iconFillColor, iconStrokeColor, containerFillColor, containerStrokeColor, isGeneric, sw)
+	{
+		var sb = this;
+		var label1 = label.replace(&#039;\n&#039;, &#039; &#039;);
+		var label1 = label1.replace(&#039;- &#039;, &#039;-&#039;);
+
+		fns.push(
+			this.addEntry(dt + &#039;prescribed location&#039;, function()
+			{
+				var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 220, 140), 
+						&#039;container=1;collapsible=0;expand=0;recursiveResize=0;html=1;whiteSpace=wrap;strokeColor=&#039; + containerStrokeColor + &#039;;fillColor=&#039; + containerFillColor + &#039;;strokeWidth=&#039; + sw);
+				bg.vertex = true;
+
+				if (!isGeneric)
+				{
+					var iconBg = new mxCell(label, new mxGeometry(0, 0, d, d), 
+						&#039;shape=rect;fillColor=none;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;&#039;);
+					iconBg.vertex = true;
+					iconBg.geometry.relative = true;
+					bg.insert(iconBg);
+				}
+
+				var iconSidebar = new mxCell(isGeneric ? label : &#039;&#039;, new mxGeometry(0, 0, 4, d), 
+						&#039;shape=rect;fillColor=&#039; + bgFillColor + &#039;;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=&#039; + bgStrokeColor + &#039;;part=1;spacingLeft=5;fontSize=14;&#039;);
+				iconSidebar.vertex = true;
+				iconSidebar.geometry.relative = true;
+				bg.insert(iconSidebar);
+
+				if (!isGeneric)
+				{
+					var icon1 = new mxCell(&#039;&#039;, 
+						new mxGeometry(0, 0, d2, d2), 
+						&#039;fillColor=&#039; + iconFillColor + &#039;;shape=mxgraph.ibm_cloud.&#039; + icon + &#039;;strokeColor=&#039; + iconStrokeColor + &#039;;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;&#039;);
+					icon1.geometry.relative = true;
+					icon1.geometry.offset = new mxPoint((d - d2) * 0.5, (d - d2) * 0.5);
+					icon1.vertex = true;
+					iconBg.insert(icon1);
+				}
+
+				return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, label);
+			})
+		);
+	};
+
+	Sidebar.prototype.addIBMCloudZone = function(label, icon, dt, fns, d, d2, bgFillColor, bgStrokeColor, iconFillColor, iconStrokeColor, containerFillColor, containerStrokeColor, isGeneric, sw)
+	{
+		var sb = this;
+		var label1 = label.replace(&#039;\n&#039;, &#039; &#039;);
+		var label1 = label1.replace(&#039;- &#039;, &#039;-&#039;);
+
+		fns.push(
+			this.addEntry(dt + &#039;zone&#039;, function()
+			{
+					var bg = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 220, 140), 
+						&#039;container=1;collapsible=0;expand=0;recursiveResize=0;html=1;whiteSpace=wrap;strokeColor=&#039; + containerStrokeColor + &#039;;fillColor=&#039; + containerFillColor + &#039;;dashed=1;dashPattern=1 3;strokeWidth=&#039; + sw);
+					bg.vertex = true;
+
+				if (isGeneric)
+				{
+					var iconBg = new mxCell(label, new mxGeometry(0, 0, d, d), 
+						&#039;shape=rect;fillColor=none;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=-42;fontSize=14;&#039;);
+					iconBg.vertex = true;
+					iconBg.geometry.relative = true;
+					bg.insert(iconBg);
+				}
+				else
+				{
+					var iconBg = new mxCell(label, new mxGeometry(0, 0, d, d), 
+						&#039;shape=rect;fillColor=none;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;&#039;);
+					iconBg.vertex = true;
+					iconBg.geometry.relative = true;
+					bg.insert(iconBg);
+	
+					var icon1 = new mxCell(&#039;&#039;, 
+						new mxGeometry(0, 0, d2, d2), 
+						&#039;fillColor=&#039; + iconFillColor + &#039;;shape=mxgraph.ibm_cloud.&#039; + icon + &#039;;strokeColor=&#039; + iconStrokeColor + &#039;;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;&#039;);
+					icon1.geometry.relative = true;
+					icon1.geometry.offset = new mxPoint((d - d2) * 0.5, (d - d2) * 0.5);
+					icon1.vertex = true;
+					iconBg.insert(icon1);
+				}
+				
+				return sb.createVertexTemplateFromCells([bg], bg.geometry.width, bg.geometry.height, label);
+			})
+		);
+	};
+
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

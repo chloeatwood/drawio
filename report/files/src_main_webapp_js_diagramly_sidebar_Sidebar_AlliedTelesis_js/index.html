@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-AlliedTelesis.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-AlliedTelesis.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">66.67</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">266</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">27.76</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">6.01</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addAlliedTelesisPalette = function()
+	{
+		var d = 60;
+		var dt = &#039;allied telesis&#039;;
+		var sb = this;
+		var s = &#039;image;points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;image=img/lib/allied_telesis/&#039;;
+
+		// Adds Allied Telesis shapes
+		this.setCurrentSearchEntryLibrary(&#039;allied_telesis&#039;, &#039;allied_telesisBuildings&#039;);
+		this.addAlliedTelesisBuildingsPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;allied_telesis&#039;, &#039;allied_telesisComputer and Terminals&#039;);
+		this.addAlliedTelesisComputerTerminalsPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;allied_telesis&#039;, &#039;allied_telesisMedia Converters&#039;);
+		this.addAlliedTelesisMediaConvertersPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;allied_telesis&#039;, &#039;allied_telesisSecurity&#039;);
+		this.addAlliedTelesisSecurityPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;allied_telesis&#039;, &#039;allied_telesisStorage&#039;);
+		this.addAlliedTelesisStoragePalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;allied_telesis&#039;, &#039;allied_telesisSwitch&#039;);
+		this.addAlliedTelesisSwitchPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary(&#039;allied_telesis&#039;, &#039;allied_telesisWireless&#039;);
+		this.addAlliedTelesisWirelessPalette(d, dt, sb, s);
+		this.setCurrentSearchEntryLibrary();
+	};
+
+	Sidebar.prototype.addAlliedTelesisBuildingsPalette = function(d, dt, sb, s)
+	{
+		s += &#039;buildings/&#039;;
+		var gn = &#039;buildings&#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;Apartments.svg;&#039;,
+					 d * 0.9, d * 1.75, &#039;&#039;, &#039;Apartments&#039;, false, null, this.getTagsForStencil(gn, &#039;apartments&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Building_Cluster.svg;&#039;,
+					 d * 2.02, d * 1.85, &#039;&#039;, &#039;Building Cluster&#039;, false, null, this.getTagsForStencil(gn, &#039;building cluster&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Large_Building.svg;&#039;,
+					 d * 1.25, d * 1.25, &#039;&#039;, &#039;Large Building&#039;, false, null, this.getTagsForStencil(gn, &#039;large building&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Long_Building.svg;&#039;,
+					 d * 2.09, d * 2.16, &#039;&#039;, &#039;Long Building&#039;, false, null, this.getTagsForStencil(gn, &#039;long building&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Medium_Business_Building.svg;&#039;,
+					 d * 0.91, d * 1.17, &#039;&#039;, &#039;Medium Business Building&#039;, false, null, this.getTagsForStencil(gn, &#039;medium business building&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;School_Building.svg;&#039;,
+					 d * 2.75, d * 2.78, &#039;&#039;, &#039;School Building&#039;, false, null, this.getTagsForStencil(gn, &#039;school building&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Secure_Building.svg;&#039;,
+					 d * 2.72, d * 1.86, &#039;&#039;, &#039;Secure Building&#039;, false, null, this.getTagsForStencil(gn, &#039;secure building&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;allied_telesisBuildings&#039;, &#039;Allied Telesis / Buildings&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addAlliedTelesisComputerTerminalsPalette = function(d, dt, sb, s)
+	{
+		s += &#039;computer_and_terminals/&#039;;
+		var gn = &#039;computer terminals&#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;IP_TV.svg;&#039;,
+					 d * 0.82, d * 0.84, &#039;&#039;, &#039;IP TV&#039;, false, null, this.getTagsForStencil(gn, &#039;ip tv internet protocol television&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Keypad.svg;&#039;,
+					 d * 0.44, d * 0.8, &#039;&#039;, &#039;Keypad&#039;, false, null, this.getTagsForStencil(gn, &#039;keypad&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Laptop.svg;&#039;,
+					 d * 0.7, d * 0.71, &#039;&#039;, &#039;Laptop&#039;, false, null, this.getTagsForStencil(gn, &#039;laptop&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Personal_Computer.svg;&#039;,
+					 d * 0.76, d * 1.03, &#039;&#039;, &#039;Personal Computer&#039;, false, null, this.getTagsForStencil(gn, &#039;personal computer&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Personal_Computer_Wireless.svg;&#039;,
+					 d * 1.05, d * 1.07, &#039;&#039;, &#039;Personal Computer Wireless&#039;, false, null, this.getTagsForStencil(gn, &#039;personal computer wireless&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Personal_Computer_with_Server.svg;&#039;,
+					 d * 1.04, d * 1.04, &#039;&#039;, &#039;Personal Computer with Server&#039;, false, null, this.getTagsForStencil(gn, &#039;Personal Computer Server&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;POS_keypad.svg;&#039;,
+					 d * 0.62, d * 0.46, &#039;&#039;, &#039;POS Keypad&#039;, false, null, this.getTagsForStencil(gn, &#039;pos keypad&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;POS_Printer.svg;&#039;,
+					 d * 0.62, d * 0.54, &#039;&#039;, &#039;POS Printer&#039;, false, null, this.getTagsForStencil(gn, &#039;pos printer&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Server_Desktop.svg;&#039;,
+					 d * 0.71, d * 0.90, &#039;&#039;, &#039;Server Desktop&#039;, false, null, this.getTagsForStencil(gn, &#039;server desktop&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Smartphone.svg;&#039;,
+					 d * 0.33, d * 0.72, &#039;&#039;, &#039;Smartphone&#039;, false, null, this.getTagsForStencil(gn, &#039;smartphone&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Tablet.svg;&#039;,
+					 d * 0.45, d * 0.95, &#039;&#039;, &#039;Tablet&#039;, false, null, this.getTagsForStencil(gn, &#039;tablet&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Tablet_Alternative.svg;&#039;,
+					 d * 0.58, d * 0.8, &#039;&#039;, &#039;Tablet Alternative&#039;, false, null, this.getTagsForStencil(gn, &#039;tablet alternative&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Vdeo_Conference_Terminal.svg;&#039;,
+					 d * 0.53, d * 0.75, &#039;&#039;, &#039;Vdeo Conference Terminal&#039;, false, null, this.getTagsForStencil(gn, &#039;vdeo conference terminal&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;VOIP_IP_phone.svg;&#039;,
+					 d * 0.5, d * 0.76, &#039;&#039;, &#039;VOIP IP Phone&#039;, false, null, this.getTagsForStencil(gn, &#039;voip ip phone voice over internet protocol&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;allied_telesisComputer and Terminals&#039;, &#039;Allied Telesis / Computer and Terminals&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addAlliedTelesisMediaConvertersPalette = function(d, dt, sb, s)
+	{
+		s += &#039;media_converters/&#039;;
+		var gn = &#039;media converters&#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;Industrial_Media_Converter.svg;&#039;,
+					 d * 0.5, d * 0.95, &#039;&#039;, &#039;Industrial Media Converter&#039;, false, null, this.getTagsForStencil(gn, &#039;industrial media converter&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Industrial_Media_Converter_POE.svg;&#039;,
+					 d * 0.5, d * 0.95, &#039;&#039;, &#039;Industrial Media Converter POE&#039;, false, null, this.getTagsForStencil(gn, &#039;industrial media converter poe&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Media_Converter_Modular.svg;&#039;,
+					 d * 1.18, d * 0.91, &#039;&#039;, &#039;Media Converter Modular&#039;, false, null, this.getTagsForStencil(gn, &#039;media converter modular&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Media_Converter_Standalone.svg;&#039;,
+					 d * 0.76, d * 0.62, &#039;&#039;, &#039;Media Converter Standalone&#039;, false, null, this.getTagsForStencil(gn, &#039;media converter standalone&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Media_Converter_Standalone_POE.svg;&#039;,
+					 d * 0.76, d * 0.62, &#039;&#039;, &#039;Media Converter Standalone POE&#039;, false, null, this.getTagsForStencil(gn, &#039;media converter standalone poe&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;allied_telesisMedia Converters&#039;, &#039;Allied Telesis / Media Converters&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addAlliedTelesisSecurityPalette = function(d, dt, sb, s)
+	{
+		s += &#039;security/&#039;;
+		var gn = &#039;security&#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;DVS_Surveillance_Monitor.svg;&#039;,
+					 d * 0.7, d * 1, &#039;&#039;, &#039;DVS Surveillance Monitor&#039;, false, null, this.getTagsForStencil(gn, &#039;dvs surveillance monitor&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;EtherGRID.svg;&#039;,
+					 d * 1.49, d * 1.08, &#039;&#039;, &#039;EtherGRID&#039;, false, null, this.getTagsForStencil(gn, &#039;ethergrid&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;POE_DVS_Camera.svg;&#039;,
+					 d * 0.85, d * 0.67, &#039;&#039;, &#039;POE DVS Camera&#039;, false, null, this.getTagsForStencil(gn, &#039;poe dvs camera&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;POS.svg;&#039;,
+					 d * 1.13, d * 1.2, &#039;&#039;, &#039;POS&#039;, false, null, this.getTagsForStencil(gn, &#039;pos&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Router_UTM.svg;&#039;,
+					 d * 0.93, d * 0.66, &#039;&#039;, &#039;Router UTM&#039;, false, null, this.getTagsForStencil(gn, &#039;router utm&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Router_VPN.svg;&#039;,
+					 d * 0.93, d * 0.66, &#039;&#039;, &#039;Router VPN&#039;, false, null, this.getTagsForStencil(gn, &#039;router vpn&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Surveillance_Camera_Ceiling.svg;&#039;,
+					 d * 0.62, d * 0.59, &#039;&#039;, &#039;Surveillance Camera Ceiling&#039;, false, null, this.getTagsForStencil(gn, &#039;surveillance camera ceiling&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;allied_telesisSecurity&#039;, &#039;Allied Telesis / Security&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addAlliedTelesisStoragePalette = function(d, dt, sb, s)
+	{
+		s += &#039;storage/&#039;;
+		var gn = &#039;storage&#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;Datacenter_Server_Half_Rack_ToR.svg;&#039;,
+					 d * 1.47, d * 1.91, &#039;&#039;, &#039;Datacenter Server Half Rack ToR&#039;, false, null, this.getTagsForStencil(gn, &#039;datacenter server half rack tor&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Datacenter_Server_Rack.svg;&#039;,
+					 d * 1.47, d * 2.98, &#039;&#039;, &#039;Datacenter Server Rack&#039;, false, null, this.getTagsForStencil(gn, &#039;datacenter server rack&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Datacenter_Server_Rack_EoR.svg;&#039;,
+					 d * 1.43, d * 2.89, &#039;&#039;, &#039;Datacenter Server Rack EoR&#039;, false, null, this.getTagsForStencil(gn, &#039;datacenter server rack eor&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Datacenter_Server_Rack_Storage_Unit_Small.svg;&#039;,
+					 d * 1.29, d * 1.12, &#039;&#039;, &#039;Datacenter Server Rack Storage Unit Small&#039;, false, null, this.getTagsForStencil(gn, &#039;datacenter server rack storage unit small&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Datacenter_Server_Rack_ToR.svg;&#039;,
+					 d * 1.47, d * 2.98, &#039;&#039;, &#039;Datacenter Server Rack ToR&#039;, false, null, this.getTagsForStencil(gn, &#039;datacenter server rack tor&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Datacenter_Server_Storage_Unit_Large.svg;&#039;,
+					 d * 1.28, d * 1.32, &#039;&#039;, &#039;Datacenter Server Storage Unit Large&#039;, false, null, this.getTagsForStencil(gn, &#039;datacenter server storage unit large&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;allied_telesisStorage&#039;, &#039;Allied Telesis / Storage&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addAlliedTelesisSwitchPalette = function(d, dt, sb, s)
+	{
+		s += &#039;switch/&#039;;
+		var gn = &#039;switch&#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;Industrial_Ethernet_IE200.svg;&#039;,
+					 d * 0.67, d * 0.94, &#039;&#039;, &#039;Industrial Ethernet IE200&#039;, false, null, this.getTagsForStencil(gn, &#039;industrial ethernet ie200&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Industrial_Ethernet_IE200_POE.svg;&#039;,
+					 d * 0.67, d * 0.94, &#039;&#039;, &#039;Industrial Ethernet IE200 POE&#039;, false, null, this.getTagsForStencil(gn, &#039;industrial ethernet ie200 poe&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Industrial_Ethernet_IE300.svg;&#039;,
+					 d * 1.16, d * 1.29, &#039;&#039;, &#039;Industrial_Ethernet_IE300&#039;, false, null, this.getTagsForStencil(gn, &#039;industrial ethernet ie300&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Modular_Switch_SBx8106.svg;&#039;,
+					 d * 1.43, d * 1.23, &#039;&#039;, &#039;Modular Switch SBx8106&#039;, false, null, this.getTagsForStencil(gn, &#039;modular switch sbx8106&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Modular_Switch_SBx8112.svg;&#039;,
+					 d * 1.49, d * 1.53, &#039;&#039;, &#039;Modular Switch SBx8112&#039;, false, null, this.getTagsForStencil(gn, &#039;modular switch sbx8112&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Modular_Switch_SXx908GEN2.svg;&#039;,
+					 d * 1.3, d * 1.11, &#039;&#039;, &#039;Modular Switch SXx908GEN2&#039;, false, null, this.getTagsForStencil(gn, &#039;modular switch sxx908gen2&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Switch_24_port_L2.svg;&#039;,
+					 d * 1.24, d * 0.85, &#039;&#039;, &#039;Switch 24 port L2&#039;, false, null, this.getTagsForStencil(gn, &#039;switch 24 port l2&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Switch_24_port_L2_POE.svg;&#039;,
+					 d * 1.24, d * 0.85, &#039;&#039;, &#039;Switch 24 port L2 POE&#039;, false, null, this.getTagsForStencil(gn, &#039;switch 24 port l2 poe&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Switch_24_port_L3.svg;&#039;,
+					 d * 1.24, d * 0.85, &#039;&#039;, &#039;Switch 24 port L3&#039;, false, null, this.getTagsForStencil(gn, &#039;switch 24 port l3&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Switch_24_port_L3_Alternative.svg;&#039;,
+					 d * 1.3, d * 0.88, &#039;&#039;, &#039;Switch 24 port L3 Alternative&#039;, false, null, this.getTagsForStencil(gn, &#039;switch 24 port l3 alternative&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Switch_24_port_L3_POE.svg;&#039;,
+					 d * 1.24, d * 0.85, &#039;&#039;, &#039;Switch 24 port L3 POE&#039;, false, null, this.getTagsForStencil(gn, &#039;switch 24 port l3 poe&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Switch_48_port_L2.svg;&#039;,
+					 d * 1.3, d * 0.88, &#039;&#039;, &#039;Switch 48 port L2&#039;, false, null, this.getTagsForStencil(gn, &#039;switch 48 port l2&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Switch_48_port_L2_POE.svg;&#039;,
+					 d * 1.3, d * 0.88, &#039;&#039;, &#039;Switch 48 port L2 POE&#039;, false, null, this.getTagsForStencil(gn, &#039;switch 48 port l2 poe&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Switch_48_port_L3.svg;&#039;,
+					 d * 1.3, d * 0.88, &#039;&#039;, &#039;Switch 48 port L3&#039;, false, null, this.getTagsForStencil(gn, &#039;switch 48 port l3&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Switch_48_port_L3_POE.svg;&#039;,
+					 d * 1.3, d * 0.88, &#039;&#039;, &#039;Switch 48 port L3 POE&#039;, false, null, this.getTagsForStencil(gn, &#039;switch 48 port l3 poe&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Switch_52_port_L3.svg;&#039;,
+					 d * 1.3, d * 0.88, &#039;&#039;, &#039;Switch 52 port L3&#039;, false, null, this.getTagsForStencil(gn, &#039;switch 52 port l3&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;allied_telesisSwitch&#039;, &#039;Allied Telesis / Switch&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+	
+	Sidebar.prototype.addAlliedTelesisWirelessPalette = function(d, dt, sb, s)
+	{
+		s += &#039;wireless/&#039;;
+		var gn = &#039;wireless&#039;;
+		
+		var fns = [
+			 this.createVertexTemplateEntry(s + &#039;Access_Point_Indoor.svg;&#039;,
+					 d * 0.61, d * 0.91, &#039;&#039;, &#039;Access Point Indoor&#039;, false, null, this.getTagsForStencil(gn, &#039;access point indoor&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Access_Point_Outdoor.svg;&#039;,
+					 d * 0.43, d * 1.66, &#039;&#039;, &#039;Access Point Outdoor&#039;, false, null, this.getTagsForStencil(gn, &#039;access point outdoor&#039;, dt).join(&#039; &#039;)),
+			 this.createVertexTemplateEntry(s + &#039;Laptop_Wireless.svg;&#039;,
+					 d * 0.96, d * 0.79, &#039;&#039;, &#039;Laptop Wireless&#039;, false, null, this.getTagsForStencil(gn, &#039;laptop wireless&#039;, dt).join(&#039; &#039;))
+		];
+			   	
+   		this.addPalette(&#039;allied_telesisWireless&#039;, &#039;Allied Telesis / Wireless&#039;, false, mxUtils.bind(this, function(content)
+	    {
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

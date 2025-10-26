@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\GitHubClient.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\GitHubClient.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">66.96</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">1468</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">102.82</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">15.26</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2006-2024, JGraph Holdings Ltd
+ * Copyright (c) 2006-2024, draw.io AG
+ */
+//Add a closure to hide the class private variables without changing the code a lot
+(function ()
+{
+
+var _token = null;
+
+window.GitHubClient = function(editorUi, authName)
+{
+	DrawioClient.call(this, editorUi, authName || &#039;ghauth&#039;);
+};
+
+// Extends DrawioClient
+mxUtils.extend(GitHubClient, DrawioClient);
+
+/**
+ * Specifies if thumbnails should be enabled. Default is true.
+ * LATER: If thumbnails are disabled, make sure to replace the
+ * existing thumbnail with the placeholder only once.
+ */
+GitHubClient.prototype.clientId = (window.location.hostname == &#039;test.draw.io&#039;) ? &#039;Iv1.1218f5567fbc258a&#039; : window.DRAWIO_GITHUB_ID;
+
+/**
+ * Default extension for new files.
+ */
+GitHubClient.prototype.extension = &#039;.drawio&#039;;
+
+/**
+ * Base URL for API calls.
+ */
+GitHubClient.prototype.baseUrl = DRAWIO_GITHUB_API_URL;
+
+GitHubClient.prototype.baseHostUrl = DRAWIO_GITHUB_URL;
+
+GitHubClient.prototype.redirectUri = window.DRAWIO_SERVER_URL + &#039;github2&#039;;
+
+/**
+ * Maximum file size of the GitHub REST API.
+ */
+GitHubClient.prototype.maxFileSize = 50000000 /*50MB*/;
+
+/**
+ * Name for the auth token header.
+ */
+GitHubClient.prototype.authToken = &#039;token&#039;;
+
+GitHubClient.prototype.setToken = function(token)
+{
+	_token = token;	
+};
+
+/**
+ * Authorizes the client, gets the userId and calls &lt;open&gt;.
+ */
+GitHubClient.prototype.updateUser = function(success, error, failOnAuth)
+{
+	var acceptResponse = true;
+	
+	var timeoutThread = window.setTimeout(mxUtils.bind(this, function()
+	{
+		acceptResponse = false;
+		error({code: App.ERROR_TIMEOUT, message: mxResources.get(&#039;timeout&#039;)});
+	}), this.ui.timeout);
+	
+	var userReq = new mxXmlRequest(this.baseUrl + &#039;/user&#039;, null, &#039;GET&#039;);
+	var temp = this.authToken + &#039; &#039; +  _token;
+	
+	userReq.setRequestHeaders = function(request, params)
+	{
+		request.setRequestHeader(&#039;Authorization&#039;, temp);
+	};
+	
+	userReq.send(mxUtils.bind(this, function()
+	{
+		window.clearTimeout(timeoutThread);
+		
+		if (acceptResponse)
+		{
+			if (userReq.getStatus() === 401)
+			{
+				if (!failOnAuth)
+				{
+					this.logout();
+					
+					this.authenticate(mxUtils.bind(this, function()
+					{
+						this.updateUser(success, error, true);
+					}), error);
+				}
+				else
+				{
+					error({code: userReq.getStatus(), message:
+						this.getErrorMessage(userReq,
+						mxResources.get(&#039;accessDenied&#039;))});
+				}
+			}
+			else if (userReq.getStatus() &lt; 200 || userReq.getStatus() &gt;= 300)
+			{
+				error({message: mxResources.get(&#039;accessDenied&#039;)});
+			}
+			else
+			{
+				this.setUser(this.createUser(JSON.parse(userReq.getText())));
+				success();
+			}
+		}
+	}), error);
+};
+
+/**
+ * Authorizes the client, gets the userId and calls &lt;open&gt;.
+ */
+GitHubClient.prototype.createUser = function(userInfo)
+{
+	return new DrawioUser(userInfo.id, userInfo.email, userInfo.name);
+};
+
+/**
+ * Authorizes the client, gets the userId and calls &lt;open&gt;.
+ */
+GitHubClient.prototype.authenticate = function(success, error)
+{
+	var req = new mxXmlRequest(this.redirectUri + &#039;?getState=1&#039;, null, &#039;GET&#039;);
+	
+	req.send(mxUtils.bind(this, function(req)
+	{
+		if (req.getStatus() &gt;= 200 &amp;&amp; req.getStatus() &lt;= 299)
+		{
+			this.authenticateStep2(req.getText(), success, error);
+		}
+		else if (error != null)
+		{
+			error(req);
+		}
+	}), error);
+};
+
+GitHubClient.prototype.authenticateStep2 = function(state, success, error)
+{
+	if (window.onGitHubCallback == null)
+	{
+		var auth = mxUtils.bind(this, function()
+		{
+			var acceptAuthResponse = true;
+			
+			var authRemembered = this.getPersistentToken(true);
+			
+			if (authRemembered != null)
+			{
+				var req = new mxXmlRequest(this.redirectUri + &#039;?state=&#039; + encodeURIComponent(&#039;cId=&#039; + this.clientId + &#039;&amp;domain=&#039; + window.location.host + &#039;&amp;token=&#039; + state), null, &#039;GET&#039;); //To identify which app/domain is used
+				
+				req.send(mxUtils.bind(this, function(req)
+				{
+					if (req.getStatus() &gt;= 200 &amp;&amp; req.getStatus() &lt;= 299)
+					{
+						try
+						{
+							_token = JSON.parse(req.getText()).access_token;
+							this.setUser(null);
+							success();
+						}
+						catch (e)
+						{
+							error({message: mxResources.get(&#039;authFailed&#039;), retry: auth});
+						}
+					}
+					else 
+					{
+						this.clearPersistentToken();
+						this.setUser(null);
+						_token = null;
+
+						if (req.getStatus() == 401) // (Unauthorized) [e.g, invalid refresh token]
+						{
+							auth();
+						}
+						else
+						{
+							error({message: mxResources.get(&#039;accessDenied&#039;), retry: auth});
+						}
+					}
+				}), error);
+			}
+			else
+			{
+				this.ui.showAuthDialog(this, true, mxUtils.bind(this, function(remember, authSuccess)
+				{
+					var win = window.open(this.baseHostUrl + &#039;/login/oauth/authorize?client_id=&#039; +
+						this.clientId +  
+						&#039;&amp;state=&#039; + encodeURIComponent(&#039;cId=&#039; + this.clientId + //To identify which app/domain is used
+							&#039;&amp;domain=&#039; + window.location.host + &#039;&amp;token=&#039; + state), &#039;ghauth&#039;);
+					
+					if (win != null)
+					{
+						window.onGitHubCallback = mxUtils.bind(this, function(newAuthInfo, authWindow)
+						{
+							if (acceptAuthResponse)
+							{
+								window.onGitHubCallback = null;
+								acceptAuthResponse = false;
+								
+								if (newAuthInfo == null)
+								{
+									error({message: mxResources.get(&#039;accessDenied&#039;), retry: auth});
+								}
+								else
+								{
+									if (authSuccess != null)
+									{
+										authSuccess();
+									}
+									
+									_token = newAuthInfo.access_token;
+									this.setUser(null);
+									
+									if (remember)
+									{
+										this.setPersistentToken(&#039;remembered&#039;);
+									}
+									
+									success();
+									
+									if (authWindow != null)
+									{
+										authWindow.close();
+									}
+								}
+							}
+							else if (authWindow != null)
+							{
+								authWindow.close();
+							}
+						});
+					}
+					else
+					{
+						error({message: mxResources.get(&#039;serviceUnavailableOrBlocked&#039;), retry: auth});
+					}
+				}), mxUtils.bind(this, function()
+				{
+					if (acceptAuthResponse)
+					{
+						window.onGitHubCallback = null;
+						acceptAuthResponse = false;
+						error({message: mxResources.get(&#039;accessDenied&#039;), retry: auth});
+					}
+				}));
+			}
+		});
+		
+		auth();
+	}
+	else
+	{
+		error({code: App.ERROR_BUSY});
+	}
+};
+
+/**
+ * Authorizes the client, gets the userId and calls &lt;open&gt;.
+ */
+GitHubClient.prototype.getErrorMessage = function(req, defaultText)
+{
+	try
+	{
+		var temp = JSON.parse(req.getText());
+		
+		if (temp != null &amp;&amp; temp.message != null)
+		{
+			defaultText = temp.message;
+		}
+	}
+	catch (e)
+	{
+		// ignore
+	}
+	
+	return defaultText;
+};
+
+/**
+ * Authorizes the client, gets the userId and calls &lt;open&gt;.
+ */
+GitHubClient.prototype.showAuthorizeDialog = function(retryFn, cancelFn)
+{
+	this.ui.showError(mxResources.get(&#039;accessDenied&#039;), mxResources.get(&#039;authorizationRequired&#039;),
+		mxResources.get(&#039;help&#039;), mxUtils.bind(this, function()
+		{
+			this.ui.openLink(&#039;https://www.drawio.com/blog/single-repository-diagrams&#039;);
+		}), retryFn, mxResources.get(&#039;authorize&#039;), mxUtils.bind(this, function()
+		{
+			this.ui.openLink((window.location.hostname == &#039;test.draw.io&#039;) ?
+				&#039;https://github.com/apps/diagrams-net-app-test&#039; :
+				&#039;https://github.com/apps/draw-io-app&#039;);
+		}), mxResources.get(&#039;cancel&#039;), cancelFn, 480, null, false);
+};
+
+/**
+ * Authorizes the client, gets the userId and calls &lt;open&gt;.
+ */
+GitHubClient.prototype.executeRequest = function(req, success, error, ignoreNotFound, returnNotFound)
+{
+	var doExecute = mxUtils.bind(this, function(failOnAuth)
+	{
+		var acceptResponse = true;
+		
+		var timeoutThread = window.setTimeout(mxUtils.bind(this, function()
+		{
+			acceptResponse = false;
+			error({code: App.ERROR_TIMEOUT, retry: fn});
+		}), this.ui.timeout);
+		
+		var temp = this.authToken + &#039; &#039; + _token;
+		
+		req.setRequestHeaders = function(request, params)
+		{
+			request.setRequestHeader(&#039;Authorization&#039;, temp);
+		};
+		
+		req.send(mxUtils.bind(this, function()
+		{
+			window.clearTimeout(timeoutThread);
+
+			var authorizeApp = mxUtils.bind(this, function()
+			{
+				// Pauses spinner while showing dialog
+				var resume = this.ui.spinner.pause();
+
+				this.showAuthorizeDialog(mxUtils.bind(this, function()
+				{
+					resume();
+					fn();
+				}), mxUtils.bind(this, function()
+				{
+					this.ui.hideDialog();
+					error({name: &#039;AbortError&#039;});
+				}));
+			});
+			
+			if (acceptResponse)
+			{
+				if ((req.getStatus() &gt;= 200 &amp;&amp; req.getStatus() &lt;= 299) ||
+					(ignoreNotFound &amp;&amp; req.getStatus() == 404))
+				{
+					success(req);
+				}
+				else if (req.getStatus() === 401)
+				{
+					if (!failOnAuth)
+					{
+						this.authenticate(function()
+						{
+							doExecute(true);
+						}, error);
+					}
+					else
+					{
+						error({code: req.getStatus(), message: mxResources.get(&#039;accessDenied&#039;), retry: mxUtils.bind(this, function()
+						{
+							this.authenticate(function()
+							{
+								fn(true);
+							}, error);
+						})});
+					}
+				}
+				else if (req.getStatus() === 403)
+				{
+					var tooLarge = false;
+					
+					try
+					{
+						var temp = JSON.parse(req.getText());
+
+						if (temp != null &amp;&amp; temp.message == &#039;Resource not accessible by integration&#039;)
+						{
+							authorizeApp();
+						}
+						else
+						{
+							if (temp != null &amp;&amp; temp.errors != null &amp;&amp; temp.errors.length &gt; 0)
+							{
+								tooLarge = temp.errors[0].code == &#039;too_large&#039;;
+							}
+
+							error({message: mxResources.get((tooLarge) ? &#039;drawingTooLarge&#039; : &#039;forbidden&#039;)});
+						}
+					}
+					catch (e)
+					{
+						error({message: mxResources.get((tooLarge) ? &#039;drawingTooLarge&#039; : &#039;forbidden&#039;)});
+					}
+				}
+				else if (req.getStatus() === 404)
+				{
+					if (returnNotFound)
+					{
+						error({code: req.getStatus(), message: this.getErrorMessage(req, mxResources.get(&#039;fileNotFound&#039;))});
+					}
+					else
+					{
+						authorizeApp();
+					}
+				}
+				else if (req.getStatus() === 409)
+				{
+					// Special case: flag to the caller that there was a conflict
+					error({code: req.getStatus(), status: 409});
+				}
+				else
+				{
+					error({code: req.getStatus(), message: this.getErrorMessage(req, mxResources.get(&#039;error&#039;) + &#039; &#039; + req.getStatus())});
+				}
+			}
+		}), mxUtils.bind(this, function(err)
+		{
+			window.clearTimeout(timeoutThread);
+				    	
+			if (acceptResponse)
+			{
+				error(err);
+			}
+		}));
+	});
+
+	var fn = mxUtils.bind(this, function(failOnAuth)
+	{
+		if (this.user == null)
+		{
+			this.updateUser(function()
+			{
+				fn(true);
+			}, error, failOnAuth);
+		}
+		else
+		{
+			doExecute(failOnAuth);
+		}
+	});
+
+	if (_token == null)
+	{
+		this.authenticate(function()
+		{
+			fn(true);
+		}, error);
+	}
+	else
+	{
+		fn(false);
+	}
+};
+
+/**
+ * Checks if the client is authorized and calls the next step.
+ */
+GitHubClient.prototype.getLibrary = function(path, success, error)
+{
+	this.getFile(path, success, error, true);
+};
+
+/**
+ * Checks if the client is authorized and calls the next step.
+ */
+GitHubClient.prototype.getSha = function(org, repo, path, ref, success, error, returnNotFound)
+{
+	// Adds random parameter to bypass cache
+	var rnd = &#039;&amp;t=&#039; + new Date().getTime();
+	var req = new mxXmlRequest(this.baseUrl + &#039;/repos/&#039; + org + &#039;/&#039; + repo +
+		&#039;/contents/&#039; + path + &#039;?ref=&#039; + ref + rnd, null, &#039;HEAD&#039;);
+	
+	this.executeRequest(req, mxUtils.bind(this, function(req)
+	{
+		try
+		{
+			success(req.request.getResponseHeader(&#039;Etag&#039;).match(/&quot;([^&quot;]+)&quot;/)[1]);
+		}
+		catch (e)
+		{
+			error(e);
+		}
+	}), error, null, returnNotFound);
+};
+
+/**
+ * Checks if the client is authorized and calls the next step.
+ */
+GitHubClient.prototype.getFile = function(path, success, error, asLibrary, checkExists)
+{
+	asLibrary = (asLibrary != null) ? asLibrary : false;
+	
+	var tokens = path.split(&#039;/&#039;);
+	var org = tokens[0];
+	var repo = tokens[1];
+	var ref = tokens[2];
+	path = tokens.slice(3, tokens.length).join(&#039;/&#039;);
+	var binary = /\.png$/i.test(path);
+	
+	// Handles .vsdx, Gliffy and PNG+XML files by creating a temporary file
+	if (!checkExists &amp;&amp; (/\.v(dx|sdx?)$/i.test(path) || /\.gliffy$/i.test(path) ||
+		/\.pdf$/i.test(path) || (!Editor.useCanvasForExport &amp;&amp; binary)))
+	{
+		// Should never be null
+		if (_token != null)
+		{
+			var url = this.baseUrl + &#039;/repos/&#039; + org + &#039;/&#039; + repo +
+				&#039;/contents/&#039; + path + &#039;?ref=&#039; + ref;
+			var headers = {&#039;Authorization&#039;: &#039;token &#039; + _token};
+			tokens = path.split(&#039;/&#039;);
+			var name = (tokens.length &gt; 0) ? tokens[tokens.length - 1] : path;
+			this.ui.convertFile(url, name, null, this.extension, success, error, null, headers);
+		}
+		else
+		{
+			error({message: mxResources.get(&#039;accessDenied&#039;)});
+		}
+	}
+	else
+	{
+		// Adds random parameter to bypass cache
+		var rnd = &#039;&amp;t=&#039; + new Date().getTime();
+		var req = new mxXmlRequest(this.baseUrl + &#039;/repos/&#039; + org + &#039;/&#039; + repo +
+			&#039;/contents/&#039; + path + &#039;?ref=&#039; + ref + rnd, null, &#039;GET&#039;);
+		
+		this.executeRequest(req, mxUtils.bind(this, function(req)
+		{
+			try
+			{
+				var obj = JSON.parse(req.getText());
+
+				// Additional request needed to get file contents
+				if (obj.content == &#039;&#039; &amp;&amp; obj.git_url != null)
+				{
+					var contentReq = new mxXmlRequest(obj.git_url, null, &#039;GET&#039;);
+
+					this.executeRequest(contentReq, mxUtils.bind(this, function(contentReq)
+					{
+						var contentObject = JSON.parse(contentReq.getText());
+						
+						if (contentObject.content != &#039;&#039;)
+						{
+							obj.content = contentObject.content;
+							obj.encoding = contentObject.encoding;
+
+							success(this.createGitHubFile(org, repo, ref, obj, asLibrary));
+						}
+						else
+						{
+							error({message: mxResources.get(&#039;errorLoadingFile&#039;)});
+						}
+					}), error);
+				}
+				else
+				{
+					success(this.createGitHubFile(org, repo, ref, obj, asLibrary));
+				}
+			}
+			catch (e)
+			{
+				error(e);
+			}
+		}), error);
+	}
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+GitHubClient.prototype.createGitHubFile = function(org, repo, ref, data, asLibrary)
+{
+	var meta = {&#039;org&#039;: org, &#039;repo&#039;: repo, &#039;ref&#039;: ref, &#039;name&#039;: data.name,
+		&#039;path&#039;: data.path, &#039;sha&#039;: data.sha, &#039;html_url&#039;: data.html_url,
+		&#039;download_url&#039;: data.download_url};
+	var content = data.content;
+	
+	if (data.encoding === &#039;base64&#039;)
+	{
+		if (/\.jpe?g$/i.test(data.name))
+		{
+			content = &#039;data:image/jpeg;base64,&#039; + content;
+		}
+		else if (/\.gif$/i.test(data.name))
+		{
+			content = &#039;data:image/gif;base64,&#039; + content;
+		}
+		else
+		{
+			if (/\.png$/i.test(data.name))
+			{
+				var xml = this.ui.extractGraphModelFromPng(content);
+				
+				if (xml != null &amp;&amp; xml.length &gt; 0)
+				{
+					content = xml;
+				}
+				else
+				{
+					content = &#039;data:image/png;base64,&#039; + content;
+				}
+			}
+			else
+			{
+				content = Base64.decode(content);
+			}
+		}
+	}
+	
+	return (asLibrary) ? new GitHubLibrary(this.ui, content, meta) : new GitHubFile(this.ui, content, meta);
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+GitHubClient.prototype.insertLibrary = function(filename, data, success, error, folderId)
+{
+	this.insertFile(filename, data, success, error, true, folderId, false);
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+GitHubClient.prototype.insertFile = function(filename, data, success, error, asLibrary, folderId, base64Encoded)
+{
+	asLibrary = (asLibrary != null) ? asLibrary : false;
+
+	var tokens = folderId.split(&#039;/&#039;);
+	var org = tokens[0];
+	var repo = tokens[1];
+	var ref = tokens[2];
+	var path = tokens.slice(3, tokens.length).join(&#039;/&#039;);
+
+	if (path.length &gt; 0)
+	{
+		path = path + &#039;/&#039;;
+	}
+	
+	path = path + filename;
+
+	this.checkExists(org + &#039;/&#039; + repo + &#039;/&#039; + ref + &#039;/&#039; + path, true, mxUtils.bind(this, function(checked, sha)
+	{
+		if (checked)
+		{
+			// Does not insert file here as there is another writeFile implicit via fileCreated
+			if (!asLibrary)
+			{
+				success(new GitHubFile(this.ui, data, {&#039;org&#039;: org, &#039;repo&#039;: repo, &#039;ref&#039;: ref,
+					&#039;name&#039;: filename, &#039;path&#039;: path, &#039;sha&#039;: sha, isNew: true}));
+			}
+			else
+			{
+				if (!base64Encoded)
+				{
+					data = Base64.encode(data);
+				}
+				
+				this.showCommitDialog(filename, true, mxUtils.bind(this, function(message)
+				{
+					this.writeFile(org, repo, ref, path, message, data, sha, mxUtils.bind(this, function(req)
+					{
+						try
+						{
+							var msg = JSON.parse(req.getText());
+							success(this.createGitHubFile(org, repo, ref, msg.content, asLibrary));
+						}
+						catch (e)
+						{
+							error(e);
+						}
+					}), error);
+				}), error);
+			}
+		}
+		else
+		{
+			error();
+		}
+	}))
+};
+
+/**
+ * 
+ */
+GitHubClient.prototype.showCommitDialog = function(filename, isNew, success, cancel)
+{
+	// Pauses spinner while commit message dialog is shown
+	var resume = this.ui.spinner.pause();
+	
+	var dlg = new FilenameDialog(this.ui, mxResources.get((isNew) ? &#039;addedFile&#039; : &#039;updateFile&#039;,
+		[filename]), mxResources.get(&#039;ok&#039;), mxUtils.bind(this, function(message)
+	{
+		resume(function()
+		{
+			success(message);
+		});
+	}), mxResources.get(&#039;commitMessage&#039;), null, null, null, null, mxUtils.bind(this, function()
+	{
+		cancel();
+	}));
+
+	this.ui.showDialog(dlg.container, 400, 80, true, false);
+	dlg.init();
+};
+
+/**
+ * 
+ */
+GitHubClient.prototype.writeFile = function(org, repo, ref, path, message, data, sha, success, error)
+{
+	if (data.length &gt;= this.maxFileSize)
+	{
+		error({message: mxResources.get(&#039;drawingTooLarge&#039;) + &#039; (&#039; +
+			this.ui.formatFileSize(data.length) + &#039; / 1 MB)&#039;});
+	}
+	else
+	{
+		var entity =
+		{
+			path: path,
+			branch: decodeURIComponent(ref),
+			message: message,
+			content: data
+		};
+		
+		if (sha != null)
+		{
+			entity.sha = sha;
+		}
+		
+		var req = new mxXmlRequest(this.baseUrl + &#039;/repos/&#039; + org + &#039;/&#039; + repo +
+			&#039;/contents/&#039; + path, JSON.stringify(entity), &#039;PUT&#039;);
+		
+		this.executeRequest(req, mxUtils.bind(this, function(req)
+		{
+			success(req);
+		}), mxUtils.bind(this, function(err)
+		{
+			if (err.code == 404)
+			{
+				err.helpLink = this.baseHostUrl + &#039;/settings/connections/applications/&#039; + this.clientId;
+				err.code = null;
+			}
+			
+			error(err);
+		}));
+	}
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+GitHubClient.prototype.checkExists = function(path, askReplace, fn)
+{
+	var tokens = path.split(&#039;/&#039;);
+	var org = tokens[0];
+	var repo = tokens[1];
+	var ref = tokens[2];
+	path = tokens.slice(3, tokens.length).join(&#039;/&#039;);
+	
+	this.getSha(org, repo, path, ref, mxUtils.bind(this, function(sha)
+	{
+		if (askReplace)
+		{
+			var resume = this.ui.spinner.pause();
+			
+			this.ui.confirm(mxResources.get(&#039;replaceIt&#039;, [path]), function()
+			{
+				resume();
+				fn(true, sha);
+			}, function()
+			{
+				resume();
+				fn(false);
+			});
+		}
+		else
+		{
+			this.ui.spinner.stop();
+			
+			this.ui.showError(mxResources.get(&#039;error&#039;), mxResources.get(&#039;fileExists&#039;), mxResources.get(&#039;ok&#039;), function()
+			{
+				fn(false);						
+			});
+		}
+	}), mxUtils.bind(this, function(err)
+	{
+		fn(true);
+	}), true);
+};
+
+/**
+ * Translates this point by the given vector.
+ * 
+ * @param {number} dx X-coordinate of the translation.
+ * @param {number} dy Y-coordinate of the translation.
+ */
+GitHubClient.prototype.saveFile = function(file, success, error, overwrite, message)
+{
+	var org = file.meta.org;
+	var repo = file.meta.repo;
+	var ref = file.meta.ref;
+	var path = file.meta.path;
+	
+	var fn = mxUtils.bind(this, function(sha, data)
+	{
+		this.writeFile(org, repo, ref, path, message, data, sha,
+			mxUtils.bind(this, function(req)
+		{
+			delete file.meta.isNew;
+			success(JSON.parse(req.getText()).content.sha);
+		}), mxUtils.bind(this, function(err)
+		{
+			error(err);
+		}));
+	});
+	
+	var fn2 = mxUtils.bind(this, function()
+	{
+		if (Editor.useCanvasForExport &amp;&amp; /(\.png)$/i.test(path))
+		{
+			var p = this.ui.getPngFileProperties(this.ui.fileNode);
+			
+			this.ui.getEmbeddedPng(mxUtils.bind(this, function(data)
+			{
+				fn(file.meta.sha, data);
+			}), error, (this.ui.getCurrentFile() != file) ?
+				file.getData() : null, p.scale, p.border);
+		}
+		else
+		{
+			fn(file.meta.sha, Base64.encode(file.getData()));
+		}
+	});
+	
+	if (overwrite)
+	{
+		this.getSha(org, repo, path, ref, mxUtils.bind(this, function(sha)
+		{
+			file.meta.sha = sha;
+			fn2();
+		}), error);
+	}
+	else
+	{
+		fn2();
+	}
+};
+
+/**
+ * Checks if the client is authorized and calls the next step.
+ */
+GitHubClient.prototype.pickLibrary = function(fn)
+{
+	this.pickFile(fn);
+};
+
+/**
+ * Checks if the client is authorized and calls the next step.
+ */
+GitHubClient.prototype.pickFolder = function(fn)
+{
+	this.showGitHubDialog(false, fn, true);
+};
+
+/**
+ * Checks if the client is authorized and calls the next step.
+ */
+GitHubClient.prototype.pickFile = function(fn)
+{
+	fn = (fn != null) ? fn : mxUtils.bind(this, function(path)
+	{
+		this.ui.loadFile(&#039;H&#039; + encodeURIComponent(path));
+	});
+	
+	this.showGitHubDialog(true, fn);
+};
+
+/**
+ * 
+ */
+GitHubClient.prototype.showGitHubDialog = function(showFiles, fn, hideNoFilesError)
+{
+	var org = null;
+	var repo = null;
+	var ref = null;
+	var path = null;
+	
+	var content = document.createElement(&#039;div&#039;);
+	content.style.whiteSpace = &#039;nowrap&#039;;
+	content.style.overflow = &#039;hidden&#039;;
+	content.style.height = &#039;320px&#039;;
+
+	var hd = document.createElement(&#039;h3&#039;);
+	mxUtils.write(hd, mxResources.get((showFiles) ? &#039;selectFile&#039; : &#039;selectFolder&#039;));
+	hd.style.cssText = &#039;width:100%;text-align:center;margin-top:0px;margin-bottom:12px&#039;;
+	content.appendChild(hd);
+
+	var btn = this.ui.createToolbarButton(Editor.refreshImage,
+		mxResources.get(&#039;refresh&#039;), mxUtils.bind(this, function()
+		{
+			selectRepo();
+		}));
+
+	btn.style.position = &#039;absolute&#039;;
+	btn.style.right = &#039;40px&#039;;
+	btn.style.top = &#039;26px&#039;;
+	content.appendChild(btn);
+
+	var div = document.createElement(&#039;div&#039;);
+	div.style.whiteSpace = &#039;nowrap&#039;;
+	div.style.border = &#039;1px solid lightgray&#039;;
+	div.style.boxSizing = &#039;border-box&#039;;
+	div.style.padding = &#039;4px&#039;;
+	div.style.overflow = &#039;auto&#039;;
+	div.style.lineHeight = &#039;1.2em&#039;;
+	div.style.height = &#039;290px&#039;;
+	content.appendChild(div);
+	
+	var listItem = document.createElement(&#039;div&#039;);
+	listItem.style.textOverflow = &#039;ellipsis&#039;;
+	listItem.style.boxSizing = &#039;border-box&#039;;
+	listItem.style.overflow = &#039;hidden&#039;;
+	listItem.style.padding = &#039;4px&#039;;
+	listItem.style.width = &#039;100%&#039;;
+	
+	var dlg = new CustomDialog(this.ui, content, mxUtils.bind(this, function()
+		{
+			fn(org + &#039;/&#039; + repo + &#039;/&#039; + encodeURIComponent(ref) + &#039;/&#039; + path);
+		}), null, null, &#039;https://www.drawio.com/blog/single-repository-diagrams&#039;, null, null, null, null,
+		[[mxResources.get(&#039;authorize&#039;), mxUtils.bind(this, function()
+		{
+			this.ui.openLink((window.location.hostname == &#039;test.draw.io&#039;) ?
+				&#039;https://github.com/apps/diagrams-net-app-test&#039; :
+				&#039;https://github.com/apps/draw-io-app&#039;);
+		})]], &#039;16px&#039;);
+	this.ui.showDialog(dlg.container, 420, 370, true, true);
+
+	if (showFiles)
+	{
+		dlg.okButton.parentNode.removeChild(dlg.okButton);
+	}
+	
+	var createLink = mxUtils.bind(this, function(label, exec, padding, underline)
+	{
+		var link = document.createElement(&#039;a&#039;);
+		link.setAttribute(&#039;title&#039;, label);
+		link.style.cursor = &#039;pointer&#039;;
+		mxUtils.write(link,  label);
+		mxEvent.addListener(link, &#039;click&#039;, exec);
+		
+		if (underline)
+		{
+			link.style.textDecoration = &#039;underline&#039;;
+		}
+		
+		if (padding != null)
+		{
+			var temp = listItem.cloneNode();
+			temp.style.padding = padding;
+			temp.appendChild(link);
+			
+			link = temp;
+		}
+		
+		return link;
+	});
+	
+	var updatePathInfo = mxUtils.bind(this, function(hideRef)
+	{
+		var pathInfo = document.createElement(&#039;div&#039;);
+		pathInfo.style.marginBottom = &#039;8px&#039;;
+		
+		pathInfo.appendChild(createLink(org + &#039;/&#039; + repo, mxUtils.bind(this, function()
+		{
+			path = null;
+			selectRepo();
+		}), null, true));
+		
+		if (!hideRef)
+		{
+			mxUtils.write(pathInfo, &#039; / &#039;);
+			pathInfo.appendChild(createLink(decodeURIComponent(ref), mxUtils.bind(this, function()
+			{
+				path = null;
+				selectRef();
+			}), null, true));
+		}
+		
+		if (path != null &amp;&amp; path.length &gt; 0)
+		{
+			var tokens = path.split(&#039;/&#039;);
+			
+			for (var i = 0; i &lt; tokens.length; i++)
+			{
+				(function(index)
+				{
+					mxUtils.write(pathInfo, &#039; / &#039;);
+					pathInfo.appendChild(createLink(tokens[index], mxUtils.bind(this, function()
+					{
+						path = tokens.slice(0, index + 1).join(&#039;/&#039;);
+						selectFile();
+					}), null, true));
+				})(i);
+			}
+		}
+		
+		div.appendChild(pathInfo);
+	});
+	
+	var error = mxUtils.bind(this, function(err)
+	{
+		// Pass a dummy notFoundMessage to bypass special handling 
+		this.ui.handleError(err, null, mxUtils.bind(this, function()
+		{
+			this.ui.spinner.stop();
+			
+			if (this.getUser() != null)
+			{
+				org = null;
+				repo = null;
+				ref = null;
+				path = null;
+				
+				selectRepo();
+			}
+			else
+			{
+				this.ui.hideDialog();
+			}
+		}), null, {});
+	});
+	
+	// Adds paging for repos, branches and files (files limited to 1000 by API)
+	var nextPageDiv = null;
+	var scrollFn = null;
+	var pageSize = 100;
+
+	var selectFile = mxUtils.bind(this, function(page)
+	{
+		if (page == null)
+		{
+			div.innerText = &#039;&#039;;
+			page = 1;
+		}
+		
+		var req = new mxXmlRequest(this.baseUrl + &#039;/repos/&#039; + org + &#039;/&#039; + repo +
+				&#039;/contents/&#039; + path + &#039;?ref=&#039; + encodeURIComponent(ref) +
+				&#039;&amp;per_page=&#039; + pageSize + &#039;&amp;page=&#039; + page, null, &#039;GET&#039;);
+		this.ui.spinner.spin(div, mxResources.get(&#039;loading&#039;));
+		dlg.okButton.removeAttribute(&#039;disabled&#039;);
+		
+		if (scrollFn != null)
+		{
+			mxEvent.removeListener(div, &#039;scroll&#039;, scrollFn);
+			scrollFn = null;
+		}
+		
+		if (nextPageDiv != null &amp;&amp; nextPageDiv.parentNode != null)
+		{
+			nextPageDiv.parentNode.removeChild(nextPageDiv);
+		}
+		
+		nextPageDiv = document.createElement(&#039;a&#039;);
+		nextPageDiv.style.display = &#039;block&#039;;
+		nextPageDiv.style.cursor = &#039;pointer&#039;;
+		mxUtils.write(nextPageDiv, mxResources.get(&#039;more&#039;) + &#039;...&#039;);
+		
+		var nextPage = mxUtils.bind(this, function()
+		{
+			selectFile(page + 1);
+		});
+		
+		mxEvent.addListener(nextPageDiv, &#039;click&#039;, nextPage);
+		
+		this.executeRequest(req, mxUtils.bind(this, function(req)
+		{
+			this.ui.tryAndHandle(mxUtils.bind(this, function()
+			{
+				this.ui.spinner.stop();
+				
+				if (page == 1)
+				{
+					updatePathInfo();
+					
+					div.appendChild(createLink(&#039;../ [Up]&#039;, mxUtils.bind(this, function()
+					{
+						if (path == &#039;&#039;)
+						{
+							path = null;
+							selectRepo();
+						}
+						else
+						{
+							var tokens = path.split(&#039;/&#039;);
+							path = tokens.slice(0, tokens.length - 1).join(&#039;/&#039;);
+							selectFile();
+						}
+					}), &#039;4px&#039;));
+				}
+
+				var files = JSON.parse(req.getText());
+				
+				if (files == null || files.length == 0)
+				{
+					if (!hideNoFilesError)
+					{
+						mxUtils.br(div);
+						mxUtils.write(div, mxResources.get(&#039;noFiles&#039;));
+					}
+				}
+				else
+				{
+					var gray = true;
+					var count = 0;
+					
+					var listFiles = mxUtils.bind(this, function(showFolders)
+					{
+						for (var i = 0; i &lt; files.length; i++)
+						{
+							(mxUtils.bind(this, function(file, idx)
+							{
+								if (showFolders == (file.type == &#039;dir&#039;))
+								{
+									var temp = listItem.cloneNode();
+									temp.style.backgroundColor = (gray) ?
+										((Editor.isDarkMode()) ? &#039;#000000&#039; : &#039;#eeeeee&#039;) : &#039;&#039;;
+									gray = !gray;
+
+									var typeImg = document.createElement(&#039;img&#039;);
+									typeImg.src = IMAGE_PATH + &#039;/&#039; + (file.type == &#039;dir&#039;? &#039;folder.png&#039; : &#039;file.png&#039;);
+									typeImg.setAttribute(&#039;align&#039;, &#039;absmiddle&#039;);
+									typeImg.style.marginRight = &#039;4px&#039;;
+									typeImg.style.marginTop = &#039;-4px&#039;;
+									typeImg.width = 20;
+									temp.appendChild(typeImg);
+									
+									temp.appendChild(createLink(file.name + ((file.type == &#039;dir&#039;) ? &#039;/&#039; : &#039;&#039;), mxUtils.bind(this, function()
+									{
+										if (file.type == &#039;dir&#039;)
+										{
+											path = file.path;
+											selectFile();
+										}
+										else if (showFiles &amp;&amp; file.type == &#039;file&#039;)
+										{
+											this.ui.hideDialog();
+											fn(org + &#039;/&#039; + repo + &#039;/&#039; + encodeURIComponent(ref) + &#039;/&#039; + file.path);
+										}
+									})));
+									
+									div.appendChild(temp);
+									count++;
+								}
+							}))(files[i], i);
+						}
+					});
+					
+					listFiles(true);
+					
+					if (showFiles)
+					{
+						listFiles(false);
+					}
+					
+					// LATER: Paging not supported for contents in GitHub
+					// if (count == pageSize)
+					// {
+					// 	div.appendChild(nextPageDiv);
+						
+					// 	scrollFn = function()
+					// 	{
+					// 		if (div.scrollTop &gt;= div.scrollHeight - div.offsetHeight)
+					// 		{
+					// 			nextPage();
+					// 		}
+					// 	};
+						
+					// 	mxEvent.addListener(div, &#039;scroll&#039;, scrollFn);
+					// }
+				}
+			}));
+		}), error, true);
+	});
+
+	var selectRef = mxUtils.bind(this, function(page, auto)
+	{
+		if (page == null)
+		{
+			div.innerText = &#039;&#039;;
+			page = 1;
+		}
+		
+		var req = new mxXmlRequest(this.baseUrl + &#039;/repos/&#039; + org + &#039;/&#039; + repo +
+			&#039;/branches?per_page=&#039; + pageSize + &#039;&amp;page=&#039; + page, null, &#039;GET&#039;);
+		dlg.okButton.setAttribute(&#039;disabled&#039;, &#039;disabled&#039;);
+		this.ui.spinner.spin(div, mxResources.get(&#039;loading&#039;));
+		
+		if (scrollFn != null)
+		{
+			mxEvent.removeListener(div, &#039;scroll&#039;, scrollFn);
+			scrollFn = null;
+		}
+		
+		if (nextPageDiv != null &amp;&amp; nextPageDiv.parentNode != null)
+		{
+			nextPageDiv.parentNode.removeChild(nextPageDiv);
+		}
+		
+		nextPageDiv = document.createElement(&#039;a&#039;);
+		nextPageDiv.style.display = &#039;block&#039;;
+		nextPageDiv.style.cursor = &#039;pointer&#039;;
+		mxUtils.write(nextPageDiv, mxResources.get(&#039;more&#039;) + &#039;...&#039;);
+		
+		var nextPage = mxUtils.bind(this, function()
+		{
+			selectRef(page + 1);
+		});
+		
+		mxEvent.addListener(nextPageDiv, &#039;click&#039;, nextPage);
+		
+		this.executeRequest(req, mxUtils.bind(this, function(req)
+		{
+			this.ui.tryAndHandle(mxUtils.bind(this, function()
+			{
+				this.ui.spinner.stop();
+				
+				if (page == 1)
+				{
+					updatePathInfo(true);
+					
+					div.appendChild(createLink(&#039;../ [Up]&#039;, mxUtils.bind(this, function()
+					{
+						path = null;
+						selectRepo();
+					}), &#039;4px&#039;));
+				}
+
+				var branches = JSON.parse(req.getText());
+				
+				if (branches == null || branches.length == 0)
+				{
+					mxUtils.br(div);
+					mxUtils.write(div, mxResources.get(&#039;repositoryNotFound&#039;));
+				}
+				else if (branches.length == 1 &amp;&amp; auto)
+				{
+					ref = branches[0].name;
+					path = &#039;&#039;;
+					selectFile();
+				}
+				else
+				{
+					for (var i = 0; i &lt; branches.length; i++)
+					{
+						(mxUtils.bind(this, function(branch, idx)
+						{
+							var temp = listItem.cloneNode();
+							temp.style.backgroundColor = (idx % 2 == 0) ?
+								((Editor.isDarkMode()) ? &#039;#000000&#039; : &#039;#eeeeee&#039;) : &#039;&#039;;
+							
+							temp.appendChild(createLink(branch.name, mxUtils.bind(this, function()
+							{
+								ref = branch.name;
+								path = &#039;&#039;;
+								selectFile();
+							})));
+							
+							div.appendChild(temp);
+						}))(branches[i], i);
+					}
+					
+					if (branches.length == pageSize)
+					{
+						div.appendChild(nextPageDiv);
+						
+						scrollFn = function()
+						{
+							if (div.scrollTop &gt;= div.scrollHeight - div.offsetHeight)
+							{
+								nextPage();
+							}
+						};
+						
+						mxEvent.addListener(div, &#039;scroll&#039;, scrollFn);
+					}
+				}
+			}));
+		}), error);
+	});
+
+	var selectRepo = mxUtils.bind(this, function(page)
+	{
+		if (page == null)
+		{
+			div.innerText = &#039;&#039;;
+			page = 1;
+		}
+		
+		var req = new mxXmlRequest(this.baseUrl + &#039;/user/repos?per_page=&#039; +
+			pageSize + &#039;&amp;page=&#039; + page, null, &#039;GET&#039;);
+		dlg.okButton.setAttribute(&#039;disabled&#039;, &#039;disabled&#039;);
+		this.ui.spinner.spin(div, mxResources.get(&#039;loading&#039;));
+		
+		if (scrollFn != null)
+		{
+			mxEvent.removeListener(div, &#039;scroll&#039;, scrollFn);
+		}
+		
+		if (nextPageDiv != null &amp;&amp; nextPageDiv.parentNode != null)
+		{
+			nextPageDiv.parentNode.removeChild(nextPageDiv);
+		}
+		
+		nextPageDiv = document.createElement(&#039;a&#039;);
+		nextPageDiv.style.display = &#039;block&#039;;
+		nextPageDiv.style.cursor = &#039;pointer&#039;;
+		mxUtils.write(nextPageDiv, mxResources.get(&#039;more&#039;) + &#039;...&#039;);
+		
+		var nextPage = mxUtils.bind(this, function()
+		{
+			selectRepo(page + 1);
+		});
+		
+		mxEvent.addListener(nextPageDiv, &#039;click&#039;, nextPage);
+		
+		this.executeRequest(req, mxUtils.bind(this, function(req)
+		{
+			this.ui.tryAndHandle(mxUtils.bind(this, function()
+			{
+				this.ui.spinner.stop();
+				var repos = JSON.parse(req.getText());
+				
+				if (repos == null || repos.length == 0)
+				{
+					mxUtils.br(div);
+					mxUtils.write(div, mxResources.get(&#039;repositoryNotFound&#039;));
+				}
+				else
+				{
+					if (page == 1)
+					{
+						div.appendChild(createLink(mxResources.get(&#039;enterValue&#039;) + &#039;...&#039;, mxUtils.bind(this, function()
+						{
+							var dlg = new FilenameDialog(this.ui, &#039;org/repo/ref&#039;, mxResources.get(&#039;ok&#039;), mxUtils.bind(this, function(value)
+							{
+								if (value != null)
+								{
+									var tokens = value.split(&#039;/&#039;);
+									
+									if (tokens.length &gt; 1)
+									{
+										var tmpOrg = tokens[0];
+										var tmpRepo = tokens[1];
+		
+										if (tokens.length &lt; 3)
+										{
+											org = tmpOrg;
+											repo = tmpRepo;
+											ref = null;
+											path = null;
+											
+											selectRef();
+										}
+										else if (this.ui.spinner.spin(div, mxResources.get(&#039;loading&#039;)))
+										{
+											var tmpRef = encodeURIComponent(tokens.slice(2, tokens.length).join(&#039;/&#039;));
+											
+											this.getFile(tmpOrg + &#039;/&#039; + tmpRepo + &#039;/&#039; + tmpRef, mxUtils.bind(this, function(file)
+											{
+												this.ui.spinner.stop();
+												org = file.meta.org;
+												repo = file.meta.repo;
+												ref = decodeURIComponent(file.meta.ref);
+												path = &#039;&#039;;
+												
+												selectFile();
+											}), mxUtils.bind(this, function(err)
+											{
+												this.ui.spinner.stop();
+												this.ui.handleError({message: mxResources.get(&#039;fileNotFound&#039;)});
+											}));
+										}
+									}
+									else
+									{
+										this.ui.spinner.stop();
+										this.ui.handleError({message: mxResources.get(&#039;invalidName&#039;)});
+									}
+								}
+							}), mxResources.get(&#039;enterValue&#039;));
+							this.ui.showDialog(dlg.container, 300, 80, true, false);
+							dlg.init();
+						})));
+						
+						mxUtils.br(div);
+						mxUtils.br(div);
+					}
+					
+					for (var i = 0; i &lt; repos.length; i++)
+					{
+						(mxUtils.bind(this, function(repository, idx)
+						{
+							var temp = listItem.cloneNode();
+							temp.style.backgroundColor = (idx % 2 == 0) ?
+								((Editor.isDarkMode()) ? &#039;#000000&#039; : &#039;#eeeeee&#039;) : &#039;&#039;;
+							
+							temp.appendChild(createLink(repository.full_name, mxUtils.bind(this, function()
+							{
+								org = repository.owner.login;
+								repo = repository.name;
+								path = &#039;&#039;;
+		
+								selectRef(null, true);
+							})));
+							
+							div.appendChild(temp);
+						}))(repos[i], i);
+					}
+				}
+
+				if (repos.length == pageSize)
+				{
+					div.appendChild(nextPageDiv);
+					
+					scrollFn = function()
+					{
+						if (div.scrollTop &gt;= div.scrollHeight - div.offsetHeight)
+						{
+							nextPage();
+						}
+					};
+					
+					mxEvent.addListener(div, &#039;scroll&#039;, scrollFn);
+				}
+			}));
+		}), error);
+	});
+	
+	selectRepo();
+};
+
+/**
+ * Checks if the client is authorized and calls the next step.
+ */
+GitHubClient.prototype.logout = function()
+{
+	//NOTE: GitHub doesn&#039;t provide a refresh token, so no need to clear the token cookie
+	//this.ui.editor.loadUrl(this.redirectUri + &#039;?doLogout=1&amp;state=&#039; + encodeURIComponent(&#039;cId=&#039; + this.clientId + &#039;&amp;domain=&#039; + window.location.host));
+	this.clearPersistentToken();
+	this.setUser(null);
+	_token = null;
+};
+
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

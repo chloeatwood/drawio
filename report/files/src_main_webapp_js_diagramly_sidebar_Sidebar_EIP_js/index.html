@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - src\main\webapp\js\diagramly\sidebar\Sidebar-EIP.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>src\main\webapp\js\diagramly\sidebar\Sidebar-EIP.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">63.71</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">364</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">35.57</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">6.78</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Copyright (c) 2020-2025, JGraph Holdings Ltd
+ * Copyright (c) 2020-2025, draw.io AG
+ */
+(function()
+{
+	Sidebar.prototype.addEipPalette = function()
+	{
+		this.setCurrentSearchEntryLibrary(&#039;eip&#039;, &#039;eipMessage Construction&#039;);
+		this.addEipMessageConstructionPalette();
+		this.setCurrentSearchEntryLibrary(&#039;eip&#039;, &#039;eipMessage Routing&#039;);
+		this.addEipMessageRoutingPalette();
+		this.setCurrentSearchEntryLibrary(&#039;eip&#039;, &#039;eipMessage Transformation&#039;);
+		this.addEipMessageTransformationPalette();
+		this.setCurrentSearchEntryLibrary(&#039;eip&#039;, &#039;eipMessaging Channels&#039;);
+		this.addEipMessagingChannelsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;eip&#039;, &#039;eipMessaging Endpoints&#039;);
+		this.addEipMessagingEndpointsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;eip&#039;, &#039;eipMessaging Systems&#039;);
+		this.addEipMessagingSystemsPalette();
+		this.setCurrentSearchEntryLibrary(&#039;eip&#039;, &#039;eipSystem Management&#039;);
+		this.addEipSystemManagementPalette();
+		this.setCurrentSearchEntryLibrary();
+	}
+	
+	// Adds EIP shapes
+	Sidebar.prototype.addEipMessageConstructionPalette = function(expand)
+	{
+		var s = &quot;strokeWidth=2;dashed=0;align=center;fontSize=8;shape=&quot;;
+		var s2 = &quot;strokeWidth=2;outlineConnect=0;dashed=0;align=center;fontSize=8;shape=mxgraph.eip.&quot;;
+		var s3 = &quot;strokeWidth=3;outlineConnect=0;dashed=0;align=center;fontSize=8;shape=mxgraph.eip.&quot;;
+		var gn = &#039;mxgraph.eip&#039;;
+		var dt = &#039;eip enterprise integration pattern message construction &#039;;
+		var sb = this;
+		
+		var fns = [
+			this.createEdgeTemplateEntry(&#039;edgeStyle=none;html=1;strokeColor=#808080;endArrow=block;endSize=10;dashed=0;verticalAlign=bottom;strokeWidth=2;&#039;, 
+					160, 0, &#039;&#039;, &#039;Pipe&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;pipe&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s + &#039;rect;fillColor=#c0f5a9;verticalLabelPosition=bottom;verticalAlign=top;html=1;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Filter&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;filter&#039;).join(&#039; &#039;)),
+			this.addEntry(dt + &#039;command message&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 12, 12), s + &#039;ellipse;fillColor=#808080;strokeColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;C&#039;, new mxGeometry(16, 18, 12, 12), s + &#039;rect;fillColor=#FF8080;fontStyle=1;whiteSpace=wrap;html=1;&#039;);
+				bg2.vertex = true;
+				var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;endArrow=none;dashed=0;html=1;strokeColor=#808080;strokeWidth=2;&#039;);
+		    	edge1.geometry.relative = true;
+		    	edge1.edge = true;
+		    	bg1.insertEdge(edge1, false);
+		    	bg2.insertEdge(edge1, true);
+			    
+			   	return sb.createVertexTemplateFromCells([edge1, bg1, bg2], 28, 30, &#039;Command Message&#039;);
+			}),
+			this.addDataEntry(dt + &#039;correlation identifier&#039;, 78, 30, &#039;Correlation Identifier&#039;,
+				&#039;7ZZNj9MwEIZ/Ta4oH/SD47a73RMSUg/A0TTT2Fo3EznuNuXXM46naYwpFC0UCUhVaWbsmTjPO3aSFMtd92hEI99iCTopHpJiaRCtt3bdErRO8lSVSXGf5HlK/yRfXRjN+tG0EQZqe01C7hOehd6Dj/hAa4+aA1BWsGYXjZVYYS30wzm6MLivS3AVU/KgU/bDyP7o7FcT59XlnTF4oECNtcssRSuHRGl39Pz3GZmtNfgES9Ro+kUU89T9hpH3qrSSRnKK+AW7VQYMWtybDYemPmSFqYCxTGJSfSJjegTcgTVHmmJAC6uew+qi9W41zDtDJoM5f5t58U8wn8fMZ3+O+esrmJ9JfdK4eQrp0OhK6ZDVmEhEb7V6QwgjpS6Q+5VMOPUdKqqYpx0T4I4/BlvilO+V45TxefFVlWz2vSpe7KhKL87wJFfpNfmxXrEGQWcLraqa7A1xBdJkscXartVnl+1kaaVonE33VU3rNsaW9L3c/qcR3kW8PjAWup9V8sBrdjP4uSSoStow9pJ+n0b87n4XQAMbG9Mb2j/aGGl/nerxcjL2R/O2/UXxg1QW1o3oT5YDvSrDnfkSJU4J06CrMz67bqDT7G/uc06YpDfDOY9wLv63/UVhprdqe3LPn7T+bTD+4v0C&#039;),
+				
+			this.addEntry(dt + &#039;document message&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 12, 12), s + &#039;ellipse;fillColor=#808080;strokeColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;D&#039;, new mxGeometry(16, 18, 12, 12), s + &#039;rect;fillColor=#C7A0FF;fontStyle=1;whiteSpace=wrap;html=1;&#039;);
+				bg2.vertex = true;
+				var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;endArrow=none;dashed=0;html=1;strokeColor=#808080;strokeWidth=2;&#039;);
+		    	edge1.geometry.relative = true;
+		    	edge1.edge = true;
+		    	bg1.insertEdge(edge1, false);
+		    	bg2.insertEdge(edge1, true);
+			    
+			   	return sb.createVertexTemplateFromCells([edge1, bg1, bg2], 28, 30, &#039;Document Message&#039;);
+			}),
+			this.addEntry(dt + &#039;event message&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 12, 12), s + &#039;ellipse;fillColor=#808080;strokeColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;E&#039;, new mxGeometry(16, 18, 12, 12), s + &#039;rect;fillColor=#83BEFF;fontStyle=1;whiteSpace=wrap;html=1;&#039;);
+				bg2.vertex = true;
+				var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;endArrow=none;dashed=0;html=1;strokeColor=#808080;strokeWidth=2;&#039;);
+		    	edge1.geometry.relative = true;
+		    	edge1.edge = true;
+		    	bg1.insertEdge(edge1, false);
+		    	bg2.insertEdge(edge1, true);
+			    
+			   	return sb.createVertexTemplateFromCells([edge1, bg1, bg2], 28, 30, &#039;Event Message&#039;);
+			}),
+		    this.createVertexTemplateEntry(s3 + &#039;messExp;html=1;verticalLabelPosition=bottom;verticalAlign=top&#039;, 
+		    		48, 48, &#039;&#039;, &#039;Message Expiration&#039;, null, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;message expiration&#039;).join(&#039; &#039;)),
+			this.addDataEntry(dt + &#039;message sequence&#039;, 60, 24, &#039;Message Sequence&#039;,
+				&#039;7ZbPb4MgFMf/Gu4KtvG6urWnJUt62Jnpm5KiGMSq++sHQlsM7bLDsmzZmjThfd8Pee+DRESyetxJ2laPogCOyAMimRRC2VU9ZsA5whErELlHGEf6j/D2hjeevVFLJTTqMwnYJhwp78EqVujUxJ2Q9/IIJjxGZANNcSelGLT5wkV+0FKlau68nZLiAJngQs65JM6ybRSdPc+sUJX2YFtpz97MM4i2pOibYn6KibZ7gKKERVud6GXupJWVFJUluE6TsPk50XW+A1GDkpMOkcCpYsdlddpZszzHuVTdMJ28gFawRnVe5Scj6IDR1Uv9keuFLXCyvJ1cpBnLdUTktyJah4hWPwRRgr8UURIgigNG4XgL2lXneVLOykavcz0Y0Gg2r6JRbvqpoVPR1qwl5Mp4GecexDTabtfZNbzR/DvVc9sxB2GomIJ9S2dag76AlufEdQRSwYhu3S032E3O6w7q4Hr2pApYWamldg2uR+hDAKsAQPiS/CEALuF0Lr+fxzrgQf554CT9Jh7avHxC2PvM/8J4Bw==&#039;),
+		    this.createVertexTemplateEntry(s3 + &#039;retAddr;html=1;verticalLabelPosition=bottom;fillColor=#FFE040;verticalAlign=top;&#039;, 
+		    		78, 48, &#039;&#039;, &#039;Return Address&#039;, null, null, this.getTagsForStencil(gn, &#039;retAddr&#039;, dt + &#039;return address&#039;).join(&#039; &#039;))
+		];
+		  
+		this.addPalette(&#039;eipMessage Construction&#039;, &#039;EIP / Message Construction&#039;, expand || false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+
+	Sidebar.prototype.addEipMessageRoutingPalette = function(expand)
+	{
+		var s = &quot;strokeWidth=2;dashed=0;align=center;fontSize=8;shape=rect;fillColor=#fffbc0;&quot;;
+		var s2 = &quot;html=1;strokeWidth=2;outlineConnect=0;dashed=0;align=center;fontSize=8;fillColor=#c0f5a9;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.eip.&quot;;
+		var s3 = &quot;edgeStyle=none;endArrow=none;dashed=0;html=1;strokeWidth=2;&quot;;
+		var gn = &#039;mxgraph.eip&#039;;
+		var dt = &#039;eip enterprise integration pattern message routing &#039;;
+		var sb = this;
+		
+		var fns = [
+		    this.createVertexTemplateEntry(s2 + &#039;aggregator;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Aggregator&#039;, null, null, this.getTagsForStencil(gn, &#039;aggregator&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;composed_message_processor;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Composed Message Processor&#039;, null, null, this.getTagsForStencil(gn, &#039;composed_message_processor&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;content_based_router;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Content Based Router&#039;, null, null, this.getTagsForStencil(gn, &#039;content_based_router&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;dynamic_router;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Dynamic Router&#039;, null, null, this.getTagsForStencil(gn, &#039;dynamic_router&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+			this.addDataEntry(dt + &#039;message broker&#039;, 120, 90, &#039;Message Broker&#039;,
+				&#039;5ZjJboMwEIafxneDWZJjQ9qcesqhZxcGjGpwZJytT1+DnQUpUZEqmYQiIWb+YcbMZySwEUmqw0rSDXsXGXBEXhFJpBDKWNUhAc6Rj8sMkSXyfaxP5L/diXpdFG+ohFoNSfBNwo7yLRjFCI06cis0Soov+CgzxbTgI7LIaMOgLYC1Q3lZ1NpO9YggtZCLWq3L7zZ7pt2G0U1rS0hVGy05TwQXsitO8jz/TNsyZpSrCO4OHbFPCFLB4W6XnWRbXIGoQMmjvsUmBLHJ2Nsm2sYjIzEoC3YqMjMabYxfnAtdCGrDQrwNlEwb6LFPygHQYNpAbcLctumebzhtvhZoGDgDGk0b6O0X1iHf+F/wPX2yLN/Yd8Z3NjLfFOchnTvmSyJnfOe/84WsgLV1a1HrywLq7EVKsb8oPeRMVXq8pXfGdj05pn5btAerEVuZQm/SFZUFqN6v4QCkEjhV5a5f/S+IPPwkjMiIjLwnYRSMyGjA8uYhGIUjMhqwYnkIRtGIjAYsQh6CUeyMkXYvuxRdrLeJ8QM=&#039;),
+		    this.createVertexTemplateEntry(s2 + &#039;message_filter;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Message Filter&#039;, null, null, this.getTagsForStencil(gn, &#039;message_filter&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;process_manager;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Process Manager&#039;, null, null, this.getTagsForStencil(gn, &#039;process_manager&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;recipient_list;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Recipient List&#039;, null, null, this.getTagsForStencil(gn, &#039;recipient_list&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;resequencer;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Resequencer&#039;, null, null, this.getTagsForStencil(gn, &#039;resequencer&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;routing_slip;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Routing Slip&#039;, null, null, this.getTagsForStencil(gn, &#039;routing_slip&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;splitter;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Splitter&#039;, null, null, this.getTagsForStencil(gn, &#039;splitter&#039;, dt + &#039;&#039;).join(&#039; &#039;))
+		];
+		
+		this.addPalette(&#039;eipMessage Routing&#039;, &#039;EIP / Message Routing&#039;, expand || false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+
+	Sidebar.prototype.addEipMessageTransformationPalette = function(expand)
+	{
+		var s = &quot;html=1;strokeWidth=2;outlineConnect=0;dashed=0;align=center;fontSize=8;fillColor=#c0f5a9;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.eip.&quot;;
+		var gn = &#039;mxgraph.eip&#039;;
+		var dt = &#039;eip enterprise integration pattern message transformation &#039;;
+
+		this.addPaletteFunctions(&#039;eipMessage Transformation&#039;, &#039;EIP / Message Transformation&#039;, false,
+		[
+		    this.createVertexTemplateEntry(s + &#039;claim_check;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Claim Check&#039;, null, null, this.getTagsForStencil(gn, &#039;claim_check&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s + &#039;content_enricher;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Content Enricher&#039;, null, null, this.getTagsForStencil(gn, &#039;content_enricher&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s + &#039;content_filter;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Content Filter&#039;, null, null, this.getTagsForStencil(gn, &#039;content_filter&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s + &#039;envelope_wrapper;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Envelope Wrapper&#039;, null, null, this.getTagsForStencil(gn, &#039;envelope_wrapper&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s + &#039;normalizer;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Normalizer&#039;, null, null, this.getTagsForStencil(gn, &#039;normalizer&#039;, dt + &#039;&#039;).join(&#039; &#039;))
+		]);
+	};
+
+	Sidebar.prototype.addEipMessagingChannelsPalette = function(expand)
+	{
+		var s = &quot;strokeWidth=2;dashed=0;align=center;fontSize=8;html=1;shape=&quot;;
+		var s2 = &quot;strokeWidth=2;outlineConnect=0;dashed=0;align=center;html=1;fontSize=8;shape=mxgraph.eip.&quot;;
+		var s3 = &quot;strokeWidth=1;outlineConnect=0;dashed=0;align=center;html=1;fontSize=8;shape=mxgraph.eip.&quot;;
+		var gn = &#039;mxgraph.eip&#039;;
+		var dt = &#039;eip enterprise integration pattern messaging channel message &#039;;
+		var sb = this;
+		
+		var fns = [
+			this.createEdgeTemplateEntry(&#039;edgeStyle=none;html=1;strokeColor=#808080;endArrow=block;endSize=10;dashed=0;verticalAlign=bottom;strokeWidth=2;&#039;, 
+				160, 0, &#039;&#039;, &#039;Point to Point Channel&#039;, null, this.getTagsForStencil(gn, &#039;&#039;, dt + &#039;point&#039;).join(&#039; &#039;)),
+			this.addDataEntry(dt + &#039;publish subscribe&#039;, 80, 160, &#039;Publish Subscribe Channel&#039;,
+				&#039;7ZbBbsIwDIafJvfQMMR1FMYJaRKHnbPWayvSGLmBwZ5+bhNKYaAxDTihqlL8O3aS72/VChWXmynpZT7DFIxQE6FiQnR+VG5iMEZEskiFGosoknyL6OVMttdk5VITWHdJQeQL1tqswCteqNzWBKFyhAt4K1KXsxAJNUp1lUPdQHKgTZFZHie8IhALH2jdvPiqq4cc5q7kU417PKxyvaxlgoQ3NwpLAznYnN1+I4W9TwFLcLTlKaGg708nt2FyOK3UlReytmLPgAcBw2kk6nckhCubtgTAps9E+MmhRQteCQR68phXl0dDNkaD1PRVQ1lfbabL3O8B0gwOUDlNGbgDLy+gR2C0K9aHrU4xC6WvWHDHH9R3FRWuKIEw6Qh0u+pF7Pt/Zs9A5iGJ5HLM0Goz2atdd94NJou72uPJ3Mue3VswOPLHPyTX8Ofp4c/1Xp/b2zV42PV/u4a3sovD/YfeT+/+B3wD&#039;),
+		    this.createVertexTemplateEntry(s2 + &#039;channel_adapter;fillColor=#9ddbef;&#039;, 
+		    	45, 90, &#039;&#039;, &#039;Channel Adapter&#039;, null, null, this.getTagsForStencil(gn, &#039;channel_adapter&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s3 + &#039;messageChannel;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;&#039;, 
+		    	100, 20, &#039;&#039;, &#039;Message Channel&#039;, null, null, this.getTagsForStencil(gn, &#039;messageChannel&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s3 + &#039;dataChannel;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;&#039;, 
+		    	100, 20, &#039;&#039;, &#039;Datatype Channel&#039;, null, null, this.getTagsForStencil(gn, &#039;dataChannel&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s3 + &#039;deadLetterChannel;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;&#039;, 
+		    	100, 20, &#039;&#039;, &#039;Dead Letter Channel&#039;, null, null, this.getTagsForStencil(gn, &#039;deadLetterChannel&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s3 + &#039;invalidMessageChannel;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;&#039;, 
+		    	100, 20, &#039;&#039;, &#039;Invalid Message Channel&#039;, null, null, this.getTagsForStencil(gn, &#039;invalidMessageChannel&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;messaging_bridge;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#c0f5a9;&#039;, 
+	    		150, 90, &#039;&#039;, &#039;Messaging Bridge&#039;, null, null, this.getTagsForStencil(gn, &#039;messaging_bridge&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+			this.addDataEntry(dt + &#039;message bus&#039;, 120, 140, &#039;Message Bus&#039;,
+				&#039;7ZbPb8IgFMf/Gq6Gwma8rtV5WrLEw84ob4VISwOodX/9oLBq/ZF5MJ5s0+S9L7xX+H5KUkSLqp0b1ogPzUEhOkO0MFq7GFVtAUohgiVHdIoIwf5B5P3KaNaN4oYZqN0tBSQWbJnaQFSiYN1eJcE6o9fwJbkTXiCI5lEptNKmm0Jxd/kRzqyA0DokTMmy9vHKrwX8zFy4ym9wmvnwW9duIX/CKyaho2BNiKu2DFaMQDajCqxlJRSC1XUwJk9LBeOgvbrdTkp7nYOuwJm9n7KPo+PoBt6l3YSC5BAWIEuRuvxpzMa87DsdvPRBsvOytfR/a4GXsEgpqKXezQ5Cfu670Zua9/ZCzd+M0TufLpVerbsSZtxFMXmdpcLjdMDsCNEZ5QkOdw8iLH6Awb+nBDf4rm4gY0AxJ7fDVpd8T6WfWvqOBLdDoglw9nJCzuqNWUEqOoHXr+Imni9Png/geXry7sfv9cnvgefx/vzGT34P4JfhewH06eE/Jk4//s35BQ==&#039;)
+		];
+		
+		this.addPalette(&#039;eipMessaging Channels&#039;, &#039;EIP / Messaging Channels&#039;, expand || false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+
+	Sidebar.prototype.addEipMessagingEndpointsPalette = function(expand)
+	{
+		var s = &quot;dashed=0;outlineConnect=0;strokeWidth=2;html=1;align=center;fontSize=8;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.eip.&quot;;
+		var s2 = &#039;fillColor=#c0f5a9;&#039; + s;
+		var gn = &#039;mxgraph.eip&#039;;
+		var dt = &#039;eip enterprise integration pattern messaging endpoint &#039;;
+		
+		this.addPaletteFunctions(&#039;eipMessaging Endpoints&#039;, &#039;EIP / Messaging Endpoints&#039;, false,
+		[
+		    this.createVertexTemplateEntry(s2 + &#039;competing_consumers;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Competing Consumers&#039;, null, null, this.getTagsForStencil(gn, &#039;competing_consumers&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s + &#039;durable_subscriber;fillColor=#a0a0a0;&#039;, 
+		    		30, 35, &#039;&#039;, &#039;Durable Subscriber&#039;, null, null, this.getTagsForStencil(gn, &#039;durable_subscriber&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;event_driven_consumer;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Event Driven Consumer&#039;, null, null, this.getTagsForStencil(gn, &#039;event_driven_consumer&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;message_dispatcher;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Message Dispatcher&#039;, null, null, this.getTagsForStencil(gn, &#039;message_dispatcher&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;messaging_gateway;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Messaging Gateway&#039;, null, null, this.getTagsForStencil(gn, &#039;messaging_gateway&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;polling_consumer;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Polling Consumer&#039;, null, null, this.getTagsForStencil(gn, &#039;polling_consumer&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;selective_consumer;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Selective Consumer&#039;, null, null, this.getTagsForStencil(gn, &#039;selective_consumer&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;service_activator;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Service Activator&#039;, null, null, this.getTagsForStencil(gn, &#039;service_activator&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;transactional_client;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Transactional Client&#039;, null, null, this.getTagsForStencil(gn, &#039;transactional_client&#039;, dt + &#039;&#039;).join(&#039; &#039;))
+		]);
+	};
+
+	Sidebar.prototype.addEipMessagingSystemsPalette = function(expand)
+	{
+		var s = &quot;strokeWidth=2;dashed=0;align=center;fontSize=8;shape=&quot;;
+		var s2 = &quot;html=1;strokeWidth=2;outlineConnect=0;dashed=0;align=center;fontSize=8;shape=mxgraph.eip.&quot;;
+		var s3 = &quot;html=1;strokeWidth=1;dashed=0;align=center;fontSize=8;shape=&quot;;
+		var s4 = &quot;strokeWidth=1;outlineConnect=0;dashed=0;align=center;fontSize=8;shape=mxgraph.eip.&quot;;
+		var gn = &#039;mxgraph.eip&#039;;
+		var dt = &#039;eip enterprise integration pattern messaging system &#039;;
+		var sb = this;
+		
+		var fns = [
+			this.createVertexTemplateEntry(s2 + &#039;content_based_router;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#c0f5a9;&#039;, 
+					150, 90, &#039;&#039;, &#039;Message Router&#039;, null, null, this.getTagsForStencil(gn, &#039;content_based_router&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+
+		    this.createVertexTemplateEntry(s4 + &#039;messageChannel;html=1;verticalLabelPosition=bottom;verticalAlign=top;&#039;, 
+		    		100, 20, &#039;&#039;, &#039;Message Channel&#039;, null, null, this.getTagsForStencil(gn, &#039;messageChannel&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    
+			this.addEntry(dt + &#039;message endpoint&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 150, 90), s + &#039;rect;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#c0f5a9;html=1;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;&#039;, new mxGeometry(85, 25, 40, 40), s3 + &#039;rect;&#039;);
+				bg2.vertex = true;
+				bg1.insert(bg2);
+			    
+			   	return sb.createVertexTemplateFromCells([bg1], bg1.geometry.width, bg1.geometry.height, &#039;Message Endpoint&#039;);
+			}),
+			    
+			this.addEntry(dt + &#039;message endpoint&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 150, 90), s + &#039;rect;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#c0f5a9;html=1;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;&#039;, new mxGeometry(25, 25, 40, 40), s3 + &#039;rect&#039;);
+				bg2.vertex = true;
+				bg1.insert(bg2);
+			    
+			   	return sb.createVertexTemplateFromCells([bg1], bg1.geometry.width, bg1.geometry.height, &#039;Message Endpoint&#039;);
+			}),
+			this.addDataEntry(dt + &#039;message endpoint&#039;, 400, 90, &#039;Message Endpoint&#039;,
+				&#039;zVZNb4JAEP013NcFGj0qWi9t0sRDzyuMsHFhyDJ+9dd3F1aFiK0mNhVCMvNmZj/emwU8P8r3cy3K7B0TUJ4/8/xII1Jj5fsIlPI4k4nnTz3OmXk8/nolOqijrBQaCrqlgDcFW6E20CANUNFBOaAijWv4lAllBuCeP0lElYEdgBlHKJkWxo7NjKANsMKCFvLLVg+NW2WitLaGmGxUKhWhQl0P7sdsFYqRTatnaUVYfZnIFjTJWKg3sQT1gZUkiXbCJRJh3koYu5UQlgbNKDdsTgfGdHs0abC/ylMNOZLmgDmQPpiUndu3zQgbLlkGMs1c2chhomr89FR6Zt0Yjvh+Efx7RRg8VoRVfT2DCLxfBFfAw6bi0HVbEgU9CgUPUCh4/mPyoH4/Uc0uyP2z/g+fv//vZTf4kd3hvzXyy+9UQ5LCwrmglribnYHJZZdr3BTJSQgokrHWuLOvBoXxui4Rmo5ggQUcMafPwNW13Y64Le4vBBoye/curNmY3U1HpQo3OobOi9csJgXq9OINJ0WDEiS33dHv0Ma45+98Hev8BnwD&#039;),
+			this.addDataEntry(dt + &#039;message&#039;, 28, 48, &#039;Message&#039;,
+				&#039;5ZVNb8IwDIZ/Ta9TaEcFx1E+Tjtx2HaMqNtES5MqNbTs1y9pwkdFu01iY5MGQrJfx8F57DZBlBTNStOSPaoURBAtgijRSqGziiYBIYKQ8DSI5kEYEvMLwuVAdNRGSUk1SPxKQugSdlRswSlOqHAvvABpDmvvKo1M5UpSsTipM622MgW7IzEeNByfz+wXa9+NrSfTB61VbQSppM1MacWOiQwLc/75yJgVavUKiRJKt0VEE2K/x8gTT5GZSGgUV7CtssOgUlu98dLYSUh1Dh7L/SWpNtFjWoEqAPXeLNEgKPJdd3daOTc/rjtBNobn3M88+hfM4z/F/P5z5pen7JCigufS2BtTOxhCs0xJXPM3mz2xkBgtrW3+l5eVBZ1xIYZxHiK+K74+0AjN4LM8QKv2NdsV/lwMeM6wq13Db3wzfho22AdvuYyTvikl7eewny9n1B3tmnGEdUnb2azNy/ZK4IcEP+N7706ce4N2xL/cjiybTsnlLH/Ujr4enLXo+9sRxT/VDuOebug21rnA3wE=&#039;),
+	
+			this.addEntry(dt + &#039;message&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 12, 12), s + &#039;ellipse;fillColor=#808080;strokeColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;&#039;, new mxGeometry(16, 18, 12, 12), s + &#039;rect;fillColor=#80FF6C;fontStyle=1;whiteSpace=wrap;html=1;&#039;);
+				bg2.vertex = true;
+				var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;endArrow=none;dashed=0;html=1;strokeColor=#808080;strokeWidth=2;&#039;);
+		    	edge1.geometry.relative = true;
+		    	edge1.edge = true;
+		    	bg1.insertEdge(edge1, false);
+		    	bg2.insertEdge(edge1, true);
+			    
+			   	return sb.createVertexTemplateFromCells([edge1, bg1, bg2], 28, 30, &#039;Message&#039;);
+			}),
+	
+			this.addDataEntry(dt + &#039;message&#039;, 28, 48, &#039;Message&#039;,
+				&#039;vZTBboMwDIafhutEoZva40q7nnbqYdsxKoZECzEKbqF7+jkkbYcY2qROAyHZv/MH5yMkSrOq21pRy2fMQUfpJkozi0g+qroMtI6SWOVRuo6SJOYnSp4mqrO+GtfCgqHfGBJvOAp9AK94oaGTDgLkJexCipYklmiE3lzVlcWDycHNGHMGnaLXL/Gbi+/uXWbyR2uxZcGgcc5cNPJilFTx+tczDhuy+A4ZarR9E+kidvel8qJyklxJWPENuy4HDBo82H2Q5l4iYUsIWNIxqd4YMG0BKyB74iEWtCB1HM4uGp+Wl3FXyBwEzt8zT39mPl7lgJTQqjQc77l3YEKrAg3t1IdzLxwkKWoX83tV3TjQhdJ6Gue5Er5K6A8sQTe5ryZotaFnNyKsS4IqJQ21W/jN/42fhT2N4RXFchmP4XEl7q/zfKGd2XBrt1IR7GrR782Wf/wbgZ8ND95xCunCp3//OTi9Hk99bXB6fQI=&#039;),
+	
+			this.addEntry(dt + &#039;message&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 12, 12), s + &#039;ellipse;fillColor=#808080;strokeColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;&#039;, new mxGeometry(16, 18, 12, 12), s2 + &#039;message_1;fillColor=#ff5500;fontStyle=1;whiteSpace=wrap;html=1;&#039;);
+				bg2.vertex = true;
+				var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;endArrow=none;dashed=0;html=1;strokeColor=#808080;strokeWidth=2;&#039;);
+		    	edge1.geometry.relative = true;
+		    	edge1.edge = true;
+		    	bg1.insertEdge(edge1, false);
+		    	bg2.insertEdge(edge1, true);
+			    
+			   	return sb.createVertexTemplateFromCells([edge1, bg1, bg2], 28, 30, &#039;Message&#039;);
+			}),
+	
+			this.addEntry(dt + &#039;message&#039;, function()
+			{
+				var bg1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 12, 12), s + &#039;ellipse;fillColor=#808080;strokeColor=none;&#039;);
+				bg1.vertex = true;
+				var bg2 = new mxCell(&#039;&#039;, new mxGeometry(16, 18, 12, 12), s2 + &#039;message_2;fillColor=#00cc00;fontStyle=1;whiteSpace=wrap;html=1;&#039;);
+				bg2.vertex = true;
+				var edge1 = new mxCell(&#039;&#039;, new mxGeometry(0, 0, 0, 0), &#039;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0;exitY=0.5;endArrow=none;dashed=0;html=1;strokeColor=#808080;strokeWidth=2;&#039;);
+		    	edge1.geometry.relative = true;
+		    	edge1.edge = true;
+		    	bg1.insertEdge(edge1, false);
+		    	bg2.insertEdge(edge1, true);
+			    
+			   	return sb.createVertexTemplateFromCells([edge1, bg1, bg2], 28, 30, &#039;Message&#039;);
+			}),
+	
+		    this.createVertexTemplateEntry(s2 + &#039;message_translator;fillColor=#c0f5a9;verticalLabelPosition=bottom;verticalAlign=top;&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Message-Translator&#039;, null, null, this.getTagsForStencil(gn, &#039;message_translator&#039;, dt + &#039;&#039;).join(&#039; &#039;))
+		];
+		
+		this.addPalette(&#039;eipMessaging Systems&#039;, &#039;EIP / Messaging Systems&#039;, expand || false, mxUtils.bind(this, function(content)
+		{
+			for (var i = 0; i &lt; fns.length; i++)
+			{
+				content.appendChild(fns[i](content));
+			}
+		}));
+	};
+
+	Sidebar.prototype.addEipSystemManagementPalette = function(expand)
+	{
+		var s2 = &quot;html=1;strokeWidth=2;outlineConnect=0;dashed=0;align=center;fontSize=8;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.eip.&quot;;
+		var gn = &#039;mxgraph.eip&#039;;
+		var dt = &#039;eip enterprise integration pattern system management &#039;;
+		
+		this.addPaletteFunctions(&#039;eipSystem Management&#039;, &#039;EIP / System Management&#039;, false,
+		[
+		    this.createVertexTemplateEntry(s2 + &#039;channel_purger;fillColor=#c0f5a9&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Channel Purger&#039;, null, null, this.getTagsForStencil(gn, &#039;channel_purger&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;control_bus;fillColor=#c0f5a9&#039;, 
+		    		60, 40, &#039;&#039;, &#039;Control Bus&#039;, null, null, this.getTagsForStencil(gn, &#039;control_bus&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;detour;fillColor=#c0f5a9&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Detour&#039;, null, null, this.getTagsForStencil(gn, &#039;detour&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;message_store;fillColor=#c0f5a9&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Message Store&#039;, null, null, this.getTagsForStencil(gn, &#039;message_store&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;smart_proxy;fillColor=#c0f5a9&#039;, 
+		    		70, 90, &#039;&#039;, &#039;Smart Proxy&#039;, null, null, this.getTagsForStencil(gn, &#039;smart_proxy&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;test_message;fillColor=#c0f5a9&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Test Message&#039;, null, null, this.getTagsForStencil(gn, &#039;test_message&#039;, dt + &#039;&#039;).join(&#039; &#039;)),
+		    this.createVertexTemplateEntry(s2 + &#039;wire_tap;fillColor=#c0f5a9&#039;, 
+		    		150, 90, &#039;&#039;, &#039;Wire Tap&#039;, null, null, this.getTagsForStencil(gn, &#039;wire_tap&#039;, dt + &#039;&#039;).join(&#039; &#039;))
+		]);
+	};
+})();</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>
